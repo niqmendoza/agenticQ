@@ -1,0 +1,193 @@
+{
+  "query": "frontend chat solicitudes cancelación i18n tokens semánticos",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "cancelacion",
+    "chat",
+    "frontend",
+    "i18n",
+    "semanticos",
+    "solicitudes",
+    "tokens"
+  ],
+  "missing_terms": [
+    "cancelacion",
+    "solicitudes"
+  ],
+  "total_matches": 202,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Tokens primitivos de color.md",
+      "sha256": "cf036480441186251bdc119526054164035a6bc6e903c7b9043e40afa5a870f5",
+      "section": "Relacionado",
+      "start": 48,
+      "end": 53,
+      "score": 12.3521,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Tokens primitivos de color\"\ntype: referencia\ntags: [coelsa-intelligent, diseño, colores, tokens, teal, pink, neutral]\naliases: [Color primitives, Escalas de color COELSA, Teal Pink Neutral]\ndescription: \"Usar cuando necesitás la escala de valores hex de los colores primitivos de COELSA.Intelligent (Teal, Pink, Neutral) para definir o revisar tokens semánticos.\"\nestado: vigente\n---",
+        "title": "Tokens primitivos de color",
+        "type": "referencia",
+        "tags": "[coelsa-intelligent, diseño, colores, tokens, teal, pink, neutral]",
+        "aliases": "[Color primitives, Escalas de color COELSA, Teal Pink Neutral]",
+        "description": "Usar cuando necesitás la escala de valores hex de los colores primitivos de COELSA.Intelligent (Teal, Pink, Neutral) para definir o revisar tokens semánticos.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Relacionado\n\n- [[ECO Design System]] — El sistema del que estas escalas forman la base\n- [[Roles semánticos de color]] — Los roles construidos sobre estas escalas\n- [[Dark mode reglas]] — Cómo los mismos primitivos se usan diferente en cada tema\n- [[MOC - Diseño y Frontend]] — Índice del cluster de diseño",
+      "relations": [
+        {
+          "target": "ECO Design System",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/ECO Design System.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "ECO Design System",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/ECO Design System.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Roles semánticos de color",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Dark mode reglas",
+          "fragment": "",
+          "line": 52,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Diseño y Frontend",
+          "fragment": "",
+          "line": 53,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Diseño y Frontend.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/OKF-INDEX.md",
+      "sha256": "834b91471b0257c7c5d359c41780bf42decf1c96367fecc44ac37dea4dadedc0",
+      "section": "Diseño Frontend",
+      "start": 113,
+      "end": 124,
+      "score": 11.3083,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"COELSA.Intelligent - Indice Maestro OKF\"\ntype: index\ntags: [coelsa-intelligent, okf, indice, navegacion-llm]\naliases: [Indice Maestro, OKF Index, Entry Point LLM]\ndescription: \"Usar cuando un LLM o una persona necesita encontrar rapido la nota exacta sin recorrer todo el vault.\"\nestado: vigente\n---",
+        "title": "COELSA.Intelligent - Indice Maestro OKF",
+        "type": "index",
+        "tags": "[coelsa-intelligent, okf, indice, navegacion-llm]",
+        "aliases": "[Indice Maestro, OKF Index, Entry Point LLM]",
+        "description": "Usar cuando un LLM o una persona necesita encontrar rapido la nota exacta sin recorrer todo el vault.",
+        "estado": "vigente"
+      },
+      "excerpt": "### Diseño Frontend\n\n- [Dark mode reglas](Diseño%20Frontend/Dark%20mode%20reglas.md)\n- [ECO Design System](Diseño%20Frontend/ECO%20Design%20System.md)\n- [Internacionalización i18n](Diseño%20Frontend/Internacionalización%20i18n.md)\n- [Manejo de errores frontend](Diseño%20Frontend/Manejo%20de%20errores%20frontend.md)\n- [Patrones de componentes Svelte](Diseño%20Frontend/Patrones%20de%20componentes%20Svelte.md)\n- [Roles semánticos de color](Diseño%20Frontend/Roles%20semánticos%20de%20color.md)\n- [Surface Containers](Diseño%20Frontend/Surface%20Containers.md)\n- [Tipografía Saira](Diseño%20Frontend/Tipografía%20Saira.md)\n- [Tokens primitivos de color](Diseño%20Frontend/Tokens%20primitivos%20de%20color.md)\n",
+      "relations": [
+        {
+          "target": "COELSA.Intelligent - Home.md",
+          "fragment": "",
+          "line": 22,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/COELSA.Intelligent - Home.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Decisiones.md",
+          "fragment": "",
+          "line": 23,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Decisiones.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Arquitectura.md",
+          "fragment": "",
+          "line": 24,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Arquitectura.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Stack.md",
+          "fragment": "",
+          "line": 25,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Stack.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Autenticación y Permisos.md",
+          "fragment": "",
+          "line": 26,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Almacenamiento.md",
+          "fragment": "",
+          "line": 27,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 91,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}

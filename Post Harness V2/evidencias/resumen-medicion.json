@@ -1,0 +1,43 @@
+{
+  "iterations": [
+    {
+      "id": "full",
+      "model_responses": 21,
+      "local_calls": 16,
+      "documents_presented": 80,
+      "document_tokens": 57652,
+      "cases": 38,
+      "total_tokens": 1383155
+    },
+    {
+      "id": "v1",
+      "model_responses": 21,
+      "local_calls": 52,
+      "documents_presented": 27,
+      "document_tokens": 42496,
+      "cases": 29,
+      "total_tokens": 1258251
+    },
+    {
+      "id": "v2",
+      "model_responses": 16,
+      "local_calls": 23,
+      "documents_presented": 28,
+      "document_tokens": 32195,
+      "cases": 38,
+      "total_tokens": 1004676
+    }
+  ],
+  "validation": {
+    "v1_files_checked": 462,
+    "v1_changed": [],
+    "frozen_inputs_changed": [],
+    "corpus_changed": [],
+    "literal_errors": [],
+    "unique_source_lines_v2": 1607,
+    "all_native_sums_match": true,
+    "model_effort_equal": true,
+    "evaluator_reported_elision_repaired": true,
+    "terminal_truncation_notice_in_recorded_outputs": false
+  }
+}

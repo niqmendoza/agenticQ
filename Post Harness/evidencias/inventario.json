@@ -1,0 +1,664 @@
+{
+  "root": "/Users/nmendoza/Desktop/Docs/Docs/OWUI",
+  "revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524",
+  "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 17.0.0 (clang-1700.6.4.2)]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "files": [
+    {
+      "path": ".DS_Store",
+      "bytes": 6148,
+      "sha256": "07001c36247735ddffae86b0067761680b14c1a4b081befacc8b3f840ab77293",
+      "mtime_ns": 1793138800348289772,
+      "included": false,
+      "reason": "extensión no textual admitida"
+    },
+    {
+      "path": "COELSA.Intelligent/.DS_Store",
+      "bytes": 10244,
+      "sha256": "be02fdb00c765baefd1a0709f5e8d02d33ee9bd4fcbdb546737ded1072702461",
+      "mtime_ns": 1793138771465641726,
+      "included": false,
+      "reason": "extensión no textual admitida"
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+      "bytes": 1923,
+      "sha256": "3f7223b1d2b55617d97bde656755b2e7158b6ebaab7592ecd24aa53a153fa5c5",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 50
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+      "bytes": 2035,
+      "sha256": "8bfa3cfca6f5ef84dd7427fd7cf2688cb2b14aef4b25b8af66d72d245cf1d5c0",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 48
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+      "bytes": 1845,
+      "sha256": "a94655add9bc943c40bcb8b8233adaa548e79e454700a2071772ccd079773796",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 43
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+      "bytes": 2159,
+      "sha256": "6dae495a1de98da2f1de521d0df4f0e75283ce2dc86d38889dc6cba1a4bc926b",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 60
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Storage Dashboard.md",
+      "bytes": 1465,
+      "sha256": "7ef1b1f9b8fd431ea54ae69d141ca17cdb6b757eb44bed776ed2d1dfb2e10549",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 43
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+      "bytes": 2241,
+      "sha256": "45ab53acb192acc80c560d357d61560d2b1f8909fa3fc43aaee264ad7b232b4e",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 52
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/Fork de Open WebUI.md",
+      "bytes": 2401,
+      "sha256": "724e0c32512dcf36d3e01a794f15372a2d0cb12467cde9e652f2d9f6e1d93a10",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 40
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+      "bytes": 1542,
+      "sha256": "e55a93237b5781aace21c113e9fc71906c2e056ce44d8b649ca78f812934966b",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 35
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/Idioma por defecto es-AR.md",
+      "bytes": 1620,
+      "sha256": "e7ac2c3e4599bbaaddded5b4274a475222f41ce97123336814ecf65daa4df43c",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 45
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/PostgreSQL como base de datos.md",
+      "bytes": 1905,
+      "sha256": "04cc623242d1b61f7af296d22c19ff43384472865c6dcece091329de16d2f275",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 42
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/Redis para WebSockets.md",
+      "bytes": 1852,
+      "sha256": "c7ed15748ea02626313513d3e3e5aeb5eec540d62998c015742091fefff03578",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 41
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+      "bytes": 2224,
+      "sha256": "d1e6f8db848e014164e9ac2d81784da71d700c2a6e00349a84d3466491a15c52",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 43
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+      "bytes": 2420,
+      "sha256": "655215e135866d2da32f0499e408087c34000875b9efe3d8f2e804333c8d7185",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 59
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md",
+      "bytes": 1924,
+      "sha256": "5334e067051311815a3c387f5c5902f4e6675acbdc12e67d452093e0fa01c663",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 45
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+      "bytes": 1905,
+      "sha256": "63512785920e4b1035f23e1a5f0d7bbe736ea15a3c2e51845d3dc6ebe1e7c339",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 51
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+      "bytes": 1872,
+      "sha256": "2d2d8bbec28f33cb389bf605b71b21a8a914a2b323a62d5f78344811fe3ac84e",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 57
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+      "bytes": 1949,
+      "sha256": "1de1408046f7e94fde09b8c6e366b80176643850b5f4bfa8caed57b1286de56f",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 51
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+      "bytes": 2041,
+      "sha256": "d07b8455c519b053c6a243d3e79b181f42196e4ff2bfc709eec4bdd8cbf8974d",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 46
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/bcrypt para contraseñas.md",
+      "bytes": 1976,
+      "sha256": "e9ecc87d258d46762363a3ba5e3e0f3180c8733c5b9b827576a75f5f60c6e588",
+      "mtime_ns": 1783690883016000032,
+      "included": true,
+      "lines": 44
+    },
+    {
+      "path": "COELSA.Intelligent/CI-CD/Build frontend.md",
+      "bytes": 2044,
+      "sha256": "7f3da8815563d3fa7651c99d5b1346e78a4ce40bb8b331972bcc7446bd1cb9ee",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 48
+    },
+    {
+      "path": "COELSA.Intelligent/CI-CD/Despliegue en OpenShift.md",
+      "bytes": 2186,
+      "sha256": "ea5286f35171c5be485f0e6b18217e9b811c1f66a59595ae44ae4183d7229e06",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 72
+    },
+    {
+      "path": "COELSA.Intelligent/CI-CD/Dockerfile.md",
+      "bytes": 2039,
+      "sha256": "5ce0dbeb045daa2067ea50cb5f0046a7d9d164fcda6deedb2a125d00c594dfb0",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 55
+    },
+    {
+      "path": "COELSA.Intelligent/CI-CD/Pipelines Azure DevOps.md",
+      "bytes": 1893,
+      "sha256": "d931e4ac4cea7c4eaaa1289b5725572d5fcf7ea882a50eb7fe37430346d75684",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 43
+    },
+    {
+      "path": "COELSA.Intelligent/CI-CD/SSL corporativo en build.md",
+      "bytes": 2250,
+      "sha256": "32eefae75dd52ea5178c68b9ade872d5b868fe6823b05bf89018e0662c3791ce",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 48
+    },
+    {
+      "path": "COELSA.Intelligent/COELSA.Intelligent - Home.md",
+      "bytes": 2945,
+      "sha256": "dd4c0bdd24ac536e2c82a602d263e3e12cf6088d2222617202b444593ea3fa3a",
+      "mtime_ns": 1783519155221998929,
+      "included": true,
+      "lines": 49
+    },
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+      "bytes": 2972,
+      "sha256": "cd1aefbdb2327f1bf5ffb436760b22afe277fdd692c635d6cf8dd949c9fd1f4b",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 94
+    },
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+      "bytes": 2212,
+      "sha256": "9a7abc07850e4d29afdd6160b59e0e3c21cf59c533132b5db466f2f78c6c6878",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 74
+    },
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Ejecución local.md",
+      "bytes": 2147,
+      "sha256": "8f3772674f4f529fe3d9214119e773b1cbb3fae7c79c9fc61fc66cd506f15c45",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 74
+    },
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Loguru y logging.md",
+      "bytes": 1892,
+      "sha256": "b2dfb002d577ae3e074ca5df16a1851f77699b42bac85fd54aa83be3dec46d77",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 64
+    },
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Migraciones Alembic.md",
+      "bytes": 2120,
+      "sha256": "ef88dc20c13e15a1025cd823c2deb39da868be063addb992c09ab6167471339c",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 66
+    },
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+      "bytes": 1998,
+      "sha256": "b9f8fbcba69774de6e357757821f48334827276223788bf756c423cf1581f049",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 41
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+      "bytes": 2279,
+      "sha256": "1f9c3996cf851072ec73af8e52c1b35763cd7f939adba6655cf35a6293535a3f",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 65
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/ECO Design System.md",
+      "bytes": 2496,
+      "sha256": "a5b4b87ac94f9e388bee90e981e0d47bd12b0647e1a208734676a73ad86c1151",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 59
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+      "bytes": 1800,
+      "sha256": "d9e8cc1be54498d21a67a9247f6eb066391a519df86fcbe0ebac88a5860a9ec5",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 57
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+      "bytes": 2382,
+      "sha256": "f4d0cc88113e86e38a36230d26cab8f3303f32d6ae1a4beca0625589aff0b231",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 57
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+      "bytes": 2922,
+      "sha256": "6ae535d7d011734543b9246447d02388f744ce098c5f61cd842d9656bac8fae0",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 81
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+      "bytes": 2612,
+      "sha256": "633414976a121f28a1d4355819b770ec1b3aea9384a634acee0df24e05c86e0e",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 62
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Surface Containers.md",
+      "bytes": 2349,
+      "sha256": "f7ba875c8328d2302f0536131fd2a9078903ccdaa5e516fb36f6f9b6ffb8c897",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 56
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Tipografía Saira.md",
+      "bytes": 2089,
+      "sha256": "3f35c98a83027d8c36bcf4cf90f5a7f4be871af8ae447d35b8a05d5edc6ab3a0",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 55
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Tokens primitivos de color.md",
+      "bytes": 2376,
+      "sha256": "cf036480441186251bdc119526054164035a6bc6e903c7b9043e40afa5a870f5",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 53
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Almacenamiento.md",
+      "bytes": 1590,
+      "sha256": "901cb1a046fc470631e370d90d58eda66e02b5160b5a4252e27fafd5c219f4c1",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 28
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Arquitectura.md",
+      "bytes": 1730,
+      "sha256": "9114673a7b48db07ed2db34f3861bf6e55fb4e58475ac0fe40d6e08d699b07db",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 29
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md",
+      "bytes": 1517,
+      "sha256": "62ea96d10252175a083b78bfcf4f595257e62f0c0d0b4ad60a9f20aa095b836a",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 27
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - CI-CD y Despliegue.md",
+      "bytes": 1478,
+      "sha256": "29f0d34c8d9944496354acf50b2fc6e0bb0b65a7068a32dce969644d38856fe6",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 27
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Decisiones.md",
+      "bytes": 2807,
+      "sha256": "19f4193e467dc6c581cad890908dddb8bd3304bf525f4bf3cf8dc87089a372f8",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 63
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Desarrollo.md",
+      "bytes": 1644,
+      "sha256": "55792092bfb6f1868646c795d989e976c23bdc5346ef2107faecf64f7fbeb6df",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 28
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Diseño y Frontend.md",
+      "bytes": 2048,
+      "sha256": "b87f26cb28ef5b8dcb9b4357bbbec870f09a37cad4ddf1967f93e88fc26befb4",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 33
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Modelos IA y Routing.md",
+      "bytes": 1690,
+      "sha256": "ccb7fa346b046676e4d99caeee26222bb555fa17a29f8ee43945f7e11664363e",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 28
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - RAG y Búsqueda Vectorial.md",
+      "bytes": 1600,
+      "sha256": "5dac6db7a456fa4de857ec68bfe8d324a3d41a2e2ae6c3f20a60091f5ebf3b51",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 27
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Seguridad.md",
+      "bytes": 1834,
+      "sha256": "d175166b06ca7c094c711d2f38d56e6f60b848af61df5d2e0a1dc8d1093901f8",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 34
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Stack.md",
+      "bytes": 1965,
+      "sha256": "e7cb09f8e7cf7845d06e73ccad5732e0834f7a2c7642f151d2fb3932e3e9cc8e",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 47
+    },
+    {
+      "path": "COELSA.Intelligent/Modelos IA/Cadena SearXNG Context Forge.md",
+      "bytes": 1993,
+      "sha256": "c810e02eb5cc52df3dd78d3ecd1d13b613766ca4dc1143d7b29fded866fc779f",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 56
+    },
+    {
+      "path": "COELSA.Intelligent/Modelos IA/MCP y tool calling.md",
+      "bytes": 2356,
+      "sha256": "6043f116d3ca2e6f97fb871e59712c6d3bbac239bb83a09dd8b182bc297ab2c8",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 58
+    },
+    {
+      "path": "COELSA.Intelligent/Modelos IA/PyTorch CPU-only.md",
+      "bytes": 2075,
+      "sha256": "866cbc9b4dbd5a99f45c5559b76c742f3dbd3d8c19c8d84b1fee060aa5edaf19",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 46
+    },
+    {
+      "path": "COELSA.Intelligent/Modelos IA/Routing de modelos IA.md",
+      "bytes": 2035,
+      "sha256": "bbd9b3b28b48a137fb275e50e8aaebf70fdf6b7e8cbd93578616dba775a2f6fb",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 49
+    },
+    {
+      "path": "COELSA.Intelligent/Modelos IA/SharePoint OneDrive integración.md",
+      "bytes": 2149,
+      "sha256": "f2053d730812a93aecf4a4e948eb2d53b153f66e22970607a8b46715f7719ea7",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 49
+    },
+    {
+      "path": "COELSA.Intelligent/Modelos IA/Validación de urlIdx.md",
+      "bytes": 2072,
+      "sha256": "ed3a277d46b7d43133716efc276291296f49141bd5f38f12dd8a23e96abd99c7",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 53
+    },
+    {
+      "path": "COELSA.Intelligent/OKF-INDEX.md",
+      "bytes": 7441,
+      "sha256": "834b91471b0257c7c5d359c41780bf42decf1c96367fecc44ac37dea4dadedc0",
+      "mtime_ns": 1783519155221998929,
+      "included": true,
+      "lines": 155
+    },
+    {
+      "path": "COELSA.Intelligent/RAG/Aislamiento por resource_id.md",
+      "bytes": 2124,
+      "sha256": "98080874e18fa8334607b66ea82926cb07d4af2ae9759b744d73d8b77a9c62a2",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 54
+    },
+    {
+      "path": "COELSA.Intelligent/RAG/Chats de referencia.md",
+      "bytes": 1971,
+      "sha256": "87800ebc333f55b3f9fd3becd70af8f7db4c6d96a3f5a00127306fd42ebb759b",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 53
+    },
+    {
+      "path": "COELSA.Intelligent/RAG/Cinco colecciones Milvus.md",
+      "bytes": 2075,
+      "sha256": "739fc3c157e0721ac63fcef16e5b5e6bfda7b2bfd9e7da665af926838972990a",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 41
+    },
+    {
+      "path": "COELSA.Intelligent/RAG/Milvus multi-tenancy.md",
+      "bytes": 2316,
+      "sha256": "e3ad2bb8099648991f68c2e3a1facd196a4f5097edf3a39cf9650db5fbc52fea",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 47
+    },
+    {
+      "path": "COELSA.Intelligent/RAG/Módulo de retrieval.md",
+      "bytes": 2442,
+      "sha256": "a991ec02091ce63244b9c8cc7a678a9f001d56ebdffa9b2746d9accb940eeb1b",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 53
+    },
+    {
+      "path": "COELSA.Intelligent/Seguridad/CSP con nonces.md",
+      "bytes": 2513,
+      "sha256": "2e44b4dc1f0488cdb2709466c01d81f5afa142ac45b54f90653b9cdb77baa286",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 57
+    },
+    {
+      "path": "COELSA.Intelligent/Seguridad/CVE-2025-7969 markdown-it.md",
+      "bytes": 2001,
+      "sha256": "27703ed84c409f2e53b44717d7722e5bd6adc56f0a9cbff7108fd566606c6153",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 43
+    },
+    {
+      "path": "COELSA.Intelligent/Seguridad/Dependencias vulnerables.md",
+      "bytes": 1836,
+      "sha256": "fb77822db5b0d36dc74f9ee8b5ef34203345e2a1c17df7aef598591f62e10bc8",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 46
+    },
+    {
+      "path": "COELSA.Intelligent/Seguridad/Hardening ReDoS.md",
+      "bytes": 2010,
+      "sha256": "8e618ab4f37fe4e0d1583701b6d58910e98758cc0e3a6d5b95a6ba18a4fe6c25",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 52
+    },
+    {
+      "path": "COELSA.Intelligent/Seguridad/Path Traversal.md",
+      "bytes": 2042,
+      "sha256": "1861c722febbbc8130bfb56b97b52204032c855053bde3f5ba027254e7a9b32d",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 49
+    },
+    {
+      "path": "COELSA.Intelligent/Seguridad/Protección SSRF.md",
+      "bytes": 2145,
+      "sha256": "fcf02a1318dd799b7b198d8c4f67ad2b18bcfcde49e964bced55184fdf106778",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 63
+    },
+    {
+      "path": "COELSA.Intelligent/Seguridad/Riesgos de seguridad aceptados.md",
+      "bytes": 2305,
+      "sha256": "d2b3f701348b9a7dc639a978663dd4b180026a452e94879784279d6d8269ffc9",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 52
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/Azure AD OAuth.md",
+      "bytes": 2092,
+      "sha256": "3fc6a3aeb33a25ea7fdb3c78e36aeed02c5125b769f8b262f0ef32edc49226cb",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 47
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/FastAPI y uvicorn.md",
+      "bytes": 1897,
+      "sha256": "c46b88e3f87c7039e45d76b0802179d20ab8514d2b940378ff76c8ce5e5908f1",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 57
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/LiteLLM proxy.md",
+      "bytes": 1909,
+      "sha256": "e3d8f5063e306ed5d291d773e33055f9200a6563dc92ddb49362f2d02be82097",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 41
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/Milvus.md",
+      "bytes": 1946,
+      "sha256": "9c884a5384c69f3e16ed07be0f3d7017736b2357432a1ffa00ef0629e94cb7b4",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 52
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/MinIO S3.md",
+      "bytes": 2068,
+      "sha256": "889b273117ba06c7736e93c842274d17150f23fad4c1c6186d51cfa4bb639bb3",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 56
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/Ollama.md",
+      "bytes": 1888,
+      "sha256": "3570fa88ce7532dd0cec9c8309469f00dc1d348c9b799b4a9f1eeb68d8db47a5",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 43
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/OpenShift.md",
+      "bytes": 2067,
+      "sha256": "adfef3e0930bd08ab3530f5daefc5765a7b8df3724c7926ae835d12ce3fc246e",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 45
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/PostgreSQL.md",
+      "bytes": 1850,
+      "sha256": "d7908f79bbf932207a9c8b02d0a71cec3c2e9d3569f9d503b99277ce9f402270",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 46
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/Redis.md",
+      "bytes": 1546,
+      "sha256": "40ed95854d5545b8a17ca97df0d8a856748987b3281b3b2cc1957c66c2d26e63",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 43
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/SvelteKit 2.md",
+      "bytes": 2204,
+      "sha256": "0eddcfe12eeae361ed35cdbd08358f12af27a9ee22f805e294d64276550c0fd5",
+      "mtime_ns": 1783528500000000000,
+      "included": true,
+      "lines": 55
+    }
+  ]
+}

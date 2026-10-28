@@ -1,0 +1,2607 @@
+## Instrucción observable 1
+# Evaluación documental independiente
+Trabajá íntegramente en español. No crear subagentes ni contactar otros chats/agentes/personas. No leer entregables del otro evaluador ni resultados de calibración, reporte o análisis del coordinador. No navegar Internet ni ejecutar la aplicación ni modificar fuentes. Usar exclusivamente la modalidad de acceso documental que se te asigna.
+
+## Feature mock: renovar acceso temporal a un archivo desde el chat
+Es una extensión propuesta; no afirmar que existe.
+P1. Usuario activo solicita renovar acceso de lectura a un File por ID desde el chat. Backend valida identidad y permisos actuales antes de resolver el path; pending no puede usarlo. No aceptar URL/ruta arbitraria del cliente.
+P2. Para path S3 emitir acceso firmado al objeto específico. TTL opcional entero en segundos: 60 ≤ TTL ≤ 3600; default 3600. Rechazar fuera de rango, fracciones, booleanos y texto con 422. Son límites y política de validación propuestos, no contratos existentes.
+P3. Para path local devolver referencia de descarga del backend protegido; no fingir URL S3 ni prometer expiración S3. No promover el archivo a MinIO desde esta acción.
+P4. No alterar ACL, contenido, chat_id ni disparar borrado, limpieza o embeddings; política de last_accessed_at al renovar ABIERTA hasta decisión de producto.
+P5. UI con acción explícita, carga y reintento; impedir que una respuesta de otro chat reemplace la actual. Errores sin detalles internos en producción.
+P6. Informar que URLs S3 emitidas previamente pueden seguir funcionando hasta expirar aunque se revoque el permiso. No prometer revocación inmediata.
+P7. UI usa i18n es-AR/en-GB/pt-BR y tokens semánticos light/dark, manteniendo SPA.
+
+## Consigna
+Analizá exclusivamente la evidencia documental adjunta y los requisitos P1–P7. Separá hechos documentados, requisitos propuestos, inferencias y dudas. Proponé cómo implementar el mock sin ejecutarlo ni modificar la app. Generá casos documentales con precondiciones, pasos, resultado esperado, origen del oráculo y referencias precisas a archivo/sección/líneas. Cubrí reglas, excepciones, límites, negativos, permisos y efectos laterales pertinentes; evitá duplicados. Indicá conflictos y omisiones y qué ampliarías. No conviertas una inferencia en una regla validada.
+
+## Criterios
+A: propietario/admin, None, {}, read grupo/usuario, write sin read, pending, JWT.
+B: default y fronteras/validación TTL, objeto correcto.
+C: URLs previas, local vs S3, inexistencia, caída/timeout, carreras.
+D: efectos laterales y dudas sobre último acceso/scheduler.
+E: UI i18n/tokens/errores/cancelación.
+F: trazabilidad por fuente o P; ambigüedades visibles.
+G: evitar casos con idéntico estado, acción y oráculo; parametrizar fronteras.
+
+## Entrega
+Guardar SOLO en tu carpeta asignada:
+- `resultado.json`: objeto con `facts`, `implementation`, `cases`, `questions`, `conflicts`, `omissions`. Cada elemento de facts/implementation lleva `id`, `text`, `kind` (documentado/propuesto/inferencia) y `sources`. Cada caso lleva `id`, `title`, `criteria` (lista A..G), `preconditions`, `steps`, `expected`, `oracle` (P1..P7 y/o hecho documental), `kind` y `sources`. `sources` siempre lista de objetos {path: ruta relativa exacta a OWUI, start: línea inicial, end: final, section: texto del encabezado}. Dudas/conflictos/omisiones pueden ser texto o usar la misma estructura. No inventar fuentes para políticas propuestas; distinguirlo en kind/oracle.
+- `comportamiento.md`: decisiones de navegación, ampliaciones, dudas y cualquier fallo/truncamiento de herramientas observado. No calcular tokens tú: el coordinador cuenta archivos exactos. No afirmar tests de aplicación ejecutados.
+- `congelado.json`: SHA256 de resultado.json y comportamiento.md. Cerrá con breve estado y rutas; no seguir editando tras congelar.
+Las invocaciones y resultados de TODAS las lecturas/consultas deben quedar registrados con las herramientas locales asignadas. Emití al coordinador un aviso cuando hayas completado la recuperación, sin compartir todavía tus casos.
+
+
+## Instrucción observable 2
+# Modalidad B — navegación con scripts
+Carpeta de entrega: /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts
+No leer corpus completo, snapshot, inventario, índice SQLite, código de los scripts ni carpetas de otras evaluaciones. Toda evidencia documental debe obtenerse exclusivamente por salida de brain.py con --log-dir. El índice ya está preparado; no reindexar.
+Ejecutar PRIMERO las cinco consultas de consultas-evaluacion.json en orden, sin modificar sus textos. Por cada una usar --limit 3 --max-chars 9000 y max_output_tokens=4000. Después elegir autónomamente ampliaciones por query/show/links según evidencia insuficiente, sin límite total obligatorio ni objetivos de ahorro. No continuar desde un resultado truncado sin declararlo: decidir si ampliar y justificar. Una salida acotada no es exhaustiva.
+Comando base:
+python3 '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/brain.py' --db '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/indice.sqlite' --log-dir '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas' query 'texto' --limit 3 --max-chars 9000
+Ampliación:
+... show 'ruta relativa exacta' --start 1 --end 80 --max-lines 80
+... links 'ruta relativa exacta' --limit 20 --offset 0
+Salida JSON muestra path, section, start/end, sha256, extracto literal, metadata cruda y enlaces hasta 6 por resultado (más vía links). next_offset y next_line permiten paginar. Los enlaces pueden ser ambiguos o faltar; no asumir que faltante equivale a inexistente. Los metadatos no prueban vigencia. Buscar excepciones, dependencias, dudas y versiones; ampliar si el extracto no contiene evidencia suficiente. No leer directamente fuentes para completar citas.
+
+
+## Instrucción observable 3
+Realizá una evaluación documental en español con contexto limpio. Leé y cumplí estos dos archivos: /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/consigna-comun.md y /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/modalidad-scripts.md. Guardá todos los entregables y logs indicados. No leas archivos de otras evaluaciones. No crees subagentes. Empezá ahora y completá la entrega congelada.
+
+## Instrucción observable 4
+[
+ "archivo renovar lectura permisos access_control propietario admin grupos usuario pending",
+ "archivo URL firmada expiración local MinIO storage",
+ "archivo último acceso limpieza borrado chat",
+ "agregar endpoint router REST autenticación errores",
+ "frontend chat solicitudes cancelación i18n tokens semánticos"
+]
+
+
+## Instrucción observable 5
+Observación para registrar en tu bitácora (sin cambiar tu estrategia por un objetivo de ahorro): hay relecturas show de archivos ya consultados. Explicá el motivo y cualquier transformación/paginación/truncamiento de stdout que haya hecho que el contenido efectivamente presentado difiera de *.result.json. La medición debe reflejar fielmente esas repeticiones. No necesitás informarme tus casos hasta congelarlos.
+
+## Contexto documental presentado 1
+{
+  "query": "archivo renovar lectura permisos access_control propietario admin grupos usuario pending",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "access_control",
+    "admin",
+    "archivo",
+    "grupos",
+    "lectura",
+    "pending",
+    "permisos",
+    "propietario",
+    "renovar",
+    "usuario"
+  ],
+  "missing_terms": [
+    "renovar"
+  ],
+  "total_matches": 146,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+      "sha256": "63512785920e4b1035f23e1a5f0d7bbe736ea15a3c2e51845d3dc6ebe1e7c339",
+      "section": "Evaluación de acceso",
+      "start": 39,
+      "end": 46,
+      "score": 26.5708,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Control de acceso a recursos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, access-control, knowledge, files]\naliases: [access_control, Permisos de recursos, Resource access control]\ndescription: \"Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.\"\nestado: vigente\n---",
+        "title": "Control de acceso a recursos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, access-control, knowledge, files]",
+        "aliases": "[access_control, Permisos de recursos, Resource access control]",
+        "description": "Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Evaluación de acceso\n\nLa función `has_access()` en `backend/server/utils/access_control.py` evalúa si un usuario tiene permiso sobre un recurso. La evaluación verifica:\n1. Si el usuario es el propietario → acceso total\n2. Si el usuario tiene rol `admin` → acceso total\n3. Si el `access_control` es `None` → acceso de lectura para `user`\n4. Si hay reglas custom → verifica `group_ids` y `user_ids`\n",
+      "relations": [
+        {
+          "target": "Roles de usuario",
+          "fragment": "",
+          "line": 49,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Grupos y permisos",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 3,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+      "sha256": "d07b8455c519b053c6a243d3e79b181f42196e4ff2bfc709eec4bdd8cbf8974d",
+      "section": "Relacionado",
+      "start": 41,
+      "end": 46,
+      "score": 25.2321,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---",
+        "title": "Roles de usuario",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, roles, permisos]",
+        "aliases": "[User roles, Roles COELSA, admin user pending]",
+        "description": "Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Relacionado\n\n- [[Grupos y permisos]] — Permisos granulares dentro del rol `user`\n- [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos\n- [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+      "relations": [
+        {
+          "target": "Grupos y permisos",
+          "fragment": "",
+          "line": 43,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Control de acceso a recursos",
+          "fragment": "",
+          "line": 44,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 45,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 46,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 4,
+      "relations_truncated": false
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}
+
+
+## Contexto documental presentado 2
+{
+  "query": "archivo URL firmada expiración local MinIO storage",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "archivo",
+    "expiracion",
+    "firmada",
+    "local",
+    "minio",
+    "storage",
+    "url"
+  ],
+  "missing_terms": [],
+  "total_matches": 155,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+      "sha256": "8bfa3cfca6f5ef84dd7427fd7cf2688cb2b14aef4b25b8af66d72d245cf1d5c0",
+      "section": "4. Acceso",
+      "start": 36,
+      "end": 41,
+      "score": 22.5903,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---",
+        "title": "Flujo de subida de archivos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, upload, archivos]",
+        "aliases": "[File upload flow, Subida de archivos COELSA]",
+        "description": "Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.",
+        "estado": "vigente"
+      },
+      "excerpt": "### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n",
+      "relations": [
+        {
+          "target": "Path Traversal",
+          "fragment": "",
+          "line": 20,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/Path Traversal.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Módulo de retrieval",
+          "fragment": "",
+          "line": 26,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/RAG/Módulo de retrieval.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Milvus",
+          "fragment": "",
+          "line": 27,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Milvus.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Scheduler de limpieza",
+          "fragment": "",
+          "line": 30,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 32,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "URLs firmadas MinIO",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 12,
+      "relations_truncated": true
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+      "sha256": "6dae495a1de98da2f1de521d0df4f0e75283ce2dc86d38889dc6cba1a4bc926b",
+      "section": "Flujo completo",
+      "start": 16,
+      "end": 31,
+      "score": 22.4763,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Sistema híbrido de almacenamiento\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, s3, hibrido]\naliases: [Almacenamiento híbrido, Local+S3, Hybrid storage]\ndescription: \"Usar cuando necesitás entender el flujo completo de archivos en COELSA.Intelligent: cómo pasan de local a MinIO y cómo coexisten los dos providers.\"\nestado: vigente\n---",
+        "title": "Sistema híbrido de almacenamiento",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, minio, s3, hibrido]",
+        "aliases": "[Almacenamiento híbrido, Local+S3, Hybrid storage]",
+        "description": "Usar cuando necesitás entender el flujo completo de archivos en COELSA.Intelligent: cómo pasan de local a MinIO y cómo coexisten los dos providers.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Flujo completo\n\n```\nUsuario sube archivo\n       ↓\nBackend guarda en data/uploads/ (local temporal)\n       ↓\n[Scheduler diario] detecta archivos locales\n       ↓\nMigra a MinIO → genera presigned URL\n       ↓\nActualiza metadatos en BD (path = s3://bucket/key)\n       ↓\n[Acceso futuro] devuelve URL firmada de MinIO\n```\n",
+      "relations": [
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Flujo de subida de archivos",
+          "fragment": "",
+          "line": 56,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 57,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "URLs firmadas MinIO",
+          "fragment": "",
+          "line": 58,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Scheduler de limpieza",
+          "fragment": "",
+          "line": 59,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Agregar proveedor de almacenamiento",
+          "fragment": "",
+          "line": 60,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 6,
+      "relations_truncated": false
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}
+
+
+## Contexto documental presentado 3
+{
+  "query": "archivo último acceso limpieza borrado chat",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "acceso",
+    "archivo",
+    "borrado",
+    "chat",
+    "limpieza",
+    "ultimo"
+  ],
+  "missing_terms": [],
+  "total_matches": 136,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+      "sha256": "8bfa3cfca6f5ef84dd7427fd7cf2688cb2b14aef4b25b8af66d72d245cf1d5c0",
+      "section": "Relacionado",
+      "start": 42,
+      "end": 48,
+      "score": 16.6612,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---",
+        "title": "Flujo de subida de archivos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, upload, archivos]",
+        "aliases": "[File upload flow, Subida de archivos COELSA]",
+        "description": "Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Relacionado\n\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza\n- [[Borrado en cascada de archivos]] — Qué pasa cuando se elimina el chat asociado\n- [[Protección SSRF]] — La sanitización de paths en el paso de recepción",
+      "relations": [
+        {
+          "target": "Path Traversal",
+          "fragment": "",
+          "line": 20,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/Path Traversal.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Módulo de retrieval",
+          "fragment": "",
+          "line": 26,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/RAG/Módulo de retrieval.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Milvus",
+          "fragment": "",
+          "line": 27,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Milvus.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Scheduler de limpieza",
+          "fragment": "",
+          "line": 30,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 32,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "URLs firmadas MinIO",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 12,
+      "relations_truncated": true
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+      "sha256": "a94655add9bc943c40bcb8b8233adaa548e79e454700a2071772ccd079773796",
+      "section": "Configuración",
+      "start": 18,
+      "end": 25,
+      "score": 15.112,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---",
+        "title": "Scheduler de limpieza",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]",
+        "aliases": "[Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]",
+        "description": "Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Configuración\n\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\n\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n",
+      "relations": [
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 15,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Sistema híbrido de almacenamiento",
+          "fragment": "",
+          "line": 40,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 41,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Borrado en cascada de archivos",
+          "fragment": "",
+          "line": 42,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Almacenamiento",
+          "fragment": "",
+          "line": 43,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}
+
+
+## Contexto documental presentado 4
+{
+  "query": "agregar endpoint router REST autenticación errores",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "agregar",
+    "autenticacion",
+    "endpoint",
+    "errores",
+    "rest",
+    "router"
+  ],
+  "missing_terms": [],
+  "total_matches": 170,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+      "sha256": "9a7abc07850e4d29afdd6160b59e0e3c21cf59c533132b5db466f2f78c6c6878",
+      "section": "Convenciones",
+      "start": 62,
+      "end": 68,
+      "score": 28.2186,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Agregar router REST\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, fastapi, routers, api]\naliases: [Agregar endpoint, Nuevo router FastAPI, New REST endpoint]\ndescription: \"Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router.\"\nestado: vigente\n---",
+        "title": "Agregar router REST",
+        "type": "referencia",
+        "tags": "[coelsa-intelligent, desarrollo, backend, fastapi, routers, api]",
+        "aliases": "[Agregar endpoint, Nuevo router FastAPI, New REST endpoint]",
+        "description": "Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Convenciones\n\n- Los routers usan el prefijo `/api/v1/`\n- Todos los endpoints que requieren autenticación usan `Depends(get_current_user)`\n- Los errores usan la jerarquía del [[Sistema de errores centralizado]]\n- La lógica de acceso a BD va en `backend/server/models/`; el router solo orquesta\n",
+      "relations": [
+        {
+          "target": "Sistema de errores centralizado",
+          "fragment": "",
+          "line": 66,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "FastAPI y uvicorn",
+          "fragment": "",
+          "line": 71,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/FastAPI y uvicorn.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Sistema de errores centralizado",
+          "fragment": "",
+          "line": 72,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Control de acceso a recursos",
+          "fragment": "",
+          "line": 73,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Desarrollo",
+          "fragment": "",
+          "line": 74,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Desarrollo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Desarrollo.md",
+      "sha256": "55792092bfb6f1868646c795d989e976c23bdc5346ef2107faecf64f7fbeb6df",
+      "section": "Notas de este cluster",
+      "start": 14,
+      "end": 22,
+      "score": 13.3785,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"MOC — Desarrollo\"\ntype: moc\ntags: [coelsa-intelligent, desarrollo, patrones, migraciones, moc]\naliases: [MOC Desarrollo, Dev COELSA, Patrones COELSA]\ndescription: \"Usar cuando estás desarrollando en COELSA.Intelligent: patrones obligatorios del frontend, cómo agregar rutas REST, migraciones de BD, logging o ejecución local.\"\nestado: vigente\n---",
+        "title": "MOC — Desarrollo",
+        "type": "moc",
+        "tags": "[coelsa-intelligent, desarrollo, patrones, migraciones, moc]",
+        "aliases": "[MOC Desarrollo, Dev COELSA, Patrones COELSA]",
+        "description": "Usar cuando estás desarrollando en COELSA.Intelligent: patrones obligatorios del frontend, cómo agregar rutas REST, migraciones de BD, logging o ejecución local.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Notas de este cluster\n\n- [[Patrones frontend críticos]] — Las 4 guardas de código obligatorias en Chat.svelte y componentes relacionados\n- [[Migraciones Alembic]] — Flujo de migraciones de base de datos; comandos y cuándo ejecutarlas\n- [[Agregar router REST]] — Cómo extender la API de FastAPI con un nuevo router\n- [[Agregar proveedor de almacenamiento]] — Cómo implementar la interfaz `StorageProvider` para un nuevo backend\n- [[Loguru y logging]] — Configuración de logs con loguru; variable `LOG_LEVEL`; niveles por módulo\n- [[Ejecución local]] — Comandos para correr frontend y backend en modo desarrollo\n",
+      "relations": [
+        {
+          "target": "Patrones frontend críticos",
+          "fragment": "",
+          "line": 12,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Patrones frontend críticos",
+          "fragment": "",
+          "line": 16,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Migraciones Alembic",
+          "fragment": "",
+          "line": 17,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Migraciones Alembic.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Agregar router REST",
+          "fragment": "",
+          "line": 18,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Agregar router REST.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Agregar proveedor de almacenamiento",
+          "fragment": "",
+          "line": 19,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Loguru y logging",
+          "fragment": "",
+          "line": 20,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Loguru y logging.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 11,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}
+
+
+## Contexto documental presentado 5
+{
+  "query": "frontend chat solicitudes cancelación i18n tokens semánticos",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "cancelacion",
+    "chat",
+    "frontend",
+    "i18n",
+    "semanticos",
+    "solicitudes",
+    "tokens"
+  ],
+  "missing_terms": [
+    "cancelacion",
+    "solicitudes"
+  ],
+  "total_matches": 202,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Tokens primitivos de color.md",
+      "sha256": "cf036480441186251bdc119526054164035a6bc6e903c7b9043e40afa5a870f5",
+      "section": "Relacionado",
+      "start": 48,
+      "end": 53,
+      "score": 12.3521,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Tokens primitivos de color\"\ntype: referencia\ntags: [coelsa-intelligent, diseño, colores, tokens, teal, pink, neutral]\naliases: [Color primitives, Escalas de color COELSA, Teal Pink Neutral]\ndescription: \"Usar cuando necesitás la escala de valores hex de los colores primitivos de COELSA.Intelligent (Teal, Pink, Neutral) para definir o revisar tokens semánticos.\"\nestado: vigente\n---",
+        "title": "Tokens primitivos de color",
+        "type": "referencia",
+        "tags": "[coelsa-intelligent, diseño, colores, tokens, teal, pink, neutral]",
+        "aliases": "[Color primitives, Escalas de color COELSA, Teal Pink Neutral]",
+        "description": "Usar cuando necesitás la escala de valores hex de los colores primitivos de COELSA.Intelligent (Teal, Pink, Neutral) para definir o revisar tokens semánticos.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Relacionado\n\n- [[ECO Design System]] — El sistema del que estas escalas forman la base\n- [[Roles semánticos de color]] — Los roles construidos sobre estas escalas\n- [[Dark mode reglas]] — Cómo los mismos primitivos se usan diferente en cada tema\n- [[MOC - Diseño y Frontend]] — Índice del cluster de diseño",
+      "relations": [
+        {
+          "target": "ECO Design System",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/ECO Design System.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "ECO Design System",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/ECO Design System.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Roles semánticos de color",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Dark mode reglas",
+          "fragment": "",
+          "line": 52,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Diseño y Frontend",
+          "fragment": "",
+          "line": 53,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Diseño y Frontend.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/OKF-INDEX.md",
+      "sha256": "834b91471b0257c7c5d359c41780bf42decf1c96367fecc44ac37dea4dadedc0",
+      "section": "Diseño Frontend",
+      "start": 113,
+      "end": 124,
+      "score": 11.3083,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"COELSA.Intelligent - Indice Maestro OKF\"\ntype: index\ntags: [coelsa-intelligent, okf, indice, navegacion-llm]\naliases: [Indice Maestro, OKF Index, Entry Point LLM]\ndescription: \"Usar cuando un LLM o una persona necesita encontrar rapido la nota exacta sin recorrer todo el vault.\"\nestado: vigente\n---",
+        "title": "COELSA.Intelligent - Indice Maestro OKF",
+        "type": "index",
+        "tags": "[coelsa-intelligent, okf, indice, navegacion-llm]",
+        "aliases": "[Indice Maestro, OKF Index, Entry Point LLM]",
+        "description": "Usar cuando un LLM o una persona necesita encontrar rapido la nota exacta sin recorrer todo el vault.",
+        "estado": "vigente"
+      },
+      "excerpt": "### Diseño Frontend\n\n- [Dark mode reglas](Diseño%20Frontend/Dark%20mode%20reglas.md)\n- [ECO Design System](Diseño%20Frontend/ECO%20Design%20System.md)\n- [Internacionalización i18n](Diseño%20Frontend/Internacionalización%20i18n.md)\n- [Manejo de errores frontend](Diseño%20Frontend/Manejo%20de%20errores%20frontend.md)\n- [Patrones de componentes Svelte](Diseño%20Frontend/Patrones%20de%20componentes%20Svelte.md)\n- [Roles semánticos de color](Diseño%20Frontend/Roles%20semánticos%20de%20color.md)\n- [Surface Containers](Diseño%20Frontend/Surface%20Containers.md)\n- [Tipografía Saira](Diseño%20Frontend/Tipografía%20Saira.md)\n- [Tokens primitivos de color](Diseño%20Frontend/Tokens%20primitivos%20de%20color.md)\n",
+      "relations": [
+        {
+          "target": "COELSA.Intelligent - Home.md",
+          "fragment": "",
+          "line": 22,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/COELSA.Intelligent - Home.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Decisiones.md",
+          "fragment": "",
+          "line": 23,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Decisiones.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Arquitectura.md",
+          "fragment": "",
+          "line": 24,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Arquitectura.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Stack.md",
+          "fragment": "",
+          "line": 25,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Stack.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Autenticación y Permisos.md",
+          "fragment": "",
+          "line": 26,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOCs/MOC - Almacenamiento.md",
+          "fragment": "",
+          "line": 27,
+          "kind": "markdown",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 91,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}
+
+
+## Contexto documental presentado 6
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+  "sha256": "63512785920e4b1035f23e1a5f0d7bbe736ea15a3c2e51845d3dc6ebe1e7c339",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Control de acceso a recursos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, access-control, knowledge, files]\naliases: [access_control, Permisos de recursos, Resource access control]\ndescription: \"Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.\"\nestado: vigente\n---",
+    "title": "Control de acceso a recursos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, auth, access-control, knowledge, files]",
+    "aliases": "[access_control, Permisos de recursos, Resource access control]",
+    "description": "Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 51,
+  "total_lines": 51,
+  "text": "---\ntitle: \"Control de acceso a recursos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, access-control, knowledge, files]\naliases: [access_control, Permisos de recursos, Resource access control]\ndescription: \"Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.\"\nestado: vigente\n---\n\n# Control de acceso a recursos\n\n## Qué es\n\nLos modelos `Knowledge` y `File` tienen un campo `access_control` en formato JSON que define quién puede leer y escribir ese recurso. El campo `None` significa acceso público para todos los `user`.\n\n## Modos de acceso\n\n| Valor de `access_control` | Significado |\n|--------------------------|-------------|\n| `None` | Acceso público — cualquier usuario con rol `user` puede leer |\n| `{}` (objeto vacío) | Acceso privado — solo el propietario puede acceder |\n| Objeto con reglas | Acceso custom — según grupos y usuarios específicos |\n\n## Estructura del objeto custom\n\n```json\n{\n  \"read\": {\n    \"group_ids\": [\"grupo-id-1\", \"grupo-id-2\"],\n    \"user_ids\": [\"user-id-1\"]\n  },\n  \"write\": {\n    \"group_ids\": [],\n    \"user_ids\": [\"user-id-admin\"]\n  }\n}\n```\n\n## Evaluación de acceso\n\nLa función `has_access()` en `backend/server/utils/access_control.py` evalúa si un usuario tiene permiso sobre un recurso. La evaluación verifica:\n1. Si el usuario es el propietario → acceso total\n2. Si el usuario tiene rol `admin` → acceso total\n3. Si el `access_control` es `None` → acceso de lectura para `user`\n4. Si hay reglas custom → verifica `group_ids` y `user_ids`\n\n## Relacionado\n\n- [[Roles de usuario]] — El rol del usuario es el primer criterio de la evaluación\n- [[Grupos y permisos]] — Los `group_ids` en access_control referencian grupos del sistema\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 7
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+  "sha256": "d07b8455c519b053c6a243d3e79b181f42196e4ff2bfc709eec4bdd8cbf8974d",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---",
+    "title": "Roles de usuario",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, auth, roles, permisos]",
+    "aliases": "[User roles, Roles COELSA, admin user pending]",
+    "description": "Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 46,
+  "total_lines": 46,
+  "text": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---\n\n# Roles de usuario\n\n## Qué es\n\nCOELSA.Intelligent define tres roles de usuario, almacenados en el campo `role` del modelo `User`:\n\n| Rol | Descripción | Capacidades principales |\n|-----|-------------|------------------------|\n| `admin` | Administrador del sistema | Acceso total; gestión de usuarios, grupos, modelos, configuración |\n| `user` | Usuario activo | Chat, upload de archivos, uso de bases de conocimiento según permisos |\n| `pending` | En espera de aprobación | Solo puede ver la pantalla de espera; no puede usar el chat |\n\n## Estado `pending`\n\nUn usuario recién logeado por primera vez via Azure AD puede quedar en estado `pending` si la configuración requiere aprobación manual. Un admin debe cambiar el rol a `user` para habilitar el acceso.\n\n## Restricciones por rol en la UI\n\nEn la vista de **Settings**, las siguientes tabs están restringidas a `admin`:\n- **Personalization** — configuración visual de la app\n- **Audio** — configuración de síntesis y transcripción de voz\n\nLos usuarios `user` ven estas tabs pero no pueden acceder a su contenido.\n\n## Funcionalidades deshabilitadas para todos los roles\n\nIndependientemente del rol, estas funcionalidades están desactivadas en el fork:\n- Sugerencias de chat automáticas\n- Ejecución de Python en CodeBlocks\n- Webhooks en la sección Account\n\n## Relacionado\n\n- [[Grupos y permisos]] — Permisos granulares dentro del rol `user`\n- [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos\n- [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 8
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+  "sha256": "45ab53acb192acc80c560d357d61560d2b1f8909fa3fc43aaee264ad7b232b4e",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"URLs firmadas MinIO\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, presigned-url, seguridad]\naliases: [Presigned URLs, URLs firmadas S3, Signed URLs MinIO]\ndescription: \"Usar cuando necesitás entender cómo los clientes acceden a archivos en MinIO de forma segura y temporaria sin exponer credenciales.\"\nestado: vigente\n---",
+    "title": "URLs firmadas MinIO",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, almacenamiento, minio, presigned-url, seguridad]",
+    "aliases": "[Presigned URLs, URLs firmadas S3, Signed URLs MinIO]",
+    "description": "Usar cuando necesitás entender cómo los clientes acceden a archivos en MinIO de forma segura y temporaria sin exponer credenciales.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 52,
+  "total_lines": 52,
+  "text": "---\ntitle: \"URLs firmadas MinIO\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, presigned-url, seguridad]\naliases: [Presigned URLs, URLs firmadas S3, Signed URLs MinIO]\ndescription: \"Usar cuando necesitás entender cómo los clientes acceden a archivos en MinIO de forma segura y temporaria sin exponer credenciales.\"\nestado: vigente\n---\n\n# URLs firmadas MinIO\n\n## Qué es\n\nLas **URLs firmadas** (presigned URLs) son URLs de acceso temporal a objetos en [[MinIO S3]] que no requieren que el cliente tenga credenciales del bucket. El servidor firma la URL con las credenciales S3 y establece un tiempo de expiración.\n\n## Cómo funciona\n\n```python\n# Pseudocódigo de generación (StorageProvider.get_presigned_url)\nurl = s3_client.generate_presigned_url(\n    'get_object',\n    Params={'Bucket': S3_BUCKET_NAME, 'Key': file_path},\n    ExpiresIn=3600  # 1 hora por defecto\n)\n```\n\nLa URL resultante incluye la firma criptográfica y la fecha de expiración en los query params. Solo es válida hasta esa fecha y solo para el objeto específico.\n\n## Por qué URLs firmadas\n\n- **Seguridad**: el cliente nunca recibe credenciales del bucket; solo puede acceder al archivo específico por el tiempo configurado\n- **Control de acceso**: si el [[Control de acceso a recursos|access_control]] del archivo cambia, las URLs viejas siguen siendo válidas hasta su expiración pero no se generan nuevas\n- **Descarga directa**: el cliente descarga directo de MinIO sin pasar por el backend, reduciendo la carga del servidor\n\n## Configuración de expiración\n\nLa expiración por defecto es **3600 segundos (1 hora)**. El parámetro `ExpiresIn` es configurable en la llamada a `get_presigned_url()`.\n\n## Timeouts boto3 (Windows)\n\nPara evitar timeouts en entornos Windows con latencia de red:\n- Connect timeout: 30s\n- Read timeout: 120s\n- 10 reintentos con backoff exponencial\n- TCP keepalive habilitado\n\n## Relacionado\n\n- [[MinIO S3]] — El proveedor que genera estas URLs\n- [[Flujo de subida de archivos]] — Cuándo se genera la URL firmada en el ciclo de vida del archivo\n- [[Sistema híbrido de almacenamiento]] — El contexto general del sistema de almacenamiento\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 9
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+  "sha256": "a94655add9bc943c40bcb8b8233adaa548e79e454700a2071772ccd079773796",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---",
+    "title": "Scheduler de limpieza",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]",
+    "aliases": "[Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]",
+    "description": "Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 43,
+  "total_lines": 43,
+  "text": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---\n\n# Scheduler de limpieza\n\n## Qué es\n\nCOELSA.Intelligent tiene un **scheduler que corre diariamente** y realiza dos tareas sobre el almacenamiento:\n1. **Migra** archivos desde almacenamiento local a [[MinIO S3]]\n2. **Elimina** archivos huérfanos (sin registro en BD) y archivos que superan el umbral de antigüedad\n\n## Configuración\n\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\n\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n\n## Qué es un archivo huérfano\n\nUn archivo **huérfano** es aquel que:\n- Existe físicamente en el almacenamiento (local o MinIO)\n- **No tiene** un registro correspondiente en la tabla `file` de la base de datos\n\nEsto puede ocurrir si un upload falló a medias o si un registro fue eliminado manualmente de la BD sin limpiar el storage.\n\n## Cuándo se ejecuta\n\nEl scheduler es un job asíncrono que se registra durante el `lifespan` de la aplicación FastAPI. No tiene una hora fija; se ejecuta cada 24 horas a partir del arranque del servidor.\n\n## Relacionado\n\n- [[Sistema híbrido de almacenamiento]] — El sistema del que el scheduler es parte\n- [[MinIO S3]] — El destino de los archivos migrados\n- [[Borrado en cascada de archivos]] — La otra vía de eliminación de archivos (cuando se borra el chat)\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 10
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+  "sha256": "3f7223b1d2b55617d97bde656755b2e7158b6ebaab7592ecd24aa53a153fa5c5",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---",
+    "title": "Borrado en cascada de archivos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, almacenamiento, cascada, archivos, chats]",
+    "aliases": "[Cascade delete files, Eliminación en cascada]",
+    "description": "Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 50,
+  "total_lines": 50,
+  "text": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---\n\n# Borrado en cascada de archivos\n\n## Qué es\n\nCuando un usuario **elimina una conversación (chat)**, COELSA.Intelligent elimina automáticamente todos los archivos asociados a esa conversación, tanto en la base de datos como en [[MinIO S3]].\n\n## Por qué existe\n\nSin esta funcionalidad, eliminar un chat dejaría archivos huérfanos en MinIO indefinidamente. A largo plazo, esto genera acumulación de storage sin posibilidad de recuperarlo sin una migración manual.\n\n## Implementación\n\nEl modelo `File` tiene una columna `chat_id` (con índice):\n\n```python\nclass File(Base):\n    chat_id = Column(String, nullable=True, index=True)\n    # Vinculación con chats para borrado en cascada\n```\n\nCuando el endpoint de eliminación de chat se ejecuta:\n1. Busca todos los registros `File` donde `chat_id == chat.id`\n2. Para cada archivo: llama a `StorageProvider.delete_file(file.path)`\n3. Elimina los registros de la tabla `file`\n4. Elimina el registro del chat\n\n## Diferencia con el Scheduler\n\n| Mecanismo | Cuándo actúa | Qué elimina |\n|-----------|-------------|-------------|\n| **Borrado en cascada** | Al eliminar un chat | Archivos del chat eliminado |\n| **[[Scheduler de limpieza]]** | Diariamente | Huérfanos + archivos vencidos |\n\nAmbos mecanismos son complementarios.\n\n## Relacionado\n\n- [[Sistema híbrido de almacenamiento]] — El sistema del que la cascada es parte\n- [[Scheduler de limpieza]] — El mecanismo diario de limpieza de archivos\n- [[MinIO S3]] — El storage donde se eliminan los objetos\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 11
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+  "sha256": "6dae495a1de98da2f1de521d0df4f0e75283ce2dc86d38889dc6cba1a4bc926b",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Sistema híbrido de almacenamiento\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, s3, hibrido]\naliases: [Almacenamiento híbrido, Local+S3, Hybrid storage]\ndescription: \"Usar cuando necesitás entender el flujo completo de archivos en COELSA.Intelligent: cómo pasan de local a MinIO y cómo coexisten los dos providers.\"\nestado: vigente\n---",
+    "title": "Sistema híbrido de almacenamiento",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, almacenamiento, minio, s3, hibrido]",
+    "aliases": "[Almacenamiento híbrido, Local+S3, Hybrid storage]",
+    "description": "Usar cuando necesitás entender el flujo completo de archivos en COELSA.Intelligent: cómo pasan de local a MinIO y cómo coexisten los dos providers.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 60,
+  "total_lines": 60,
+  "text": "---\ntitle: \"Sistema híbrido de almacenamiento\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, s3, hibrido]\naliases: [Almacenamiento híbrido, Local+S3, Hybrid storage]\ndescription: \"Usar cuando necesitás entender el flujo completo de archivos en COELSA.Intelligent: cómo pasan de local a MinIO y cómo coexisten los dos providers.\"\nestado: vigente\n---\n\n# Sistema híbrido de almacenamiento\n\n## Qué es\n\nEl almacenamiento de archivos en COELSA.Intelligent opera en modo **híbrido**: los archivos se reciben localmente y luego se migran a [[MinIO S3]]. Los archivos viejos y los nuevos coexisten hasta que el scheduler los migra.\n\n## Flujo completo\n\n```\nUsuario sube archivo\n       ↓\nBackend guarda en data/uploads/ (local temporal)\n       ↓\n[Scheduler diario] detecta archivos locales\n       ↓\nMigra a MinIO → genera presigned URL\n       ↓\nActualiza metadatos en BD (path = s3://bucket/key)\n       ↓\n[Acceso futuro] devuelve URL firmada de MinIO\n```\n\n## Proveedores disponibles\n\nLa interfaz `StorageProvider` (en `backend/server/storage/provider.py`) es abstracta. Las implementaciones concretas son:\n- `LocalStorageProvider` — guarda en `data/uploads/`\n- `S3StorageProvider` (MinIO / AWS S3)\n- `GCSStorageProvider` (Google Cloud Storage)\n- `AzureBlobStorageProvider` (Azure Blob Storage)\n\nLa variable `STORAGE_PROVIDER` en `.env` selecciona el provider activo.\n\n## Fallback local\n\nSi MinIO no está disponible, el sistema usa el almacenamiento local. Esto permite desarrollo local sin configurar MinIO, aunque los archivos no persisten en caso de recreación del contenedor.\n\n## Script de migración\n\nPara migrar archivos existentes a MinIO en un entorno ya en producción:\n\n```bash\npython scripts/migrate_to_minio.py\n```\n\n## Relacionado\n\n- [[Flujo de subida de archivos]] — El ciclo completo de recepción y migración de un archivo\n- [[MinIO S3]] — El provider S3 que recibe los archivos migrados\n- [[URLs firmadas MinIO]] — Cómo se accede a los archivos en MinIO\n- [[Scheduler de limpieza]] — El job que limpia archivos vencidos\n- [[Agregar proveedor de almacenamiento]] — Cómo implementar un nuevo provider",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 12
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+  "sha256": "b9f8fbcba69774de6e357757821f48334827276223788bf756c423cf1581f049",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Patrones frontend críticos\"\ntype: concepto\ntags: [coelsa-intelligent, desarrollo, frontend, svelte, patrones, bugs]\naliases: [Critical frontend patterns, Patrones obligatorios frontend]\ndescription: \"Usar como checklist antes de mergear cambios en Chat.svelte o componentes de chat — los 4 patrones que no deben revertirse bajo ninguna circunstancia.\"\nestado: vigente\n---",
+    "title": "Patrones frontend críticos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, desarrollo, frontend, svelte, patrones, bugs]",
+    "aliases": "[Critical frontend patterns, Patrones obligatorios frontend]",
+    "description": "Usar como checklist antes de mergear cambios en Chat.svelte o componentes de chat — los 4 patrones que no deben revertirse bajo ninguna circunstancia.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 41,
+  "total_lines": 41,
+  "text": "---\ntitle: \"Patrones frontend críticos\"\ntype: concepto\ntags: [coelsa-intelligent, desarrollo, frontend, svelte, patrones, bugs]\naliases: [Critical frontend patterns, Patrones obligatorios frontend]\ndescription: \"Usar como checklist antes de mergear cambios en Chat.svelte o componentes de chat — los 4 patrones que no deben revertirse bajo ninguna circunstancia.\"\nestado: vigente\n---\n\n# Patrones frontend críticos\n\n## Qué es\n\nCuatro patrones de código en el frontend de COELSA.Intelligent que resuelven bugs concretos documentados. Su omisión o reversión reproduce los bugs originales. Son **invariantes del codebase**.\n\n> **Referencia completa**: ver [[Patrones de componentes Svelte]] para el código y explicación detallada de cada patrón.\n\n## Checklist rápido\n\nAntes de mergear cambios en `Chat.svelte` o componentes relacionados:\n\n- [ ] **Guarda de `chatId`**: el setter del store solo se llama si `$chatId !== chatIdProp`\n- [ ] **AbortController en `loadChat`**: se cancela la request anterior antes de iniciar la nueva\n- [ ] **Unsubscribers en `onDestroy`**: todo store suscrito en `onMount` se desuscribe en `onDestroy`\n- [ ] **Bloques reactivos unificados**: los bloques `$:` que dependen del mismo state están en un solo bloque\n\n## Consecuencias de revertirlos\n\n| Patrón omitido | Consecuencia |\n|---------------|-------------|\n| Guarda de chatId | Loop de renderizado infinito al cambiar de chat |\n| AbortController ausente | ~80% más de requests duplicados y errores 404 de chunks |\n| Unsubscribers ausentes | Memory leaks; listeners fantasma; requests adicionales |\n| Bloques reactivos separados | Doble ejecución por cambio de estado |\n\n## Relacionado\n\n- [[Patrones de componentes Svelte]] — El código completo con explicaciones detalladas\n- [[SvelteKit 2]] — El framework donde aplican estos patrones\n- [[MOC - Desarrollo]] — Índice del cluster de desarrollo\n- [[MOC - Decisiones]] — D-20 en el índice de decisiones",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 13
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+  "sha256": "9a7abc07850e4d29afdd6160b59e0e3c21cf59c533132b5db466f2f78c6c6878",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Agregar router REST\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, fastapi, routers, api]\naliases: [Agregar endpoint, Nuevo router FastAPI, New REST endpoint]\ndescription: \"Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router.\"\nestado: vigente\n---",
+    "title": "Agregar router REST",
+    "type": "referencia",
+    "tags": "[coelsa-intelligent, desarrollo, backend, fastapi, routers, api]",
+    "aliases": "[Agregar endpoint, Nuevo router FastAPI, New REST endpoint]",
+    "description": "Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 74,
+  "total_lines": 74,
+  "text": "---\ntitle: \"Agregar router REST\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, fastapi, routers, api]\naliases: [Agregar endpoint, Nuevo router FastAPI, New REST endpoint]\ndescription: \"Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router.\"\nestado: vigente\n---\n\n# Agregar router REST\n\n## Qué es\n\nGuía paso a paso para agregar un nuevo conjunto de endpoints REST al backend de COELSA.Intelligent usando el patrón de routers de FastAPI.\n\n## Pasos\n\n### 1. Crear el módulo del router\n\n```python\n# backend/server/routers/mi_nuevo_router.py\nfrom fastapi import APIRouter, Depends, HTTPException\nfrom server.models.users import UserModel\nfrom server.utils.auth import get_current_user\n\nrouter = APIRouter()\n\n@router.get(\"/\")\nasync def get_items(user: UserModel = Depends(get_current_user)):\n    \"\"\"Endpoint de ejemplo.\"\"\"\n    return {\"items\": []}\n\n@router.post(\"/\")\nasync def create_item(\n    data: dict,\n    user: UserModel = Depends(get_current_user)\n):\n    return {\"created\": True}\n```\n\n### 2. Importar el router en `main.py`\n\n```python\n# backend/server/main.py\nfrom server.routers import (\n    # ... routers existentes ...\n    mi_nuevo_router,  # Agregar aquí\n)\n```\n\n### 3. Registrar el router en la app\n\n```python\n# backend/server/main.py — en la función que monta los routers\napp.include_router(\n    mi_nuevo_router.router,\n    prefix=\"/api/v1/mi-recurso\",\n    tags=[\"mi-recurso\"]\n)\n```\n\n## Convenciones\n\n- Los routers usan el prefijo `/api/v1/`\n- Todos los endpoints que requieren autenticación usan `Depends(get_current_user)`\n- Los errores usan la jerarquía del [[Sistema de errores centralizado]]\n- La lógica de acceso a BD va en `backend/server/models/`; el router solo orquesta\n\n## Relacionado\n\n- [[FastAPI y uvicorn]] — El servidor donde se montan los routers\n- [[Sistema de errores centralizado]] — Las excepciones que deben usarse en los endpoints\n- [[Control de acceso a recursos]] — Cómo agregar control de acceso a nivel de endpoint\n- [[MOC - Desarrollo]] — Índice del cluster de desarrollo",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 14
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+  "sha256": "655215e135866d2da32f0499e408087c34000875b9efe3d8f2e804333c8d7185",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Sistema de errores centralizado\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, errores, backend, frontend]\naliases: [Jerarquía de excepciones, Error handling centralizado]\ndescription: \"Usar cuando necesitás entender cómo el backend devuelve errores de forma consistente o cómo el frontend los captura y muestra al usuario.\"\nestado: vigente\n---",
+    "title": "Sistema de errores centralizado",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, arquitectura, errores, backend, frontend]",
+    "aliases": "[Jerarquía de excepciones, Error handling centralizado]",
+    "description": "Usar cuando necesitás entender cómo el backend devuelve errores de forma consistente o cómo el frontend los captura y muestra al usuario.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 59,
+  "total_lines": 59,
+  "text": "---\ntitle: \"Sistema de errores centralizado\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, errores, backend, frontend]\naliases: [Jerarquía de excepciones, Error handling centralizado]\ndescription: \"Usar cuando necesitás entender cómo el backend devuelve errores de forma consistente o cómo el frontend los captura y muestra al usuario.\"\nestado: vigente\n---\n\n# Sistema de errores centralizado\n\n## Qué es\n\nCOELSA.Intelligent centraliza el manejo de excepciones en el backend con una jerarquía estándar de 10 tipos, y tiene componentes específicos en el frontend para cada categoría.\n\n## Backend: tipos de excepción\n\nTodos los errores devuelven un JSON consistente:\n\n```json\n{\n  \"message\": \"Mensaje legible para el usuario\",\n  \"status_code\": 400,\n  \"details\": \"Detalle técnico (omitido en producción)\"\n}\n```\n\n| Tipo | Código HTTP | Uso |\n|------|-------------|-----|\n| `BadRequest` | 400 | Input inválido |\n| `Unauthorized` | 401 | Token ausente o inválido |\n| `Forbidden` | 403 | Sin permiso para el recurso |\n| `NotFound` | 404 | Recurso inexistente |\n| `Conflict` | 409 | Estado incompatible (ej: email duplicado) |\n| `Validation` | 422 | Fallo de validación de esquema |\n| `RateLimit` | 429 | Rate limit excedido |\n| `InternalServer` | 500 | Error interno inesperado |\n| `ServiceUnavailable` | 503 | Servicio externo no disponible |\n| `GatewayTimeout` | 504 | Timeout en llamada a servicio externo |\n\nLos detalles técnicos se omiten en producción para no exponer información interna.\n\n## Frontend: componentes de error\n\n| Componente | Cuándo se muestra |\n|------------|-------------------|\n| `NetworkError.svelte` | Sin conexión o error de red |\n| `TimeoutError.svelte` | La request tomó demasiado tiempo |\n| `GenericError.svelte` | Cualquier error no categorizado |\n| `ErrorBoundary.svelte` | Envuelve secciones para capturar errores en render |\n\nEl archivo `src/routes/+error.svelte` recibe todos los códigos HTTP y rutea al componente correspondiente, incluyendo un fallback genérico.\n\n## Relacionado\n\n- [[Manejo de errores frontend]] — Detalle de los componentes Svelte de error\n- [[FastAPI y uvicorn]] — El servidor donde se registran los handlers de excepción\n- [[MOC - Arquitectura]] — Contexto del diseño de errores en el sistema\n- [[Roles de usuario]] — Los errores 403 se disparan cuando el rol no alcanza",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 15
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+  "sha256": "d9e8cc1be54498d21a67a9247f6eb066391a519df86fcbe0ebac88a5860a9ec5",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Internacionalización i18n\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, i18n, traducciones, es-ar]\naliases: [i18n COELSA, Traducciones COELSA, i18next COELSA]\ndescription: \"Usar cuando necesitás agregar o modificar traducciones en COELSA.Intelligent, o cuando querés entender qué idiomas están soportados y cómo configurarlos.\"\nestado: vigente\n---",
+    "title": "Internacionalización i18n",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, i18n, traducciones, es-ar]",
+    "aliases": "[i18n COELSA, Traducciones COELSA, i18next COELSA]",
+    "description": "Usar cuando necesitás agregar o modificar traducciones en COELSA.Intelligent, o cuando querés entender qué idiomas están soportados y cómo configurarlos.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 57,
+  "total_lines": 57,
+  "text": "---\ntitle: \"Internacionalización i18n\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, i18n, traducciones, es-ar]\naliases: [i18n COELSA, Traducciones COELSA, i18next COELSA]\ndescription: \"Usar cuando necesitás agregar o modificar traducciones en COELSA.Intelligent, o cuando querés entender qué idiomas están soportados y cómo configurarlos.\"\nestado: vigente\n---\n\n# Internacionalización i18n\n\n## Qué es\n\nCOELSA.Intelligent usa **i18next** como sistema de internacionalización. Los archivos de traducción están en `src/lib/i18n/` organizados por código de idioma.\n\n## Idiomas soportados\n\n| Código | Idioma | Estado |\n|--------|--------|--------|\n| `es-AR` | Castellano Rioplatense | **Default** — ver [[Idioma por defecto es-AR]] |\n| `en-GB` | English (British) | Activo |\n| `pt-BR` | Português (Brasil) | Activo |\n\n## Idiomas eliminados del fork\n\nRemovidos en v1.3.0: `es-ES`, `pt-PT`, `en-US`. Ver [[Idioma por defecto es-AR]].\n\n## Configuración\n\n```env\nDEFAULT_LOCALE=es-AR\n```\n\nEn el frontend, el idioma también puede seleccionarse por usuario en Settings (acceso restringido según [[Roles de usuario]]).\n\n## Uso en componentes Svelte\n\n```svelte\n<script>\n  import { t } from '$lib/i18n';\n</script>\n\n<button>{$t('common.send')}</button>\n<p>{$t('chat.placeholder', { name: userName })}</p>\n```\n\n## Agregar una traducción\n\n1. Localizar la clave en `src/lib/i18n/es-AR.json` (o crear si no existe)\n2. Agregar la misma clave en `en-GB.json` y `pt-BR.json`\n3. Usar `$t('clave')` en el componente Svelte\n\n## Relacionado\n\n- [[Idioma por defecto es-AR]] — La decisión de elegir es-AR como default\n- [[SvelteKit 2]] — El framework donde se integra i18next\n- [[MOC - Diseño y Frontend]] — Índice del cluster de diseño",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 16
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+  "sha256": "f4d0cc88113e86e38a36230d26cab8f3303f32d6ae1a4beca0625589aff0b231",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Manejo de errores frontend\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, errores, svelte]\naliases: [Error handling frontend, Componentes de error Svelte, ErrorBoundary COELSA]\ndescription: \"Usar cuando necesitás implementar manejo de errores en el frontend de COELSA.Intelligent o entender cómo se renderizan los errores HTTP al usuario.\"\nestado: vigente\n---",
+    "title": "Manejo de errores frontend",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, frontend, errores, svelte]",
+    "aliases": "[Error handling frontend, Componentes de error Svelte, ErrorBoundary COELSA]",
+    "description": "Usar cuando necesitás implementar manejo de errores en el frontend de COELSA.Intelligent o entender cómo se renderizan los errores HTTP al usuario.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 57,
+  "total_lines": 57,
+  "text": "---\ntitle: \"Manejo de errores frontend\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, errores, svelte]\naliases: [Error handling frontend, Componentes de error Svelte, ErrorBoundary COELSA]\ndescription: \"Usar cuando necesitás implementar manejo de errores en el frontend de COELSA.Intelligent o entender cómo se renderizan los errores HTTP al usuario.\"\nestado: vigente\n---\n\n# Manejo de errores frontend\n\n## Qué es\n\nCOELSA.Intelligent tiene un sistema de componentes específicos para cada categoría de error HTTP, más un `ErrorBoundary` para capturar errores de renderizado en componentes Svelte.\n\n## Componentes de error\n\n| Componente | Archivo | Cuándo se muestra |\n|-----------|---------|-------------------|\n| `NetworkError` | `src/lib/components/error/NetworkError.svelte` | Sin conexión o error de red (0, ECONNREFUSED) |\n| `TimeoutError` | `src/lib/components/error/TimeoutError.svelte` | La request excedió el timeout |\n| `GenericError` | `src/lib/components/error/GenericError.svelte` | Cualquier error HTTP no categorizado |\n| `ErrorBoundary` | `src/lib/components/error/ErrorBoundary.svelte` | Error durante el renderizado de un componente hijo |\n\n## Routing de errores HTTP\n\n`src/routes/+error.svelte` recibe todos los errores HTTP de SvelteKit y los rutea:\n- `0` o sin respuesta → `NetworkError`\n- Timeout detectado → `TimeoutError`\n- Cualquier otro → `GenericError` (con el código y mensaje del backend)\n\n## ErrorBoundary (para errores de render)\n\nEnvuelve secciones de UI que podrían fallar durante el renderizado:\n\n```svelte\n<ErrorBoundary>\n  <ComponenteQuePodriaFallar />\n</ErrorBoundary>\n```\n\nSi el componente hijo lanza un error durante el render, `ErrorBoundary` lo captura y muestra un fallback en lugar de romper toda la página.\n\n## Relación con el backend\n\nLos errores del backend llegan con la estructura estándar del [[Sistema de errores centralizado]]:\n```json\n{ \"message\": \"...\", \"status_code\": 400, \"details\": \"...\" }\n```\n\nLos componentes de error extraen el `message` para mostrarlo al usuario.\n\n## Relacionado\n\n- [[Sistema de errores centralizado]] — Los errores del backend que estos componentes consumen\n- [[SvelteKit 2]] — El framework donde viven estos componentes y el router de errores\n- [[MOC - Diseño y Frontend]] — Índice del cluster de diseño",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 17
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+  "sha256": "633414976a121f28a1d4355819b770ec1b3aea9384a634acee0df24e05c86e0e",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Roles semánticos de color\"\ntype: referencia\ntags: [coelsa-intelligent, diseño, colores, roles, tailwind, css-variables]\naliases: [Semantic color roles, Roles de color, Color roles COELSA]\ndescription: \"Usar cuando necesitás la lista de roles de color disponibles en Tailwind y CSS variables para implementar componentes en COELSA.Intelligent.\"\nestado: vigente\n---",
+    "title": "Roles semánticos de color",
+    "type": "referencia",
+    "tags": "[coelsa-intelligent, diseño, colores, roles, tailwind, css-variables]",
+    "aliases": "[Semantic color roles, Roles de color, Color roles COELSA]",
+    "description": "Usar cuando necesitás la lista de roles de color disponibles en Tailwind y CSS variables para implementar componentes en COELSA.Intelligent.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 62,
+  "total_lines": 62,
+  "text": "---\ntitle: \"Roles semánticos de color\"\ntype: referencia\ntags: [coelsa-intelligent, diseño, colores, roles, tailwind, css-variables]\naliases: [Semantic color roles, Roles de color, Color roles COELSA]\ndescription: \"Usar cuando necesitás la lista de roles de color disponibles en Tailwind y CSS variables para implementar componentes en COELSA.Intelligent.\"\nestado: vigente\n---\n\n# Roles semánticos de color\n\n## Qué es\n\nLos **roles semánticos** son tokens de tema que cambian automáticamente entre light y dark mode via CSS custom properties. Son la capa 2 del [[ECO Design System]]. Siempre se prefieren sobre las escalas primitivas en componentes.\n\n## Roles principales (light / dark)\n\n| Rol CSS | Light | Dark | Uso |\n|---------|-------|------|-----|\n| `--color-primary` | `#006972` (teal-40) | `#57D8E6` (teal-80) | Botones CTA, acciones principales |\n| `--color-on-primary` | `#FFFFFF` | `#00363B` (teal-20) | Texto/icono sobre primary |\n| `--color-secondary` | `#004F56` (teal-30) | `#90F2FE` (teal-90) | Acciones secundarias, outlined buttons |\n| `--color-on-secondary` | `#FFFFFF` | `#00363B` (teal-20) | Texto/icono sobre secondary |\n| `--color-tertiary` | `#9D0061` (custom) | `#FFB0CF` (pink-80) | Badges, notificaciones, acentos |\n| `--color-on-tertiary` | `#FFFFFF` | `#63003C` (pink-20) | Texto/icono sobre tertiary |\n| `--color-surface` | `#FFFFFF` | `#191C1D` | Fondo base de la app |\n| `--color-on-surface` | `#191C1D` | `#EFF1F1` | Texto principal |\n\n## Clases Tailwind disponibles\n\n```html\n<!-- Botón principal -->\n<button class=\"bg-primary text-on-primary hover:opacity-90\">\n  Acción Principal\n</button>\n\n<!-- Botón secundario -->\n<button class=\"border-2 border-secondary text-secondary hover:bg-secondary/10\">\n  Acción Secundaria\n</button>\n\n<!-- Badge de acento -->\n<span class=\"bg-tertiary text-on-tertiary px-3 py-1 rounded-full\">\n  Badge\n</span>\n```\n\n## Regla de uso de on-* colors\n\n**Siempre** usar el color `on-*` para texto/iconos sobre un fondo de rol:\n- Fondo `bg-primary` → texto `text-on-primary`\n- Fondo `bg-secondary` → texto `text-on-secondary`\n- Fondo `bg-surface` → texto `text-on-surface`\n\nNo asumir que \"el texto siempre es blanco\" o \"siempre es negro\"; los roles invierten en dark mode.\n\n## Relacionado\n\n- [[Tokens primitivos de color]] — Los valores hex que definen estos roles\n- [[Surface Containers]] — Los 5 roles de superficie para jerarquía visual\n- [[Dark mode reglas]] — Cómo se invierten los roles en dark mode\n- [[ECO Design System]] — El sistema del que estos roles son parte",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 18
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+  "sha256": "1f9c3996cf851072ec73af8e52c1b35763cd7f939adba6655cf35a6293535a3f",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Dark mode reglas\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, dark-mode, tema, colores]\naliases: [Dark mode COELSA, Modo oscuro, Inversión de roles]\ndescription: \"Usar cuando implementás o verificás el comportamiento de dark mode en componentes de COELSA.Intelligent — especialmente para entender qué cambia y qué no.\"\nestado: vigente\n---",
+    "title": "Dark mode reglas",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, dark-mode, tema, colores]",
+    "aliases": "[Dark mode COELSA, Modo oscuro, Inversión de roles]",
+    "description": "Usar cuando implementás o verificás el comportamiento de dark mode en componentes de COELSA.Intelligent — especialmente para entender qué cambia y qué no.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 65,
+  "total_lines": 65,
+  "text": "---\ntitle: \"Dark mode reglas\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, dark-mode, tema, colores]\naliases: [Dark mode COELSA, Modo oscuro, Inversión de roles]\ndescription: \"Usar cuando implementás o verificás el comportamiento de dark mode en componentes de COELSA.Intelligent — especialmente para entender qué cambia y qué no.\"\nestado: vigente\n---\n\n# Dark mode reglas\n\n## Qué es\n\nEl dark mode de COELSA.Intelligent **invierte los roles semánticos**, no los colores primitivos. La escala Teal sigue siendo Teal; solo cambia qué tono de la escala se asigna a cada rol.\n\n## La regla fundamental\n\n```\nLight mode: primary = teal-40 (#006972, oscuro)\nDark mode:  primary = teal-80 (#57D8E6, claro)\n```\n\nLos primitivos no cambian; cambia qué primitivo se asigna a qué rol.\n\n## Anti-patrones de dark mode\n\n| Anti-patrón | Por qué está mal |\n|------------|-----------------|\n| Usar escala directa (`bg-teal-40`) | No se invierte en dark mode |\n| Asumir que `text-on-primary` es siempre blanco | En dark mode `on-primary` = teal-20 (oscuro) |\n| Hardcodear `text-white` sobre `bg-primary` | Rompe en light mode si se ajustan los roles |\n| Usar `opacity-50` para el texto secundario | Debe usarse `text-on-surface/75` (opacity utility) |\n\n## Implementación técnica\n\nLas CSS custom properties se definen en `src/lib/styles/colors.css` con dos bloques:\n\n```css\n/* Light mode (por defecto) */\n:root {\n  --color-primary: #006972;\n  --color-on-primary: #FFFFFF;\n  /* ... */\n}\n\n/* Dark mode */\n[data-theme=\"dark\"], .dark {\n  --color-primary: #57D8E6;\n  --color-on-primary: #00363B;\n  /* ... */\n}\n```\n\nTailwind usa estas variables via `tailwind.config.js`.\n\n## Surface containers en dark mode\n\nLos [[Surface Containers]] más oscuros en light mode son los más claros en dark mode. La jerarquía se mantiene: `highest` siempre es el más destacado, solo cambia si eso significa \"más claro\" o \"más oscuro\".\n\n## Relacionado\n\n- [[Roles semánticos de color]] — Los roles que se invierten en dark mode\n- [[Tokens primitivos de color]] — Los valores que no cambian\n- [[Surface Containers]] — Cómo cambian los niveles de superficie en dark mode\n- [[ECO Design System]] — El sistema general de diseño",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 19
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+  "sha256": "6ae535d7d011734543b9246447d02388f744ce098c5f61cd842d9656bac8fae0",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Patrones de componentes Svelte\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]\naliases: [Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]\ndescription: \"Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.\"\nestado: vigente\n---",
+    "title": "Patrones de componentes Svelte",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]",
+    "aliases": "[Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]",
+    "description": "Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 80,
+  "total_lines": 81,
+  "text": "---\ntitle: \"Patrones de componentes Svelte\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]\naliases: [Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]\ndescription: \"Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.\"\nestado: vigente\n---\n\n# Patrones de componentes Svelte\n\n## Qué es\n\nHay **4 patrones de código en el frontend** que resuelven bugs concretos. Su omisión o reversión reproduce los bugs originales. Documentados aquí como referencia obligatoria al trabajar en `Chat.svelte` y componentes relacionados.\n\n## 1. Guarda de `chatId` (evita loop de renderizado)\n\n```typescript\n// src/routes/(app)/c/[id]/+page.svelte o Chat.svelte\nif ($chatId !== chatIdProp) {\n    chatId.set(chatIdProp);\n}\n```\n\n**Por qué**: sin esta guarda, el cambio de chat dispara una actualización del store que a su vez dispara otro cambio de chat, generando un **loop de renderizado infinito**.\n\n## 2. `AbortController` en `loadChat` (reduce requests duplicados ~80%)\n\n```typescript\nlet currentController: AbortController | null = null;\n\nasync function loadChat(id: string) {\n    currentController?.abort();  // Cancela la carga anterior\n    currentController = new AbortController();\n    const data = await fetchChat(id, { signal: currentController.signal });\n}\n```\n\n**Por qué**: si el usuario cambia de chat antes de que termine de cargar el anterior, sin `AbortController` ambas requests corren en paralelo y pueden pisarse. Reduce ~80% de requests duplicados.\n\n## 3. Unsubscribers en `onDestroy` (evita memory leaks)\n\n```typescript\nimport { onMount, onDestroy } from 'svelte';\n\nlet unsub: () => void;\n\nonMount(() => {\n    unsub = someStore.subscribe(value => { ... });\n});\n\nonDestroy(() => {\n    unsub?.();  // OBLIGATORIO: limpiar la suscripción\n});\n```\n\n**Por qué**: los stores suscritos en `onMount` acumulan listeners si no se destruyen en `onDestroy`. Los listeners fantasma disparan requests adicionales y pueden causar actualizaciones en componentes desmontados.\n\n## 4. Bloques reactivos unificados (evita ejecuciones duplicadas)\n\n```typescript\n// MAL — separados generan doble ejecución:\n$: if (selectedModels) updateModels();\n$: if (selectedModels) setToolIds();\n\n// BIEN — unificados:\n$: {\n    if (selectedModels) {\n        updateModels();\n        setToolIds();\n    }\n}\n```\n\n**Por qué**: los bloques `$:` separados que dependen del mismo reactive value se ejecutan independientemente. Al unificarlos, solo hay una ejecución por cambio de estado.\n\n## Relacionado\n\n- [[SvelteKit 2]] — El framework donde aplican estos patrones\n- [[MOC - Desarrollo]] — Índice del cluster de desarrollo",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": false
+}
+
+
+## Contexto documental presentado 20
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+  "sha256": "2d2d8bbec28f33cb389bf605b71b21a8a914a2b323a62d5f78344811fe3ac84e",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Grupos y permisos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, grupos, permisos]\naliases: [Groups COELSA, Permisos de grupo]\ndescription: \"Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.\"\nestado: vigente\n---",
+    "title": "Grupos y permisos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, auth, grupos, permisos]",
+    "aliases": "[Groups COELSA, Permisos de grupo]",
+    "description": "Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 57,
+  "total_lines": 57,
+  "text": "---\ntitle: \"Grupos y permisos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, grupos, permisos]\naliases: [Groups COELSA, Permisos de grupo]\ndescription: \"Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.\"\nestado: vigente\n---\n\n# Grupos y permisos\n\n## Qué es\n\nAdemás del sistema de [[Roles de usuario|roles]], COELSA.Intelligent implementa **grupos** con permisos granulares en formato JSON. Los grupos permiten dar acceso diferenciado a conjuntos de funcionalidades a subconjuntos de usuarios.\n\n## Modelo de datos (Group)\n\n```python\nclass Group(Base):\n    id: Text           # UUID\n    user_id: Text      # Creador del grupo\n    name: Text\n    description: Text\n    data: JSON         # Datos adicionales\n    meta: JSON         # Metadatos internos\n    permissions: JSON  # Permisos del grupo\n    user_ids: JSON     # Lista de IDs de usuarios en el grupo\n    created_at: BigInteger\n    updated_at: BigInteger\n```\n\n## Estructura del JSON de permisos\n\nLos permisos se definen como un objeto JSON con capacidades específicas. Ejemplo:\n\n```json\n{\n  \"chat\": {\n    \"file_upload\": true,\n    \"web_search\": false\n  },\n  \"workspace\": {\n    \"models\": false,\n    \"knowledge\": true\n  }\n}\n```\n\n## Permisos por defecto\n\nLa configuración de permisos iniciales para nuevos usuarios y grupos se ajustó en v1.3.0 a las necesidades corporativas de COELSA (ver CHANGELOG). Los defaults del upstream no aplicaban al contexto corporativo.\n\n## Relacionado\n\n- [[Roles de usuario]] — El rol es la primera capa; los grupos son la segunda capa granular\n- [[Control de acceso a recursos]] — Cómo los grupos interactúan con el access_control de Knowledge y Files\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 21
+{
+  "query": "JWT get_current_user expiración autenticación",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "autenticacion",
+    "expiracion",
+    "get_current_user",
+    "jwt"
+  ],
+  "missing_terms": [],
+  "total_matches": 54,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+      "sha256": "1de1408046f7e94fde09b8c6e366b80176643850b5f4bfa8caed57b1286de56f",
+      "section": "Validación",
+      "start": 38,
+      "end": 41,
+      "score": 11.6031,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---",
+        "title": "JWT y sesiones",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, jwt, sesiones, tokens]",
+        "aliases": "[JWT COELSA, Tokens de sesión, HS256 COELSA]",
+        "description": "Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Validación\n\nCada endpoint protegido valida el token usando el `HTTPBearer` security scheme de FastAPI. El decorador `get_current_user` extrae el usuario del token y verifica que exista en la base de datos.\n",
+      "relations": [
+        {
+          "target": "Azure AD OAuth",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Azure AD OAuth.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 48,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "bcrypt para contraseñas",
+          "fragment": "",
+          "line": 49,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/bcrypt para contraseñas.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "FastAPI y uvicorn",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/FastAPI y uvicorn.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+      "sha256": "e55a93237b5781aace21c113e9fc71906c2e056ce44d8b649ca78f812934966b",
+      "section": "Uso",
+      "start": 26,
+      "end": 29,
+      "score": 11.4002,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Headers de usuario COELSA\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, http-headers]\naliases: [Encabezados HTTP COELSA, X-COELSA headers]\ndescription: \"Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent.\"\nestado: vigente\n---",
+        "title": "Headers de usuario COELSA",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, arquitectura, http-headers]",
+        "aliases": "[Encabezados HTTP COELSA, X-COELSA headers]",
+        "description": "Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Uso\n\nLos headers se inyectan automáticamente por el middleware de autenticación al validar el token JWT. Los routers que necesitan la identidad del usuario usan el sistema estándar de dependencias de FastAPI (`get_current_user`) en lugar de leer los headers directamente.\n",
+      "relations": [
+        {
+          "target": "JWT y sesiones",
+          "fragment": "",
+          "line": 32,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "FastAPI y uvicorn",
+          "fragment": "",
+          "line": 33,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/FastAPI y uvicorn.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Arquitectura",
+          "fragment": "",
+          "line": 35,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Arquitectura.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 4,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/Azure AD OAuth.md",
+      "sha256": "3fc6a3aeb33a25ea7fdb3c78e36aeed02c5125b769f8b262f0ef32edc49226cb",
+      "section": "Flujo de autenticación",
+      "start": 25,
+      "end": 33,
+      "score": 9.2392,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Azure AD OAuth\"\ntype: stack\ntags: [coelsa-intelligent, stack, azure-ad, oauth, openid-connect]\naliases: [Azure AD, OAuth COELSA, OpenID Connect COELSA]\ndescription: \"Usar cuando necesitás configurar o diagnosticar la autenticación OAuth con Azure AD en COELSA.Intelligent.\"\nestado: vigente\n---",
+        "title": "Azure AD OAuth",
+        "type": "stack",
+        "tags": "[coelsa-intelligent, stack, azure-ad, oauth, openid-connect]",
+        "aliases": "[Azure AD, OAuth COELSA, OpenID Connect COELSA]",
+        "description": "Usar cuando necesitás configurar o diagnosticar la autenticación OAuth con Azure AD en COELSA.Intelligent.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Flujo de autenticación\n\n1. El usuario hace clic en \"Login con Microsoft\".\n2. Es redirigido a `login.microsoftonline.com` para autenticarse.\n3. Azure AD devuelve un código de autorización al callback del backend.\n4. El backend intercambia el código por tokens (access + id token).\n5. El `sub` del id token se guarda como `oauth_sub` en el modelo `User`.\n6. Se genera un JWT interno (ver [[JWT y sesiones]]) que el frontend usa en todas las requests.\n",
+      "relations": [
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "JWT y sesiones",
+          "fragment": "",
+          "line": 32,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SharePoint OneDrive integración",
+          "fragment": "",
+          "line": 36,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Modelos IA/SharePoint OneDrive integración.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "CSP con nonces",
+          "fragment": "",
+          "line": 40,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/CSP con nonces.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Despliegue en OpenShift",
+          "fragment": "",
+          "line": 40,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/CI-CD/Despliegue en OpenShift.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 44,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 9,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 3,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ]
+}
+
+
+## Contexto documental presentado 22
+{
+  "query": "SPA ssr false SvelteKit",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "false",
+    "spa",
+    "ssr",
+    "sveltekit"
+  ],
+  "missing_terms": [],
+  "total_matches": 49,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+      "sha256": "d1e6f8db848e014164e9ac2d81784da71d700c2a6e00349a84d3466491a15c52",
+      "section": "Documento",
+      "start": 1,
+      "end": 9,
+      "score": 22.8996,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"SPA con SSR deshabilitado\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]\naliases: [SSR deshabilitado, SPA mode, ssr false]\ndescription: \"Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.\"\nestado: vigente\n---",
+        "title": "SPA con SSR deshabilitado",
+        "type": "decision",
+        "tags": "[coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]",
+        "aliases": "[SSR deshabilitado, SPA mode, ssr false]",
+        "description": "Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.",
+        "estado": "vigente"
+      },
+      "excerpt": "---\ntitle: \"SPA con SSR deshabilitado\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]\naliases: [SSR deshabilitado, SPA mode, ssr false]\ndescription: \"Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.\"\nestado: vigente\n---\n",
+      "relations": [
+        {
+          "target": "SvelteKit 2",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/SvelteKit 2.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "OpenShift",
+          "fragment": "",
+          "line": 27,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/OpenShift.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "CVE-2025-7969 markdown-it",
+          "fragment": "",
+          "line": 29,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/CVE-2025-7969 markdown-it.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "CSP con nonces",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/CSP con nonces.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SvelteKit 2",
+          "fragment": "",
+          "line": 39,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/SvelteKit 2.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "CSP con nonces",
+          "fragment": "",
+          "line": 40,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/CSP con nonces.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 9,
+      "relations_truncated": true
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/SvelteKit 2.md",
+      "sha256": "0eddcfe12eeae361ed35cdbd08358f12af27a9ee22f805e294d64276550c0fd5",
+      "section": "Estructura de carpetas relevante",
+      "start": 16,
+      "end": 33,
+      "score": 16.4227,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"SvelteKit 2\"\ntype: stack\ntags: [coelsa-intelligent, stack, frontend, sveltekit, spa]\naliases: [Frontend SvelteKit, SvelteKit COELSA]\ndescription: \"Usar cuando trabajás con el frontend de COELSA.Intelligent: rutas, stores, componentes, build o modo de desarrollo.\"\nestado: vigente\n---",
+        "title": "SvelteKit 2",
+        "type": "stack",
+        "tags": "[coelsa-intelligent, stack, frontend, sveltekit, spa]",
+        "aliases": "[Frontend SvelteKit, SvelteKit COELSA]",
+        "description": "Usar cuando trabajás con el frontend de COELSA.Intelligent: rutas, stores, componentes, build o modo de desarrollo.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Estructura de carpetas relevante\n\n```\nsrc/\n  routes/\n    +layout.js        ← ssr = false; trailingSlash = 'ignore'\n    +layout.svelte    ← layout raíz con providers de estado\n    (app)/            ← rutas autenticadas (chat, admin, workspace)\n    auth/             ← login via Azure AD\n    +error.svelte     ← manejo de errores HTTP\n  lib/\n    components/       ← componentes Svelte reutilizables\n    stores/           ← estado global reactivo\n    i18n/             ← traducciones (es-AR, en-GB, pt-BR)\n    utils/            ← helpers y funciones utilitarias\n    apis/             ← cliente HTTP para cada dominio del backend\n```\n",
+      "relations": [
+        {
+          "target": "SPA con SSR deshabilitado",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Build frontend",
+          "fragment": "",
+          "line": 42,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/CI-CD/Build frontend.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "ECO Design System",
+          "fragment": "",
+          "line": 46,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/ECO Design System.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Internacionalización i18n",
+          "fragment": "",
+          "line": 47,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SPA con SSR deshabilitado",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Build frontend",
+          "fragment": "",
+          "line": 52,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/CI-CD/Build frontend.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 9,
+      "relations_truncated": true
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Arquitectura.md",
+      "sha256": "9114673a7b48db07ed2db34f3861bf6e55fb4e58475ac0fe40d6e08d699b07db",
+      "section": "Notas de este cluster",
+      "start": 14,
+      "end": 23,
+      "score": 10.2173,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"MOC — Arquitectura\"\ntype: moc\ntags: [coelsa-intelligent, arquitectura, moc]\naliases: [Arquitectura COELSA, MOC Arquitectura]\ndescription: \"Usar cuando necesitás entender las decisiones de diseño estructural de COELSA.Intelligent — qué componentes existen y por qué se tomó cada decisión.\"\nestado: vigente\n---",
+        "title": "MOC — Arquitectura",
+        "type": "moc",
+        "tags": "[coelsa-intelligent, arquitectura, moc]",
+        "aliases": "[Arquitectura COELSA, MOC Arquitectura]",
+        "description": "Usar cuando necesitás entender las decisiones de diseño estructural de COELSA.Intelligent — qué componentes existen y por qué se tomó cada decisión.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Notas de este cluster\n\n- [[Fork de Open WebUI]] — Qué es el fork, qué cambia y por qué no se sigue el upstream directamente\n- [[SPA con SSR deshabilitado]] — Por qué `ssr = false` y sus implicaciones de seguridad y compatibilidad\n- [[PostgreSQL como base de datos]] — Migración de SQLite a PostgreSQL para escalar en producción\n- [[Redis para WebSockets]] — Backend de canal que permite múltiples workers sin pérdida de eventos\n- [[Sistema de errores centralizado]] — Jerarquía estándar de 10 tipos de excepción con respuestas JSON consistentes\n- [[Headers de usuario COELSA]] — Convención de encabezados HTTP `X-COELSA.Intelligent-User-*`\n- [[Idioma por defecto es-AR]] — Castellano Rioplatense como único español; idiomas eliminados del fork\n",
+      "relations": [
+        {
+          "target": "Fork de Open WebUI",
+          "fragment": "",
+          "line": 12,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Fork de Open WebUI.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Fork de Open WebUI",
+          "fragment": "",
+          "line": 16,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Fork de Open WebUI.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SPA con SSR deshabilitado",
+          "fragment": "",
+          "line": 17,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "PostgreSQL como base de datos",
+          "fragment": "",
+          "line": 18,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/PostgreSQL como base de datos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Redis para WebSockets",
+          "fragment": "",
+          "line": 19,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Redis para WebSockets.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Sistema de errores centralizado",
+          "fragment": "",
+          "line": 20,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 12,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 3,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ]
+}
+
+
+## Contexto documental presentado 23
+{
+  "query": "File last_accessed_at path chat_id",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "chat_id",
+    "file",
+    "last_accessed_at",
+    "path"
+  ],
+  "missing_terms": [],
+  "total_matches": 53,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+      "sha256": "3f7223b1d2b55617d97bde656755b2e7158b6ebaab7592ecd24aa53a153fa5c5",
+      "section": "Implementación",
+      "start": 20,
+      "end": 35,
+      "score": 15.8705,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---",
+        "title": "Borrado en cascada de archivos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, cascada, archivos, chats]",
+        "aliases": "[Cascade delete files, Eliminación en cascada]",
+        "description": "Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Implementación\n\nEl modelo `File` tiene una columna `chat_id` (con índice):\n\n```python\nclass File(Base):\n    chat_id = Column(String, nullable=True, index=True)\n    # Vinculación con chats para borrado en cascada\n```\n\nCuando el endpoint de eliminación de chat se ejecuta:\n1. Busca todos los registros `File` donde `chat_id == chat.id`\n2. Para cada archivo: llama a `StorageProvider.delete_file(file.path)`\n3. Elimina los registros de la tabla `file`\n4. Elimina el registro del chat\n",
+      "relations": [
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Scheduler de limpieza",
+          "fragment": "",
+          "line": 41,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Sistema híbrido de almacenamiento",
+          "fragment": "",
+          "line": 47,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Scheduler de limpieza",
+          "fragment": "",
+          "line": 48,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 49,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Almacenamiento",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 6,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+      "sha256": "a94655add9bc943c40bcb8b8233adaa548e79e454700a2071772ccd079773796",
+      "section": "Configuración",
+      "start": 18,
+      "end": 25,
+      "score": 9.0238,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---",
+        "title": "Scheduler de limpieza",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]",
+        "aliases": "[Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]",
+        "description": "Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Configuración\n\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\n\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n",
+      "relations": [
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 15,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Sistema híbrido de almacenamiento",
+          "fragment": "",
+          "line": 40,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 41,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Borrado en cascada de archivos",
+          "fragment": "",
+          "line": 42,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Almacenamiento",
+          "fragment": "",
+          "line": 43,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+      "sha256": "8bfa3cfca6f5ef84dd7427fd7cf2688cb2b14aef4b25b8af66d72d245cf1d5c0",
+      "section": "3. Migración a MinIO (scheduler diario)",
+      "start": 29,
+      "end": 35,
+      "score": 8.632,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---",
+        "title": "Flujo de subida de archivos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, upload, archivos]",
+        "aliases": "[File upload flow, Subida de archivos COELSA]",
+        "description": "Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.",
+        "estado": "vigente"
+      },
+      "excerpt": "### 3. Migración a MinIO (scheduler diario)\nEl [[Scheduler de limpieza|scheduler]] ejecuta diariamente:\n- Lee los registros de `file` con `path` local\n- Sube cada archivo a [[MinIO S3]]\n- Actualiza el campo `path` en BD con la clave S3\n- Genera una [[URLs firmadas MinIO|URL firmada]] para el acceso\n",
+      "relations": [
+        {
+          "target": "Path Traversal",
+          "fragment": "",
+          "line": 20,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/Path Traversal.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Módulo de retrieval",
+          "fragment": "",
+          "line": 26,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/RAG/Módulo de retrieval.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Milvus",
+          "fragment": "",
+          "line": 27,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Milvus.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Scheduler de limpieza",
+          "fragment": "",
+          "line": 30,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 32,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "URLs firmadas MinIO",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 12,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 3,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ]
+}
+
+
+## Contexto documental presentado 24
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+  "sha256": "1de1408046f7e94fde09b8c6e366b80176643850b5f4bfa8caed57b1286de56f",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---",
+    "title": "JWT y sesiones",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, auth, jwt, sesiones, tokens]",
+    "aliases": "[JWT COELSA, Tokens de sesión, HS256 COELSA]",
+    "description": "Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 51,
+  "total_lines": 51,
+  "text": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---\n\n# JWT y sesiones\n\n## Qué es\n\nDespués de un login OAuth exitoso con [[Azure AD OAuth|Azure AD]], COELSA.Intelligent genera un **JWT interno** (JSON Web Token) que el frontend usa en todas las requests subsiguientes. Este token es independiente del token de Azure AD.\n\n## Especificaciones del token\n\n- **Algoritmo**: HS256 (HMAC con SHA-256)\n- **Clave secreta**: `WEBUI_SECRET_KEY` (variable de entorno)\n- **Módulo**: `backend/server/utils/auth.py`\n\n## Generación\n\n```python\n# Pseudocódigo del flujo\ntoken = jwt.encode(\n    {\n        \"id\": user.id,\n        \"email\": user.email,\n        \"role\": user.role,\n        \"exp\": datetime.utcnow() + timedelta(hours=SESSION_HOURS)\n    },\n    SESSION_SECRET,  # WEBUI_SECRET_KEY\n    algorithm=ALGORITHM  # HS256\n)\n```\n\n## Validación\n\nCada endpoint protegido valida el token usando el `HTTPBearer` security scheme de FastAPI. El decorador `get_current_user` extrae el usuario del token y verifica que exista en la base de datos.\n\n## Firma HMAC\n\nPara verificación de webhooks entre servicios internos, existe una firma HMAC separada (`verify_signature()`) usando `TRUSTED_SIGNATURE_KEY`. Usa `hmac.compare_digest` para prevenir timing attacks.\n\n## Relacionado\n\n- [[Azure AD login exclusivo]] — El flujo OAuth que termina en la generación del JWT\n- [[bcrypt para contraseñas]] — La otra pieza de auth; para contraseñas locales (deshabilitadas en COELSA)\n- [[FastAPI y uvicorn]] — El servidor donde se registran las dependencias de validación\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 25
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+  "sha256": "d1e6f8db848e014164e9ac2d81784da71d700c2a6e00349a84d3466491a15c52",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"SPA con SSR deshabilitado\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]\naliases: [SSR deshabilitado, SPA mode, ssr false]\ndescription: \"Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.\"\nestado: vigente\n---",
+    "title": "SPA con SSR deshabilitado",
+    "type": "decision",
+    "tags": "[coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]",
+    "aliases": "[SSR deshabilitado, SPA mode, ssr false]",
+    "description": "Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 43,
+  "total_lines": 43,
+  "text": "---\ntitle: \"SPA con SSR deshabilitado\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]\naliases: [SSR deshabilitado, SPA mode, ssr false]\ndescription: \"Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.\"\nestado: vigente\n---\n\n# SPA con SSR deshabilitado\n\n## Qué es\n\nCOELSA.Intelligent tiene el SSR (Server-Side Rendering) de [[SvelteKit 2]] **explícitamente deshabilitado**:\n\n```javascript\n// src/routes/+layout.js\nexport const ssr = false;\n```\n\nEsto convierte la aplicación en una **SPA pura**: el servidor solo sirve el HTML inicial y los assets; toda la lógica de renderizado corre en el navegador del cliente.\n\n## Por qué está deshabilitado\n\nDos razones principales:\n\n1. **Modelo de despliegue**: COELSA.Intelligent usa un backend FastAPI separado en otro proceso/contenedor. El SSR de SvelteKit requeriría que el propio servidor Node.js hiciera llamadas al backend durante el renderizado, complicando el modelo de despliegue en [[OpenShift]].\n\n2. **Seguridad (CVE-2025-7969)**: La vulnerabilidad XSS de `markdown-it` afecta únicamente contextos SSR. Al tener SSR deshabilitado, este vector de ataque no existe. Ver [[CVE-2025-7969 markdown-it]].\n\n## Implicaciones\n\n- La app **no funciona sin JavaScript** en el cliente. No es un trade-off relevante para el caso de uso (chat corporativo interno).\n- Los [[CSP con nonces|nonces CSP]] **no son compatibles** con el modo de desarrollo de SvelteKit (`npm run dev`), que genera scripts dinámicamente en el navegador. Los nonces solo se activan en OpenShift (`ENABLE_CSP_NONCES=true`).\n- El build produce assets estáticos que se sirven desde el backend FastAPI como archivos estáticos.\n\n## Relacionado\n\n- [[SvelteKit 2]] — Framework frontend donde se configura el modo SPA\n- [[CSP con nonces]] — Los nonces solo funcionan en producción por esta razón\n- [[CVE-2025-7969 markdown-it]] — El CVE que no aplica gracias a este diseño\n- [[MOC - Arquitectura]] — Contexto de la decisión dentro del sistema general\n- [[Despliegue en OpenShift]] — Cómo se sirve la SPA compilada desde FastAPI",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 26
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Seguridad/Path Traversal.md",
+  "sha256": "1861c722febbbc8130bfb56b97b52204032c855053bde3f5ba027254e7a9b32d",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Path Traversal\"\ntype: concepto\ntags: [coelsa-intelligent, seguridad, path-traversal, owasp, archivos]\naliases: [Path traversal protection, Directory traversal, Sanitización de paths]\ndescription: \"Usar cuando agregás un endpoint que opera sobre rutas de archivos o nombres de archivo provistos por el usuario — para asegurarte de sanitizar el input.\"\nestado: vigente\n---",
+    "title": "Path Traversal",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, seguridad, path-traversal, owasp, archivos]",
+    "aliases": "[Path traversal protection, Directory traversal, Sanitización de paths]",
+    "description": "Usar cuando agregás un endpoint que opera sobre rutas de archivos o nombres de archivo provistos por el usuario — para asegurarte de sanitizar el input.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 49,
+  "total_lines": 49,
+  "text": "---\ntitle: \"Path Traversal\"\ntype: concepto\ntags: [coelsa-intelligent, seguridad, path-traversal, owasp, archivos]\naliases: [Path traversal protection, Directory traversal, Sanitización de paths]\ndescription: \"Usar cuando agregás un endpoint que opera sobre rutas de archivos o nombres de archivo provistos por el usuario — para asegurarte de sanitizar el input.\"\nestado: vigente\n---\n\n# Path Traversal\n\n## Qué es\n\n**Path Traversal** (también llamado Directory Traversal) es una vulnerabilidad donde un atacante usa secuencias como `../../../etc/passwd` en nombres de archivo o paths para acceder a archivos fuera del directorio esperado.\n\nCOELSA.Intelligent aplicó sanitización de paths de entrada en **8 endpoints**.\n\n## El fix en StorageProvider\n\n```python\n# backend/server/storage/provider.py — LocalStorageProvider.upload_file()\n# Security: Path Injection Prevention\n# 'filename' puede contener '../../../etc/passwd'\n\n# Extraer solo el nombre base (sin directorios)\nsafe_filename = os.path.basename(filename)\n\n# Resolver la ruta final y verificar que esté dentro de UPLOAD_DIR\nfile_path = os.path.realpath(os.path.join(UPLOAD_DIR, safe_filename))\nif not file_path.startswith(os.path.realpath(UPLOAD_DIR)):\n    raise ValueError(\"Path traversal detectado\")\n```\n\n## Patrón de sanitización\n\n1. **`os.path.basename()`**: elimina cualquier componente de directorio del nombre\n2. **`os.path.realpath()`**: resuelve symlinks y `..`\n3. **Verificar prefijo**: confirmar que la ruta final esté dentro del directorio permitido\n\nEste patrón debe aplicarse en **cualquier endpoint nuevo** que:\n- Acepte un nombre de archivo del usuario\n- Use ese nombre para operar sobre el sistema de archivos\n\n## Relacionado\n\n- [[Hardening ReDoS]] — Otra remediación OWASP del mismo ciclo de hardening\n- [[Protección SSRF]] — Otra remediación del mismo ciclo\n- [[Flujo de subida de archivos]] — El flujo donde aplica esta sanitización\n- [[MOC - Seguridad]] — Índice del cluster de seguridad",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 27
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+  "sha256": "8bfa3cfca6f5ef84dd7427fd7cf2688cb2b14aef4b25b8af66d72d245cf1d5c0",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---",
+    "title": "Flujo de subida de archivos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, almacenamiento, upload, archivos]",
+    "aliases": "[File upload flow, Subida de archivos COELSA]",
+    "description": "Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 48,
+  "total_lines": 48,
+  "text": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---\n\n# Flujo de subida de archivos\n\n## Qué es\n\nDescribe el ciclo completo desde que un usuario sube un archivo hasta que queda accesible via URL firmada en MinIO.\n\n## Pasos del flujo\n\n### 1. Recepción (router `files.py`)\nEl endpoint `POST /api/v1/files/` recibe el archivo multipart. El backend:\n- Sanitiza el nombre del archivo (protección contra [[Path Traversal]])\n- Guarda temporalmente en `data/uploads/<uuid>-<filename>`\n- Crea un registro en la tabla `file` con `path` = ruta local\n\n### 2. Procesamiento RAG (opcional)\nSi el archivo va a ser embedido (Knowledge base, búsqueda vectorial):\n- Se procesa con los loaders del [[Módulo de retrieval]]\n- Los chunks se insertan en [[Milvus]] bajo la colección correspondiente\n\n### 3. Migración a MinIO (scheduler diario)\nEl [[Scheduler de limpieza|scheduler]] ejecuta diariamente:\n- Lee los registros de `file` con `path` local\n- Sube cada archivo a [[MinIO S3]]\n- Actualiza el campo `path` en BD con la clave S3\n- Genera una [[URLs firmadas MinIO|URL firmada]] para el acceso\n\n### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n\n## Relacionado\n\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza\n- [[Borrado en cascada de archivos]] — Qué pasa cuando se elimina el chat asociado\n- [[Protección SSRF]] — La sanitización de paths en el paso de recepción",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
+
+
+## Contexto documental presentado 28
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+  "sha256": "cd1aefbdb2327f1bf5ffb436760b22afe277fdd692c635d6cf8dd949c9fd1f4b",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Agregar proveedor de almacenamiento\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]\naliases: [Nuevo storage provider, StorageProvider interface, Agregar backend storage]\ndescription: \"Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.\"\nestado: vigente\n---",
+    "title": "Agregar proveedor de almacenamiento",
+    "type": "referencia",
+    "tags": "[coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]",
+    "aliases": "[Nuevo storage provider, StorageProvider interface, Agregar backend storage]",
+    "description": "Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 80,
+  "total_lines": 94,
+  "text": "---\ntitle: \"Agregar proveedor de almacenamiento\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]\naliases: [Nuevo storage provider, StorageProvider interface, Agregar backend storage]\ndescription: \"Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.\"\nestado: vigente\n---\n\n# Agregar proveedor de almacenamiento\n\n## Qué es\n\nGuía para implementar un nuevo backend de almacenamiento en COELSA.Intelligent. El sistema usa una interfaz abstracta `StorageProvider` que permite agregar nuevos providers sin modificar el código de negocio.\n\n## La interfaz abstracta\n\n```python\n# backend/server/storage/provider.py\nclass StorageProvider(ABC):\n    \n    @abstractmethod\n    def get_file(self, file_path: str) -> str:\n        \"\"\"Retorna la ruta local o URL al archivo.\"\"\"\n        pass\n    \n    @abstractmethod\n    def upload_file(self, file: BinaryIO, filename: str) -> Tuple[bytes, str]:\n        \"\"\"Sube el archivo y retorna (contenido, path).\"\"\"\n        pass\n    \n    @abstractmethod\n    def get_presigned_url(self, file_path: str, expiration: int = 3600) -> str:\n        \"\"\"Genera una URL firmada de acceso temporal.\"\"\"\n        pass\n    \n    @abstractmethod\n    def get_storage_stats(self) -> dict:\n        \"\"\"Retorna estadísticas de uso del almacenamiento.\"\"\"\n        pass\n    \n    @abstractmethod\n    def delete_all_files(self) -> None:\n        pass\n    \n    @abstractmethod\n    def delete_file(self, file_path: str) -> None:\n        pass\n```\n\n## Pasos para agregar un nuevo provider\n\n### 1. Crear la clase del provider\n\n```python\n# backend/server/storage/provider.py — agregar junto a las clases existentes\nclass MiNuevoProvider(StorageProvider):\n    \n    def get_file(self, file_path: str) -> str:\n        # implementación\n        ...\n    \n    def upload_file(self, file, filename):\n        # implementación con sanitización de path (ver Path Traversal)\n        ...\n    \n    # ... implementar todos los métodos abstractos\n```\n\n### 2. Registrar en la factory\n\nEn `provider.py`, agregar el nuevo provider a la selección por variable de entorno:\n\n```python\nSTORAGE_PROVIDER = os.getenv(\"STORAGE_PROVIDER\", \"local\")\n\nif STORAGE_PROVIDER == \"s3\":\n    Storage = S3StorageProvider(...)\nelif STORAGE_PROVIDER == \"mi-nuevo\":\n    Storage = MiNuevoProvider(...)",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": false
+}
+
+
+## Contexto documental presentado 29
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+  "sha256": "cd1aefbdb2327f1bf5ffb436760b22afe277fdd692c635d6cf8dd949c9fd1f4b",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Agregar proveedor de almacenamiento\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]\naliases: [Nuevo storage provider, StorageProvider interface, Agregar backend storage]\ndescription: \"Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.\"\nestado: vigente\n---",
+    "title": "Agregar proveedor de almacenamiento",
+    "type": "referencia",
+    "tags": "[coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]",
+    "aliases": "[Nuevo storage provider, StorageProvider interface, Agregar backend storage]",
+    "description": "Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.",
+    "estado": "vigente"
+  },
+  "start": 81,
+  "end": 94,
+  "total_lines": 94,
+  "text": "else:\n    Storage = LocalStorageProvider()\n```\n\n## Notas de seguridad\n\nSiempre incluir sanitización de path traversal en `upload_file`. Ver [[Path Traversal]].\n\n## Relacionado\n\n- [[Sistema híbrido de almacenamiento]] — El contexto donde opera el provider\n- [[MinIO S3]] — El provider S3 como referencia de implementación\n- [[Path Traversal]] — La sanitización de paths obligatoria en upload_file\n- [[MOC - Desarrollo]] — Índice del cluster de desarrollo",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 94,
+  "beyond_eof": false
+}
+
+
+## Contexto documental presentado 30
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+  "sha256": "6ae535d7d011734543b9246447d02388f744ce098c5f61cd842d9656bac8fae0",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Patrones de componentes Svelte\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]\naliases: [Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]\ndescription: \"Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.\"\nestado: vigente\n---",
+    "title": "Patrones de componentes Svelte",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]",
+    "aliases": "[Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]",
+    "description": "Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.",
+    "estado": "vigente"
+  },
+  "start": 81,
+  "end": 81,
+  "total_lines": 81,
+  "text": "- [[MOC - Decisiones]] — D-20 en el índice de decisiones (AbortController fix)",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 81,
+  "beyond_eof": false
+}
+
+
+## Contexto documental presentado 31
+{
+  "query": "access_control write read herencia permisos",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "access_control",
+    "herencia",
+    "permisos",
+    "read",
+    "write"
+  ],
+  "missing_terms": [
+    "herencia"
+  ],
+  "total_matches": 68,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+      "sha256": "63512785920e4b1035f23e1a5f0d7bbe736ea15a3c2e51845d3dc6ebe1e7c339",
+      "section": "Estructura del objeto custom",
+      "start": 24,
+      "end": 38,
+      "score": 19.2115,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Control de acceso a recursos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, access-control, knowledge, files]\naliases: [access_control, Permisos de recursos, Resource access control]\ndescription: \"Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.\"\nestado: vigente\n---",
+        "title": "Control de acceso a recursos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, access-control, knowledge, files]",
+        "aliases": "[access_control, Permisos de recursos, Resource access control]",
+        "description": "Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Estructura del objeto custom\n\n```json\n{\n  \"read\": {\n    \"group_ids\": [\"grupo-id-1\", \"grupo-id-2\"],\n    \"user_ids\": [\"user-id-1\"]\n  },\n  \"write\": {\n    \"group_ids\": [],\n    \"user_ids\": [\"user-id-admin\"]\n  }\n}\n```\n",
+      "relations": [
+        {
+          "target": "Roles de usuario",
+          "fragment": "",
+          "line": 49,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Grupos y permisos",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 3,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+      "sha256": "2d2d8bbec28f33cb389bf605b71b21a8a914a2b323a62d5f78344811fe3ac84e",
+      "section": "Relacionado",
+      "start": 53,
+      "end": 57,
+      "score": 8.3989,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Grupos y permisos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, grupos, permisos]\naliases: [Groups COELSA, Permisos de grupo]\ndescription: \"Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.\"\nestado: vigente\n---",
+        "title": "Grupos y permisos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, grupos, permisos]",
+        "aliases": "[Groups COELSA, Permisos de grupo]",
+        "description": "Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Relacionado\n\n- [[Roles de usuario]] — El rol es la primera capa; los grupos son la segunda capa granular\n- [[Control de acceso a recursos]] — Cómo los grupos interactúan con el access_control de Knowledge y Files\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+      "relations": [
+        {
+          "target": "Roles de usuario",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Roles de usuario",
+          "fragment": "",
+          "line": 55,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Control de acceso a recursos",
+          "fragment": "",
+          "line": 56,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 57,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 4,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+      "sha256": "d07b8455c519b053c6a243d3e79b181f42196e4ff2bfc709eec4bdd8cbf8974d",
+      "section": "Relacionado",
+      "start": 41,
+      "end": 46,
+      "score": 7.9116,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---",
+        "title": "Roles de usuario",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, roles, permisos]",
+        "aliases": "[User roles, Roles COELSA, admin user pending]",
+        "description": "Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Relacionado\n\n- [[Grupos y permisos]] — Permisos granulares dentro del rol `user`\n- [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos\n- [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+      "relations": [
+        {
+          "target": "Grupos y permisos",
+          "fragment": "",
+          "line": 43,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Control de acceso a recursos",
+          "fragment": "",
+          "line": 44,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 45,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 46,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 4,
+      "relations_truncated": false
+    }
+  ],
+  "next_offset": 3,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ]
+}
+
+
+## Contexto documental presentado 32
+{"path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md", "headings": [{"line": 10, "text": "Borrado en cascada de archivos"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Por qué existe"}, {"line": 20, "text": "Implementación"}, {"line": 36, "text": "Diferencia con el Scheduler"}, {"line": 45, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md", "headings": [{"line": 10, "text": "Flujo de subida de archivos"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Pasos del flujo"}, {"line": 18, "text": "1. Recepción (router `files.py`)"}, {"line": 24, "text": "2. Procesamiento RAG (opcional)"}, {"line": 29, "text": "3. Migración a MinIO (scheduler diario)"}, {"line": 36, "text": "4. Acceso"}, {"line": 42, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md", "headings": [{"line": 10, "text": "Scheduler de limpieza"}, {"line": 12, "text": "Qué es"}, {"line": 18, "text": "Configuración"}, {"line": 26, "text": "Qué es un archivo huérfano"}, {"line": 34, "text": "Cuándo se ejecuta"}, {"line": 38, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md", "headings": [{"line": 10, "text": "Sistema híbrido de almacenamiento"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Flujo completo"}, {"line": 32, "text": "Proveedores disponibles"}, {"line": 42, "text": "Fallback local"}, {"line": 46, "text": "Script de migración"}, {"line": 54, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md", "headings": [{"line": 10, "text": "URLs firmadas MinIO"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Cómo funciona"}, {"line": 19, "text": "Pseudocódigo de generación (StorageProvider.get_presigned_url)"}, {"line": 29, "text": "Por qué URLs firmadas"}, {"line": 35, "text": "Configuración de expiración"}, {"line": 39, "text": "Timeouts boto3 (Windows)"}, {"line": 47, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md", "headings": [{"line": 10, "text": "Headers de usuario COELSA"}, {"line": 12, "text": "Qué es"}, {"line": 22, "text": "Por qué el renombre"}, {"line": 26, "text": "Uso"}, {"line": 30, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md", "headings": [{"line": 10, "text": "SPA con SSR deshabilitado"}, {"line": 12, "text": "Qué es"}, {"line": 23, "text": "Por qué está deshabilitado"}, {"line": 31, "text": "Implicaciones"}, {"line": 37, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md", "headings": [{"line": 10, "text": "Sistema de errores centralizado"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Backend: tipos de excepción"}, {"line": 43, "text": "Frontend: componentes de error"}, {"line": 54, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md", "headings": [{"line": 10, "text": "Control de acceso a recursos"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Modos de acceso"}, {"line": 24, "text": "Estructura del objeto custom"}, {"line": 39, "text": "Evaluación de acceso"}, {"line": 47, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md", "headings": [{"line": 10, "text": "Grupos y permisos"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Modelo de datos (Group)"}, {"line": 32, "text": "Estructura del JSON de permisos"}, {"line": 49, "text": "Permisos por defecto"}, {"line": 53, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md", "headings": [{"line": 10, "text": "JWT y sesiones"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Especificaciones del token"}, {"line": 22, "text": "Generación"}, {"line": 25, "text": "Pseudocódigo del flujo"}, {"line": 38, "text": "Validación"}, {"line": 42, "text": "Firma HMAC"}, {"line": 46, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md", "headings": [{"line": 10, "text": "Roles de usuario"}, {"line": 12, "text": "Qué es"}, {"line": 22, "text": "Estado `pending`"}, {"line": 26, "text": "Restricciones por rol en la UI"}, {"line": 34, "text": "Funcionalidades deshabilitadas para todos los roles"}, {"line": 41, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md", "headings": [{"line": 10, "text": "Agregar proveedor de almacenamiento"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "La interfaz abstracta"}, {"line": 19, "text": "backend/server/storage/provider.py"}, {"line": 51, "text": "Pasos para agregar un nuevo provider"}, {"line": 53, "text": "1. Crear la clase del provider"}, {"line": 56, "text": "backend/server/storage/provider.py — agregar junto a las clases existentes"}, {"line": 70, "text": "2. Registrar en la factory"}]}
+{"path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md", "headings": [{"line": 10, "text": "Agregar router REST"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Pasos"}, {"line": 18, "text": "1. Crear el módulo del router"}, {"line": 21, "text": "backend/server/routers/mi_nuevo_router.py"}, {"line": 41, "text": "2. Importar el router en `main.py`"}, {"line": 44, "text": "backend/server/main.py"}, {"line": 51, "text": "3. Registrar el router en la app"}, {"line": 54, "text": "backend/server/main.py — en la función que monta los routers"}, {"line": 62, "text": "Convenciones"}, {"line": 69, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md", "headings": [{"line": 10, "text": "Patrones frontend críticos"}, {"line": 12, "text": "Qué es"}, {"line": 18, "text": "Checklist rápido"}, {"line": 27, "text": "Consecuencias de revertirlos"}, {"line": 36, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md", "headings": [{"line": 10, "text": "Dark mode reglas"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "La regla fundamental"}, {"line": 25, "text": "Anti-patrones de dark mode"}, {"line": 34, "text": "Implementación técnica"}, {"line": 56, "text": "Surface containers en dark mode"}, {"line": 60, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md", "headings": [{"line": 10, "text": "Internacionalización i18n"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Idiomas soportados"}, {"line": 24, "text": "Idiomas eliminados del fork"}, {"line": 28, "text": "Configuración"}, {"line": 36, "text": "Uso en componentes Svelte"}, {"line": 47, "text": "Agregar una traducción"}, {"line": 53, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md", "headings": [{"line": 10, "text": "Manejo de errores frontend"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Componentes de error"}, {"line": 25, "text": "Routing de errores HTTP"}, {"line": 32, "text": "ErrorBoundary (para errores de render)"}, {"line": 44, "text": "Relación con el backend"}, {"line": 53, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md", "headings": [{"line": 10, "text": "Patrones de componentes Svelte"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "1. Guarda de `chatId` (evita loop de renderizado)"}, {"line": 27, "text": "2. `AbortController` en `loadChat` (reduce requests duplicados ~80%)"}, {"line": 41, "text": "3. Unsubscribers en `onDestroy` (evita memory leaks)"}, {"line": 59, "text": "4. Bloques reactivos unificados (evita ejecuciones duplicadas)"}, {"line": 77, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md", "headings": [{"line": 10, "text": "Roles semánticos de color"}, {"line": 12, "text": "Qué es"}, {"line": 16, "text": "Roles principales (light / dark)"}, {"line": 29, "text": "Clases Tailwind disponibles"}, {"line": 48, "text": "Regla de uso de on-* colors"}, {"line": 57, "text": "Relacionado"}]}
+{"path": "COELSA.Intelligent/Seguridad/Path Traversal.md", "headings": [{"line": 10, "text": "Path Traversal"}, {"line": 12, "text": "Qué es"}, {"line": 18, "text": "El fix en StorageProvider"}, {"line": 21, "text": "backend/server/storage/provider.py — LocalStorageProvider.upload_file()"}, {"line": 22, "text": "Security: Path Injection Prevention"}, {"line": 23, "text": "'filename' puede contener '../../../etc/passwd'"}, {"line": 25, "text": "Extraer solo el nombre base (sin directorios)"}, {"line": 28, "text": "Resolver la ruta final y verificar que esté dentro de UPLOAD_DIR"}, {"line": 34, "text": "Patrón de sanitización"}, {"line": 44, "text": "Relacionado"}]}

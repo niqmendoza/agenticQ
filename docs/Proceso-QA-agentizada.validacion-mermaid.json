@@ -1,0 +1,66 @@
+{
+  "date": "2026-09-30",
+  "document": "/Users/nmendoza/Desktop/Code/QA agentizada/docs/Proceso-QA-agentizada.md",
+  "mermaid": "11.12.1",
+  "renderer": "Chromium vía Playwright",
+  "chromium": "151.0.7922.34",
+  "diagrams": [
+    {
+      "diagram": 1,
+      "type": "flowchart-v2",
+      "parse": "passed",
+      "render": "passed",
+      "viewBox": "0 0 661.0546875 1644.296875",
+      "source_sha256": "f47be2dbff046125c9bc1270d0a6e2f64177d5d74e21e298e22210b1ebab279e"
+    },
+    {
+      "diagram": 2,
+      "type": "flowchart-v2",
+      "parse": "passed",
+      "render": "passed",
+      "viewBox": "0 0 1012.9140625 506",
+      "source_sha256": "c991646ee65768bbe39c54660aa254f1df5c0677bd84b1d7fd47e7285b29052c"
+    },
+    {
+      "diagram": 3,
+      "type": "flowchart-v2",
+      "parse": "passed",
+      "render": "passed",
+      "viewBox": "0 0 1121.47265625 684",
+      "source_sha256": "fd7434ae76e0387feb91e10e3eaf0ff8bc9fb07145c532ad16535a55225724fb"
+    },
+    {
+      "diagram": 4,
+      "type": "sequence",
+      "parse": "passed",
+      "render": "passed",
+      "viewBox": "-50 -10 1205 671",
+      "source_sha256": "845812bd67478a1ab2161c56bccc27525c7726913f5d835ef7c124190a6c17ee"
+    },
+    {
+      "diagram": 5,
+      "type": "flowchart-v2",
+      "parse": "passed",
+      "render": "passed",
+      "viewBox": "0 0 437.98828125 1901.734375",
+      "source_sha256": "2a6cbc17f250e8a9992f633c08bd7ae88bf4511797a9d0b1921b6aeaaf272fba"
+    },
+    {
+      "diagram": 6,
+      "type": "flowchart-v2",
+      "parse": "passed",
+      "render": "passed",
+      "viewBox": "0 0 908.203125 1076",
+      "source_sha256": "05fcbe7d2f36c5e7872fa61275526f9f941300a83a64a030ef2e73dec47b410b"
+    }
+  ],
+  "count": 6,
+  "limitations": "No valida integraciones ni permisos; presentación final depende del lector Markdown.",
+  "document_sha256": "f50a2de5eb826912fe7fdfc8cb5eabfc8219b4fdcecdedf46b67aaab521e6515",
+  "visual_review": "passed: seis imágenes inspeccionadas; distribución ajustada en arquitectura y diagrama integral",
+  "markdown_checks": {
+    "index_links": 15,
+    "missing_links": [],
+    "fences": "balanced"
+  }
+}

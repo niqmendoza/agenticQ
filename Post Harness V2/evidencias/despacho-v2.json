@@ -1,0 +1,6 @@
+{
+  "message": "Realizá una evaluación documental independiente en español con contexto limpio. Leé y cumplí /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness V2/evidencias/consigna-comun.md y /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness V2/evidencias/modalidad-v2.md. No leas informes previos ni respuestas de otros evaluadores. Usá exclusivamente el navegador V2 para la evidencia, registrá todas las operaciones, completá implementación propuesta y casos, verificá y congelá la entrega. No crees subagentes ni ejecutes la aplicación.",
+  "fork_turns": "none",
+  "model": "heredado sin override; verificar turn_context",
+  "timestamp_before_dispatch_utc": "2026-10-28T02:13:44.624745+00:00"
+}

@@ -1,0 +1,184 @@
+{
+  "v1_files_checked": 462,
+  "v1_changed": [],
+  "frozen_inputs_changed": [],
+  "corpus_changed": [],
+  "literal_errors": [],
+  "unique_source_lines_v2": 1607,
+  "document_payloads": [
+    {
+      "log": "001.result.json",
+      "tokens": 13796,
+      "chars": 45371,
+      "limits": {
+        "max_chars": 50000,
+        "max_tokens": 14000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "002.result.json",
+      "tokens": 737,
+      "chars": 2584,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "003.result.json",
+      "tokens": 940,
+      "chars": 3335,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "004.result.json",
+      "tokens": 1019,
+      "chars": 3372,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "005.result.json",
+      "tokens": 1001,
+      "chars": 3394,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "006.result.json",
+      "tokens": 1409,
+      "chars": 4698,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "007.result.json",
+      "tokens": 1095,
+      "chars": 3343,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "008.result.json",
+      "tokens": 1303,
+      "chars": 4099,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "009.result.json",
+      "tokens": 1174,
+      "chars": 3782,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "010.result.json",
+      "tokens": 1125,
+      "chars": 3906,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "011.result.json",
+      "tokens": 1062,
+      "chars": 3559,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "012.result.json",
+      "tokens": 1382,
+      "chars": 4768,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "013.result.json",
+      "tokens": 1111,
+      "chars": 3560,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "016.result.json",
+      "tokens": 968,
+      "chars": 3371,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "017.result.json",
+      "tokens": 830,
+      "chars": 2843,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "018.result.json",
+      "tokens": 940,
+      "chars": 3314,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    },
+    {
+      "log": "021.result.json",
+      "tokens": 1187,
+      "chars": 3966,
+      "limits": {
+        "max_chars": 20000,
+        "max_tokens": 5000,
+        "tokenizer": "o200k_base proxy"
+      }
+    }
+  ],
+  "all_native_sums_match": true,
+  "model_effort_equal": true,
+  "evaluator_reported_elision_repaired": true,
+  "terminal_truncation_notice_in_recorded_outputs": false
+}

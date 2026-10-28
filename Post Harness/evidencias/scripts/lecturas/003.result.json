@@ -1,0 +1,189 @@
+{
+  "query": "archivo último acceso limpieza borrado chat",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "acceso",
+    "archivo",
+    "borrado",
+    "chat",
+    "limpieza",
+    "ultimo"
+  ],
+  "missing_terms": [],
+  "total_matches": 136,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+      "sha256": "8bfa3cfca6f5ef84dd7427fd7cf2688cb2b14aef4b25b8af66d72d245cf1d5c0",
+      "section": "Relacionado",
+      "start": 42,
+      "end": 48,
+      "score": 16.6612,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---",
+        "title": "Flujo de subida de archivos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, upload, archivos]",
+        "aliases": "[File upload flow, Subida de archivos COELSA]",
+        "description": "Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Relacionado\n\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza\n- [[Borrado en cascada de archivos]] — Qué pasa cuando se elimina el chat asociado\n- [[Protección SSRF]] — La sanitización de paths en el paso de recepción",
+      "relations": [
+        {
+          "target": "Path Traversal",
+          "fragment": "",
+          "line": 20,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/Path Traversal.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Módulo de retrieval",
+          "fragment": "",
+          "line": 26,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/RAG/Módulo de retrieval.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Milvus",
+          "fragment": "",
+          "line": 27,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Milvus.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Scheduler de limpieza",
+          "fragment": "",
+          "line": 30,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 32,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "URLs firmadas MinIO",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 12,
+      "relations_truncated": true
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+      "sha256": "a94655add9bc943c40bcb8b8233adaa548e79e454700a2071772ccd079773796",
+      "section": "Configuración",
+      "start": 18,
+      "end": 25,
+      "score": 15.112,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---",
+        "title": "Scheduler de limpieza",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]",
+        "aliases": "[Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]",
+        "description": "Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Configuración\n\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\n\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n",
+      "relations": [
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 15,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Sistema híbrido de almacenamiento",
+          "fragment": "",
+          "line": 40,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 41,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Borrado en cascada de archivos",
+          "fragment": "",
+          "line": 42,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Almacenamiento",
+          "fragment": "",
+          "line": 43,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}

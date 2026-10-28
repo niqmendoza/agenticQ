@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+  "sha256": "d1e6f8db848e014164e9ac2d81784da71d700c2a6e00349a84d3466491a15c52",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"SPA con SSR deshabilitado\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]\naliases: [SSR deshabilitado, SPA mode, ssr false]\ndescription: \"Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.\"\nestado: vigente\n---",
+    "title": "SPA con SSR deshabilitado",
+    "type": "decision",
+    "tags": "[coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]",
+    "aliases": "[SSR deshabilitado, SPA mode, ssr false]",
+    "description": "Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 43,
+  "total_lines": 43,
+  "text": "---\ntitle: \"SPA con SSR deshabilitado\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]\naliases: [SSR deshabilitado, SPA mode, ssr false]\ndescription: \"Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.\"\nestado: vigente\n---\n\n# SPA con SSR deshabilitado\n\n## Qué es\n\nCOELSA.Intelligent tiene el SSR (Server-Side Rendering) de [[SvelteKit 2]] **explícitamente deshabilitado**:\n\n```javascript\n// src/routes/+layout.js\nexport const ssr = false;\n```\n\nEsto convierte la aplicación en una **SPA pura**: el servidor solo sirve el HTML inicial y los assets; toda la lógica de renderizado corre en el navegador del cliente.\n\n## Por qué está deshabilitado\n\nDos razones principales:\n\n1. **Modelo de despliegue**: COELSA.Intelligent usa un backend FastAPI separado en otro proceso/contenedor. El SSR de SvelteKit requeriría que el propio servidor Node.js hiciera llamadas al backend durante el renderizado, complicando el modelo de despliegue en [[OpenShift]].\n\n2. **Seguridad (CVE-2025-7969)**: La vulnerabilidad XSS de `markdown-it` afecta únicamente contextos SSR. Al tener SSR deshabilitado, este vector de ataque no existe. Ver [[CVE-2025-7969 markdown-it]].\n\n## Implicaciones\n\n- La app **no funciona sin JavaScript** en el cliente. No es un trade-off relevante para el caso de uso (chat corporativo interno).\n- Los [[CSP con nonces|nonces CSP]] **no son compatibles** con el modo de desarrollo de SvelteKit (`npm run dev`), que genera scripts dinámicamente en el navegador. Los nonces solo se activan en OpenShift (`ENABLE_CSP_NONCES=true`).\n- El build produce assets estáticos que se sirven desde el backend FastAPI como archivos estáticos.\n\n## Relacionado\n\n- [[SvelteKit 2]] — Framework frontend donde se configura el modo SPA\n- [[CSP con nonces]] — Los nonces solo funcionan en producción por esta razón\n- [[CVE-2025-7969 markdown-it]] — El CVE que no aplica gracias a este diseño\n- [[MOC - Arquitectura]] — Contexto de la decisión dentro del sistema general\n- [[Despliegue en OpenShift]] — Cómo se sirve la SPA compilada desde FastAPI",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

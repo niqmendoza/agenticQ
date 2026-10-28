@@ -1,0 +1,250 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 10, "returned": 5, "next_offset": 15}
+
+=== COELSA.Intelligent/Arquitectura/Redis para WebSockets.md sha256=c7ed15748ea02626313513d3e3e5aeb5eec540d62998c015742091fefff03578 ===
+1: ---
+2: title: "Redis para WebSockets"
+3: type: decision
+4: tags: [coelsa-intelligent, arquitectura, redis, websockets]
+5: aliases: [Redis WebSocket backend, Canal de WebSockets]
+6: description: "Usar cuando necesitás entender por qué Redis es el canal de comunicación del socket y qué permite en términos de escalado horizontal."
+7: estado: vigente
+8: ---
+9: 
+10: # Redis para WebSockets
+11: 
+12: ## Qué es
+13: 
+14: El servidor de WebSocket de COELSA.Intelligent (implementado con `python-socketio`) usa **Redis como backend de canal**. Esto permite que múltiples instancias del servidor compartan el estado del socket sin pérdida de eventos entre workers.
+15: 
+16: ## Configuración
+17: 
+18: ```env
+19: REDIS_URL=redis://host:6379
+20: # O con Redis Sentinel para alta disponibilidad:
+21: REDIS_SENTINEL_HOSTS=sentinel1:26379,sentinel2:26379
+22: REDIS_SENTINEL_PORT=26379
+23: ```
+24: 
+25: ## Por qué Redis
+26: 
+27: Sin un backend de canal compartido, cada instancia del servidor tendría su propia cola de eventos. Un mensaje enviado por un cliente conectado al worker A no llegaría a los clientes conectados al worker B. Redis resuelve este problema actuando como bus de mensajes entre instancias.
+28: 
+29: En [[OpenShift]] el servidor puede escalar horizontalmente (múltiples pods) gracias a este diseño. Sin Redis, el WebSocket funciona solo con un único worker.
+30: 
+31: ## Configuración de conexión (`config.py`)
+32: 
+33: La conexión a Redis se obtiene a través de `get_redis_connection()` en `server/utils/redis.py`, que soporta tanto Redis standalone como Redis Sentinel.
+34: 
+35: ## Relacionado
+36: 
+37: - [[Redis]] — Nota de stack con versiones mínimas y configuración
+38: - [[FastAPI y uvicorn]] — El servidor donde se monta python-socketio
+39: - [[OpenShift]] — El entorno donde se escala horizontalmente
+40: - [[MOC - Arquitectura]] — Contexto de la decisión
+41: - [[MOC - Decisiones]] — D-03 en el índice de decisiones
+
+=== COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md sha256=d1e6f8db848e014164e9ac2d81784da71d700c2a6e00349a84d3466491a15c52 ===
+1: ---
+2: title: "SPA con SSR deshabilitado"
+3: type: decision
+4: tags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]
+5: aliases: [SSR deshabilitado, SPA mode, ssr false]
+6: description: "Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica."
+7: estado: vigente
+8: ---
+9: 
+10: # SPA con SSR deshabilitado
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent tiene el SSR (Server-Side Rendering) de [[SvelteKit 2]] **explícitamente deshabilitado**:
+15: 
+16: ```javascript
+17: // src/routes/+layout.js
+18: export const ssr = false;
+19: ```
+20: 
+21: Esto convierte la aplicación en una **SPA pura**: el servidor solo sirve el HTML inicial y los assets; toda la lógica de renderizado corre en el navegador del cliente.
+22: 
+23: ## Por qué está deshabilitado
+24: 
+25: Dos razones principales:
+26: 
+27: 1. **Modelo de despliegue**: COELSA.Intelligent usa un backend FastAPI separado en otro proceso/contenedor. El SSR de SvelteKit requeriría que el propio servidor Node.js hiciera llamadas al backend durante el renderizado, complicando el modelo de despliegue en [[OpenShift]].
+28: 
+29: 2. **Seguridad (CVE-2025-7969)**: La vulnerabilidad XSS de `markdown-it` afecta únicamente contextos SSR. Al tener SSR deshabilitado, este vector de ataque no existe. Ver [[CVE-2025-7969 markdown-it]].
+30: 
+31: ## Implicaciones
+32: 
+33: - La app **no funciona sin JavaScript** en el cliente. No es un trade-off relevante para el caso de uso (chat corporativo interno).
+34: - Los [[CSP con nonces|nonces CSP]] **no son compatibles** con el modo de desarrollo de SvelteKit (`npm run dev`), que genera scripts dinámicamente en el navegador. Los nonces solo se activan en OpenShift (`ENABLE_CSP_NONCES=true`).
+35: - El build produce assets estáticos que se sirven desde el backend FastAPI como archivos estáticos.
+36: 
+37: ## Relacionado
+38: 
+39: - [[SvelteKit 2]] — Framework frontend donde se configura el modo SPA
+40: - [[CSP con nonces]] — Los nonces solo funcionan en producción por esta razón
+41: - [[CVE-2025-7969 markdown-it]] — El CVE que no aplica gracias a este diseño
+42: - [[MOC - Arquitectura]] — Contexto de la decisión dentro del sistema general
+43: - [[Despliegue en OpenShift]] — Cómo se sirve la SPA compilada desde FastAPI
+
+=== COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md sha256=655215e135866d2da32f0499e408087c34000875b9efe3d8f2e804333c8d7185 ===
+1: ---
+2: title: "Sistema de errores centralizado"
+3: type: concepto
+4: tags: [coelsa-intelligent, arquitectura, errores, backend, frontend]
+5: aliases: [Jerarquía de excepciones, Error handling centralizado]
+6: description: "Usar cuando necesitás entender cómo el backend devuelve errores de forma consistente o cómo el frontend los captura y muestra al usuario."
+7: estado: vigente
+8: ---
+9: 
+10: # Sistema de errores centralizado
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent centraliza el manejo de excepciones en el backend con una jerarquía estándar de 10 tipos, y tiene componentes específicos en el frontend para cada categoría.
+15: 
+16: ## Backend: tipos de excepción
+17: 
+18: Todos los errores devuelven un JSON consistente:
+19: 
+20: ```json
+21: {
+22:   "message": "Mensaje legible para el usuario",
+23:   "status_code": 400,
+24:   "details": "Detalle técnico (omitido en producción)"
+25: }
+26: ```
+27: 
+28: | Tipo | Código HTTP | Uso |
+29: |------|-------------|-----|
+30: | `BadRequest` | 400 | Input inválido |
+31: | `Unauthorized` | 401 | Token ausente o inválido |
+32: | `Forbidden` | 403 | Sin permiso para el recurso |
+33: | `NotFound` | 404 | Recurso inexistente |
+34: | `Conflict` | 409 | Estado incompatible (ej: email duplicado) |
+35: | `Validation` | 422 | Fallo de validación de esquema |
+36: | `RateLimit` | 429 | Rate limit excedido |
+37: | `InternalServer` | 500 | Error interno inesperado |
+38: | `ServiceUnavailable` | 503 | Servicio externo no disponible |
+39: | `GatewayTimeout` | 504 | Timeout en llamada a servicio externo |
+40: 
+41: Los detalles técnicos se omiten en producción para no exponer información interna.
+42: 
+43: ## Frontend: componentes de error
+44: 
+45: | Componente | Cuándo se muestra |
+46: |------------|-------------------|
+47: | `NetworkError.svelte` | Sin conexión o error de red |
+48: | `TimeoutError.svelte` | La request tomó demasiado tiempo |
+49: | `GenericError.svelte` | Cualquier error no categorizado |
+50: | `ErrorBoundary.svelte` | Envuelve secciones para capturar errores en render |
+51: 
+52: El archivo `src/routes/+error.svelte` recibe todos los códigos HTTP y rutea al componente correspondiente, incluyendo un fallback genérico.
+53: 
+54: ## Relacionado
+55: 
+56: - [[Manejo de errores frontend]] — Detalle de los componentes Svelte de error
+57: - [[FastAPI y uvicorn]] — El servidor donde se registran los handlers de excepción
+58: - [[MOC - Arquitectura]] — Contexto del diseño de errores en el sistema
+59: - [[Roles de usuario]] — Los errores 403 se disparan cuando el rol no alcanza
+
+=== COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md sha256=5334e067051311815a3c387f5c5902f4e6675acbdc12e67d452093e0fa01c663 ===
+1: ---
+2: title: "Azure AD login exclusivo"
+3: type: decision
+4: tags: [coelsa-intelligent, auth, azure-ad, autenticacion]
+5: aliases: [Solo Azure AD, Login corporativo COELSA]
+6: description: "Usar cuando necesitás confirmar que el login local está deshabilitado o cuando configurás un nuevo entorno y necesitás saber qué variables de Azure AD son obligatorias."
+7: estado: vigente
+8: ---
+9: 
+10: # Azure AD login exclusivo
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent tiene **deshabilitados** el registro de nuevos usuarios vía formulario web y el login con email/contraseña. El **único** medio de autenticación es Azure Active Directory via OAuth 2.0.
+15: 
+16: ## Qué está deshabilitado
+17: 
+18: - Formulario de registro de usuario (el endpoint existe pero rechaza requests)
+19: - Login con email + contraseña
+20: - Auto-signup (creación automática de cuenta al primer login configurada en modo restringido)
+21: 
+22: ## Por qué esta decisión
+23: 
+24: COELSA es una empresa con Azure AD como directorio corporativo. Usar Azure AD:
+25: - Unifica la gestión de usuarios con el directorio existente
+26: - Elimina la necesidad de gestionar contraseñas en la aplicación
+27: - Permite aprovechar políticas de seguridad (MFA, Conditional Access) del tenant corporativo
+28: - Cumple con las políticas de seguridad de TI de COELSA
+29: 
+30: ## Variables requeridas
+31: 
+32: ```env
+33: OAUTH_CLIENT_ID=<azure-client-id>
+34: OAUTH_CLIENT_SECRET=<azure-client-secret>
+35: OAUTH_PROVIDER_NAME=microsoft
+36: OPENID_PROVIDER_URL=https://login.microsoftonline.com/<tenant-id>/v2.0/.well-known/openid-configuration
+37: ```
+38: 
+39: ## Relacionado
+40: 
+41: - [[Azure AD OAuth]] — Detalle técnico de la configuración OAuth
+42: - [[JWT y sesiones]] — El token interno que se genera después del OAuth exitoso
+43: - [[Roles de usuario]] — Los roles que se asignan a los usuarios una vez autenticados
+44: - [[MOC - Autenticación y Permisos]] — Índice del cluster de auth
+45: - [[MOC - Decisiones]] — D-11 en el índice de decisiones
+
+=== COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md sha256=63512785920e4b1035f23e1a5f0d7bbe736ea15a3c2e51845d3dc6ebe1e7c339 ===
+1: ---
+2: title: "Control de acceso a recursos"
+3: type: concepto
+4: tags: [coelsa-intelligent, auth, access-control, knowledge, files]
+5: aliases: [access_control, Permisos de recursos, Resource access control]
+6: description: "Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # Control de acceso a recursos
+11: 
+12: ## Qué es
+13: 
+14: Los modelos `Knowledge` y `File` tienen un campo `access_control` en formato JSON que define quién puede leer y escribir ese recurso. El campo `None` significa acceso público para todos los `user`.
+15: 
+16: ## Modos de acceso
+17: 
+18: | Valor de `access_control` | Significado |
+19: |--------------------------|-------------|
+20: | `None` | Acceso público — cualquier usuario con rol `user` puede leer |
+21: | `{}` (objeto vacío) | Acceso privado — solo el propietario puede acceder |
+22: | Objeto con reglas | Acceso custom — según grupos y usuarios específicos |
+23: 
+24: ## Estructura del objeto custom
+25: 
+26: ```json
+27: {
+28:   "read": {
+29:     "group_ids": ["grupo-id-1", "grupo-id-2"],
+30:     "user_ids": ["user-id-1"]
+31:   },
+32:   "write": {
+33:     "group_ids": [],
+34:     "user_ids": ["user-id-admin"]
+35:   }
+36: }
+37: ```
+38: 
+39: ## Evaluación de acceso
+40: 
+41: La función `has_access()` en `backend/server/utils/access_control.py` evalúa si un usuario tiene permiso sobre un recurso. La evaluación verifica:
+42: 1. Si el usuario es el propietario → acceso total
+43: 2. Si el usuario tiene rol `admin` → acceso total
+44: 3. Si el `access_control` es `None` → acceso de lectura para `user`
+45: 4. Si hay reglas custom → verifica `group_ids` y `user_ids`
+46: 
+47: ## Relacionado
+48: 
+49: - [[Roles de usuario]] — El rol del usuario es el primer criterio de la evaluación
+50: - [[Grupos y permisos]] — Los `group_ids` en access_control referencian grupos del sistema
+51: - [[MOC - Autenticación y Permisos]] — Índice del cluster de auth

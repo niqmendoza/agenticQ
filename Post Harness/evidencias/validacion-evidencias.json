@@ -1,0 +1,3785 @@
+{
+  "source_integrity": [],
+  "frozen_inputs": [],
+  "arms": {
+    "baseline": {
+      "documents_presented": 80,
+      "unique_source_lines_presented": 4100,
+      "source_lines_total": 4100,
+      "literal_extract_errors": [],
+      "citations": [
+        {
+          "location": "/facts/0/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 14,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/0/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/1/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/1/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/2/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 14,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/3/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 14,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/3/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+          "start": 26,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/3/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md",
+          "start": 12,
+          "end": 20,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/4/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 14,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/4/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/5/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/6/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 18,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/6/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 12,
+          "end": 29,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/7/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/7/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/8/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/9/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/10/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/11/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/12/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 16,
+          "end": 39,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/12/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 41,
+          "end": 75,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/13/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 14,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/13/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 36,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/ECO Design System.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 48,
+          "end": 55,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+          "start": 12,
+          "end": 32,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 16,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/15/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/15/sources/1",
+          "path": "COELSA.Intelligent/Stack/SvelteKit 2.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/16/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+          "start": 62,
+          "end": 67,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/17/sources/0",
+          "path": "COELSA.Intelligent/Seguridad/Path Traversal.md",
+          "start": 18,
+          "end": 42,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/17/sources/1",
+          "path": "COELSA.Intelligent/Seguridad/Protección SSRF.md",
+          "start": 18,
+          "end": 53,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/18/sources/0",
+          "path": "COELSA.Intelligent/RAG/Módulo de retrieval.md",
+          "start": 29,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/18/sources/1",
+          "path": "COELSA.Intelligent/RAG/Chats de referencia.md",
+          "start": 16,
+          "end": 47,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/0/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+          "start": 62,
+          "end": 67,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/0/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 14,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/0/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/0/sources/3",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 14,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/1/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/1/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 14,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/2/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 18,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/2/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/2/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 12,
+          "end": 29,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/3/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/3/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/3/sources/2",
+          "path": "COELSA.Intelligent/RAG/Módulo de retrieval.md",
+          "start": 29,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/4/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/4/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 14,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/4/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/5/sources/0",
+          "path": "COELSA.Intelligent/Stack/SvelteKit 2.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/5/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/5/sources/2",
+          "path": "COELSA.Intelligent/RAG/Chats de referencia.md",
+          "start": 16,
+          "end": 47,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/6/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 16,
+          "end": 39,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/6/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 41,
+          "end": 75,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/8/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 36,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/8/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/ECO Design System.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/8/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 48,
+          "end": 55,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/8/sources/3",
+          "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/9/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/9/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/10/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/10/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/10/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/10/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/0/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 14,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/0/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/0/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 14,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/1/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 14,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/1/sources/1",
+          "path": "COELSA.Intelligent/RAG/Chats de referencia.md",
+          "start": 16,
+          "end": 47,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/2/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 14,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/2/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/3/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/3/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/3/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+          "start": 16,
+          "end": 29,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/4/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/4/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+          "start": 16,
+          "end": 29,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/5/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/5/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/6/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 14,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/6/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/6/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 14,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+          "start": 26,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/2",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/8/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 14,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/8/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/8/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 14,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/9/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 14,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/9/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/14/sources/0",
+          "path": "COELSA.Intelligent/Seguridad/Path Traversal.md",
+          "start": 18,
+          "end": 42,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/14/sources/1",
+          "path": "COELSA.Intelligent/Seguridad/Protección SSRF.md",
+          "start": 18,
+          "end": 53,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/16/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 14,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/16/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/16/sources/2",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 18,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 12,
+          "end": 29,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/2",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/18/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 14,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/18/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/18/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 18,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/19/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/20/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 14,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/20/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/21/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/21/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/21/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/21/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/22/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/22/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 36,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/23/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/23/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/24/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 18,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/24/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/25/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/25/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/25/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/26/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/26/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/26/sources/2",
+          "path": "COELSA.Intelligent/RAG/Módulo de retrieval.md",
+          "start": 29,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/26/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/27/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/28/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 16,
+          "end": 39,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/28/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 41,
+          "end": 75,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/29/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 16,
+          "end": 39,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/29/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/30/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 16,
+          "end": 39,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/31/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 41,
+          "end": 75,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/31/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 16,
+          "end": 39,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/32/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/32/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/32/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 36,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/33/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 14,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/33/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 36,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/34/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/ECO Design System.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/34/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 16,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/34/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 48,
+          "end": 55,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/34/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+          "start": 12,
+          "end": 32,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/35/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/35/sources/1",
+          "path": "COELSA.Intelligent/Stack/SvelteKit 2.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/36/sources/0",
+          "path": "COELSA.Intelligent/RAG/Chats de referencia.md",
+          "start": 16,
+          "end": 47,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/36/sources/1",
+          "path": "COELSA.Intelligent/RAG/Módulo de retrieval.md",
+          "start": 29,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/36/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/37/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/37/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/0/sources/0",
+          "path": "COELSA.Intelligent/MOCs/MOC - Almacenamiento.md",
+          "start": 10,
+          "end": 12,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/0/sources/1",
+          "path": "COELSA.Intelligent/Stack/MinIO S3.md",
+          "start": 12,
+          "end": 14,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/0/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 18,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/1/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 14,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/1/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/2/sources/0",
+          "path": "COELSA.Intelligent/COELSA.Intelligent - Home.md",
+          "start": 24,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/2/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 16,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/2/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/ECO Design System.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/3/sources/0",
+          "path": "COELSA.Intelligent/Stack/Ollama.md",
+          "start": 24,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/3/sources/1",
+          "path": "COELSA.Intelligent/Modelos IA/Validación de urlIdx.md",
+          "start": 28,
+          "end": 45,
+          "range_valid": true,
+          "entire_range_presented": true
+        }
+      ],
+      "invalid_citations": 0,
+      "citations_not_fully_presented": 0,
+      "freeze_errors": [],
+      "exact_duplicate_cases": 0,
+      "cases": 38
+    },
+    "scripts": {
+      "documents_presented": 27,
+      "unique_source_lines_presented": 1264,
+      "source_lines_total": 4100,
+      "literal_extract_errors": [],
+      "citations": [
+        {
+          "location": "/facts/0/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 12,
+          "end": 14,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/0/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 16,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/0/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/1/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/1/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/2/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/2/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 22,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/3/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 12,
+          "end": 14,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/3/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 16,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/3/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 22,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/3/sources/3",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 38,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/3/sources/4",
+          "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+          "start": 26,
+          "end": 29,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/4/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/5/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/5/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/5/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/6/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/7/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/7/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/7/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/8/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/9/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/9/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/9/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 26,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/9/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 34,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/10/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/10/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/11/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+          "start": 62,
+          "end": 67,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/11/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/12/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 18,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/12/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 27,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/12/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 27,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/12/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 41,
+          "end": 57,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/13/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 12,
+          "end": 15,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/13/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 16,
+          "end": 23,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/13/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 24,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/13/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 47,
+          "end": 52,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 12,
+          "end": 15,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 16,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 48,
+          "end": 55,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/4",
+          "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+          "start": 25,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/14/sources/5",
+          "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/15/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/15/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 25,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/15/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 32,
+          "end": 43,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/facts/15/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 44,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/0/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+          "start": 62,
+          "end": 67,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/1/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/1/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/1/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 22,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/1/sources/3",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 16,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/1/sources/4",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 22,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/1/sources/5",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 38,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/1/sources/6",
+          "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+          "start": 26,
+          "end": 29,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/2/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/2/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 16,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/2/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/3/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/3/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/3/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/4/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/4/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/4/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/4/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/4/sources/4",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/5/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/5/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/6/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 24,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/6/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/6/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/6/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/6/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/6/sources/5",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/5",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/7/sources/6",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/8/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/8/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/8/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/8/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/8/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/9/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 18,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/9/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 27,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/9/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 27,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/9/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 41,
+          "end": 57,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/10/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 12,
+          "end": 15,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 16,
+          "end": 23,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 24,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 47,
+          "end": 52,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/4",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 12,
+          "end": 15,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/5",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 16,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/6",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 48,
+          "end": 55,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/7",
+          "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/8",
+          "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+          "start": 25,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/9",
+          "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/10",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/11",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 25,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/12",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 32,
+          "end": 43,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/implementation/11/sources/13",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 44,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/0/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/0/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 16,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/1/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 16,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/1/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/2/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 16,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/2/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/3/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/3/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/3/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/3/sources/3",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/4/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/4/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/5/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/5/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 22,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/5/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/5/sources/3",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/6/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 16,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/6/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 22,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/6/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 38,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/6/sources/3",
+          "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+          "start": 26,
+          "end": 29,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/6/sources/4",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 16,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 22,
+          "end": 37,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/3",
+          "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+          "start": 38,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/5",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/7/sources/6",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 22,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/8/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/8/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/8/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/8/sources/3",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/9/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/10/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/10/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/10/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/10/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/11/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/11/sources/1",
+          "path": "COELSA.Intelligent/Seguridad/Path Traversal.md",
+          "start": 34,
+          "end": 42,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/12/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/12/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 24,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/12/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/12/sources/3",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/13/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/13/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/13/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/14/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/14/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/14/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/14/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/14/sources/4",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/5",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/6",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 25,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/7",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 32,
+          "end": 43,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/15/sources/8",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 44,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/16/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/16/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/16/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/16/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 24,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/5",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/17/sources/6",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/18/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/18/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/18/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 26,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/18/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 34,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/19/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/19/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/19/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 26,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/19/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 34,
+          "end": 36,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/19/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/19/sources/5",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/20/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/20/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/20/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/20/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/20/sources/4",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/21/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/21/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/22/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 18,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/22/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 27,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/22/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/22/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 25,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/22/sources/4",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 32,
+          "end": 43,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/22/sources/5",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 44,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/23/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 18,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/23/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 27,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/23/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 27,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/23/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 41,
+          "end": 57,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/24/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 18,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/24/sources/1",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 27,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/24/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 27,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/24/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 41,
+          "end": 57,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/25/sources/0",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/25/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/25/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 25,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/25/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 32,
+          "end": 43,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/25/sources/4",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 44,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/26/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 12,
+          "end": 15,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/26/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 16,
+          "end": 23,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/26/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 24,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/26/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 47,
+          "end": 52,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/27/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 12,
+          "end": 15,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/27/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 16,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/27/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 48,
+          "end": 55,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/27/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/27/sources/4",
+          "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+          "start": 25,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/27/sources/5",
+          "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/28/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/28/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/cases/28/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/0/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/0/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/0/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/1/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/1/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/3/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/3/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/3/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/3/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/3/sources/4",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/4/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/4/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/4/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/4/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/4/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/4/sources/5",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/4/sources/6",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/5/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/5/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/5/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/6/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+          "start": 62,
+          "end": 67,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/6/sources/1",
+          "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+          "start": 16,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/6/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/7/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 16,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/7/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/7/sources/2",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 12,
+          "end": 21,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/7/sources/3",
+          "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+          "start": 22,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/8/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 27,
+          "end": 40,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/8/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+          "start": 41,
+          "end": 57,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/8/sources/2",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 18,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/8/sources/3",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 27,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/9/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/9/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/questions/9/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/0/sources/0",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 16,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/0/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 39,
+          "end": 46,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/1/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/1/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/1/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/1/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/2/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/2/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/2/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/2/sources/3",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/3/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/3/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/3/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/3/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/3/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/3/sources/5",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/3/sources/6",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/4/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 18,
+          "end": 22,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/conflicts/4/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 42,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/0/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+          "start": 62,
+          "end": 67,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/0/sources/1",
+          "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+          "start": 24,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/0/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+          "start": 36,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/1/sources/0",
+          "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+          "start": 16,
+          "end": 48,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/1/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 16,
+          "end": 28,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/1/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/1/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 35,
+          "end": 38,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/1/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 16,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/1/sources/5",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 32,
+          "end": 41,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/1/sources/6",
+          "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+          "start": 42,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/2/sources/0",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 12,
+          "end": 17,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/2/sources/1",
+          "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+          "start": 18,
+          "end": 25,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/2/sources/2",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 20,
+          "end": 35,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/2/sources/3",
+          "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+          "start": 36,
+          "end": 44,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/2/sources/4",
+          "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+          "start": 29,
+          "end": 33,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 12,
+          "end": 15,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 16,
+          "end": 23,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 24,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/3",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 12,
+          "end": 15,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/4",
+          "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+          "start": 16,
+          "end": 27,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/5",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 16,
+          "end": 24,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/6",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 25,
+          "end": 31,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/7",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 32,
+          "end": 43,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/8",
+          "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+          "start": 44,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/9",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 18,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/3/sources/10",
+          "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+          "start": 27,
+          "end": 34,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/4/sources/0",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 12,
+          "end": 15,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/4/sources/1",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 16,
+          "end": 23,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/4/sources/2",
+          "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+          "start": 24,
+          "end": 26,
+          "range_valid": true,
+          "entire_range_presented": true
+        },
+        {
+          "location": "/omissions/4/sources/3",
+          "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+          "start": 49,
+          "end": 51,
+          "range_valid": true,
+          "entire_range_presented": true
+        }
+      ],
+      "invalid_citations": 0,
+      "citations_not_fully_presented": 0,
+      "freeze_errors": [],
+      "exact_duplicate_cases": 0,
+      "cases": 29
+    }
+  },
+  "previous_html_modified": []
+}

@@ -1,0 +1,267 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 50, "returned": 5, "next_offset": 55}
+
+=== COELSA.Intelligent/MOCs/MOC - Stack.md sha256=e7cb09f8e7cf7845d06e73ccad5732e0834f7a2c7642f151d2fb3932e3e9cc8e ===
+1: ---
+2: title: "MOC — Stack"
+3: type: moc
+4: tags: [coelsa-intelligent, stack, tecnologia, moc]
+5: aliases: [Stack COELSA, Tecnologías COELSA, MOC Stack]
+6: description: "Usar cuando necesitás saber qué tecnología usa COELSA.Intelligent en cada capa, su versión mínima requerida y cómo se configura."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — Stack
+11: 
+12: El stack de COELSA.Intelligent cubre todas las capas: frontend, backend, persistencia, mensajería, almacenamiento de objetos, búsqueda vectorial, identidad y despliegue.
+13: 
+14: ## Notas de este cluster
+15: 
+16: ### Frontend
+17: - [[SvelteKit 2]] — Framework SPA con TailwindCSS; SSR deshabilitado; más de 4.500 módulos en build
+18: 
+19: ### Backend
+20: - [[FastAPI y uvicorn]] — Servidor HTTP ASGI con python-socketio para WebSockets
+21: 
+22: ### Persistencia
+23: - [[PostgreSQL]] — Base de datos relacional con SQLAlchemy + Alembic; versión mínima 14
+24: - [[Redis]] — Canal de WebSockets y cache distribuida; versión mínima 7
+25: 
+26: ### Almacenamiento de objetos
+27: - [[MinIO S3]] — Almacenamiento compatible S3 para archivos del sistema
+28: 
+29: ### Búsqueda vectorial
+30: - [[Milvus]] — Base de datos vectorial para RAG con multi-tenancy; versión mínima 2.4
+31: 
+32: ### Identidad
+33: - [[Azure AD OAuth]] — Proveedor OAuth 2.0 / OpenID Connect corporativo; único medio de login
+34: 
+35: ### Modelos IA
+36: - [[Ollama]] — Servidor local de modelos LLM (acceso nativo)
+37: - [[LiteLLM proxy]] — Proxy OpenAI-compatible que unifica múltiples proveedores de modelos
+38: 
+39: ### Despliegue
+40: - [[OpenShift]] — Plataforma de orquestación de contenedores con Azure DevOps CI/CD
+41: 
+42: ## MOCs vecinos
+43: 
+44: - [[MOC - Arquitectura]] — Decisiones de diseño que motivaron la elección de cada componente
+45: - [[MOC - CI-CD y Despliegue]] — Cómo se construye y despliega cada componente del stack
+46: - [[MOC - RAG y Búsqueda Vectorial]] — Cómo se usa Milvus dentro del sistema RAG
+47: - [[MOC - Modelos IA y Routing]] — Cómo interactúan Ollama y LiteLLM con el sistema
+
+=== COELSA.Intelligent/Modelos IA/Cadena SearXNG Context Forge.md sha256=c810e02eb5cc52df3dd78d3ecd1d13b613766ca4dc1143d7b29fded866fc779f ===
+1: ---
+2: title: "Cadena SearXNG Context Forge"
+3: type: concepto
+4: tags: [coelsa-intelligent, modelos-ia, searxng, mcp, busqueda-web]
+5: aliases: [SearXNG integration, Context Forge chain, Búsqueda web MCP]
+6: description: "Usar cuando necesitás entender cómo está implementada la búsqueda web en COELSA.Intelligent: la cadena completa desde el modelo hasta SearXNG."
+7: estado: vigente
+8: ---
+9: 
+10: # Cadena SearXNG Context Forge
+11: 
+12: ## Qué es
+13: 
+14: La integración de búsqueda web en COELSA.Intelligent usa una cadena de 4 componentes:
+15: 
+16: ```
+17: Open WebUI → MCPO (puerto 8000) → Context Forge (puerto 4444) → searxng-mcp → SearXNG
+18: ```
+19: 
+20: ## Componentes
+21: 
+22: | Componente | Puerto | Rol |
+23: |-----------|--------|-----|
+24: | **MCPO** | 8000 | Proxy MCP → HTTP que convierte el protocolo MCP a una API HTTP/OpenAPI |
+25: | **Context Forge** | 4444 | Orquestador de contexto; registra herramientas MCP y las expone via OpenAPI |
+26: | **searxng-mcp** | — | Servidor MCP que envuelve SearXNG con el protocolo MCP |
+27: | **SearXNG** | — | Motor de búsqueda metasearch (privado, self-hosted) |
+28: 
+29: ## Por qué esta cadena
+30: 
+31: - SearXNG es self-hosted para mantener privacidad (sin tracking de búsquedas)
+32: - MCP es el protocolo estándar para tool calling en agentes IA
+33: - MCPO convierte MCP a HTTP/OpenAPI, que es lo que Open WebUI entiende como tool server
+34: 
+35: ## Configuración
+36: 
+37: ```env
+38: TOOL_SERVER_CONNECTIONS=[
+39:   {
+40:     "url": "http://host:8000/contextforge",
+41:     "path": "openapi.json",
+42:     "auth_type": "bearer",
+43:     "key": "tu-api-key"
+44:   }
+45: ]
+46: ```
+47: 
+48: ## Relación con non-native function calling
+49: 
+50: Para el modelo `gpt-oss:120b` (sin function calling nativo), la herramienta se describe en el system prompt. Ver [[MCP y tool calling]] para el detalle del JSON prompt.
+51: 
+52: ## Relacionado
+53: 
+54: - [[MCP y tool calling]] — El mecanismo de tool calling que usa esta cadena
+55: - [[MOC - Modelos IA y Routing]] — Índice del cluster de modelos
+56: - [[MOC - Decisiones]] — D-10 en el índice de decisiones
+
+=== COELSA.Intelligent/Modelos IA/MCP y tool calling.md sha256=6043f116d3ca2e6f97fb871e59712c6d3bbac239bb83a09dd8b182bc297ab2c8 ===
+1: ---
+2: title: "MCP y tool calling"
+3: type: concepto
+4: tags: [coelsa-intelligent, modelos-ia, mcp, tool-calling, function-calling]
+5: aliases: [MCP tool calling, Non-native function calling, JSON prompt tool calling]
+6: description: "Usar cuando necesitás entender cómo COELSA.Intelligent implementa tool calling para modelos sin function calling nativo, o cómo está configurada la integración MCP."
+7: estado: vigente
+8: ---
+9: 
+10: # MCP y tool calling
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent integra **Model Context Protocol (MCP)** para exponer herramientas (tools) a los modelos. La herramienta principal configurada es [[Cadena SearXNG Context Forge|búsqueda web via SearXNG]].
+15: 
+16: ## Dos modos de tool calling
+17: 
+18: ### 1. Native function calling
+19: Modelos que soportan function calling nativo (formato OpenAI `tools`). El backend envía las herramientas disponibles en el payload y el modelo responde con llamadas estructuradas.
+20: 
+21: ### 2. Non-native function calling (JSON prompt)
+22: El modelo `gpt-oss:120b` **no soporta tool calling nativo de forma confiable**. COELSA.Intelligent implementa un workaround:
+23: 
+24: 1. Las herramientas disponibles se describen en el **system prompt** como JSON
+25: 2. Se le indica al modelo que responda con un JSON específico cuando quiera llamar una herramienta
+26: 3. El backend parsea la respuesta del modelo buscando el JSON de tool call
+27: 4. Ejecuta la herramienta y vuelve a llamar al modelo con el resultado
+28: 
+29: ## Parsing robusto de JSON
+30: 
+31: Los modelos grandes frecuentemente incluyen texto adicional antes o después del JSON válido. El parser usa `json.JSONDecoder().raw_decode()` para tolerar este "ruido":
+32: 
+33: ```python
+34: # backend/server/utils/middleware.py
+35: decoder = json.JSONDecoder()
+36: obj, end_idx = decoder.raw_decode(model_response)
+37: # obj es el JSON válido; el texto después de end_idx se descarta
+38: ```
+39: 
+40: ## Configuración
+41: 
+42: ```env
+43: TOOL_SERVER_CONNECTIONS=[
+44:   {
+45:     "url": "http://host:8000/contextforge",
+46:     "path": "openapi.json",
+47:     "auth_type": "bearer",
+48:     "key": "..."
+49:   }
+50: ]
+51: ```
+52: 
+53: ## Relacionado
+54: 
+55: - [[Cadena SearXNG Context Forge]] — La cadena concreta de tool calling para búsqueda web
+56: - [[LiteLLM proxy]] — El proxy a través del cual pasan las requests al modelo
+57: - [[MOC - Modelos IA y Routing]] — Índice del cluster de modelos
+58: - [[MOC - Decisiones]] — D-09 en el índice de decisiones
+
+=== COELSA.Intelligent/Modelos IA/PyTorch CPU-only.md sha256=866cbc9b4dbd5a99f45c5559b76c742f3dbd3d8c19c8d84b1fee060aa5edaf19 ===
+1: ---
+2: title: "PyTorch CPU-only"
+3: type: decision
+4: tags: [coelsa-intelligent, modelos-ia, pytorch, docker, cpu]
+5: aliases: [CPU-only PyTorch, PyTorch sin CUDA, Torch CPU]
+6: description: "Usar cuando necesitás entender por qué la imagen Docker de COELSA.Intelligent usa PyTorch CPU-only y qué implica para el tamaño de imagen y el rendimiento de embeddings."
+7: estado: vigente
+8: ---
+9: 
+10: # PyTorch CPU-only
+11: 
+12: ## Qué es
+13: 
+14: El [[Dockerfile]] de COELSA.Intelligent instala **PyTorch en su variante CPU-only** en lugar de la variante con soporte CUDA (GPU):
+15: 
+16: ```dockerfile
+17: RUN pip3 install torch==2.5.1+cpu \
+18:     --index-url https://download.pytorch.org/whl/cpu
+19: ```
+20: 
+21: ## Por qué CPU-only
+22: 
+23: | Variante | Tamaño | Requisito |
+24: |----------|--------|-----------|
+25: | CUDA | ~2GB | GPU NVIDIA en el nodo |
+26: | CPU-only | ~200MB | Solo CPU |
+27: 
+28: Los contenedores en [[OpenShift]] de COELSA **no tienen acceso a GPU**. La variante CUDA ocuparía ~2GB de imagen innecesariamente. La variante CPU-only es 10x más liviana y suficiente para las necesidades de embeddings del sistema.
+29: 
+30: ## `torchvision` y `torchaudio`
+31: 
+32: Estas bibliotecas auxiliares fueron removidas del Dockerfile en v1.3.0 (ver CHANGELOG). No hay imports de `torchvision` ni `torchaudio` verificados en el repositorio, por lo que su presencia solo aumentaba el tamaño de imagen sin aportar funcionalidad.
+33: 
+34: ## Impacto en rendimiento de embeddings
+35: 
+36: El procesamiento de embeddings con CPU es más lento que con GPU. Para el volumen de documentos esperado en COELSA.Intelligent, el impacto es aceptable. Si el tiempo de procesamiento se convierte en un problema, sería necesario:
+37: 1. Migrar a nodos con GPU en OpenShift
+38: 2. Cambiar a la variante CUDA de PyTorch
+39: 3. Activar `USE_CUDA_DOCKER=true` en las variables de entorno
+40: 
+41: ## Relacionado
+42: 
+43: - [[Dockerfile]] — El archivo donde se instala PyTorch CPU-only
+44: - [[OpenShift]] — El entorno sin GPU donde corre la imagen
+45: - [[Módulo de retrieval]] — El módulo que usa PyTorch para los embeddings
+46: - [[MOC - Decisiones]] — D-06 en el índice de decisiones
+
+=== COELSA.Intelligent/Modelos IA/Routing de modelos IA.md sha256=bbd9b3b28b48a137fb275e50e8aaebf70fdf6b7e8cbd93578616dba775a2f6fb ===
+1: ---
+2: title: "Routing de modelos IA"
+3: type: concepto
+4: tags: [coelsa-intelligent, modelos-ia, routing, ollama, litellm]
+5: aliases: [Model routing, Selección de endpoint de modelos]
+6: description: "Usar cuando necesitás entender cómo COELSA.Intelligent decide si una request de chat va al endpoint nativo de Ollama o al proxy LiteLLM."
+7: estado: vigente
+8: ---
+9: 
+10: # Routing de modelos IA
+11: 
+12: ## Qué es
+13: 
+14: Cuando un usuario envía un mensaje, el backend debe decidir a qué endpoint enviar la request de inferencia. COELSA.Intelligent soporta dos destinos:
+15: - **[[Ollama]]** nativo — endpoint Ollama en `OLLAMA_BASE_URL`
+16: - **[[LiteLLM proxy]]** — proxy OpenAI-compatible en `OPENAI_API_BASE_URL`
+17: 
+18: ## Lógica de routing
+19: 
+20: ```
+21: backend/server/utils/chat.py (líneas ~263–293)
+22: ```
+23: 
+24: El routing evalúa en orden:
+25: 
+26: 1. **¿Tiene `urlIdx`?** → Si está definido, el modelo es proxied → usar endpoint OpenAI (LiteLLM)
+27: 2. **¿`owned_by` == "ollama"?** → Usar endpoint nativo de Ollama
+28: 3. **Default** → Usar endpoint OpenAI (LiteLLM)
+29: 
+30: ## Por qué `urlIdx` tiene prioridad
+31: 
+32: El campo `owned_by` no es suficiente para determinar el endpoint correcto. Los modelos con prefijo `ollama/` en LiteLLM tienen `owned_by=ollama` pero **deben** ir al proxy, no al endpoint nativo de Ollama. Si van al endpoint nativo, LiteLLM no puede procesar la respuesta y la UI muestra respuestas vacías.
+33: 
+34: Ver [[Validación de urlIdx]] para el detalle del bug y la corrección.
+35: 
+36: ## Formatos de respuesta
+37: 
+38: | Endpoint | Formato de respuesta |
+39: |----------|---------------------|
+40: | Ollama nativo | Formato Ollama propio |
+41: | LiteLLM proxy | Formato OpenAI estándar (siempre) |
+42: 
+43: ## Relacionado
+44: 
+45: - [[Validación de urlIdx]] — El fix específico que resuelve el bug de respuestas vacías
+46: - [[Ollama]] — El servidor de modelos nativo
+47: - [[LiteLLM proxy]] — El proxy OpenAI-compatible
+48: - [[MCP y tool calling]] — La capa de tool calling que corre sobre el routing
+49: - [[MOC - Modelos IA y Routing]] — Índice del cluster de modelos

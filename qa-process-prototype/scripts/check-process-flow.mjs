@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+const m = JSON.parse(readFileSync(new URL('../src/data/qa-process.json', import.meta.url), 'utf8'));
+const has = (a,b,type) => m.edges.some(e => e.source === a && e.target === b && (!type || e.type === type));
+const incoming = id => m.edges.filter(e => e.target === id).map(e=>e.source);
+assert(has('qa-reviewer','dual-approval','human-approval') && has('dev-reviewer','dual-approval','human-approval'), 'Deben intervenir las dos áreas.');
+assert.deepEqual(incoming('publish-test-case'), ['approval-decision'], 'Publicar requiere pasar por la decisión de aprobación.');
+assert(has('approval-decision','case-designer','feedback'), 'La revisión puede devolver la propuesta.');
+assert(has('coverage-decision','coverage-kept','conditional'), 'Un caso suficiente debe poder conservarse sin regenerar.');
+assert.deepEqual(incoming('ragflow-sync'), ['knowledge-repository'], 'RAGFlow sólo se actualiza desde el conocimiento incorporado al repositorio.');
+assert(has('result-decision','environment-repair','feedback') && has('environment-repair','ci-pipeline','conditional'), 'Un fallo de ambiente se corrige antes de reejecutar.');
+assert.deepEqual(incoming('defect-markdown'), ['result-decision'], 'El Markdown sólo nace de una clasificación de resultados.');
+assert(has('fix-pr','retest-request') && has('retest-request','ci-pipeline'), 'Una corrección dispara una ejecución nueva.');
+assert(!has('fix-pr','regression-check') && has('result-decision','regression-check') && has('regression-check','result-record'), 'El cierre requiere evaluar resultados nuevos, no sólo incorporar código.');
+assert(has('approval','design','feedback') && has('evaluation','execution','feedback') && has('feedback','execution','feedback'), 'El mapa maestro debe conservar los retornos principales.');
+console.log('10 controles de flujo aprobados: revisión conjunta, publicación, duplicados, conocimiento, fallos, corrección y cierre.');

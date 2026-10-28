@@ -1,0 +1,13 @@
+// Requiere playwright en NODE_PATH. No usa Internet ni abre aplicaciones de OWUI.
+const {chromium}=require('playwright');const fs=require('fs');const path=require('path');const {pathToFileURL}=require('url');
+(async()=>{
+ const root=path.resolve(__dirname,'..');const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});const errors=[];const external=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))external.push(r.url())});await page.goto(pathToFileURL(path.join(root,'reporte.html')).href);await page.screenshot({path:path.join(root,'evidencias/render-desktop.png')});
+ const desktop=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,title:document.title,sections:document.querySelectorAll('section').length,details:document.querySelectorAll('details').length,images:document.images.length}));
+ const links=await page.locator('a[href]').evaluateAll(es=>es.map(e=>e.getAttribute('href')));const broken=[];
+ for(const href of links){if(href.startsWith('http')||href.startsWith('#'))continue;const target=path.resolve(root,decodeURIComponent(href.split('#')[0]));if(!fs.existsSync(target))broken.push(href);}
+ await page.locator('button').filter({hasText:'Expandir entregas'}).click();const expanded=await page.locator('#entregas details:not([open])').count();await page.locator('button').filter({hasText:'Contraer entregas'}).click();
+ await page.setViewportSize({width:390,height:844});await page.goto(pathToFileURL(path.join(root,'reporte.html')).href);await page.screenshot({path:path.join(root,'evidencias/render-mobile.png')});const mobile=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth}));
+ await page.setViewportSize({width:1440,height:1000});await page.evaluate(()=>window.scrollTo(0,document.querySelector('#usage').getBoundingClientRect().top+scrollY-70));await page.screenshot({path:path.join(root,'evidencias/render-usage.png')});
+ const report={desktop,mobile,errors,external_requests:external,broken_links:broken,all_delivery_details_expanded:expanded===0,local_links_checked:links.filter(h=>!h.startsWith('http')&&!h.startsWith('#')).length};fs.writeFileSync(path.join(root,'evidencias/verificacion-html.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser.close();if(errors.length||external.length||broken.length||expanded||mobile.scrollWidth>mobile.width||desktop.scrollWidth>desktop.width)process.exitCode=1;
+})().catch(e=>{console.error(e);process.exitCode=1});

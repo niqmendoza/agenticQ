@@ -1,0 +1,22 @@
+{
+  "scope": "Snapshot parcial del turno actual del coordinador, preparación anterior a despacho V2 separada de coordinación/informe posterior. No suma al costo por consulta.",
+  "turn_id": "01a18041-2117-7ed2-a66d-ce7e4a960c71",
+  "cutoff_utc": "2026-10-28T02:13:50.014Z",
+  "preparation_responses": 9,
+  "preparation_usage": {
+    "input_tokens": 2439219,
+    "cached_input_tokens": 2420864,
+    "output_tokens": 18366,
+    "reasoning_output_tokens": 5785,
+    "total_tokens": 2457585
+  },
+  "coordination_responses_so_far": 20,
+  "coordination_usage_so_far": {
+    "input_tokens": 6397143,
+    "cached_input_tokens": 6373376,
+    "output_tokens": 34682,
+    "reasoning_output_tokens": 18010,
+    "total_tokens": 6431825
+  },
+  "source_sha256_at_export": "aa408ff033f3df20db3ce41e7c20fd6b3086dd4f26c94b19b548a40cfa30d486"
+}

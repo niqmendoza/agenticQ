@@ -1,0 +1,1 @@
+text(await tools.exec_command({cmd:"cat 'Post Harness V2/evidencias/consigna-comun.md' 'Post Harness V2/evidencias/modalidad-v2.md'","max_output_tokens":10000}));

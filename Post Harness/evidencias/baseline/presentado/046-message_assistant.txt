@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"La recuperación de los 80 documentos está completa y registrada. Estoy armando casos parametrizados para permisos y TTL, y dejando explícitamente abiertas las decisiones sobre `last_accessed_at`, carreras con limpieza y contratos de error todavía no definidos para esta extensión.\n","annotations":[],"logprobs":[]}]

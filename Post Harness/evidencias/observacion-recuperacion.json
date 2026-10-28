@@ -1,0 +1,5 @@
+{
+  "baseline_recovery_notice": "80 documentos; 16 lotes de cinco; evaluador declara sin truncamientos de herramienta",
+  "scripts_recovery_notice": "cinco consultas iniciales y ampliaciones por brain.py; evaluador declara recuperación completa para su análisis",
+  "notes": "Avisos recibidos antes de compartir casos. El coordinador todavía no compara resultados."
+}

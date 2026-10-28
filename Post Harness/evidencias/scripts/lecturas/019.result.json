@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+  "sha256": "6ae535d7d011734543b9246447d02388f744ce098c5f61cd842d9656bac8fae0",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Patrones de componentes Svelte\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]\naliases: [Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]\ndescription: \"Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.\"\nestado: vigente\n---",
+    "title": "Patrones de componentes Svelte",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]",
+    "aliases": "[Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]",
+    "description": "Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 80,
+  "total_lines": 81,
+  "text": "---\ntitle: \"Patrones de componentes Svelte\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]\naliases: [Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]\ndescription: \"Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.\"\nestado: vigente\n---\n\n# Patrones de componentes Svelte\n\n## Qué es\n\nHay **4 patrones de código en el frontend** que resuelven bugs concretos. Su omisión o reversión reproduce los bugs originales. Documentados aquí como referencia obligatoria al trabajar en `Chat.svelte` y componentes relacionados.\n\n## 1. Guarda de `chatId` (evita loop de renderizado)\n\n```typescript\n// src/routes/(app)/c/[id]/+page.svelte o Chat.svelte\nif ($chatId !== chatIdProp) {\n    chatId.set(chatIdProp);\n}\n```\n\n**Por qué**: sin esta guarda, el cambio de chat dispara una actualización del store que a su vez dispara otro cambio de chat, generando un **loop de renderizado infinito**.\n\n## 2. `AbortController` en `loadChat` (reduce requests duplicados ~80%)\n\n```typescript\nlet currentController: AbortController | null = null;\n\nasync function loadChat(id: string) {\n    currentController?.abort();  // Cancela la carga anterior\n    currentController = new AbortController();\n    const data = await fetchChat(id, { signal: currentController.signal });\n}\n```\n\n**Por qué**: si el usuario cambia de chat antes de que termine de cargar el anterior, sin `AbortController` ambas requests corren en paralelo y pueden pisarse. Reduce ~80% de requests duplicados.\n\n## 3. Unsubscribers en `onDestroy` (evita memory leaks)\n\n```typescript\nimport { onMount, onDestroy } from 'svelte';\n\nlet unsub: () => void;\n\nonMount(() => {\n    unsub = someStore.subscribe(value => { ... });\n});\n\nonDestroy(() => {\n    unsub?.();  // OBLIGATORIO: limpiar la suscripción\n});\n```\n\n**Por qué**: los stores suscritos en `onMount` acumulan listeners si no se destruyen en `onDestroy`. Los listeners fantasma disparan requests adicionales y pueden causar actualizaciones en componentes desmontados.\n\n## 4. Bloques reactivos unificados (evita ejecuciones duplicadas)\n\n```typescript\n// MAL — separados generan doble ejecución:\n$: if (selectedModels) updateModels();\n$: if (selectedModels) setToolIds();\n\n// BIEN — unificados:\n$: {\n    if (selectedModels) {\n        updateModels();\n        setToolIds();\n    }\n}\n```\n\n**Por qué**: los bloques `$:` separados que dependen del mismo reactive value se ejecutan independientemente. Al unificarlos, solo hay una ejecución por cambio de estado.\n\n## Relacionado\n\n- [[SvelteKit 2]] — El framework donde aplican estos patrones\n- [[MOC - Desarrollo]] — Índice del cluster de desarrollo",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": false
+}

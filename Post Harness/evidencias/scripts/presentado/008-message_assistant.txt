@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"Voy a leer la consigna común y la modalidad de scripts, y prepararé la entrega con los registros requeridos.\n","annotations":[],"logprobs":[]}]

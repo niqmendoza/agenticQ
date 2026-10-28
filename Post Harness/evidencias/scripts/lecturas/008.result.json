@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+  "sha256": "45ab53acb192acc80c560d357d61560d2b1f8909fa3fc43aaee264ad7b232b4e",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"URLs firmadas MinIO\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, presigned-url, seguridad]\naliases: [Presigned URLs, URLs firmadas S3, Signed URLs MinIO]\ndescription: \"Usar cuando necesitás entender cómo los clientes acceden a archivos en MinIO de forma segura y temporaria sin exponer credenciales.\"\nestado: vigente\n---",
+    "title": "URLs firmadas MinIO",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, almacenamiento, minio, presigned-url, seguridad]",
+    "aliases": "[Presigned URLs, URLs firmadas S3, Signed URLs MinIO]",
+    "description": "Usar cuando necesitás entender cómo los clientes acceden a archivos en MinIO de forma segura y temporaria sin exponer credenciales.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 52,
+  "total_lines": 52,
+  "text": "---\ntitle: \"URLs firmadas MinIO\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, presigned-url, seguridad]\naliases: [Presigned URLs, URLs firmadas S3, Signed URLs MinIO]\ndescription: \"Usar cuando necesitás entender cómo los clientes acceden a archivos en MinIO de forma segura y temporaria sin exponer credenciales.\"\nestado: vigente\n---\n\n# URLs firmadas MinIO\n\n## Qué es\n\nLas **URLs firmadas** (presigned URLs) son URLs de acceso temporal a objetos en [[MinIO S3]] que no requieren que el cliente tenga credenciales del bucket. El servidor firma la URL con las credenciales S3 y establece un tiempo de expiración.\n\n## Cómo funciona\n\n```python\n# Pseudocódigo de generación (StorageProvider.get_presigned_url)\nurl = s3_client.generate_presigned_url(\n    'get_object',\n    Params={'Bucket': S3_BUCKET_NAME, 'Key': file_path},\n    ExpiresIn=3600  # 1 hora por defecto\n)\n```\n\nLa URL resultante incluye la firma criptográfica y la fecha de expiración en los query params. Solo es válida hasta esa fecha y solo para el objeto específico.\n\n## Por qué URLs firmadas\n\n- **Seguridad**: el cliente nunca recibe credenciales del bucket; solo puede acceder al archivo específico por el tiempo configurado\n- **Control de acceso**: si el [[Control de acceso a recursos|access_control]] del archivo cambia, las URLs viejas siguen siendo válidas hasta su expiración pero no se generan nuevas\n- **Descarga directa**: el cliente descarga directo de MinIO sin pasar por el backend, reduciendo la carga del servidor\n\n## Configuración de expiración\n\nLa expiración por defecto es **3600 segundos (1 hora)**. El parámetro `ExpiresIn` es configurable en la llamada a `get_presigned_url()`.\n\n## Timeouts boto3 (Windows)\n\nPara evitar timeouts en entornos Windows con latencia de red:\n- Connect timeout: 30s\n- Read timeout: 120s\n- 10 reintentos con backoff exponencial\n- TCP keepalive habilitado\n\n## Relacionado\n\n- [[MinIO S3]] — El proveedor que genera estas URLs\n- [[Flujo de subida de archivos]] — Cuándo se genera la URL firmada en el ciclo de vida del archivo\n- [[Sistema híbrido de almacenamiento]] — El contexto general del sistema de almacenamiento\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

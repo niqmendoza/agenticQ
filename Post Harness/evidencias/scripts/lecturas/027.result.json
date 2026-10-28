@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+  "sha256": "8bfa3cfca6f5ef84dd7427fd7cf2688cb2b14aef4b25b8af66d72d245cf1d5c0",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---",
+    "title": "Flujo de subida de archivos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, almacenamiento, upload, archivos]",
+    "aliases": "[File upload flow, Subida de archivos COELSA]",
+    "description": "Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 48,
+  "total_lines": 48,
+  "text": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---\n\n# Flujo de subida de archivos\n\n## Qué es\n\nDescribe el ciclo completo desde que un usuario sube un archivo hasta que queda accesible via URL firmada en MinIO.\n\n## Pasos del flujo\n\n### 1. Recepción (router `files.py`)\nEl endpoint `POST /api/v1/files/` recibe el archivo multipart. El backend:\n- Sanitiza el nombre del archivo (protección contra [[Path Traversal]])\n- Guarda temporalmente en `data/uploads/<uuid>-<filename>`\n- Crea un registro en la tabla `file` con `path` = ruta local\n\n### 2. Procesamiento RAG (opcional)\nSi el archivo va a ser embedido (Knowledge base, búsqueda vectorial):\n- Se procesa con los loaders del [[Módulo de retrieval]]\n- Los chunks se insertan en [[Milvus]] bajo la colección correspondiente\n\n### 3. Migración a MinIO (scheduler diario)\nEl [[Scheduler de limpieza|scheduler]] ejecuta diariamente:\n- Lee los registros de `file` con `path` local\n- Sube cada archivo a [[MinIO S3]]\n- Actualiza el campo `path` en BD con la clave S3\n- Genera una [[URLs firmadas MinIO|URL firmada]] para el acceso\n\n### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n\n## Relacionado\n\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza\n- [[Borrado en cascada de archivos]] — Qué pasa cuando se elimina el chat asociado\n- [[Protección SSRF]] — La sanitización de paths en el paso de recepción",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

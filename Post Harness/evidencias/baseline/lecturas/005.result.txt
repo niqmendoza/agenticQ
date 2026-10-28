@@ -1,0 +1,278 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 20, "returned": 5, "next_offset": 25}
+
+=== COELSA.Intelligent/CI-CD/Despliegue en OpenShift.md sha256=ea5286f35171c5be485f0e6b18217e9b811c1f66a59595ae44ae4183d7229e06 ===
+1: ---
+2: title: "Despliegue en OpenShift"
+3: type: referencia
+4: tags: [coelsa-intelligent, cicd, openshift, despliegue, configmap]
+5: aliases: [OpenShift deployment, Deploy COELSA, Despliegue COELSA]
+6: description: "Usar cuando necesitás desplegar COELSA.Intelligent en OpenShift por primera vez o actualizar un entorno existente — pasos ordenados y requisitos previos."
+7: estado: vigente
+8: ---
+9: 
+10: # Despliegue en OpenShift
+11: 
+12: ## Pasos de despliegue
+13: 
+14: ### Prerequisitos (primera vez)
+15: 
+16: 1. **Crear el bucket MinIO**:
+17:    ```bash
+18:    python scripts/create_minio_bucket.py
+19:    ```
+20:    Requiere que las variables `S3_*` estén en `.env`.
+21: 
+22: 2. **Aplicar ConfigMap** con variables de entorno:
+23:    ```bash
+24:    oc apply -f docs/OPENSHIFT-CONFIGMAP.yaml
+25:    ```
+26: 
+27: 3. **Aplicar configuración de Routes** (incluye CSP):
+28:    ```bash
+29:    oc apply -f docs/OPENSHIFT-ROUTE-CONFIG.yaml
+30:    ```
+31: 
+32: ### Deploy de una nueva versión
+33: 
+34: Ejecutar el pipeline correspondiente:
+35: - **DEV**: `azure-pipeline-DEV.yml`
+36: - **VALIDACION**: `azure-pipeline-VALIDACION.yml`
+37: - **PRODUCCIÓN**: `azure-pipeline-PROD.yml`
+38: 
+39: ### Migraciones de base de datos
+40: 
+41: ```bash
+42: cd backend
+43: alembic upgrade head
+44: ```
+45: 
+46: El servidor aplica migraciones automáticamente al arrancar. Si hay migraciones pendientes críticas, ejecutarlas manualmente antes del deploy.
+47: 
+48: ## Configuración crítica del Route
+49: 
+50: ### Timeout de HAProxy
+51: 
+52: El timeout de HAProxy en el Route **debe ser mayor a 300 segundos**. El procesamiento de archivos con RAG (embedding + inserción en Milvus) puede superar 5 minutos en documentos grandes.
+53: 
+54: ```yaml
+55: # En la anotación del Route de OpenShift
+56: haproxy.router.openshift.io/timeout: 600s
+57: ```
+58: 
+59: ### CSP para SharePoint
+60: 
+61: Si [[SharePoint OneDrive integración]] está activo, incluir en la CSP:
+62: ```
+63: connect-src: login.microsoftonline.com graph.microsoft.com
+64: ```
+65: 
+66: ## Relacionado
+67: 
+68: - [[Pipelines Azure DevOps]] — Los pipelines que automatizan el despliegue
+69: - [[Dockerfile]] — La imagen que se despliega
+70: - [[CSP con nonces]] — La CSP que va en el Route
+71: - [[MinIO S3]] — El bucket que debe crearse antes del primer deploy
+72: - [[MOC - CI-CD y Despliegue]] — Índice del cluster de CI/CD
+
+=== COELSA.Intelligent/CI-CD/Dockerfile.md sha256=5ce0dbeb045daa2067ea50cb5f0046a7d9d164fcda6deedb2a125d00c594dfb0 ===
+1: ---
+2: title: "Dockerfile"
+3: type: referencia
+4: tags: [coelsa-intelligent, cicd, docker, dockerfile, imagen]
+5: aliases: [Docker image COELSA, Imagen Docker COELSA]
+6: description: "Usar cuando necesitás entender cómo se construye la imagen Docker de COELSA.Intelligent, sus workarounds de SSL corporativo y por qué no incluye CUDA ni Pyodide."
+7: estado: vigente
+8: ---
+9: 
+10: # Dockerfile
+11: 
+12: ## Qué es
+13: 
+14: El `Dockerfile` en la raíz del proyecto construye la imagen de producción de COELSA.Intelligent. Combina el build del frontend estático con el backend Python en una sola imagen.
+15: 
+16: ## Características clave
+17: 
+18: ### PyTorch CPU-only
+19: 
+20: ```dockerfile
+21: RUN pip3 install torch==2.5.1+cpu \
+22:     --index-url https://download.pytorch.org/whl/cpu
+23: ```
+24: 
+25: La variante CUDA (~2GB) no se usa porque [[OpenShift]] no tiene GPUs disponibles. Ver [[PyTorch CPU-only]].
+26: 
+27: ### Sin Pyodide
+28: 
+29: El build usa `npm run build:docker` (no `npm run build`), que **no descarga Pyodide**. Ver [[Build frontend]].
+30: 
+31: ### SSL corporativo (riesgo aceptado)
+32: 
+33: ```dockerfile
+34: ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+35: ENV npm_config_strict_ssl=false
+36: ENV PIP_TRUSTED_HOST="download.pytorch.org pypi.org files.pythonhosted.org"
+37: ```
+38: 
+39: Estas variables deshabilitan la verificación SSL en `npm` y `pip` durante el build. Necesario en el entorno de CI/CD con proxy corporativo que intercepta HTTPS. Ver [[SSL corporativo en build]] y [[Riesgos de seguridad aceptados]].
+40: 
+41: ### CHANGELOG en la ruta correcta
+42: 
+43: ```dockerfile
+44: COPY CHANGELOG.md /app/CHANGELOG.md
+45: ```
+46: 
+47: Corrección del v1.3.0: anteriormente se copiaba a `/app/backend/CHANGELOG.md` pero la app lo buscaba en `/app/CHANGELOG.md`.
+48: 
+49: ## Relacionado
+50: 
+51: - [[PyTorch CPU-only]] — Por qué CPU-only y su impacto en tamaño de imagen
+52: - [[Build frontend]] — El comando `build:docker` que usa el Dockerfile
+53: - [[SSL corporativo en build]] — El riesgo del SSL deshabilitado
+54: - [[Pipelines Azure DevOps]] — Los pipelines que construyen esta imagen
+55: - [[MOC - CI-CD y Despliegue]] — Índice del cluster de CI/CD
+
+=== COELSA.Intelligent/CI-CD/Pipelines Azure DevOps.md sha256=d931e4ac4cea7c4eaaa1289b5725572d5fcf7ea882a50eb7fe37430346d75684 ===
+1: ---
+2: title: "Pipelines Azure DevOps"
+3: type: referencia
+4: tags: [coelsa-intelligent, cicd, azure-devops, pipelines, openshift]
+5: aliases: [Azure DevOps pipelines, CI/CD COELSA, Pipelines COELSA]
+6: description: "Usar cuando necesitás entender qué hace cada pipeline de CI/CD de COELSA.Intelligent o cuándo se ejecuta cada uno."
+7: estado: vigente
+8: ---
+9: 
+10: # Pipelines Azure DevOps
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent tiene **4 pipelines de Azure DevOps** que gestionan el ciclo de vida completo desde el commit hasta producción.
+15: 
+16: ## Los 4 pipelines
+17: 
+18: | Archivo | Entorno | Propósito |
+19: |---------|---------|-----------|
+20: | `azure-pipeline-DEV.yml` | DEV | Build y deploy automático de ramas de feature |
+21: | `azure-pipeline-VALIDACION.yml` | VALIDACION | Build y deploy para QA/testing |
+22: | `azure-pipeline-PROD.yml` | PRODUCCIÓN | Deploy a producción (requiere aprobación) |
+23: | `azure-pipeline-RELEASE.yml` | — | Gestión de versiones (tagging, changelogs) |
+24: 
+25: ## Pasos típicos de un pipeline
+26: 
+27: 1. **Build frontend**: `npm run build:docker` (sin Pyodide — ver [[Build frontend]])
+28: 2. **Build imagen Docker**: `docker build -t ...` (ver [[Dockerfile]])
+29: 3. **Push a registry**: push de la imagen al registro corporativo
+30: 4. **Deploy a OpenShift**: `oc apply` con la nueva imagen
+31: 
+32: ## Variables críticas de entorno en los pipelines
+33: 
+34: Las variables de entorno de la app **no** están hardcodeadas en los pipelines. Se inyectan desde:
+35: - **ConfigMap de OpenShift**: variables de aplicación — ver [[Despliegue en OpenShift]]
+36: - **Azure DevOps Variable Groups**: credenciales (secrets) del pipeline
+37: 
+38: ## Relacionado
+39: 
+40: - [[Build frontend]] — El comando `build:docker` que usan los pipelines
+41: - [[Dockerfile]] — La imagen que construyen los pipelines
+42: - [[Despliegue en OpenShift]] — El destino de los deploys
+43: - [[MOC - CI-CD y Despliegue]] — Índice del cluster de CI/CD
+
+=== COELSA.Intelligent/CI-CD/SSL corporativo en build.md sha256=32eefae75dd52ea5178c68b9ade872d5b868fe6823b05bf89018e0662c3791ce ===
+1: ---
+2: title: "SSL corporativo en build"
+3: type: referencia
+4: tags: [coelsa-intelligent, cicd, ssl, docker, seguridad, riesgo]
+5: aliases: [SSL deshabilitado build, Corporate SSL proxy, TLS bypass build]
+6: description: "Usar cuando el build Docker falla por errores de certificado SSL, o cuando necesitás entender por qué el Dockerfile tiene SSL deshabilitado y cuándo debe corregirse."
+7: estado: vigente
+8: ---
+9: 
+10: # SSL corporativo en build
+11: 
+12: ## Qué es
+13: 
+14: El Dockerfile de COELSA.Intelligent tiene la verificación SSL deshabilitada en los pasos de instalación de dependencias:
+15: 
+16: ```dockerfile
+17: ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+18: ENV npm_config_strict_ssl=false
+19: ENV PIP_TRUSTED_HOST="download.pytorch.org download-r2.pytorch.org pypi.org files.pythonhosted.org"
+20: ```
+21: 
+22: ## Por qué está deshabilitado
+23: 
+24: El entorno de CI/CD de COELSA tiene un **proxy corporativo** que intercepta el tráfico HTTPS y lo re-encripta con sus propios certificados TLS. Estos certificados son de la CA corporativa de COELSA, que **no está instalada en las imágenes base** de Docker usadas en el pipeline.
+25: 
+26: Resultado: `npm` y `pip` ven certificados que no reconocen → error de SSL → fallo del build.
+27: 
+28: La deshabilitación de SSL es el workaround temporal mientras se resuelve la instalación de los CAs corporativos a nivel de imagen base.
+29: 
+30: ## El riesgo
+31: 
+32: Con SSL deshabilitado, `npm` y `pip` **no verifican la autenticidad del servidor** durante la descarga de dependencias. Un atacante con posición de man-in-the-middle en la red corporativa podría inyectar paquetes maliciosos.
+33: 
+34: Este es un **riesgo aceptado** documentado en [[Riesgos de seguridad aceptados]].
+35: 
+36: ## La solución correcta
+37: 
+38: 1. Instalar los certificados CA corporativos en la imagen base de Docker
+39: 2. Eliminar las variables `NODE_TLS_REJECT_UNAUTHORIZED`, `npm_config_strict_ssl` y `PIP_TRUSTED_HOST` del Dockerfile
+40: 
+41: Esta solución requiere coordinación con el equipo de infraestructura de COELSA.
+42: 
+43: ## Relacionado
+44: 
+45: - [[Dockerfile]] — El archivo donde viven estas variables
+46: - [[Riesgos de seguridad aceptados]] — El riesgo 3 (SSL en build)
+47: - [[Pipelines Azure DevOps]] — El entorno de CI/CD donde aplica
+48: - [[MOC - CI-CD y Despliegue]] — Índice del cluster de CI/CD
+
+=== COELSA.Intelligent/COELSA.Intelligent - Home.md sha256=dd4c0bdd24ac536e2c82a602d263e3e12cf6088d2222617202b444593ea3fa3a ===
+1: ---
+2: title: "COELSA.Intelligent — Home"
+3: type: home
+4: tags: [coelsa-intelligent, home, indice]
+5: aliases: [Home COELSA, COELSA Intelligent Home, COELSA.Intelligent Home]
+6: description: "Usar cuando necesitás orientarte en el vault de COELSA.Intelligent — punto de entrada a todos los MOCs y áreas del proyecto."
+7: estado: vigente
+8: ---
+9: 
+10: # COELSA.Intelligent — Home
+11: 
+12: Plataforma interna de chat con IA generativa de COELSA. Fork de Open WebUI adaptado para infraestructura corporativa: autenticación Azure AD, almacenamiento MinIO/S3, búsqueda vectorial Milvus, identidad visual COELSA y despliegue en OpenShift.
+13: 
+14: **Versión actual:** v1.3.0
+15: **Entornos activos:** DEV · VALIDACION · PRODUCCIÓN (OpenShift)
+16: **Repo base:** Fork de Open WebUI (MIT); cambios aplicados sobre versión estabilizada sin seguimiento del upstream.
+17: 
+18: > **Para LLMs:** cada nota tiene un campo `description` tipo "Usar cuando…" en el frontmatter YAML. Leer ese campo es suficiente para saber si la nota es relevante antes de leer el cuerpo completo.
+19: 
+20: > **Acceso rápido global:** [[OKF-INDEX]] para navegar por salto directo a cualquier nota del vault.
+21: 
+22: ---
+23: 
+24: ## Invariantes del proyecto (reglas que nunca se rompen)
+25: 
+26: - La autenticación es **exclusivamente Azure AD**; el registro local y el formulario de login están deshabilitados.
+27: - **Teal (`#06ABB9`) es el color primario COELSA** en ambos temas (light y dark). Pink es solo acento decorativo.
+28: - SSR está deshabilitado (`export const ssr = false`); la app es una SPA pura.
+29: - No se mantiene compatibilidad directa con el upstream Open WebUI; los cambios se aplican deliberadamente.
+30: - Todo par texto/fondo debe cumplir WCAG AA (4.5:1 texto normal, 3:1 texto grande).
+31: - No hardcodear valores hex en componentes; usar siempre roles/tokens semánticos del ECO Design System.
+32: 
+33: ---
+34: 
+35: ## Mapas de Contenido (MOCs)
+36: 
+37: | Área | MOC | Qué agrupa |
+38: |------|-----|-----------|
+39: | Arquitectura general | [[MOC - Arquitectura]] | Decisiones de diseño estructural del sistema |
+40: | Tecnologías del stack | [[MOC - Stack]] | Cada tecnología y su configuración |
+41: | Autenticación y acceso | [[MOC - Autenticación y Permisos]] | Azure AD, roles, JWT, control de acceso |
+42: | Almacenamiento de archivos | [[MOC - Almacenamiento]] | MinIO/S3, flujo de archivos, limpieza |
+43: | RAG y búsqueda vectorial | [[MOC - RAG y Búsqueda Vectorial]] | Milvus, embeddings, retrieval, multi-tenancy |
+44: | Modelos IA y routing | [[MOC - Modelos IA y Routing]] | Ollama, LiteLLM, MCP, SharePoint |
+45: | Diseño visual y frontend | [[MOC - Diseño y Frontend]] | ECO Design System, colores, componentes |
+46: | Seguridad y hardening | [[MOC - Seguridad]] | CSP, ReDoS, SSRF, dependencias |
+47: | CI/CD y despliegue | [[MOC - CI-CD y Despliegue]] | Pipelines, Docker, OpenShift |
+48: | Patrones de desarrollo | [[MOC - Desarrollo]] | Patrones críticos, migraciones, dev local |
+49: | Decisiones indexadas | [[MOC - Decisiones]] | Índice de todas las decisiones de diseño |

@@ -1,0 +1,18 @@
+{
+  "baseline": {
+    "dispatch_message": "Realizá una evaluación documental en español con contexto limpio. Leé y cumplí estos dos archivos: /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/consigna-comun.md y /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/modalidad-baseline.md. Guardá todos los entregables y logs indicados. No leas archivos de otras evaluaciones. No crees subagentes. Empezá ahora y completá la entrega congelada.",
+    "dispatched_utc": null,
+    "model": "heredado del coordinador, sin override",
+    "fork_turns": "none",
+    "dispatched_observation_utc": "2026-10-27T22:16:19.827376+00:00",
+    "task_name": "/root/lectura_completa"
+  },
+  "scripts": {
+    "dispatch_message": "Realizá una evaluación documental en español con contexto limpio. Leé y cumplí estos dos archivos: /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/consigna-comun.md y /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/modalidad-scripts.md. Guardá todos los entregables y logs indicados. No leas archivos de otras evaluaciones. No crees subagentes. Empezá ahora y completá la entrega congelada.",
+    "dispatched_utc": null,
+    "model": "heredado del coordinador, sin override",
+    "fork_turns": "none",
+    "dispatched_observation_utc": "2026-10-27T22:16:19.827376+00:00",
+    "task_name": "/root/lectura_scripts"
+  }
+}

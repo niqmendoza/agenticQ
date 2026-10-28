@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+  "sha256": "d9e8cc1be54498d21a67a9247f6eb066391a519df86fcbe0ebac88a5860a9ec5",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Internacionalización i18n\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, i18n, traducciones, es-ar]\naliases: [i18n COELSA, Traducciones COELSA, i18next COELSA]\ndescription: \"Usar cuando necesitás agregar o modificar traducciones en COELSA.Intelligent, o cuando querés entender qué idiomas están soportados y cómo configurarlos.\"\nestado: vigente\n---",
+    "title": "Internacionalización i18n",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, i18n, traducciones, es-ar]",
+    "aliases": "[i18n COELSA, Traducciones COELSA, i18next COELSA]",
+    "description": "Usar cuando necesitás agregar o modificar traducciones en COELSA.Intelligent, o cuando querés entender qué idiomas están soportados y cómo configurarlos.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 57,
+  "total_lines": 57,
+  "text": "---\ntitle: \"Internacionalización i18n\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, i18n, traducciones, es-ar]\naliases: [i18n COELSA, Traducciones COELSA, i18next COELSA]\ndescription: \"Usar cuando necesitás agregar o modificar traducciones en COELSA.Intelligent, o cuando querés entender qué idiomas están soportados y cómo configurarlos.\"\nestado: vigente\n---\n\n# Internacionalización i18n\n\n## Qué es\n\nCOELSA.Intelligent usa **i18next** como sistema de internacionalización. Los archivos de traducción están en `src/lib/i18n/` organizados por código de idioma.\n\n## Idiomas soportados\n\n| Código | Idioma | Estado |\n|--------|--------|--------|\n| `es-AR` | Castellano Rioplatense | **Default** — ver [[Idioma por defecto es-AR]] |\n| `en-GB` | English (British) | Activo |\n| `pt-BR` | Português (Brasil) | Activo |\n\n## Idiomas eliminados del fork\n\nRemovidos en v1.3.0: `es-ES`, `pt-PT`, `en-US`. Ver [[Idioma por defecto es-AR]].\n\n## Configuración\n\n```env\nDEFAULT_LOCALE=es-AR\n```\n\nEn el frontend, el idioma también puede seleccionarse por usuario en Settings (acceso restringido según [[Roles de usuario]]).\n\n## Uso en componentes Svelte\n\n```svelte\n<script>\n  import { t } from '$lib/i18n';\n</script>\n\n<button>{$t('common.send')}</button>\n<p>{$t('chat.placeholder', { name: userName })}</p>\n```\n\n## Agregar una traducción\n\n1. Localizar la clave en `src/lib/i18n/es-AR.json` (o crear si no existe)\n2. Agregar la misma clave en `en-GB.json` y `pt-BR.json`\n3. Usar `$t('clave')` en el componente Svelte\n\n## Relacionado\n\n- [[Idioma por defecto es-AR]] — La decisión de elegir es-AR como default\n- [[SvelteKit 2]] — El framework donde se integra i18next\n- [[MOC - Diseño y Frontend]] — Índice del cluster de diseño",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

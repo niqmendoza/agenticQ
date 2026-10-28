@@ -1,0 +1,189 @@
+{
+  "query": "agregar endpoint router REST autenticación errores",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "agregar",
+    "autenticacion",
+    "endpoint",
+    "errores",
+    "rest",
+    "router"
+  ],
+  "missing_terms": [],
+  "total_matches": 170,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+      "sha256": "9a7abc07850e4d29afdd6160b59e0e3c21cf59c533132b5db466f2f78c6c6878",
+      "section": "Convenciones",
+      "start": 62,
+      "end": 68,
+      "score": 28.2186,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Agregar router REST\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, fastapi, routers, api]\naliases: [Agregar endpoint, Nuevo router FastAPI, New REST endpoint]\ndescription: \"Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router.\"\nestado: vigente\n---",
+        "title": "Agregar router REST",
+        "type": "referencia",
+        "tags": "[coelsa-intelligent, desarrollo, backend, fastapi, routers, api]",
+        "aliases": "[Agregar endpoint, Nuevo router FastAPI, New REST endpoint]",
+        "description": "Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Convenciones\n\n- Los routers usan el prefijo `/api/v1/`\n- Todos los endpoints que requieren autenticación usan `Depends(get_current_user)`\n- Los errores usan la jerarquía del [[Sistema de errores centralizado]]\n- La lógica de acceso a BD va en `backend/server/models/`; el router solo orquesta\n",
+      "relations": [
+        {
+          "target": "Sistema de errores centralizado",
+          "fragment": "",
+          "line": 66,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "FastAPI y uvicorn",
+          "fragment": "",
+          "line": 71,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/FastAPI y uvicorn.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Sistema de errores centralizado",
+          "fragment": "",
+          "line": 72,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Control de acceso a recursos",
+          "fragment": "",
+          "line": 73,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Desarrollo",
+          "fragment": "",
+          "line": 74,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Desarrollo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Desarrollo.md",
+      "sha256": "55792092bfb6f1868646c795d989e976c23bdc5346ef2107faecf64f7fbeb6df",
+      "section": "Notas de este cluster",
+      "start": 14,
+      "end": 22,
+      "score": 13.3785,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"MOC — Desarrollo\"\ntype: moc\ntags: [coelsa-intelligent, desarrollo, patrones, migraciones, moc]\naliases: [MOC Desarrollo, Dev COELSA, Patrones COELSA]\ndescription: \"Usar cuando estás desarrollando en COELSA.Intelligent: patrones obligatorios del frontend, cómo agregar rutas REST, migraciones de BD, logging o ejecución local.\"\nestado: vigente\n---",
+        "title": "MOC — Desarrollo",
+        "type": "moc",
+        "tags": "[coelsa-intelligent, desarrollo, patrones, migraciones, moc]",
+        "aliases": "[MOC Desarrollo, Dev COELSA, Patrones COELSA]",
+        "description": "Usar cuando estás desarrollando en COELSA.Intelligent: patrones obligatorios del frontend, cómo agregar rutas REST, migraciones de BD, logging o ejecución local.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Notas de este cluster\n\n- [[Patrones frontend críticos]] — Las 4 guardas de código obligatorias en Chat.svelte y componentes relacionados\n- [[Migraciones Alembic]] — Flujo de migraciones de base de datos; comandos y cuándo ejecutarlas\n- [[Agregar router REST]] — Cómo extender la API de FastAPI con un nuevo router\n- [[Agregar proveedor de almacenamiento]] — Cómo implementar la interfaz `StorageProvider` para un nuevo backend\n- [[Loguru y logging]] — Configuración de logs con loguru; variable `LOG_LEVEL`; niveles por módulo\n- [[Ejecución local]] — Comandos para correr frontend y backend en modo desarrollo\n",
+      "relations": [
+        {
+          "target": "Patrones frontend críticos",
+          "fragment": "",
+          "line": 12,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Patrones frontend críticos",
+          "fragment": "",
+          "line": 16,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Migraciones Alembic",
+          "fragment": "",
+          "line": 17,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Migraciones Alembic.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Agregar router REST",
+          "fragment": "",
+          "line": 18,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Agregar router REST.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Agregar proveedor de almacenamiento",
+          "fragment": "",
+          "line": 19,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Loguru y logging",
+          "fragment": "",
+          "line": 20,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Loguru y logging.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 11,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}

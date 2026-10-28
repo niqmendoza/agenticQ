@@ -1,0 +1,2262 @@
+{
+  "title": "QA agentizada",
+  "description": "De la documentación a las pruebas y de los resultados a una mejora. Explorá cómo colaboran QA, desarrollo y las herramientas de IA.",
+  "modelVersion": "2.0.0",
+  "scope": {
+    "current": [
+      "GitHub Copilot para ayudar a QA a generar casos y tests",
+      "Azure Test Plans como catálogo",
+      "Playwright como automatización existente",
+      "Segundo cerebro en Obsidian/RAGFlow según la aplicación"
+    ],
+    "proposed": [
+      "n8n como orquestador",
+      "PR de casos con aprobación obligatoria de QA y desarrollo",
+      "Generación de Markdown para defectos confirmados"
+    ],
+    "optional": [
+      "Schemathesis",
+      "Hercules",
+      "iTestFlow",
+      "TestForge"
+    ]
+  },
+  "groups": [
+    {
+      "id": "context",
+      "type": "group",
+      "title": "01 · Entender el cambio",
+      "description": "El equipo acuerda qué debe hacer la aplicación y actualiza el conocimiento.",
+      "children": [
+        {
+          "id": "context-sources",
+          "type": "group",
+          "title": "Reunir el conocimiento",
+          "description": "Documentación aprobada, notas de QA y registro de cambios: cada fuente tiene un propósito.",
+          "children": [
+            {
+              "id": "functional-change",
+              "type": "input",
+              "title": "Cambio aprobado",
+              "shortDescription": "Una función nueva, una corrección o una regla que cambió.",
+              "description": "Funcionales y desarrollo confirman qué cambió. Ese acuerdo inicia la revisión de las pruebas.",
+              "responsibilities": [
+                "Identificar qué cambió y por qué"
+              ],
+              "inputs": [
+                "Historia o requisito",
+                "Criterios de aceptación"
+              ],
+              "outputs": [
+                "Cambio trazable"
+              ],
+              "tools": [
+                "Azure Boards o equivalente"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "Funcionales y desarrollo confirman el cambio."
+              },
+              "details": {
+                "objective": "Evitar diseñar pruebas a partir de una intención todavía ambigua.",
+                "howItWorks": "Se registra la versión, el alcance y los criterios aprobados.",
+                "validationCriteria": [
+                  "Existe una fuente funcional aprobada",
+                  "El cambio tiene identificador y responsable"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "functional-documentation",
+              "type": "artifact",
+              "title": "Documentación funcional",
+              "shortDescription": "Explica qué debería hacer la aplicación.",
+              "description": "Describe las reglas acordadas y los resultados esperados. Es la referencia para decidir si una prueba está bien.",
+              "responsibilities": [
+                "Mantener reglas de negocio y criterios claros"
+              ],
+              "inputs": [
+                "Cambio funcional aprobado"
+              ],
+              "outputs": [
+                "Documento revisado"
+              ],
+              "tools": [
+                "Repositorio Git"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "Funcionales redactan; QA y desarrollo pueden comentar."
+              },
+              "details": {
+                "objective": "Dar al agente una base verificable para proponer pruebas.",
+                "howItWorks": "Se modifica el documento en una rama y se revisa antes de integrarlo.",
+                "validationCriteria": [
+                  "La regla tiene fuente y versión",
+                  "Las contradicciones se resuelven antes de generar"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "knowledge-repository",
+              "type": "external-system",
+              "title": "Guardar el conocimiento",
+              "shortDescription": "El repositorio conserva la versión aprobada.",
+              "description": "La documentación y las notas revisadas se guardan con historial por aplicación. Los cambios se revisan antes de incorporarlos.",
+              "responsibilities": [
+                "Versionar documentación",
+                "Registrar cambios por PR"
+              ],
+              "inputs": [
+                "Documentación funcional",
+                "Notas QA revisadas"
+              ],
+              "outputs": [
+                "Revisión aprobada"
+              ],
+              "tools": [
+                "Git / Azure Repos"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA, funcionales y desarrollo revisan PRs según el cambio."
+              },
+              "details": {
+                "objective": "Mantener una fuente de conocimiento editable y auditable.",
+                "howItWorks": "Cada cambio se propone en rama, se comenta y se incorpora a la rama principal.",
+                "validationCriteria": [
+                  "Se conoce la revisión utilizada",
+                  "El contenido publicado fue aprobado"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "qa-notes",
+              "type": "artifact",
+              "title": "Experiencia del equipo QA",
+              "shortDescription": "Notas, dudas y situaciones descubiertas al probar.",
+              "description": "Las notas de Obsidian u otra base suman experiencia. Si proponen una regla nueva, el equipo debe confirmarla antes de usarla como requisito.",
+              "responsibilities": [
+                "Registrar hallazgos y ejemplos",
+                "Marcar dudas"
+              ],
+              "inputs": [
+                "Experiencia de QA"
+              ],
+              "outputs": [
+                "Notas con autor y estado"
+              ],
+              "tools": [
+                "Obsidian"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA mantiene y clasifica las notas."
+              },
+              "details": {
+                "objective": "Aprovechar conocimiento práctico sin elevar hipótesis a reglas.",
+                "howItWorks": "Se etiquetan las notas según estén confirmadas o pendientes.",
+                "validationCriteria": [
+                  "Las notas no contradicen reglas aprobadas sin aviso"
+                ]
+              },
+              "status": "actual"
+            }
+          ]
+        },
+        {
+          "id": "context-sync",
+          "type": "group",
+          "title": "Actualizar y comprobar",
+          "description": "La información llega a RAGFlow y se comprueba que corresponde al cambio que se va a probar.",
+          "children": [
+            {
+              "id": "ragflow-sync",
+              "type": "process",
+              "title": "Actualizar RAGFlow",
+              "shortDescription": "Incorporar la última documentación aprobada.",
+              "description": "Después de actualizar el repositorio, RAGFlow procesa los documentos. Antes de generar casos, se comprueba que la nueva versión esté disponible.",
+              "responsibilities": [
+                "Sincronizar cambios",
+                "Retirar información obsoleta"
+              ],
+              "inputs": [
+                "Revisión aprobada del repositorio"
+              ],
+              "outputs": [
+                "Índice consultable"
+              ],
+              "tools": [
+                "RAGFlow",
+                "Conector o API"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA verifica cambios sensibles."
+              },
+              "details": {
+                "objective": "Evitar que las propuestas usen reglas viejas.",
+                "howItWorks": "Se toma la rama principal y se comprueba que los documentos modificados estén procesados.",
+                "validationCriteria": [
+                  "La revisión consultable coincide con la aprobada",
+                  "No quedan versiones contradictorias activas"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "ragflow",
+              "type": "tool",
+              "title": "Consultar RAGFlow",
+              "shortDescription": "Encontrar las reglas y sus documentos de origen.",
+              "description": "RAGFlow permite buscar el conocimiento de la aplicación. Devuelve información y sus fuentes para que la IA pueda proponer pruebas con contexto.",
+              "responsibilities": [
+                "Entregar fragmentos pertinentes con fuente"
+              ],
+              "inputs": [
+                "Documentación indexada",
+                "Consulta del agente"
+              ],
+              "outputs": [
+                "Contexto y citas"
+              ],
+              "tools": [
+                "RAGFlow"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": false,
+                "description": ""
+              },
+              "details": {
+                "objective": "Fundamentar los casos propuestos en contenido verificable.",
+                "howItWorks": "n8n consulta la base pertinente y guarda las referencias de origen.",
+                "validationCriteria": [
+                  "Cada regla usada tiene fuente identificable"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "context-check",
+              "type": "validation",
+              "title": "¿La información está lista?",
+              "shortDescription": "Comprobar versión, reglas y dudas pendientes.",
+              "description": "Antes de generar casos se verifica que la información esté actualizada y sea suficiente. Si hay contradicciones, se resuelven con el equipo.",
+              "responsibilities": [
+                "Verificar sincronización y consistencia"
+              ],
+              "inputs": [
+                "Revisión Git",
+                "Respuesta RAGFlow"
+              ],
+              "outputs": [
+                "Contexto listo o devolución"
+              ],
+              "tools": [
+                "n8n",
+                "RAGFlow"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA o funcionales resuelven contradicciones."
+              },
+              "details": {
+                "objective": "Evitar propuestas basadas en información incompleta.",
+                "howItWorks": "Compara la revisión esperada y las fuentes recuperadas.",
+                "validationCriteria": [
+                  "La revisión es la esperada",
+                  "No hay ambigüedad crítica sin resolver"
+                ]
+              },
+              "status": "propuesto"
+            }
+          ]
+        }
+      ],
+      "milestones": [
+        "Documentación aprobada",
+        "Conocimiento en el repositorio",
+        "RAGFlow actualizado"
+      ],
+      "owner": "Funcionales + QA"
+    },
+    {
+      "id": "design",
+      "type": "group",
+      "title": "02 · Proponer pruebas",
+      "description": "Se revisa lo que ya está probado y se preparan los casos que faltan.",
+      "children": [
+        {
+          "id": "design-orchestration",
+          "type": "group",
+          "title": "Revisar qué ya existe",
+          "description": "n8n organiza la consulta de los casos que el equipo tiene en Azure.",
+          "children": [
+            {
+              "id": "n8n",
+              "type": "tool",
+              "title": "n8n organiza el trabajo",
+              "shortDescription": "Conecta las consultas y coordina cada paso.",
+              "description": "El flujo propuesto usa n8n para pedir información, invocar al agente y preparar la revisión. Las personas siguen tomando las decisiones de aprobación.",
+              "responsibilities": [
+                "Activar flujos",
+                "Conservar estado y correlación",
+                "Respetar controls humanas"
+              ],
+              "inputs": [
+                "Cambio aprobado",
+                "Eventos Git/Azure"
+              ],
+              "outputs": [
+                "Solicitudes a sistemas",
+                "Estados de ejecución"
+              ],
+              "tools": [
+                "n8n"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": false,
+                "description": ""
+              },
+              "details": {
+                "objective": "Reducir tareas repetitivas manteniendo control humano.",
+                "howItWorks": "Conecta APIs y pipelines, espera aprobaciones y vincula los documentos y resultados.",
+                "validationCriteria": [
+                  "No avanza sin ambas aprobaciones requeridas",
+                  "Cada ejecución es trazable"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "azure-test-plans",
+              "type": "external-system",
+              "title": "Consultar Azure Test Plans",
+              "shortDescription": "Buscar los casos y resultados que ya existen.",
+              "description": "Azure Test Plans es el catálogo del equipo: guarda casos, agrupaciones y resultados vinculados a lo que se está probando.",
+              "responsibilities": [
+                "Conservar identificadores",
+                "Registrar cobertura y ejecución"
+              ],
+              "inputs": [
+                "Casos aprobados",
+                "Resultados"
+              ],
+              "outputs": [
+                "Casos, suites y resultados"
+              ],
+              "tools": [
+                "Azure DevOps"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA administra y valida los cambios."
+              },
+              "details": {
+                "objective": "No duplicar cobertura y mantener continuidad del proceso actual.",
+                "howItWorks": "n8n lee los casos relevantes antes de proponer y publica sólo tras aprobación.",
+                "validationCriteria": [
+                  "El caso nuevo o actualizado se vincula al requisito",
+                  "Se preserva el ID si corresponde"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "case-inventory",
+              "type": "process",
+              "title": "Comparar con lo existente",
+              "shortDescription": "Identificar pruebas útiles y faltantes reales.",
+              "description": "Se comparan el cambio y los casos actuales. Así se sabe si conviene conservar una prueba, mejorarla o proponer una nueva.",
+              "responsibilities": [
+                "Detectar duplicados",
+                "Identificar huecos"
+              ],
+              "inputs": [
+                "Requisito",
+                "Casos de Azure",
+                "Contexto RAGFlow"
+              ],
+              "outputs": [
+                "Mapa de cobertura preliminar"
+              ],
+              "tools": [
+                "Azure DevOps API",
+                "n8n"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA confirma coincidencias dudosas."
+              },
+              "details": {
+                "objective": "Aprovechar el catálogo de casos existentes antes de escribir más casos.",
+                "howItWorks": "Se comparan alcance, pasos y resultados esperados.",
+                "validationCriteria": [
+                  "Cada propuesta explica qué cobertura existente se revisó"
+                ]
+              },
+              "status": "propuesto"
+            }
+          ]
+        },
+        {
+          "id": "design-generation",
+          "type": "group",
+          "title": "Preparar los borradores",
+          "description": "Copilot es la ayuda actual. El agente de n8n es una evolución propuesta para automatizar esta tarea.",
+          "children": [
+            {
+              "id": "copilot-case-current",
+              "type": "agent",
+              "title": "Hoy: casos con Copilot",
+              "shortDescription": "QA usa el conocimiento para pedir borradores.",
+              "description": "Hoy el equipo usa Copilot con la documentación y el segundo cerebro para proponer casos. QA revisa los borradores antes de usarlos.",
+              "responsibilities": [
+                "Ayudar a redactar casos en el flujo actual"
+              ],
+              "inputs": [
+                "Documentación funcional",
+                "Segundo cerebro de la aplicación"
+              ],
+              "outputs": [
+                "Borradores para revisión QA"
+              ],
+              "tools": [
+                "Obsidian o RAGFlow"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA prepara el contexto, revisa y corrige cada caso propuesto."
+              },
+              "details": {
+                "objective": "Conservar el flujo actual mientras se evalúa n8n como ayuda futura.",
+                "howItWorks": "QA consulta su segundo cerebro y pide a Copilot propuestas de casos basadas en la documentación funcional.",
+                "validationCriteria": [
+                  "Los esperados se apoyan en reglas aprobadas",
+                  "QA compara la propuesta con casos existentes"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "case-designer",
+              "type": "agent",
+              "title": "Propuesta: agente de diseño",
+              "shortDescription": "Redacta casos con contexto y fuentes.",
+              "description": "El agente propuesto usa un modelo de IA, la documentación y los casos actuales para redactar borradores. Incluye situaciones normales, errores y valores extremos relevantes.",
+              "responsibilities": [
+                "Generar borradores",
+                "Marcar supuestos",
+                "Evitar duplicados"
+              ],
+              "inputs": [
+                "Documentación aprobada",
+                "Mapa de cobertura"
+              ],
+              "outputs": [
+                "Borradores de casos"
+              ],
+              "tools": [
+                "RAGFlow",
+                "Azure DevOps API"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA revisa toda propuesta."
+              },
+              "details": {
+                "objective": "Ahorrar tiempo de diseño sin perder criterio humano.",
+                "howItWorks": "Recibe reglas con citas y casos existentes; devuelve pasos, datos y esperado por propuesta.",
+                "validationCriteria": [
+                  "Cada esperado se apoya en una fuente",
+                  "No inventa reglas ante dudas"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "llm",
+              "type": "model",
+              "title": "Modelo de IA",
+              "shortDescription": "Genera texto a partir de la información recibida.",
+              "description": "El modelo redacta las propuestas que el agente le pide. Puede ser un servicio externo o un modelo local, según la integración elegida.",
+              "responsibilities": [
+                "Producir borradores estructurados"
+              ],
+              "inputs": [
+                "Contexto y tarea delimitada"
+              ],
+              "outputs": [
+                "Texto propuesto"
+              ],
+              "tools": [
+                "Proveedor del modelo de IA o modelo local"
+              ],
+              "agents": [
+                "Agente de diseño QA"
+              ],
+              "humanInteraction": {
+                "required": false,
+                "description": ""
+              },
+              "details": {
+                "objective": "Acelerar tareas de análisis y redacción.",
+                "howItWorks": "Responde a solicitudes del agente con límites y formato definidos.",
+                "validationCriteria": [
+                  "La salida se valida antes de publicarse"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "case-draft",
+              "type": "artifact",
+              "title": "Borrador de la prueba",
+              "shortDescription": "Qué comprobar, cómo hacerlo y qué esperar.",
+              "description": "Cada borrador contiene pasos, datos, resultado esperado y fuente. Indica si propone crear un caso o mejorar uno existente.",
+              "responsibilities": [
+                "Dar material revisable a QA y desarrollo"
+              ],
+              "inputs": [
+                "Salida del agente",
+                "Cobertura existente"
+              ],
+              "outputs": [
+                "Propuesta versionable"
+              ],
+              "tools": [],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA y desarrollo corrigen el contenido."
+              },
+              "details": {
+                "objective": "Hacer explícito qué se propone probar y por qué.",
+                "howItWorks": "Incluye requisito, referencia documental, precondiciones, pasos y resultado esperado.",
+                "validationCriteria": [
+                  "No contiene datos secretos",
+                  "Se puede identificar su relación con los casos existentes"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "coverage-decision",
+              "type": "decision",
+              "title": "¿Hace falta este caso?",
+              "shortDescription": "Crear, mejorar o conservar una prueba existente.",
+              "description": "Se comprueba si la propuesta cubre algo que falta. Si ya hay una prueba suficiente, se conserva. Si falta una regla, se pide una aclaración.",
+              "responsibilities": [
+                "Clasificar la propuesta"
+              ],
+              "inputs": [
+                "Borrador",
+                "Mapa de cobertura"
+              ],
+              "outputs": [
+                "Decisión de diseño"
+              ],
+              "tools": [
+                "n8n"
+              ],
+              "agents": [
+                "Agente de diseño QA"
+              ],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA decide los casos ambiguos."
+              },
+              "details": {
+                "objective": "Evitar casos repetidos y mantener útiles las pruebas existentes.",
+                "howItWorks": "Compara qué se quiere comprobar, los pasos y el resultado esperado con los casos actuales.",
+                "validationCriteria": [
+                  "El motivo de la decisión queda registrado"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "coverage-kept",
+              "type": "output",
+              "title": "Conservar la prueba existente",
+              "shortDescription": "Si ya cubre el cambio, no crear un duplicado.",
+              "description": "Se registra qué caso existente cubre el cambio. El equipo puede volver a ejecutarlo cuando corresponda.",
+              "responsibilities": [
+                "Si ya cubre el cambio, no crear un duplicado."
+              ],
+              "inputs": [
+                "Requisito y caso existente"
+              ],
+              "outputs": [
+                "Cobertura confirmada sin un caso nuevo"
+              ],
+              "tools": [
+                "Azure Test Plans"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA puede revisar el caso conservado y la justificación de cobertura."
+              },
+              "details": {
+                "objective": "Si ya cubre el cambio, no crear un duplicado.",
+                "howItWorks": "Se registra qué caso existente cubre el cambio. El equipo puede volver a ejecutarlo cuando corresponda.",
+                "validationCriteria": [
+                  "El caso existente satisface el requisito",
+                  "QA puede revisar la decisión y su fuente"
+                ]
+              },
+              "status": "propuesto"
+            }
+          ]
+        },
+        {
+          "id": "design-alternatives",
+          "type": "group",
+          "title": "Otras herramientas posibles",
+          "description": "iTestFlow y TestForge son opciones a evaluar; no son pasos obligatorios ni deben generar casos duplicados.",
+          "children": [
+            {
+              "id": "itestflow",
+              "type": "tool",
+              "title": "iTestFlow · opción",
+              "shortDescription": "Puede ayudar a revisar y proponer casos.",
+              "description": "Es una alternativa para asistir la revisión de requisitos y casos. Su conexión con n8n debe verificarse o desarrollarse antes de incorporarla.",
+              "responsibilities": [
+                "Apoyar revisión y publicación si se adopta"
+              ],
+              "inputs": [
+                "Requisitos",
+                "Casos Azure"
+              ],
+              "outputs": [
+                "Propuestas y casos aprobados"
+              ],
+              "tools": [
+                "iTestFlow"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA opera sus controls de revisión."
+              },
+              "details": {
+                "objective": "Evaluar si resuelve brechas que hoy requieren trabajo manual.",
+                "howItWorks": "Se probaría en un alcance limitado y sin duplicar al generador actual.",
+                "validationCriteria": [
+                  "No publica duplicados",
+                  "El flujo con n8n se verifica antes de prometerlo"
+                ]
+              },
+              "status": "opcional",
+              "currentAlternative": "Hoy QA puede comparar los requisitos con los casos de Azure Test Plans y usar Copilot para proponer los faltantes. iTestFlow se evaluaría para facilitar esa revisión."
+            },
+            {
+              "id": "testforge",
+              "type": "tool",
+              "title": "TestForge · opción",
+              "shortDescription": "Otra herramienta para proponer casos.",
+              "description": "Es una alternativa al paso de generación con Copilot o el agente. Hay que medir su aporte y revisar las condiciones de uso antes de integrarla.",
+              "responsibilities": [
+                "Ofrecer alternativa de generación"
+              ],
+              "inputs": [
+                "Documentación",
+                "Requisitos"
+              ],
+              "outputs": [
+                "Borradores"
+              ],
+              "tools": [
+                "TestForge"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA revisa las propuestas."
+              },
+              "details": {
+                "objective": "Comparar utilidad frente al proceso actual.",
+                "howItWorks": "Se usa sólo en piloto controlado si reemplaza o mejora una pieza existente.",
+                "validationCriteria": [
+                  "No crea una segunda vía de publicación"
+                ]
+              },
+              "status": "opcional",
+              "currentAlternative": "Hoy Copilot ya propone borradores a partir de la documentación y del segundo cerebro. QA los revisa y selecciona; no hace falta sumar TestForge para continuar con ese trabajo."
+            }
+          ]
+        }
+      ],
+      "milestones": [
+        "Consultar casos existentes",
+        "Proponer con ayuda de IA",
+        "Evitar duplicados"
+      ],
+      "owner": "n8n + IA"
+    },
+    {
+      "id": "approval",
+      "type": "group",
+      "title": "03 · Aprobar en equipo",
+      "description": "QA y desarrollo revisan la propuesta. Se necesitan las dos aprobaciones.",
+      "children": [
+        {
+          "id": "test-proposal-pr",
+          "type": "artifact",
+          "title": "Abrir una propuesta en el repo",
+          "shortDescription": "Un PR reúne los casos y los comentarios.",
+          "description": "Un PR es una solicitud de revisión en el repositorio. Contiene los borradores y el requisito para que QA y desarrollo revisen la misma versión.",
+          "responsibilities": [
+            "Abrir discusión antes de automatizar",
+            "Guardar comentarios"
+          ],
+          "inputs": [
+            "Borradores aceptables"
+          ],
+          "outputs": [
+            "Casos aprobados o correcciones"
+          ],
+          "tools": [
+            "Azure Repos"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "QA y desarrollo revisan en el PR."
+          },
+          "details": {
+            "objective": "Dar un lugar común a dos equipos para acordar expectativas.",
+            "howItWorks": "n8n crea una rama y un PR; se incorporan cambios solicitados.",
+            "validationCriteria": [
+              "El PR enlaza requisito y fuentes",
+              "No se mezcla propuesta con código ejecutable"
+            ]
+          },
+          "status": "propuesto"
+        },
+        {
+          "id": "qa-reviewer",
+          "type": "human",
+          "title": "QA revisa los casos",
+          "shortDescription": "Comprueba utilidad, claridad y cobertura.",
+          "description": "QA verifica que los casos sean reproducibles, tengan un resultado esperado claro y aporten algo frente a las pruebas actuales.",
+          "responsibilities": [
+            "Confirmar cobertura",
+            "Pedir cambios"
+          ],
+          "inputs": [
+            "PR",
+            "Casos existentes"
+          ],
+          "outputs": [
+            "Aprobación QA o comentarios"
+          ],
+          "tools": [
+            "Azure Repos"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "Obligatoria."
+          },
+          "details": {
+            "objective": "Asegurar valor y mantenibilidad de la prueba.",
+            "howItWorks": "Vota y comenta sobre la propuesta.",
+            "validationCriteria": [
+              "Existe aprobación explícita de QA"
+            ]
+          },
+          "status": "propuesto"
+        },
+        {
+          "id": "dev-reviewer",
+          "type": "human",
+          "title": "Desarrollo revisa lo esperado",
+          "shortDescription": "Comprueba que se entendió la funcionalidad.",
+          "description": "Desarrollo revisa las reglas y el comportamiento esperado. Si hay una duda funcional, la resuelve con funcionales y QA antes de aprobar.",
+          "responsibilities": [
+            "Confirmar regla",
+            "Resolver ambigüedad"
+          ],
+          "inputs": [
+            "PR",
+            "Documentación funcional"
+          ],
+          "outputs": [
+            "Aprobación desarrollo o comentarios"
+          ],
+          "tools": [
+            "Azure Repos"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "Obligatoria."
+          },
+          "details": {
+            "objective": "Reducir desacuerdos antes de ejecutar.",
+            "howItWorks": "Vota y comenta sobre el mismo PR.",
+            "validationCriteria": [
+              "Existe aprobación explícita de desarrollo"
+            ]
+          },
+          "status": "propuesto"
+        },
+        {
+          "id": "dual-approval",
+          "type": "validation",
+          "title": "Reunir las dos aprobaciones",
+          "shortDescription": "QA y desarrollo aprueban la misma versión.",
+          "description": "Las reglas del repositorio deben exigir al menos una aprobación de QA y otra de desarrollo. Si la propuesta cambia, se vuelve a revisar.",
+          "responsibilities": [
+            "Bloquear publicación prematura"
+          ],
+          "inputs": [
+            "Votos del PR",
+            "Revisión final"
+          ],
+          "outputs": [
+            "Incorporar el cambio o pedir ajustes"
+          ],
+          "tools": [
+            "Azure Repos",
+            "n8n"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "Ambas aprobaciones son obligatorias."
+          },
+          "details": {
+            "objective": "Separar acuerdo humano de automatización.",
+            "howItWorks": "Se exigen revisores de los dos equipos y se reevalúan votos si cambia el borrador.",
+            "validationCriteria": [
+              "Ambos equipos aprobaron la última versión"
+            ]
+          },
+          "status": "propuesto"
+        },
+        {
+          "id": "approval-decision",
+          "type": "decision",
+          "title": "¿Ambas partes aprobaron?",
+          "shortDescription": "La propuesta avanza o vuelve con comentarios.",
+          "description": "Sólo se publica cuando las dos áreas aprobaron la versión final y el cambio se incorporó al repositorio. Si piden ajustes, vuelve a diseño.",
+          "responsibilities": [
+            "Elegir siguiente acción"
+          ],
+          "inputs": [
+            "Estado de revisión"
+          ],
+          "outputs": [
+            "Aprobar o pedir ajustes"
+          ],
+          "tools": [
+            "Azure Repos",
+            "n8n"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "QA y desarrollo toman la decisión."
+          },
+          "details": {
+            "objective": "No tratar un borrador como caso oficial.",
+            "howItWorks": "n8n observa el resultado del PR y sólo sigue después de incorporar el cambio aprobado.",
+            "validationCriteria": [
+              "Queda rastro de votos y versión aprobada"
+            ]
+          },
+          "status": "propuesto"
+        }
+      ],
+      "milestones": [
+        "Propuesta en el repositorio",
+        "Revisión de QA y desarrollo",
+        "Ambos aprueban la versión"
+      ],
+      "owner": "Personas"
+    },
+    {
+      "id": "execution",
+      "type": "group",
+      "title": "04 · Ejecutar pruebas",
+      "description": "El caso aprobado se convierte en código revisado y se prueba la aplicación.",
+      "children": [
+        {
+          "id": "execution-prep",
+          "type": "group",
+          "title": "Preparar la prueba automática",
+          "description": "Se registra el caso aprobado, se escribe el código con ayuda de Copilot y el equipo lo revisa.",
+          "children": [
+            {
+              "id": "publish-test-case",
+              "type": "process",
+              "title": "Registrar el caso aprobado",
+              "shortDescription": "Crear o actualizar el caso en Test Plans.",
+              "description": "Se publica la versión aprobada. Si mejora un caso existente, se conserva su identificador y su relación con el requisito.",
+              "responsibilities": [
+                "Relacionar caso y requisito",
+                "Evitar duplicados"
+              ],
+              "inputs": [
+                "PR aprobado",
+                "Decisión conservar/mejorar/crear"
+              ],
+              "outputs": [
+                "Caso oficial en Azure"
+              ],
+              "tools": [
+                "Azure DevOps API",
+                "n8n"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA valida la publicación."
+              },
+              "details": {
+                "objective": "Mantener un catálogo oficial coherente.",
+                "howItWorks": "Se escribe después de la doble aprobación y se registra el ID resultante.",
+                "validationCriteria": [
+                  "Un caso lógico tiene un ID estable",
+                  "El caso se vincula al requisito"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "copilot-test",
+              "type": "agent",
+              "title": "Escribir la prueba con Copilot",
+              "shortDescription": "El equipo convierte el caso en código.",
+              "description": "QA o desarrollo usan Copilot para preparar o ajustar el código de la prueba. El código propuesto se revisa antes de ejecutarlo como parte del proceso.",
+              "responsibilities": [
+                "Proponer código de test"
+              ],
+              "inputs": [
+                "Caso aprobado",
+                "Repositorio de pruebas"
+              ],
+              "outputs": [
+                "Cambios de código propuestos"
+              ],
+              "tools": [
+                "Editor de código",
+                "Repositorio Git"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA o desarrollo supervisa y corrige el código."
+              },
+              "details": {
+                "objective": "Reducir trabajo de codificación sin alterar el esperado aprobado.",
+                "howItWorks": "Una persona usa Copilot, ejecuta pruebas locales y abre PR de código.",
+                "validationCriteria": [
+                  "El código apunta al caso aprobado",
+                  "No cambia esperados para forzar verde"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "test-code-pr",
+              "type": "artifact",
+              "title": "Proponer el código de prueba",
+              "shortDescription": "Un segundo PR permite revisar la automatización.",
+              "description": "El código de prueba se presenta para revisión. Este acuerdo técnico complementa la aprobación previa de qué se quería comprobar.",
+              "responsibilities": [
+                "Revisar código y trazabilidad"
+              ],
+              "inputs": [
+                "Código propuesto"
+              ],
+              "outputs": [
+                "Código integrable"
+              ],
+              "tools": [
+                "Repositorio Git"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA y desarrollo revisan según política."
+              },
+              "details": {
+                "objective": "Evitar ejecutar código de prueba no revisado en la ruta oficial.",
+                "howItWorks": "Se verifica selección de datos, limpieza, comprobaciones y referencia del caso.",
+                "validationCriteria": [
+                  "El PR pasa revisión y validaciones",
+                  "El caso asociado es identificable"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "code-review",
+              "type": "validation",
+              "title": "Revisar el código de prueba",
+              "shortDescription": "Confirmar que comprueba el caso aprobado.",
+              "description": "El equipo revisa los datos, las comprobaciones y la estabilidad de la prueba. Si hay errores, se corrige el código antes de continuar.",
+              "responsibilities": [
+                "Aprobar o devolver código"
+              ],
+              "inputs": [
+                "PR de código",
+                "Caso oficial"
+              ],
+              "outputs": [
+                "Código aprobado o comentarios"
+              ],
+              "tools": [
+                "Azure Repos o GitHub"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "Revisión humana obligatoria antes de la corrida oficial."
+              },
+              "details": {
+                "objective": "Separar el acuerdo sobre el caso de la implementación técnica.",
+                "howItWorks": "Revisores comprueban comprobaciones, datos y seguridad antes de incorporar el cambio.",
+                "validationCriteria": [
+                  "La prueba falla cuando la aplicación incumple la regla",
+                  "El test no depende de datos frágiles"
+                ]
+              },
+              "status": "propuesto"
+            }
+          ]
+        },
+        {
+          "id": "execution-run",
+          "type": "group",
+          "title": "Probar la aplicación",
+          "description": "El sistema de ejecución lanza las pruebas y conserva la evidencia de cada resultado.",
+          "children": [
+            {
+              "id": "ci-pipeline",
+              "type": "tool",
+              "title": "Lanzar la ejecución",
+              "shortDescription": "El pipeline inicia y registra las pruebas.",
+              "description": "El pipeline es la secuencia automática que prepara y ejecuta las pruebas en un entorno de prueba. n8n puede iniciarla y recoger los resultados.",
+              "responsibilities": [
+                "Ejecutar pruebas",
+                "Publicar reportes"
+              ],
+              "inputs": [
+                "Código aprobado",
+                "Ambiente de prueba"
+              ],
+              "outputs": [
+                "Ejecuciones y archivos de evidencia"
+              ],
+              "tools": [
+                "Azure Pipelines o pipeline existente"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": false,
+                "description": ""
+              },
+              "details": {
+                "objective": "Obtener ejecuciones reproducibles fuera de n8n.",
+                "howItWorks": "n8n dispara u observa el pipeline tras aprobación; el sistema de pruebas ejecuta el trabajo.",
+                "validationCriteria": [
+                  "Quedan versión de código, revisión y resultado identificados"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "playwright",
+              "type": "tool",
+              "title": "Playwright · pruebas habituales",
+              "shortDescription": "Ejecuta las pruebas que mantiene el equipo.",
+              "description": "Es la herramienta que ya usan para probar las APIs a partir de Swagger y los escenarios que el equipo programe. Los resultados dependen de las comprobaciones escritas.",
+              "responsibilities": [
+                "Ejecutar casos versionados"
+              ],
+              "inputs": [
+                "Código de prueba",
+                "Aplicación"
+              ],
+              "outputs": [
+                "Resultados y trazas"
+              ],
+              "tools": [
+                "Playwright"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": false,
+                "description": ""
+              },
+              "details": {
+                "objective": "Conservar la automatización actual como base.",
+                "howItWorks": "El pipeline ejecuta los tests escritos y revisados por el equipo.",
+                "validationCriteria": [
+                  "Los resultados se relacionan con casos aprobados"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "schemathesis",
+              "type": "tool",
+              "title": "Schemathesis · pruebas extra",
+              "shortDescription": "Prueba variantes de datos en una API.",
+              "description": "Opción para sumar casos desde la descripción de una API, como valores extremos o datos incompletos. Para comprobar reglas de negocio hay que definir las comprobaciones correspondientes.",
+              "responsibilities": [
+                "Explorar límites y respuestas imprevistas"
+              ],
+              "inputs": [
+                "Contrato API",
+                "Checks configurados"
+              ],
+              "outputs": [
+                "Hallazgos y reporte"
+              ],
+              "tools": [
+                "Schemathesis"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA revisa relevancia de hallazgos."
+              },
+              "details": {
+                "objective": "Encontrar problemas que las pruebas fijas no cubren.",
+                "howItWorks": "Se prueba primero con una API y se ejecuta en el pipeline sólo si aporta cobertura nueva.",
+                "validationCriteria": [
+                  "La prueba no replica sin valor lo que ya cubre Playwright"
+                ]
+              },
+              "status": "opcional",
+              "currentAlternative": "Hoy el equipo puede agregar casos con datos incompletos, errores y valores límite a sus pruebas de Playwright. Schemathesis sería una ayuda para generar y explorar más variantes de API."
+            },
+            {
+              "id": "hercules",
+              "type": "agent",
+              "title": "Hercules · recorridos extra",
+              "shortDescription": "Un agente prueba una secuencia de pasos.",
+              "description": "Opción para ejecutar recorridos aprobados usando un modelo de IA y herramientas de navegador o API. Se incorpora donde aporte cobertura o ahorre trabajo.",
+              "responsibilities": [
+                "Ejecutar escenario",
+                "Guardar evidencia"
+              ],
+              "inputs": [
+                "Escenario aprobado",
+                "Ambiente",
+                "Modelo"
+              ],
+              "outputs": [
+                "Reporte y evidencia"
+              ],
+              "tools": [
+                "TestZeus Hercules",
+                "Navegador/API"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA valida resultados y estabilidad."
+              },
+              "details": {
+                "objective": "Reducir recorridos manuales donde la automatización fija aún no existe.",
+                "howItWorks": "Se ejecuta desde el pipeline sobre un escenario acotado y versionado.",
+                "validationCriteria": [
+                  "Resultado reproducible",
+                  "No se superpone sin valor con Playwright"
+                ]
+              },
+              "status": "opcional",
+              "currentAlternative": "Hoy QA puede hacer estos recorridos manualmente o escribirlos en Playwright con ayuda de Copilot. Hercules sería una alternativa para asistir la ejecución de algunos recorridos."
+            },
+            {
+              "id": "application",
+              "type": "external-system",
+              "title": "Aplicación que se prueba",
+              "shortDescription": "La versión y el ambiente quedan identificados.",
+              "description": "La aplicación o API se prueba en un ambiente controlado, con datos adecuados y una versión conocida para poder repetir el resultado.",
+              "responsibilities": [
+                "Responder a acciones de prueba"
+              ],
+              "inputs": [
+                "Solicitudes de tests"
+              ],
+              "outputs": [
+                "Respuestas y cambios observables"
+              ],
+              "tools": [
+                "Ambiente de prueba"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": false,
+                "description": ""
+              },
+              "details": {
+                "objective": "Validar el comportamiento implementado.",
+                "howItWorks": "La herramienta prueba la API o la interfaz con datos preparados.",
+                "validationCriteria": [
+                  "Ambiente y versión quedan registrados"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "environment-repair",
+              "type": "process",
+              "title": "Corregir ambiente o datos",
+              "shortDescription": "Resolver la causa antes de volver a ejecutar.",
+              "description": "El equipo responsable corrige el ambiente, los datos o la configuración. Después se inicia una nueva ejecución y se conservan ambas evidencias.",
+              "responsibilities": [
+                "Resolver la causa antes de volver a ejecutar."
+              ],
+              "inputs": [
+                "Resultado y evidencia de la ejecución"
+              ],
+              "outputs": [
+                "Acción revisada y registrada"
+              ],
+              "tools": [
+                "Pipeline existente",
+                "Azure DevOps"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "El equipo responsable revisa la causa y confirma cuándo volver a ejecutar."
+              },
+              "details": {
+                "objective": "Resolver la causa antes de volver a ejecutar.",
+                "howItWorks": "El equipo responsable corrige el ambiente, los datos o la configuración. Después se inicia una nueva ejecución y se conservan ambas evidencias.",
+                "validationCriteria": [
+                  "La causa y la acción quedan registradas",
+                  "La nueva ejecución conserva el vínculo con el resultado anterior"
+                ]
+              },
+              "status": "propuesto"
+            }
+          ]
+        }
+      ],
+      "milestones": [
+        "Registrar en Test Plans",
+        "Preparar y revisar el código",
+        "Ejecutar automáticamente"
+      ],
+      "owner": "Equipo + ejecución automática"
+    },
+    {
+      "id": "evaluation",
+      "type": "group",
+      "title": "05 · Entender el resultado",
+      "description": "QA revisa la evidencia: confirma el éxito o identifica qué falló.",
+      "children": [
+        {
+          "id": "test-evidence",
+          "type": "artifact",
+          "title": "Reunir resultados y evidencia",
+          "shortDescription": "Guardar qué pasó y cómo reproducirlo.",
+          "description": "Cada ejecución conserva su resultado, registros y otras evidencias, junto con el caso, la versión de la aplicación y el ambiente.",
+          "responsibilities": [
+            "Permitir análisis reproducible"
+          ],
+          "inputs": [
+            "Reportes del pipeline"
+          ],
+          "outputs": [
+            "Paquete de evidencia"
+          ],
+          "tools": [
+            "Azure Pipelines",
+            "Azure Test Plans"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "QA inspecciona fallos."
+          },
+          "details": {
+            "objective": "Evitar conclusiones basadas sólo en un estado rojo.",
+            "howItWorks": "n8n reúne reportes y los vincula con caso y requisito.",
+            "validationCriteria": [
+              "Se conoce qué versión de aplicación y test corrió",
+              "La evidencia se puede abrir"
+            ]
+          },
+          "status": "propuesto"
+        },
+        {
+          "id": "qa-triage",
+          "type": "human",
+          "title": "QA interpreta los resultados",
+          "shortDescription": "Distinguir un defecto de un problema de la prueba.",
+          "description": "QA revisa la evidencia. Un fallo puede ser de la aplicación, del código de prueba, del ambiente o de los datos; también puede revelar una regla poco clara.",
+          "responsibilities": [
+            "Clasificar hallazgos",
+            "Pedir reejecución si corresponde"
+          ],
+          "inputs": [
+            "Evidencia",
+            "Regla aprobada"
+          ],
+          "outputs": [
+            "Clasificación y notas"
+          ],
+          "tools": [
+            "Azure Test Plans"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "Obligatoria para defectos."
+          },
+          "details": {
+            "objective": "No enviar falsos defectos a desarrollo.",
+            "howItWorks": "Compara esperado y observado, verifica reproducibilidad y consulta a funcionales si falta regla.",
+            "validationCriteria": [
+              "La clasificación tiene motivo y evidencia"
+            ]
+          },
+          "status": "actual"
+        },
+        {
+          "id": "result-decision",
+          "type": "decision",
+          "title": "¿Qué hay que hacer ahora?",
+          "shortDescription": "Cerrar, ajustar la prueba o corregir la aplicación.",
+          "description": "Si lo esperado se cumple, se registra el resultado. Si hay un defecto confirmado, se documenta para desarrollo. Los demás problemas vuelven a la etapa que corresponde.",
+          "responsibilities": [
+            "Elegir rama de tratamiento"
+          ],
+          "inputs": [
+            "Resultados",
+            "Clasificación QA"
+          ],
+          "outputs": [
+            "Ruta siguiente"
+          ],
+          "tools": [
+            "n8n"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "QA confirma."
+          },
+          "details": {
+            "objective": "Mantener separados los tipos de fallo.",
+            "howItWorks": "Sólo la rama de defecto confirmado genera entrega para corrección de producto.",
+            "validationCriteria": [
+              "No se abre defecto sin validación"
+            ]
+          },
+          "status": "propuesto"
+        },
+        {
+          "id": "result-record",
+          "type": "output",
+          "title": "Registrar y cerrar",
+          "shortDescription": "Guardar el resultado validado en Azure.",
+          "description": "El resultado y su evidencia quedan vinculados al caso. QA confirma el cierre cuando se cumplieron los criterios acordados.",
+          "responsibilities": [
+            "Conservar trazabilidad"
+          ],
+          "inputs": [
+            "Caso",
+            "Corrida",
+            "Clasificación"
+          ],
+          "outputs": [
+            "Resultado consultable"
+          ],
+          "tools": [
+            "Azure Test Plans"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "QA verifica cierre."
+          },
+          "details": {
+            "objective": "Mostrar cobertura y estado real.",
+            "howItWorks": "Se publica el resultado y se adjunta evidencia pertinente.",
+            "validationCriteria": [
+              "El vínculo caso-corrida-requisito funciona"
+            ]
+          },
+          "status": "propuesto"
+        }
+      ],
+      "milestones": [
+        "Resultados y evidencia",
+        "QA clasifica cada fallo",
+        "Si cumple, registrar y cerrar"
+      ],
+      "owner": "Personas"
+    },
+    {
+      "id": "feedback",
+      "type": "group",
+      "title": "06 · Corregir y aprender",
+      "description": "Desarrollo recibe el problema documentado, lo corrige y vuelve a probar.",
+      "children": [
+        {
+          "id": "feedback-fix",
+          "type": "group",
+          "title": "Documentar y corregir",
+          "description": "El equipo recibe un archivo con el problema confirmado y revisa la corrección propuesta.",
+          "children": [
+            {
+              "id": "defect-markdown",
+              "type": "artifact",
+              "title": "Escribir el defecto en Markdown",
+              "shortDescription": "Un archivo claro para desarrollo y Copilot.",
+              "description": "El archivo reúne pasos, resultado esperado y observado, versión, ambiente y evidencia. Describe el problema confirmado sin inventar su causa.",
+              "responsibilities": [
+                "Entregar información accionable"
+              ],
+              "inputs": [
+                "Defecto confirmado",
+                "Evidencia"
+              ],
+              "outputs": [
+                "Archivo Markdown vinculado"
+              ],
+              "tools": [
+                "n8n",
+                "Repositorio Git"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA revisa el texto antes de entregarlo."
+              },
+              "details": {
+                "objective": "Reducir trabajo repetido al explicar el problema con pruebas.",
+                "howItWorks": "Se crea a partir de los resultados de ejecución y la clasificación de QA, sin secretos ni diagnóstico inventado.",
+                "validationCriteria": [
+                  "El defecto se reproduce",
+                  "El archivo enlaza la evidencia y el caso"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "developer",
+              "type": "human",
+              "title": "Desarrollo analiza y corrige",
+              "shortDescription": "El equipo decide cómo resolver el defecto.",
+              "description": "Desarrollo toma el archivo, revisa la evidencia y decide la modificación. Puede usar Copilot para analizar y proponer el cambio.",
+              "responsibilities": [
+                "Investigar",
+                "Corregir",
+                "Solicitar aclaración"
+              ],
+              "inputs": [
+                "Markdown",
+                "Código de aplicación"
+              ],
+              "outputs": [
+                "Cambio propuesto"
+              ],
+              "tools": [
+                "Repositorio de aplicación"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "Obligatoria."
+              },
+              "details": {
+                "objective": "Resolver la causa comprobada sin delegar responsabilidad al modelo.",
+                "howItWorks": "Reproduce, usa Copilot si ayuda y prueba localmente.",
+                "validationCriteria": [
+                  "El cambio explica la causa y conserva otras reglas"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "copilot-fix",
+              "type": "agent",
+              "title": "Copilot propone una corrección",
+              "shortDescription": "Usa el archivo como contexto del problema.",
+              "description": "Copilot ayuda a elaborar una propuesta de código a partir de la evidencia. Desarrollo verifica que la solución sea adecuada antes de incorporarla.",
+              "responsibilities": [
+                "Sugerir cambios de código"
+              ],
+              "inputs": [
+                "Markdown",
+                "Código de aplicación"
+              ],
+              "outputs": [
+                "Propuesta de corrección"
+              ],
+              "tools": [
+                "Editor de código",
+                "Repositorio Git"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "Desarrollo evalúa y ajusta la propuesta."
+              },
+              "details": {
+                "objective": "Acelerar la corrección conservando criterio técnico.",
+                "howItWorks": "El desarrollador pide ayuda y revisa cada cambio generado.",
+                "validationCriteria": [
+                  "El código respeta las reglas aprobadas"
+                ]
+              },
+              "status": "actual"
+            },
+            {
+              "id": "fix-pr",
+              "type": "artifact",
+              "title": "Revisar la corrección",
+              "shortDescription": "El cambio de código pasa por revisión.",
+              "description": "La corrección se presenta en un PR vinculado al defecto. Tras revisarla e incorporarla, se vuelven a ejecutar las pruebas.",
+              "responsibilities": [
+                "Revisar implementación"
+              ],
+              "inputs": [
+                "Código corregido",
+                "Defecto"
+              ],
+              "outputs": [
+                "Cambio integrado"
+              ],
+              "tools": [
+                "Repositorio Git"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "Desarrollo revisa; QA puede consultar la evidencia."
+              },
+              "details": {
+                "objective": "Mantener trazabilidad entre problema y solución.",
+                "howItWorks": "Se ejecutan validaciones de código y se incorpora el cambio según las reglas del equipo.",
+                "validationCriteria": [
+                  "PR enlazado al hallazgo",
+                  "No se omiten tests para aprobar"
+                ]
+              },
+              "status": "propuesto"
+            }
+          ]
+        },
+        {
+          "id": "feedback-learn",
+          "type": "group",
+          "title": "Volver a probar y cerrar",
+          "description": "La corrección dispara otra ejecución. QA confirma el cierre con resultados nuevos; las reglas nuevas se documentan.",
+          "children": [
+            {
+              "id": "retest-request",
+              "type": "process",
+              "title": "Pedir una nueva ejecución",
+              "shortDescription": "Probar la corrección y las funciones relacionadas.",
+              "description": "Después de aprobar e incorporar la corrección, se dispara el pipeline con la versión corregida y las pruebas que correspondan.",
+              "responsibilities": [
+                "Probar la corrección y las funciones relacionadas."
+              ],
+              "inputs": [
+                "Corrección revisada e incorporada"
+              ],
+              "outputs": [
+                "Nueva ejecución vinculada al defecto"
+              ],
+              "tools": [
+                "Pipeline existente",
+                "Azure DevOps"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "El equipo responsable revisa la causa y confirma cuándo volver a ejecutar."
+              },
+              "details": {
+                "objective": "Probar la corrección y las funciones relacionadas.",
+                "howItWorks": "Después de aprobar e incorporar la corrección, se dispara el pipeline con la versión corregida y las pruebas que correspondan.",
+                "validationCriteria": [
+                  "La causa y la acción quedan registradas",
+                  "La nueva ejecución conserva el vínculo con el resultado anterior"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "regression-check",
+              "type": "validation",
+              "title": "QA confirma el cierre",
+              "shortDescription": "La nueva evidencia demuestra que se resolvió.",
+              "description": "Después de repetir la prueba fallida y las pruebas relacionadas, QA comprueba los resultados de la versión corregida. El defecto sólo se cierra si esa evidencia confirma la solución.",
+              "responsibilities": [
+                "Verificar arreglo",
+                "Detectar regresiones"
+              ],
+              "inputs": [
+                "Resultados de la versión corregida",
+                "Evidencia del fallo original",
+                "Revisión de QA"
+              ],
+              "outputs": [
+                "Cierre del defecto confirmado por QA"
+              ],
+              "tools": [
+                "Pipeline de ejecución",
+                "Playwright"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA confirma el cierre."
+              },
+              "details": {
+                "objective": "Confirmar la solución con resultados nuevos y revisados.",
+                "howItWorks": "Se compara con el fallo original y se registran resultados.",
+                "validationCriteria": [
+                  "El caso antes fallido pasa",
+                  "La regresión pertinente pasa"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "knowledge-feedback",
+              "type": "process",
+              "title": "Actualizar lo aprendido",
+              "shortDescription": "Las reglas nuevas vuelven a la documentación.",
+              "description": "Si se aclara o cambia una regla, funcionales, QA y desarrollo actualizan y aprueban la documentación. Luego se incorpora al repositorio y se actualiza RAGFlow.",
+              "responsibilities": [
+                "Registrar aprendizaje"
+              ],
+              "inputs": [
+                "Hallazgo",
+                "Decisión funcional"
+              ],
+              "outputs": [
+                "Documentación actualizada"
+              ],
+              "tools": [
+                "Repositorio Git",
+                "RAGFlow"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "Funcionales y QA aprueban el cambio."
+              },
+              "details": {
+                "objective": "Evitar repetir la misma duda en futuras pruebas.",
+                "howItWorks": "Se abre PR documental y se sincroniza RAGFlow después de incorporar el cambio aprobado.",
+                "validationCriteria": [
+                  "La nueva regla tiene responsable y fuente"
+                ]
+              },
+              "status": "propuesto"
+            }
+          ]
+        }
+      ],
+      "milestones": [
+        "Defecto en un Markdown",
+        "Corrección con ayuda de Copilot",
+        "Repetir pruebas y confirmar"
+      ],
+      "owner": "Desarrollo + QA",
+      "entryCondition": "Si hay un defecto confirmado"
+    }
+  ],
+  "edges": [
+    {
+      "id": "overview-context-design",
+      "source": "context",
+      "target": "design",
+      "type": "normal",
+      "label": "Información lista"
+    },
+    {
+      "id": "overview-design-approval",
+      "source": "design",
+      "target": "approval",
+      "type": "normal",
+      "label": "Casos propuestos"
+    },
+    {
+      "id": "overview-approval-execution",
+      "source": "approval",
+      "target": "execution",
+      "type": "human-approval",
+      "label": "QA + desarrollo aprueban"
+    },
+    {
+      "id": "overview-execution-evaluation",
+      "source": "execution",
+      "target": "evaluation",
+      "type": "normal",
+      "label": "Resultados"
+    },
+    {
+      "id": "overview-evaluation-feedback",
+      "source": "evaluation",
+      "target": "feedback",
+      "type": "conditional",
+      "label": "Sólo si hay un defecto"
+    },
+    {
+      "id": "overview-evaluation-design",
+      "source": "evaluation",
+      "target": "design",
+      "type": "feedback",
+      "label": "Caso mal definido: revisar"
+    },
+    {
+      "id": "overview-feedback-context",
+      "source": "feedback",
+      "target": "context",
+      "type": "feedback",
+      "label": "Regla nueva: documentar"
+    },
+    {
+      "id": "overview-feedback-execution",
+      "source": "feedback",
+      "target": "execution",
+      "type": "feedback",
+      "label": "Corrección lista: volver a probar"
+    },
+    {
+      "id": "flow-001",
+      "source": "functional-change",
+      "target": "functional-documentation",
+      "type": "data",
+      "label": "Se documenta"
+    },
+    {
+      "id": "flow-002",
+      "source": "qa-notes",
+      "target": "functional-documentation",
+      "type": "data",
+      "label": "Aporta contexto revisado"
+    },
+    {
+      "id": "flow-003",
+      "source": "functional-documentation",
+      "target": "knowledge-repository",
+      "type": "human-approval",
+      "label": "PR documental aprobado"
+    },
+    {
+      "id": "flow-004",
+      "source": "knowledge-repository",
+      "target": "ragflow-sync",
+      "type": "async",
+      "label": "Cambio en rama principal"
+    },
+    {
+      "id": "flow-005",
+      "source": "ragflow-sync",
+      "target": "ragflow",
+      "type": "data",
+      "label": "Índice actualizado"
+    },
+    {
+      "id": "flow-006",
+      "source": "ragflow",
+      "target": "context-check",
+      "type": "data",
+      "label": "Reglas y citas"
+    },
+    {
+      "id": "flow-007",
+      "source": "knowledge-repository",
+      "target": "context-check",
+      "type": "data",
+      "label": "Revisión aprobada"
+    },
+    {
+      "id": "flow-008",
+      "source": "context-check",
+      "target": "functional-documentation",
+      "type": "feedback",
+      "label": "Falta o contradicción"
+    },
+    {
+      "id": "flow-009",
+      "source": "context-check",
+      "target": "n8n",
+      "type": "conditional",
+      "label": "Contexto listo"
+    },
+    {
+      "id": "flow-010",
+      "source": "n8n",
+      "target": "case-inventory",
+      "type": "normal",
+      "label": "Consulta catálogo"
+    },
+    {
+      "id": "flow-011",
+      "source": "azure-test-plans",
+      "target": "case-inventory",
+      "type": "data",
+      "label": "Casos existentes"
+    },
+    {
+      "id": "flow-012",
+      "source": "ragflow",
+      "target": "case-designer",
+      "type": "data",
+      "label": "Contexto citado"
+    },
+    {
+      "id": "flow-013",
+      "source": "case-inventory",
+      "target": "case-designer",
+      "type": "data",
+      "label": "Cobertura existente"
+    },
+    {
+      "id": "flow-014",
+      "source": "case-designer",
+      "target": "llm",
+      "type": "data",
+      "label": "Solicita borrador"
+    },
+    {
+      "id": "flow-015",
+      "source": "llm",
+      "target": "case-designer",
+      "type": "data",
+      "label": "Texto propuesto"
+    },
+    {
+      "id": "flow-016",
+      "source": "case-designer",
+      "target": "case-draft",
+      "type": "normal",
+      "label": "Redacta"
+    },
+    {
+      "id": "flow-017",
+      "source": "case-draft",
+      "target": "coverage-decision",
+      "type": "normal",
+      "label": "Comparar"
+    },
+    {
+      "id": "flow-018",
+      "source": "case-inventory",
+      "target": "coverage-decision",
+      "type": "data",
+      "label": "Mapa de cobertura"
+    },
+    {
+      "id": "flow-019",
+      "source": "coverage-decision",
+      "target": "case-designer",
+      "type": "feedback",
+      "label": "Borrador incompleto: ajustar"
+    },
+    {
+      "id": "flow-020",
+      "source": "coverage-decision",
+      "target": "test-proposal-pr",
+      "type": "conditional",
+      "label": "Crear o mejorar"
+    },
+    {
+      "id": "flow-021",
+      "source": "itestflow",
+      "target": "coverage-decision",
+      "type": "data",
+      "label": "Opcional: análisis de brechas"
+    },
+    {
+      "id": "flow-022",
+      "source": "testforge",
+      "target": "case-draft",
+      "type": "data",
+      "label": "Opcional: generador alternativo"
+    },
+    {
+      "id": "flow-023",
+      "source": "n8n",
+      "target": "test-proposal-pr",
+      "type": "async",
+      "label": "Abre PR"
+    },
+    {
+      "id": "flow-024",
+      "source": "test-proposal-pr",
+      "target": "qa-reviewer",
+      "type": "human-approval",
+      "label": "Revisar cobertura"
+    },
+    {
+      "id": "flow-025",
+      "source": "test-proposal-pr",
+      "target": "dev-reviewer",
+      "type": "human-approval",
+      "label": "Revisar esperado"
+    },
+    {
+      "id": "flow-026",
+      "source": "qa-reviewer",
+      "target": "dual-approval",
+      "type": "human-approval",
+      "label": "Voto QA"
+    },
+    {
+      "id": "flow-027",
+      "source": "dev-reviewer",
+      "target": "dual-approval",
+      "type": "human-approval",
+      "label": "Voto desarrollo"
+    },
+    {
+      "id": "flow-028",
+      "source": "dual-approval",
+      "target": "approval-decision",
+      "type": "normal",
+      "label": "Evaluar ambos votos"
+    },
+    {
+      "id": "flow-029",
+      "source": "approval-decision",
+      "target": "case-designer",
+      "type": "feedback",
+      "label": "Una parte pide cambios"
+    },
+    {
+      "id": "flow-030",
+      "source": "approval-decision",
+      "target": "publish-test-case",
+      "type": "conditional",
+      "label": "Ambas aprueban y se incorpora al repo"
+    },
+    {
+      "id": "flow-031",
+      "source": "publish-test-case",
+      "target": "azure-test-plans",
+      "type": "data",
+      "label": "Caso oficial"
+    },
+    {
+      "id": "flow-032",
+      "source": "publish-test-case",
+      "target": "copilot-test",
+      "type": "data",
+      "label": "Caso aprobado"
+    },
+    {
+      "id": "flow-033",
+      "source": "copilot-test",
+      "target": "test-code-pr",
+      "type": "normal",
+      "label": "Código propuesto"
+    },
+    {
+      "id": "flow-034",
+      "source": "test-code-pr",
+      "target": "code-review",
+      "type": "human-approval",
+      "label": "Revisión técnica"
+    },
+    {
+      "id": "flow-035",
+      "source": "code-review",
+      "target": "copilot-test",
+      "type": "feedback",
+      "label": "Corregir test"
+    },
+    {
+      "id": "flow-036",
+      "source": "code-review",
+      "target": "ci-pipeline",
+      "type": "conditional",
+      "label": "Código aprobado"
+    },
+    {
+      "id": "flow-037",
+      "source": "ci-pipeline",
+      "target": "playwright",
+      "type": "normal",
+      "label": "Prueba base"
+    },
+    {
+      "id": "flow-038",
+      "source": "ci-pipeline",
+      "target": "schemathesis",
+      "type": "conditional",
+      "label": "Piloto API opcional"
+    },
+    {
+      "id": "flow-039",
+      "source": "ci-pipeline",
+      "target": "hercules",
+      "type": "conditional",
+      "label": "Recorrido opcional"
+    },
+    {
+      "id": "flow-040",
+      "source": "playwright",
+      "target": "application",
+      "type": "data",
+      "label": "Interacción de prueba"
+    },
+    {
+      "id": "flow-041",
+      "source": "schemathesis",
+      "target": "application",
+      "type": "data",
+      "label": "Variantes API"
+    },
+    {
+      "id": "flow-042",
+      "source": "hercules",
+      "target": "application",
+      "type": "data",
+      "label": "Recorrido"
+    },
+    {
+      "id": "flow-043",
+      "source": "playwright",
+      "target": "test-evidence",
+      "type": "async",
+      "label": "Resultados"
+    },
+    {
+      "id": "flow-044",
+      "source": "schemathesis",
+      "target": "test-evidence",
+      "type": "async",
+      "label": "Reporte opcional"
+    },
+    {
+      "id": "flow-045",
+      "source": "hercules",
+      "target": "test-evidence",
+      "type": "async",
+      "label": "Evidencia opcional"
+    },
+    {
+      "id": "flow-046",
+      "source": "ci-pipeline",
+      "target": "test-evidence",
+      "type": "data",
+      "label": "Versión de código y revisión"
+    },
+    {
+      "id": "flow-047",
+      "source": "test-evidence",
+      "target": "qa-triage",
+      "type": "normal",
+      "label": "Revisar fallos"
+    },
+    {
+      "id": "flow-048",
+      "source": "qa-triage",
+      "target": "result-decision",
+      "type": "normal",
+      "label": "Clasificación"
+    },
+    {
+      "id": "flow-049",
+      "source": "result-decision",
+      "target": "result-record",
+      "type": "conditional",
+      "label": "Conforme, sin defecto pendiente de cierre"
+    },
+    {
+      "id": "flow-050",
+      "source": "result-record",
+      "target": "azure-test-plans",
+      "type": "data",
+      "label": "Registrar resultado"
+    },
+    {
+      "id": "flow-051",
+      "source": "result-decision",
+      "target": "test-code-pr",
+      "type": "feedback",
+      "label": "Falla del test"
+    },
+    {
+      "id": "flow-052",
+      "source": "result-decision",
+      "target": "environment-repair",
+      "type": "feedback",
+      "label": "Fallo de ambiente o datos"
+    },
+    {
+      "id": "flow-053",
+      "source": "result-decision",
+      "target": "knowledge-feedback",
+      "type": "feedback",
+      "label": "Regla ambigua"
+    },
+    {
+      "id": "flow-054",
+      "source": "result-decision",
+      "target": "defect-markdown",
+      "type": "conditional",
+      "label": "Defecto confirmado"
+    },
+    {
+      "id": "flow-055",
+      "source": "defect-markdown",
+      "target": "developer",
+      "type": "data",
+      "label": "Entrega reproducible"
+    },
+    {
+      "id": "flow-056",
+      "source": "developer",
+      "target": "copilot-fix",
+      "type": "data",
+      "label": "Pide propuesta"
+    },
+    {
+      "id": "flow-057",
+      "source": "copilot-fix",
+      "target": "fix-pr",
+      "type": "normal",
+      "label": "Cambio sugerido y revisado"
+    },
+    {
+      "id": "flow-058",
+      "source": "developer",
+      "target": "fix-pr",
+      "type": "human-approval",
+      "label": "Valida corrección"
+    },
+    {
+      "id": "flow-059",
+      "source": "fix-pr",
+      "target": "retest-request",
+      "type": "normal",
+      "label": "Corrección revisada e incorporada"
+    },
+    {
+      "id": "flow-060",
+      "source": "retest-request",
+      "target": "ci-pipeline",
+      "type": "feedback",
+      "label": "Nueva ejecución de pruebas"
+    },
+    {
+      "id": "flow-061",
+      "source": "regression-check",
+      "target": "result-record",
+      "type": "conditional",
+      "label": "Cierre verificado con nueva evidencia"
+    },
+    {
+      "id": "flow-063",
+      "source": "knowledge-feedback",
+      "target": "functional-documentation",
+      "type": "feedback",
+      "label": "Actualizar regla"
+    },
+    {
+      "id": "flow-copilot-cases",
+      "source": "copilot-case-current",
+      "target": "case-draft",
+      "type": "data",
+      "label": "Borrador actual"
+    },
+    {
+      "id": "flow-qa-notes-copilot",
+      "source": "qa-notes",
+      "target": "copilot-case-current",
+      "type": "data",
+      "label": "Segundo cerebro"
+    },
+    {
+      "id": "flow-docs-copilot",
+      "source": "functional-documentation",
+      "target": "copilot-case-current",
+      "type": "data",
+      "label": "Reglas aprobadas"
+    },
+    {
+      "id": "flow-llm-hercules",
+      "source": "llm",
+      "target": "hercules",
+      "type": "data",
+      "label": "Modelo configurado"
+    },
+    {
+      "id": "overview-approval-design",
+      "source": "approval",
+      "target": "design",
+      "type": "feedback",
+      "label": "Cambios pedidos: ajustar propuesta"
+    },
+    {
+      "id": "overview-evaluation-execution",
+      "source": "evaluation",
+      "target": "execution",
+      "type": "feedback",
+      "label": "Prueba o ambiente: corregir"
+    },
+    {
+      "id": "flow-coverage-kept",
+      "source": "coverage-decision",
+      "target": "coverage-kept",
+      "type": "conditional",
+      "label": "El caso existente es suficiente"
+    },
+    {
+      "id": "flow-coverage-rule",
+      "source": "coverage-decision",
+      "target": "functional-documentation",
+      "type": "feedback",
+      "label": "Falta aclarar una regla"
+    },
+    {
+      "id": "flow-environment-retry",
+      "source": "environment-repair",
+      "target": "ci-pipeline",
+      "type": "conditional",
+      "label": "Causa resuelta: ejecutar de nuevo"
+    },
+    {
+      "id": "flow-retest-verified",
+      "source": "result-decision",
+      "target": "regression-check",
+      "type": "conditional",
+      "label": "Nueva corrida de la corrección: conforme"
+    },
+    {
+      "id": "flow-result-case",
+      "source": "result-decision",
+      "target": "case-designer",
+      "type": "feedback",
+      "label": "Caso esperado mal definido"
+    }
+  ]
+}

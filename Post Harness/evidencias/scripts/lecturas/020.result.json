@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+  "sha256": "2d2d8bbec28f33cb389bf605b71b21a8a914a2b323a62d5f78344811fe3ac84e",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Grupos y permisos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, grupos, permisos]\naliases: [Groups COELSA, Permisos de grupo]\ndescription: \"Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.\"\nestado: vigente\n---",
+    "title": "Grupos y permisos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, auth, grupos, permisos]",
+    "aliases": "[Groups COELSA, Permisos de grupo]",
+    "description": "Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 57,
+  "total_lines": 57,
+  "text": "---\ntitle: \"Grupos y permisos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, grupos, permisos]\naliases: [Groups COELSA, Permisos de grupo]\ndescription: \"Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.\"\nestado: vigente\n---\n\n# Grupos y permisos\n\n## Qué es\n\nAdemás del sistema de [[Roles de usuario|roles]], COELSA.Intelligent implementa **grupos** con permisos granulares en formato JSON. Los grupos permiten dar acceso diferenciado a conjuntos de funcionalidades a subconjuntos de usuarios.\n\n## Modelo de datos (Group)\n\n```python\nclass Group(Base):\n    id: Text           # UUID\n    user_id: Text      # Creador del grupo\n    name: Text\n    description: Text\n    data: JSON         # Datos adicionales\n    meta: JSON         # Metadatos internos\n    permissions: JSON  # Permisos del grupo\n    user_ids: JSON     # Lista de IDs de usuarios en el grupo\n    created_at: BigInteger\n    updated_at: BigInteger\n```\n\n## Estructura del JSON de permisos\n\nLos permisos se definen como un objeto JSON con capacidades específicas. Ejemplo:\n\n```json\n{\n  \"chat\": {\n    \"file_upload\": true,\n    \"web_search\": false\n  },\n  \"workspace\": {\n    \"models\": false,\n    \"knowledge\": true\n  }\n}\n```\n\n## Permisos por defecto\n\nLa configuración de permisos iniciales para nuevos usuarios y grupos se ajustó en v1.3.0 a las necesidades corporativas de COELSA (ver CHANGELOG). Los defaults del upstream no aplicaban al contexto corporativo.\n\n## Relacionado\n\n- [[Roles de usuario]] — El rol es la primera capa; los grupos son la segunda capa granular\n- [[Control de acceso a recursos]] — Cómo los grupos interactúan con el access_control de Knowledge y Files\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

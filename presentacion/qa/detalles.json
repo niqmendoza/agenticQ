@@ -1,0 +1,953 @@
+{
+  "realTextContrast": [
+    {
+      "slide": 1,
+      "tag": "H1",
+      "text": "QA con Copilot",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 1,
+      "tag": "P",
+      "text": "Propuesta para ampliar la capacidad de pruebas y mantener el conocimiento de cad",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 1,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "H1",
+      "text": "Punto de partida",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "P",
+      "text": "Ya tenemos una base de trabajo. La propuesta la conecta y le agrega continuidad.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "SPAN",
+      "text": "Hoy",
+      "foreground": "rgb(114, 181, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.637712952722528,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "H2",
+      "text": "Workbook + Copilot",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "P",
+      "text": "Diseño de casos, exploración web, reportes y Markdown para reproducir bugs.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "SPAN",
+      "text": "Propuesta",
+      "foreground": "rgb(114, 181, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.637712952722528,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "H2",
+      "text": "Un ciclo mantenible",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "P",
+      "text": "Conocimiento validado, pruebas reutilizables y relaciones claras entre cambios y",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "DIV",
+      "text": "Buscamos cubrir más trabajo con la capacidad disponible. El ahorro todavía se ti",
+      "foreground": "rgb(178, 198, 219)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.693760191399208,
+      "passes": true
+    },
+    {
+      "slide": 2,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 3,
+      "tag": "H1",
+      "text": "Recorrido de trabajo",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 3,
+      "tag": "P",
+      "text": "Trabajamos por aplicación, módulo o flujo, sin esperar a documentar toda la comp",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 3,
+      "tag": "DIV",
+      "text": "Cada etapa deja un entregable para la siguiente. Un cambio vuelve a abrir el cic",
+      "foreground": "rgb(178, 198, 219)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.693760191399208,
+      "passes": true
+    },
+    {
+      "slide": 3,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 4,
+      "tag": "H1",
+      "text": "Conocimiento compartido",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 4,
+      "tag": "P",
+      "text": "Copilot prepara notas y documentación funcional. Las personas confirman las regl",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 4,
+      "tag": "DIV",
+      "text": "La IA reconstruye lo implementado. La revisión define lo correcto para el negoci",
+      "foreground": "rgb(178, 198, 219)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.693760191399208,
+      "passes": true
+    },
+    {
+      "slide": 4,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "H1",
+      "text": "Cómo elegimos lo esperado",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "P",
+      "text": "Los casos combinan una regla validada con la información técnica necesaria para ",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "SPAN",
+      "text": "Regla ilustrativa",
+      "foreground": "rgb(114, 181, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.637712952722528,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "H2",
+      "text": "Cancelar un pedido pendiente libera su stock reservado.",
+      "foreground": "rgb(239, 246, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.160724673920214,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "P",
+      "text": "QA revisa condiciones, excepciones y cobertura.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "P",
+      "text": "Pedido pendiente con una reserva identificada.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "P",
+      "text": "Cancelar el pedido.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "P",
+      "text": "Estado correcto y reserva liberada.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "DIV",
+      "text": "Test Plans conserva los casos. Boards vincula el trabajo. Azure Repos guarda la ",
+      "foreground": "rgb(178, 198, 219)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.693760191399208,
+      "passes": true
+    },
+    {
+      "slide": 5,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 6,
+      "tag": "H1",
+      "text": "Herramientas según cada sistema",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 6,
+      "tag": "P",
+      "text": "Copilot usa conexiones y operaciones permitidas. Las nuevas integraciones se val",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 6,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "H1",
+      "text": "Comprobaciones de negocio",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "P",
+      "text": "Una respuesta exitosa no alcanza. La prueba verifica la regla y sus efectos.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "SPAN",
+      "text": "Ejemplo de cancelación",
+      "foreground": "rgb(114, 181, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.637712952722528,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "H2",
+      "text": "El sistema respondió",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "P",
+      "text": "La operación devolvió una respuesta técnica exitosa.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "H2",
+      "text": "QA comprueba el resultado",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "P",
+      "text": "Estado: el pedido quedó cancelado.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "P",
+      "text": "Stock: se liberó la reserva correcta.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "P",
+      "text": "Excepciones: se respetaron los estados prohibidos.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "DIV",
+      "text": "Para consultar la base, el agente elige una operación aprobada. El ejecutor y lo",
+      "foreground": "rgb(178, 198, 219)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.693760191399208,
+      "passes": true
+    },
+    {
+      "slide": 7,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "H1",
+      "text": "Ejecución y diagnóstico",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "P",
+      "text": "La exploración deja una prueba revisada y guardada. Pipelines la ejecuta cada ve",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "H2",
+      "text": "Producto",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "P",
+      "text": "Contradice la regla validada.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "H2",
+      "text": "Ambiente",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "P",
+      "text": "Datos, acceso o servicio impiden evaluar.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "H2",
+      "text": "Prueba",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "P",
+      "text": "Falla el script o su preparación.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "DIV",
+      "text": "QA clasifica los fallos. Solo los defectos confirmados se registran en Boards co",
+      "foreground": "rgb(178, 198, 219)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.693760191399208,
+      "passes": true
+    },
+    {
+      "slide": 8,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 9,
+      "tag": "H1",
+      "text": "Mantenimiento por versión",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 9,
+      "tag": "P",
+      "text": "Cada cambio actualiza conocimiento, documentación, casos y automatizaciones rela",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 9,
+      "tag": "SPAN",
+      "text": "Ejemplo ilustrativo",
+      "foreground": "rgb(114, 181, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.637712952722528,
+      "passes": true
+    },
+    {
+      "slide": 9,
+      "tag": "H2",
+      "text": "La versión desplegada define qué probar",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 9,
+      "tag": "P",
+      "text": "Documento del cambio nuevo",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 9,
+      "tag": "P",
+      "text": "Documento y pruebas de 2.4",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 9,
+      "tag": "DIV",
+      "text": "Cada corrida identifica sistema, ambiente y revisiones de documentos y pruebas. ",
+      "foreground": "rgb(178, 198, 219)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.693760191399208,
+      "passes": true
+    },
+    {
+      "slide": 9,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 10,
+      "tag": "H1",
+      "text": "Primer piloto",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 10,
+      "tag": "P",
+      "text": "Una aplicación, pocos flujos críticos y una validación de datos.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 10,
+      "tag": "SPAN",
+      "text": "Entrega concreta",
+      "foreground": "rgb(114, 181, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.637712952722528,
+      "passes": true
+    },
+    {
+      "slide": 10,
+      "tag": "H2",
+      "text": "Un flujo completo",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 10,
+      "tag": "DIV",
+      "text": "Reusamos lo existente. El piloto confirma responsables, ambiente, tecnología y c",
+      "foreground": "rgb(178, 198, 219)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.693760191399208,
+      "passes": true
+    },
+    {
+      "slide": 10,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 11,
+      "tag": "H1",
+      "text": "Sistema integrado",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 11,
+      "tag": "P",
+      "text": "El conocimiento aprobado guía las pruebas. Los cambios y resultados vuelven al c",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 11,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "H1",
+      "text": "Qué medimos y cómo seguimos",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "P",
+      "text": "El piloto crea la línea de base para decidir si conviene extender este modo de t",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "H2",
+      "text": "Tiempo total",
+      "foreground": "rgb(216, 236, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 8.242354864359008,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "P",
+      "text": "Por automatización aceptada, con revisión y mantenimiento.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "H2",
+      "text": "Estabilidad y cobertura",
+      "foreground": "rgb(216, 236, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 8.242354864359008,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "P",
+      "text": "Fallos intermitentes y reglas críticas que podemos comprobar.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "H2",
+      "text": "Defectos y conocimiento",
+      "foreground": "rgb(216, 236, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 8.242354864359008,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "P",
+      "text": "Defectos confirmados y recuperación correcta de información.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "SPAN",
+      "text": "Siguiente decisión",
+      "foreground": "rgb(114, 181, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.637712952722528,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "H2",
+      "text": "Elegir el flujo y los responsables del piloto",
+      "foreground": "rgb(237, 245, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 9.070247900093321,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "P",
+      "text": "Evaluar entregables y resultados antes de ampliar el alcance.",
+      "foreground": "rgb(176, 194, 213)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.470649184922221,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "DIV",
+      "text": "La capacidad se tiene que medir. Ahorro y cambios de dotación son objetivos, tod",
+      "foreground": "rgb(178, 198, 219)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 5.693760191399208,
+      "passes": true
+    },
+    {
+      "slide": 12,
+      "tag": "BUTTON",
+      "text": "Ampliar este tema ↗",
+      "foreground": "rgb(122, 186, 255)",
+      "background": "rgb(36, 69, 99)",
+      "ratio": 4.887446220823242,
+      "passes": true
+    }
+  ],
+  "overlaps": [],
+  "checks": {
+    "fullscreen": true,
+    "ambient": true,
+    "reducedMotion": true,
+    "modalFocus": true,
+    "horizontalDiagram": true
+  },
+  "diagramLabels": [
+    {
+      "text": "Fuentes",
+      "width": 86.5031967163086,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Código, tickets, reglas",
+      "width": 187.93980407714844,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Copilot",
+      "width": 74.87251281738281,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Notas + borrador",
+      "width": 146.6635284423828,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "QA / Negocio",
+      "width": 138.99928283691406,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Validación focalizada",
+      "width": 184.16299438476562,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Azure Repos",
+      "width": 135.60174560546875,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "PR + revisión aprobada",
+      "width": 201.83026123046875,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Buscador",
+      "width": 100.09339141845703,
+      "available": 175,
+      "passes": true
+    },
+    {
+      "text": "Índice aprobado",
+      "width": 140.65855407714844,
+      "available": 175,
+      "passes": true
+    },
+    {
+      "text": "Copilot",
+      "width": 74.87251281738281,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Contexto por versión",
+      "width": 180.18075561523438,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "UI / API / SQL",
+      "width": 145.13067626953125,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Acceso autorizado",
+      "width": 160.20631408691406,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Prueba aceptada",
+      "width": 180.92347717285156,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Datos + código en Git",
+      "width": 183.37286376953125,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Versiones fijadas",
+      "width": 184.7318878173828,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Sistema + docs + tests",
+      "width": 192.75958251953125,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Pipelines",
+      "width": 98.35511016845703,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Runner repetible",
+      "width": 146.69512939453125,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Evidencia",
+      "width": 102.68501281738281,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Resultados + artefactos",
+      "width": 206.14434814453125,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "QA diagnostica",
+      "width": 161.54954528808594,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Producto / ambiente",
+      "width": 177.84197998046875,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "/ prueba",
+      "width": 73.4660873413086,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Boards",
+      "width": 75.71005249023438,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Bug / feature + vínculos",
+      "width": 206.0337371826172,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Test Plans",
+      "width": 110.0964126586914,
+      "available": 175,
+      "passes": true
+    },
+    {
+      "text": "Casos + planes",
+      "width": 129.12269592285156,
+      "available": 175,
+      "passes": true
+    }
+  ]
+}

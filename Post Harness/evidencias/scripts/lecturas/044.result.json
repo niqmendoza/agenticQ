@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+  "sha256": "cd1aefbdb2327f1bf5ffb436760b22afe277fdd692c635d6cf8dd949c9fd1f4b",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Agregar proveedor de almacenamiento\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]\naliases: [Nuevo storage provider, StorageProvider interface, Agregar backend storage]\ndescription: \"Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.\"\nestado: vigente\n---",
+    "title": "Agregar proveedor de almacenamiento",
+    "type": "referencia",
+    "tags": "[coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]",
+    "aliases": "[Nuevo storage provider, StorageProvider interface, Agregar backend storage]",
+    "description": "Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 80,
+  "total_lines": 94,
+  "text": "---\ntitle: \"Agregar proveedor de almacenamiento\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]\naliases: [Nuevo storage provider, StorageProvider interface, Agregar backend storage]\ndescription: \"Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.\"\nestado: vigente\n---\n\n# Agregar proveedor de almacenamiento\n\n## Qué es\n\nGuía para implementar un nuevo backend de almacenamiento en COELSA.Intelligent. El sistema usa una interfaz abstracta `StorageProvider` que permite agregar nuevos providers sin modificar el código de negocio.\n\n## La interfaz abstracta\n\n```python\n# backend/server/storage/provider.py\nclass StorageProvider(ABC):\n    \n    @abstractmethod\n    def get_file(self, file_path: str) -> str:\n        \"\"\"Retorna la ruta local o URL al archivo.\"\"\"\n        pass\n    \n    @abstractmethod\n    def upload_file(self, file: BinaryIO, filename: str) -> Tuple[bytes, str]:\n        \"\"\"Sube el archivo y retorna (contenido, path).\"\"\"\n        pass\n    \n    @abstractmethod\n    def get_presigned_url(self, file_path: str, expiration: int = 3600) -> str:\n        \"\"\"Genera una URL firmada de acceso temporal.\"\"\"\n        pass\n    \n    @abstractmethod\n    def get_storage_stats(self) -> dict:\n        \"\"\"Retorna estadísticas de uso del almacenamiento.\"\"\"\n        pass\n    \n    @abstractmethod\n    def delete_all_files(self) -> None:\n        pass\n    \n    @abstractmethod\n    def delete_file(self, file_path: str) -> None:\n        pass\n```\n\n## Pasos para agregar un nuevo provider\n\n### 1. Crear la clase del provider\n\n```python\n# backend/server/storage/provider.py — agregar junto a las clases existentes\nclass MiNuevoProvider(StorageProvider):\n    \n    def get_file(self, file_path: str) -> str:\n        # implementación\n        ...\n    \n    def upload_file(self, file, filename):\n        # implementación con sanitización de path (ver Path Traversal)\n        ...\n    \n    # ... implementar todos los métodos abstractos\n```\n\n### 2. Registrar en la factory\n\nEn `provider.py`, agregar el nuevo provider a la selección por variable de entorno:\n\n```python\nSTORAGE_PROVIDER = os.getenv(\"STORAGE_PROVIDER\", \"local\")\n\nif STORAGE_PROVIDER == \"s3\":\n    Storage = S3StorageProvider(...)\nelif STORAGE_PROVIDER == \"mi-nuevo\":\n    Storage = MiNuevoProvider(...)",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": false
+}

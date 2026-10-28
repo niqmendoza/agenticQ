@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+  "sha256": "633414976a121f28a1d4355819b770ec1b3aea9384a634acee0df24e05c86e0e",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Roles semánticos de color\"\ntype: referencia\ntags: [coelsa-intelligent, diseño, colores, roles, tailwind, css-variables]\naliases: [Semantic color roles, Roles de color, Color roles COELSA]\ndescription: \"Usar cuando necesitás la lista de roles de color disponibles en Tailwind y CSS variables para implementar componentes en COELSA.Intelligent.\"\nestado: vigente\n---",
+    "title": "Roles semánticos de color",
+    "type": "referencia",
+    "tags": "[coelsa-intelligent, diseño, colores, roles, tailwind, css-variables]",
+    "aliases": "[Semantic color roles, Roles de color, Color roles COELSA]",
+    "description": "Usar cuando necesitás la lista de roles de color disponibles en Tailwind y CSS variables para implementar componentes en COELSA.Intelligent.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 62,
+  "total_lines": 62,
+  "text": "---\ntitle: \"Roles semánticos de color\"\ntype: referencia\ntags: [coelsa-intelligent, diseño, colores, roles, tailwind, css-variables]\naliases: [Semantic color roles, Roles de color, Color roles COELSA]\ndescription: \"Usar cuando necesitás la lista de roles de color disponibles en Tailwind y CSS variables para implementar componentes en COELSA.Intelligent.\"\nestado: vigente\n---\n\n# Roles semánticos de color\n\n## Qué es\n\nLos **roles semánticos** son tokens de tema que cambian automáticamente entre light y dark mode via CSS custom properties. Son la capa 2 del [[ECO Design System]]. Siempre se prefieren sobre las escalas primitivas en componentes.\n\n## Roles principales (light / dark)\n\n| Rol CSS | Light | Dark | Uso |\n|---------|-------|------|-----|\n| `--color-primary` | `#006972` (teal-40) | `#57D8E6` (teal-80) | Botones CTA, acciones principales |\n| `--color-on-primary` | `#FFFFFF` | `#00363B` (teal-20) | Texto/icono sobre primary |\n| `--color-secondary` | `#004F56` (teal-30) | `#90F2FE` (teal-90) | Acciones secundarias, outlined buttons |\n| `--color-on-secondary` | `#FFFFFF` | `#00363B` (teal-20) | Texto/icono sobre secondary |\n| `--color-tertiary` | `#9D0061` (custom) | `#FFB0CF` (pink-80) | Badges, notificaciones, acentos |\n| `--color-on-tertiary` | `#FFFFFF` | `#63003C` (pink-20) | Texto/icono sobre tertiary |\n| `--color-surface` | `#FFFFFF` | `#191C1D` | Fondo base de la app |\n| `--color-on-surface` | `#191C1D` | `#EFF1F1` | Texto principal |\n\n## Clases Tailwind disponibles\n\n```html\n<!-- Botón principal -->\n<button class=\"bg-primary text-on-primary hover:opacity-90\">\n  Acción Principal\n</button>\n\n<!-- Botón secundario -->\n<button class=\"border-2 border-secondary text-secondary hover:bg-secondary/10\">\n  Acción Secundaria\n</button>\n\n<!-- Badge de acento -->\n<span class=\"bg-tertiary text-on-tertiary px-3 py-1 rounded-full\">\n  Badge\n</span>\n```\n\n## Regla de uso de on-* colors\n\n**Siempre** usar el color `on-*` para texto/iconos sobre un fondo de rol:\n- Fondo `bg-primary` → texto `text-on-primary`\n- Fondo `bg-secondary` → texto `text-on-secondary`\n- Fondo `bg-surface` → texto `text-on-surface`\n\nNo asumir que \"el texto siempre es blanco\" o \"siempre es negro\"; los roles invierten en dark mode.\n\n## Relacionado\n\n- [[Tokens primitivos de color]] — Los valores hex que definen estos roles\n- [[Surface Containers]] — Los 5 roles de superficie para jerarquía visual\n- [[Dark mode reglas]] — Cómo se invierten los roles en dark mode\n- [[ECO Design System]] — El sistema del que estos roles son parte",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

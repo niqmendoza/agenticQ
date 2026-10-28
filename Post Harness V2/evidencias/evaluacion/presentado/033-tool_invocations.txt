@@ -1,0 +1,3 @@
+// @exec: {"max_output_tokens": 10000}
+const b=load("base");
+text(await tools.exec_command({cmd:b+" verify '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness V2/evidencias/evaluacion/resultado.json' --requirements-json '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness V2/evidencias/requirements.json' --save '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness V2/evidencias/evaluacion/verificacion.json'","max_output_tokens":9500}));

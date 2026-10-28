@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "Post Harness/scripts/brain.py",
+    "--db",
+    "Post Harness/evidencias/indice.sqlite",
+    "--log-dir",
+    "Post Harness/evidencias/preparacion",
+    "index",
+    "/Users/nmendoza/Desktop/Docs/Docs/OWUI"
+  ],
+  "exit_code": 0
+}

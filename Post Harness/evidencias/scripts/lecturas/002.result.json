@@ -1,0 +1,201 @@
+{
+  "query": "archivo URL firmada expiración local MinIO storage",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "archivo",
+    "expiracion",
+    "firmada",
+    "local",
+    "minio",
+    "storage",
+    "url"
+  ],
+  "missing_terms": [],
+  "total_matches": 155,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+      "sha256": "8bfa3cfca6f5ef84dd7427fd7cf2688cb2b14aef4b25b8af66d72d245cf1d5c0",
+      "section": "4. Acceso",
+      "start": 36,
+      "end": 41,
+      "score": 22.5903,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---",
+        "title": "Flujo de subida de archivos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, upload, archivos]",
+        "aliases": "[File upload flow, Subida de archivos COELSA]",
+        "description": "Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.",
+        "estado": "vigente"
+      },
+      "excerpt": "### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n",
+      "relations": [
+        {
+          "target": "Path Traversal",
+          "fragment": "",
+          "line": 20,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/Path Traversal.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Módulo de retrieval",
+          "fragment": "",
+          "line": 26,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/RAG/Módulo de retrieval.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Milvus",
+          "fragment": "",
+          "line": 27,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Milvus.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Scheduler de limpieza",
+          "fragment": "",
+          "line": 30,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 32,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "URLs firmadas MinIO",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 12,
+      "relations_truncated": true
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+      "sha256": "6dae495a1de98da2f1de521d0df4f0e75283ce2dc86d38889dc6cba1a4bc926b",
+      "section": "Flujo completo",
+      "start": 16,
+      "end": 31,
+      "score": 22.4763,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Sistema híbrido de almacenamiento\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, s3, hibrido]\naliases: [Almacenamiento híbrido, Local+S3, Hybrid storage]\ndescription: \"Usar cuando necesitás entender el flujo completo de archivos en COELSA.Intelligent: cómo pasan de local a MinIO y cómo coexisten los dos providers.\"\nestado: vigente\n---",
+        "title": "Sistema híbrido de almacenamiento",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, almacenamiento, minio, s3, hibrido]",
+        "aliases": "[Almacenamiento híbrido, Local+S3, Hybrid storage]",
+        "description": "Usar cuando necesitás entender el flujo completo de archivos en COELSA.Intelligent: cómo pasan de local a MinIO y cómo coexisten los dos providers.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Flujo completo\n\n```\nUsuario sube archivo\n       ↓\nBackend guarda en data/uploads/ (local temporal)\n       ↓\n[Scheduler diario] detecta archivos locales\n       ↓\nMigra a MinIO → genera presigned URL\n       ↓\nActualiza metadatos en BD (path = s3://bucket/key)\n       ↓\n[Acceso futuro] devuelve URL firmada de MinIO\n```\n",
+      "relations": [
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Flujo de subida de archivos",
+          "fragment": "",
+          "line": 56,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MinIO S3",
+          "fragment": "",
+          "line": 57,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/MinIO S3.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "URLs firmadas MinIO",
+          "fragment": "",
+          "line": 58,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Scheduler de limpieza",
+          "fragment": "",
+          "line": 59,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Agregar proveedor de almacenamiento",
+          "fragment": "",
+          "line": 60,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 6,
+      "relations_truncated": false
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}

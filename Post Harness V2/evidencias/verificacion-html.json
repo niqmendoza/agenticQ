@@ -1,0 +1,42 @@
+{
+  "desktop": {
+    "width": 1440,
+    "scrollWidth": 1440
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390
+  },
+  "errors": [],
+  "external_requests": [],
+  "broken_local_links": [],
+  "expected_numbers_present": true,
+  "flow_states": [
+    {
+      "step": 1,
+      "active": 3,
+      "status": "Paso 1 de 4: obtener la evidencia inicial."
+    },
+    {
+      "step": 2,
+      "active": 3,
+      "status": "Paso 2 de 4: localizar reglas y dependencias."
+    },
+    {
+      "step": 3,
+      "active": 3,
+      "status": "Paso 3 de 4: completar contexto y preparar casos."
+    },
+    {
+      "step": 4,
+      "active": 3,
+      "status": "Paso 4 de 4: verificar referencias y cerrar el análisis."
+    }
+  ],
+  "flow_completed_disables_next": true,
+  "flow_reset_ok": true,
+  "local_links_checked": 7,
+  "visual_inspection": "Desktop, mobile e diagrama inspeccionados: legibles, sin overflow ni cifras ficticias.",
+  "markdown_broken_links": [],
+  "original_files_unchanged": 462
+}

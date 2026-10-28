@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"La documentación distingue acceso público (`None`) de privado (`{}`), pero también declara acceso total para admin; voy a dejar visible esa tensión. La renovación sigue siendo una propuesta, y la actualización de `last_accessed_at` no queda definida por las notas existentes.\n","annotations":[],"logprobs":[]}]

@@ -1,0 +1,252 @@
+{
+  "query": "JWT get_current_user expiración autenticación",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "autenticacion",
+    "expiracion",
+    "get_current_user",
+    "jwt"
+  ],
+  "missing_terms": [],
+  "total_matches": 54,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+      "sha256": "1de1408046f7e94fde09b8c6e366b80176643850b5f4bfa8caed57b1286de56f",
+      "section": "Validación",
+      "start": 38,
+      "end": 41,
+      "score": 11.6031,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---",
+        "title": "JWT y sesiones",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, jwt, sesiones, tokens]",
+        "aliases": "[JWT COELSA, Tokens de sesión, HS256 COELSA]",
+        "description": "Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Validación\n\nCada endpoint protegido valida el token usando el `HTTPBearer` security scheme de FastAPI. El decorador `get_current_user` extrae el usuario del token y verifica que exista en la base de datos.\n",
+      "relations": [
+        {
+          "target": "Azure AD OAuth",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Azure AD OAuth.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 48,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "bcrypt para contraseñas",
+          "fragment": "",
+          "line": 49,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/bcrypt para contraseñas.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "FastAPI y uvicorn",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/FastAPI y uvicorn.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+      "sha256": "e55a93237b5781aace21c113e9fc71906c2e056ce44d8b649ca78f812934966b",
+      "section": "Uso",
+      "start": 26,
+      "end": 29,
+      "score": 11.4002,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Headers de usuario COELSA\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, http-headers]\naliases: [Encabezados HTTP COELSA, X-COELSA headers]\ndescription: \"Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent.\"\nestado: vigente\n---",
+        "title": "Headers de usuario COELSA",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, arquitectura, http-headers]",
+        "aliases": "[Encabezados HTTP COELSA, X-COELSA headers]",
+        "description": "Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Uso\n\nLos headers se inyectan automáticamente por el middleware de autenticación al validar el token JWT. Los routers que necesitan la identidad del usuario usan el sistema estándar de dependencias de FastAPI (`get_current_user`) en lugar de leer los headers directamente.\n",
+      "relations": [
+        {
+          "target": "JWT y sesiones",
+          "fragment": "",
+          "line": 32,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "FastAPI y uvicorn",
+          "fragment": "",
+          "line": 33,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/FastAPI y uvicorn.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Arquitectura",
+          "fragment": "",
+          "line": 35,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Arquitectura.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 4,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/Azure AD OAuth.md",
+      "sha256": "3fc6a3aeb33a25ea7fdb3c78e36aeed02c5125b769f8b262f0ef32edc49226cb",
+      "section": "Flujo de autenticación",
+      "start": 25,
+      "end": 33,
+      "score": 9.2392,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Azure AD OAuth\"\ntype: stack\ntags: [coelsa-intelligent, stack, azure-ad, oauth, openid-connect]\naliases: [Azure AD, OAuth COELSA, OpenID Connect COELSA]\ndescription: \"Usar cuando necesitás configurar o diagnosticar la autenticación OAuth con Azure AD en COELSA.Intelligent.\"\nestado: vigente\n---",
+        "title": "Azure AD OAuth",
+        "type": "stack",
+        "tags": "[coelsa-intelligent, stack, azure-ad, oauth, openid-connect]",
+        "aliases": "[Azure AD, OAuth COELSA, OpenID Connect COELSA]",
+        "description": "Usar cuando necesitás configurar o diagnosticar la autenticación OAuth con Azure AD en COELSA.Intelligent.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Flujo de autenticación\n\n1. El usuario hace clic en \"Login con Microsoft\".\n2. Es redirigido a `login.microsoftonline.com` para autenticarse.\n3. Azure AD devuelve un código de autorización al callback del backend.\n4. El backend intercambia el código por tokens (access + id token).\n5. El `sub` del id token se guarda como `oauth_sub` en el modelo `User`.\n6. Se genera un JWT interno (ver [[JWT y sesiones]]) que el frontend usa en todas las requests.\n",
+      "relations": [
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "JWT y sesiones",
+          "fragment": "",
+          "line": 32,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SharePoint OneDrive integración",
+          "fragment": "",
+          "line": 36,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Modelos IA/SharePoint OneDrive integración.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "CSP con nonces",
+          "fragment": "",
+          "line": 40,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/CSP con nonces.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Despliegue en OpenShift",
+          "fragment": "",
+          "line": 40,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/CI-CD/Despliegue en OpenShift.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 44,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 9,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 3,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ]
+}

@@ -1,0 +1,264 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 70, "returned": 5, "next_offset": 75}
+
+=== COELSA.Intelligent/Stack/Azure AD OAuth.md sha256=3fc6a3aeb33a25ea7fdb3c78e36aeed02c5125b769f8b262f0ef32edc49226cb ===
+1: ---
+2: title: "Azure AD OAuth"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, azure-ad, oauth, openid-connect]
+5: aliases: [Azure AD, OAuth COELSA, OpenID Connect COELSA]
+6: description: "Usar cuando necesitás configurar o diagnosticar la autenticación OAuth con Azure AD en COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # Azure AD OAuth
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent usa **Azure Active Directory** como único proveedor de identidad, implementado mediante el protocolo **OAuth 2.0 / OpenID Connect**. El registro local de usuarios y el formulario de login con usuario/contraseña están deshabilitados. Ver [[Azure AD login exclusivo]].
+15: 
+16: ## Variables de entorno requeridas
+17: 
+18: ```env
+19: OAUTH_CLIENT_ID=<azure-client-id>
+20: OAUTH_CLIENT_SECRET=<azure-client-secret>
+21: OAUTH_PROVIDER_NAME=microsoft
+22: OPENID_PROVIDER_URL=https://login.microsoftonline.com/<tenant-id>/v2.0/.well-known/openid-configuration
+23: ```
+24: 
+25: ## Flujo de autenticación
+26: 
+27: 1. El usuario hace clic en "Login con Microsoft".
+28: 2. Es redirigido a `login.microsoftonline.com` para autenticarse.
+29: 3. Azure AD devuelve un código de autorización al callback del backend.
+30: 4. El backend intercambia el código por tokens (access + id token).
+31: 5. El `sub` del id token se guarda como `oauth_sub` en el modelo `User`.
+32: 6. Se genera un JWT interno (ver [[JWT y sesiones]]) que el frontend usa en todas las requests.
+33: 
+34: ## Para SharePoint / OneDrive
+35: 
+36: La misma App Registration de Azure AD puede usarse para el [[SharePoint OneDrive integración|File Picker de SharePoint]], pero requiere el permiso adicional `Files.Read.All`.
+37: 
+38: ## CSP
+39: 
+40: El dominio `login.microsoftonline.com` debe estar incluido en la CSP del Route de OpenShift para que el redirect funcione. Ver [[CSP con nonces]] y [[Despliegue en OpenShift]].
+41: 
+42: ## Relacionado
+43: 
+44: - [[Azure AD login exclusivo]] — La decisión de arquitectura de deshabilitar el login local
+45: - [[JWT y sesiones]] — El token interno que se genera después de OAuth
+46: - [[SharePoint OneDrive integración]] — Extensión del mismo Azure AD para File Picker
+47: - [[MOC - Stack]] — Contexto del proveedor de identidad en el stack completo
+
+=== COELSA.Intelligent/Stack/FastAPI y uvicorn.md sha256=c46b88e3f87c7039e45d76b0802179d20ab8514d2b940378ff76c8ce5e5908f1 ===
+1: ---
+2: title: "FastAPI y uvicorn"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, backend, fastapi, uvicorn, asgi]
+5: aliases: [Backend FastAPI, API server COELSA]
+6: description: "Usar cuando trabajás con el servidor HTTP del backend: agregar endpoints, entender el ciclo de vida de la app, o debuggear requests."
+7: estado: vigente
+8: ---
+9: 
+10: # FastAPI y uvicorn
+11: 
+12: ## Qué es
+13: 
+14: El backend de COELSA.Intelligent está construido sobre **FastAPI 0.115** como framework HTTP, corriendo bajo **uvicorn** como servidor ASGI. Además integra **python-socketio** para la comunicación WebSocket en tiempo real.
+15: 
+16: ## Entry point
+17: 
+18: ```
+19: backend/server/main.py
+20: ```
+21: 
+22: `main.py` monta todos los routers, registra los middlewares y define el ciclo de vida de la aplicación (`lifespan`). La app de socketio se monta como sub-aplicación en `/ws`.
+23: 
+24: ## Routers registrados
+25: 
+26: La API expone rutas bajo `/api/v1/`:
+27: 
+28: ```
+29: audio, auths, channels, chats, configs, evaluations, files,
+30: files_storage_endpoints, folders, functions, groups, images,
+31: knowledge, memories, models, ollama, openai, pipelines,
+32: prompts, retrieval, storage_management, tasks, tools, users, utils
+33: ```
+34: 
+35: ## Middlewares
+36: 
+37: - `CORSMiddleware` — Orígenes permitidos configurables
+38: - `SessionMiddleware` — Sesiones HTTP
+39: - `NonceInjectionMiddleware` — Nonces CSP (ver [[CSP con nonces]])
+40: - `AuditLoggingMiddleware` — Registro de auditoría
+41: 
+42: ## Arranque en desarrollo
+43: 
+44: ```bash
+45: cd backend
+46: ./dev.sh   # hot-reload activado
+47: ```
+48: 
+49: Ver [[Ejecución local]] para detalle completo.
+50: 
+51: ## Relacionado
+52: 
+53: - [[Redis para WebSockets]] — python-socketio usa Redis como canal de mensajes
+54: - [[Agregar router REST]] — Cómo extender la API con nuevos endpoints
+55: - [[CSP con nonces]] — El middleware de nonces que se registra en esta app
+56: - [[Sistema de errores centralizado]] — Los handlers de excepción se registran aquí
+57: - [[MOC - Stack]] — Contexto del backend en el stack completo
+
+=== COELSA.Intelligent/Stack/LiteLLM proxy.md sha256=e3d8f5063e306ed5d291d773e33055f9200a6563dc92ddb49362f2d02be82097 ===
+1: ---
+2: title: "LiteLLM proxy"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, litellm, proxy, modelos-ia]
+5: aliases: [LiteLLM, Proxy OpenAI COELSA]
+6: description: "Usar cuando necesitás configurar LiteLLM como proxy, entender el routing de modelos proxied o diagnosticar respuestas vacías con modelos ollama/ prefijados."
+7: estado: vigente
+8: ---
+9: 
+10: # LiteLLM proxy
+11: 
+12: ## Qué es
+13: 
+14: **LiteLLM** es un proxy OpenAI-compatible que unifica el acceso a múltiples proveedores de modelos (OpenAI, Azure OpenAI, Anthropic, Ollama, etc.) bajo una única API estándar. COELSA.Intelligent lo usa para acceder a modelos que no están en Ollama nativo.
+15: 
+16: ## Configuración
+17: 
+18: ```env
+19: OPENAI_API_BASE_URL=http://litellm:4000/v1
+20: OPENAI_API_KEY=sk-...
+21: ```
+22: 
+23: ## El problema de routing (resuelto)
+24: 
+25: Los modelos con prefijo `ollama/` en LiteLLM tienen `owned_by=ollama`. El upstream de Open WebUI usaba solo `owned_by` para decidir el endpoint, y los enviaba incorrectamente al endpoint nativo de Ollama. LiteLLM siempre responde en **formato OpenAI**, no en formato Ollama nativo, lo que generaba **respuestas vacías en la UI**.
+26: 
+27: La corrección valida también el campo `urlIdx`: si está presente, el modelo es proxied y debe usar el endpoint OpenAI (LiteLLM), independientemente del valor de `owned_by`.
+28: 
+29: Ver [[Validación de urlIdx]] para el detalle técnico.
+30: 
+31: ## Modelo con non-native function calling
+32: 
+33: El modelo `gpt-oss:120b` usa JSON prompt en lugar de function calling nativo porque no soporta tool calling de forma confiable. Ver [[MCP y tool calling]].
+34: 
+35: ## Relacionado
+36: 
+37: - [[Ollama]] — El servidor de modelos nativos que coexiste con LiteLLM
+38: - [[Routing de modelos IA]] — La lógica que decide cuándo ir a LiteLLM
+39: - [[Validación de urlIdx]] — El fix del bug de respuestas vacías
+40: - [[MCP y tool calling]] — Cómo se implementa tool calling para modelos via LiteLLM
+41: - [[MOC - Stack]] — Contexto de LiteLLM en el stack completo
+
+=== COELSA.Intelligent/Stack/Milvus.md sha256=9c884a5384c69f3e16ed07be0f3d7017736b2357432a1ffa00ef0629e94cb7b4 ===
+1: ---
+2: title: "Milvus"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, milvus, vectores, rag]
+5: aliases: [Milvus stack, Base vectorial COELSA]
+6: description: "Usar cuando necesitás configurar Milvus, entender las colecciones del sistema RAG o diagnosticar problemas de embeddings."
+7: estado: vigente
+8: ---
+9: 
+10: # Milvus
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent usa **Milvus 2.4+** como base de datos vectorial para el sistema RAG. El esquema implementa [[Milvus multi-tenancy|multi-tenancy]] con 5 colecciones compartidas en lugar de una colección por recurso.
+15: 
+16: ## Versión mínima
+17: 
+18: Milvus **2.4** — requerido para el soporte de `resource_id` como campo escalar filtrable y mejoras de rendimiento en búsquedas con filtro booleano.
+19: 
+20: ## Configuración
+21: 
+22: ```env
+23: MILVUS_URI=http://localhost:19530
+24: ENABLE_MILVUS_MULTITENANCY_MODE=true
+25: ```
+26: 
+27: ## Colecciones
+28: 
+29: Las [[Cinco colecciones Milvus]] fijas son:
+30: - `_knowledge` — Bases de conocimiento
+31: - `_files` — Archivos subidos
+32: - `_memories` — Memorias de usuarios
+33: - `_web_search` — Resultados de búsqueda web
+34: - `_hash_based` — URLs (YouTube, páginas web)
+35: 
+36: ## Módulo principal
+37: 
+38: ```
+39: backend/server/retrieval/vector/dbs/milvus_multitenancy.py
+40: ```
+41: 
+42: Este módulo implementa `_get_collection_and_resource_id()` que determina a qué colección pertenece un recurso basándose en convenciones de nombre (prefixes).
+43: 
+44: **Advertencia**: cambiar cómo el frontend genera nombres de colección sin actualizar esta función puede provocar mezcla de datos entre recursos.
+45: 
+46: ## Relacionado
+47: 
+48: - [[Milvus multi-tenancy]] — La decisión de diseño de las 5 colecciones compartidas
+49: - [[Cinco colecciones Milvus]] — Detalle de cada colección y su uso
+50: - [[Aislamiento por resource_id]] — Cómo se filtra por recurso en las búsquedas
+51: - [[Módulo de retrieval]] — El módulo de Python que orquesta embeddings y búsqueda
+52: - [[MOC - Stack]] — Contexto de Milvus en el stack completo
+
+=== COELSA.Intelligent/Stack/MinIO S3.md sha256=889b273117ba06c7736e93c842274d17150f23fad4c1c6186d51cfa4bb639bb3 ===
+1: ---
+2: title: "MinIO S3"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, minio, s3, almacenamiento]
+5: aliases: [MinIO, S3 COELSA, Object storage COELSA]
+6: description: "Usar cuando necesitás configurar MinIO, entender cómo se suben archivos a S3 o diagnosticar problemas de conectividad con el bucket."
+7: estado: vigente
+8: ---
+9: 
+10: # MinIO S3
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent usa **MinIO** (o cualquier endpoint S3-compatible) para el almacenamiento persistente de archivos subidos por usuarios. El acceso a los archivos se hace siempre mediante [[URLs firmadas MinIO|URLs firmadas (presigned URLs)]].
+15: 
+16: ## Variables de entorno
+17: 
+18: ```env
+19: S3_ACCESS_KEY_ID=minioadmin
+20: S3_SECRET_ACCESS_KEY=minioadmin
+21: S3_BUCKET_NAME=coelsa-intelligent
+22: S3_ENDPOINT_URL=http://minio:9000
+23: FILE_STORAGE_CLEANUP_DAYS=30
+24: ```
+25: 
+26: ## Configuración de boto3 (timeouts)
+27: 
+28: La configuración de `boto3` está ajustada para entornos Windows y redes corporativas:
+29: - Connect timeout: **30 segundos**
+30: - Read timeout: **120 segundos**
+31: - Reintentos: **10** con backoff exponencial
+32: - TCP keepalive: habilitado
+33: 
+34: Esto resolvió el problema de timeouts en uploads desde Windows documentado en el CHANGELOG v1.3.0.
+35: 
+36: ## Creación del bucket
+37: 
+38: Para crear el bucket en un entorno nuevo:
+39: 
+40: ```bash
+41: python scripts/create_minio_bucket.py
+42: ```
+43: 
+44: El script lee la configuración desde `backend/server/config.py`, que auto-carga `.env`. Ejecutar desde la raíz del proyecto.
+45: 
+46: ## Proveedores soportados
+47: 
+48: El sistema soporta múltiples providers a través de la interfaz `StorageProvider`. Ver [[Agregar proveedor de almacenamiento]] para cómo agregar nuevos backends (GCS, Azure Blob Storage, etc.).
+49: 
+50: ## Relacionado
+51: 
+52: - [[Sistema híbrido de almacenamiento]] — El flujo completo local → MinIO
+53: - [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso
+54: - [[Scheduler de limpieza]] — El job que elimina archivos vencidos del bucket
+55: - [[Agregar proveedor de almacenamiento]] — Cómo implementar un provider alternativo
+56: - [[MOC - Stack]] — Contexto de MinIO en el stack completo

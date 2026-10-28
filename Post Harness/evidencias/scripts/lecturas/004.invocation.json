@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/brain.py",
+    "--db",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/indice.sqlite",
+    "--log-dir",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas",
+    "query",
+    "agregar endpoint router REST autenticación errores",
+    "--limit",
+    "3",
+    "--max-chars",
+    "9000"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-10-27T22:16:18.515414+00:00",
+  "finished_utc": "2026-10-27T22:16:18.556160+00:00",
+  "local_seconds": 0.040609083021990955
+}

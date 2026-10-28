@@ -1,0 +1,290 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 30, "returned": 5, "next_offset": 35}
+
+=== COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md sha256=b9f8fbcba69774de6e357757821f48334827276223788bf756c423cf1581f049 ===
+1: ---
+2: title: "Patrones frontend críticos"
+3: type: concepto
+4: tags: [coelsa-intelligent, desarrollo, frontend, svelte, patrones, bugs]
+5: aliases: [Critical frontend patterns, Patrones obligatorios frontend]
+6: description: "Usar como checklist antes de mergear cambios en Chat.svelte o componentes de chat — los 4 patrones que no deben revertirse bajo ninguna circunstancia."
+7: estado: vigente
+8: ---
+9: 
+10: # Patrones frontend críticos
+11: 
+12: ## Qué es
+13: 
+14: Cuatro patrones de código en el frontend de COELSA.Intelligent que resuelven bugs concretos documentados. Su omisión o reversión reproduce los bugs originales. Son **invariantes del codebase**.
+15: 
+16: > **Referencia completa**: ver [[Patrones de componentes Svelte]] para el código y explicación detallada de cada patrón.
+17: 
+18: ## Checklist rápido
+19: 
+20: Antes de mergear cambios en `Chat.svelte` o componentes relacionados:
+21: 
+22: - [ ] **Guarda de `chatId`**: el setter del store solo se llama si `$chatId !== chatIdProp`
+23: - [ ] **AbortController en `loadChat`**: se cancela la request anterior antes de iniciar la nueva
+24: - [ ] **Unsubscribers en `onDestroy`**: todo store suscrito en `onMount` se desuscribe en `onDestroy`
+25: - [ ] **Bloques reactivos unificados**: los bloques `$:` que dependen del mismo state están en un solo bloque
+26: 
+27: ## Consecuencias de revertirlos
+28: 
+29: | Patrón omitido | Consecuencia |
+30: |---------------|-------------|
+31: | Guarda de chatId | Loop de renderizado infinito al cambiar de chat |
+32: | AbortController ausente | ~80% más de requests duplicados y errores 404 de chunks |
+33: | Unsubscribers ausentes | Memory leaks; listeners fantasma; requests adicionales |
+34: | Bloques reactivos separados | Doble ejecución por cambio de estado |
+35: 
+36: ## Relacionado
+37: 
+38: - [[Patrones de componentes Svelte]] — El código completo con explicaciones detalladas
+39: - [[SvelteKit 2]] — El framework donde aplican estos patrones
+40: - [[MOC - Desarrollo]] — Índice del cluster de desarrollo
+41: - [[MOC - Decisiones]] — D-20 en el índice de decisiones
+
+=== COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md sha256=1f9c3996cf851072ec73af8e52c1b35763cd7f939adba6655cf35a6293535a3f ===
+1: ---
+2: title: "Dark mode reglas"
+3: type: concepto
+4: tags: [coelsa-intelligent, diseño, dark-mode, tema, colores]
+5: aliases: [Dark mode COELSA, Modo oscuro, Inversión de roles]
+6: description: "Usar cuando implementás o verificás el comportamiento de dark mode en componentes de COELSA.Intelligent — especialmente para entender qué cambia y qué no."
+7: estado: vigente
+8: ---
+9: 
+10: # Dark mode reglas
+11: 
+12: ## Qué es
+13: 
+14: El dark mode de COELSA.Intelligent **invierte los roles semánticos**, no los colores primitivos. La escala Teal sigue siendo Teal; solo cambia qué tono de la escala se asigna a cada rol.
+15: 
+16: ## La regla fundamental
+17: 
+18: ```
+19: Light mode: primary = teal-40 (#006972, oscuro)
+20: Dark mode:  primary = teal-80 (#57D8E6, claro)
+21: ```
+22: 
+23: Los primitivos no cambian; cambia qué primitivo se asigna a qué rol.
+24: 
+25: ## Anti-patrones de dark mode
+26: 
+27: | Anti-patrón | Por qué está mal |
+28: |------------|-----------------|
+29: | Usar escala directa (`bg-teal-40`) | No se invierte en dark mode |
+30: | Asumir que `text-on-primary` es siempre blanco | En dark mode `on-primary` = teal-20 (oscuro) |
+31: | Hardcodear `text-white` sobre `bg-primary` | Rompe en light mode si se ajustan los roles |
+32: | Usar `opacity-50` para el texto secundario | Debe usarse `text-on-surface/75` (opacity utility) |
+33: 
+34: ## Implementación técnica
+35: 
+36: Las CSS custom properties se definen en `src/lib/styles/colors.css` con dos bloques:
+37: 
+38: ```css
+39: /* Light mode (por defecto) */
+40: :root {
+41:   --color-primary: #006972;
+42:   --color-on-primary: #FFFFFF;
+43:   /* ... */
+44: }
+45: 
+46: /* Dark mode */
+47: [data-theme="dark"], .dark {
+48:   --color-primary: #57D8E6;
+49:   --color-on-primary: #00363B;
+50:   /* ... */
+51: }
+52: ```
+53: 
+54: Tailwind usa estas variables via `tailwind.config.js`.
+55: 
+56: ## Surface containers en dark mode
+57: 
+58: Los [[Surface Containers]] más oscuros en light mode son los más claros en dark mode. La jerarquía se mantiene: `highest` siempre es el más destacado, solo cambia si eso significa "más claro" o "más oscuro".
+59: 
+60: ## Relacionado
+61: 
+62: - [[Roles semánticos de color]] — Los roles que se invierten en dark mode
+63: - [[Tokens primitivos de color]] — Los valores que no cambian
+64: - [[Surface Containers]] — Cómo cambian los niveles de superficie en dark mode
+65: - [[ECO Design System]] — El sistema general de diseño
+
+=== COELSA.Intelligent/Diseño Frontend/ECO Design System.md sha256=a5b4b87ac94f9e388bee90e981e0d47bd12b0647e1a208734676a73ad86c1151 ===
+1: ---
+2: title: "ECO Design System"
+3: type: concepto
+4: tags: [coelsa-intelligent, diseño, eco-design-system, material-design, ui]
+5: aliases: [ECO Design, Design system COELSA, Sistema de diseño COELSA]
+6: description: "Usar cuando necesitás entender el sistema de diseño visual de COELSA.Intelligent: principios, arquitectura de tokens y archivos canónicos."
+7: estado: vigente
+8: ---
+9: 
+10: # ECO Design System
+11: 
+12: ## Qué es
+13: 
+14: El **ECO Design System** es el sistema de diseño visual de COELSA.Intelligent, basado en **Material Design 3** y adaptado a la identidad corporativa de COELSA (Teal + Pink).
+15: 
+16: ## Principios fundamentales
+17: 
+18: | Principio | Descripción |
+19: |-----------|-------------|
+20: | **Tokens primero** | Nunca hardcodear hex. Usar siempre roles/tokens semánticos |
+21: | **Teal = Primary, siempre** | Teal es el color de acción en ambos temas. Pink es acento/decorativo |
+22: | **Accesibilidad no negociable** | WCAG AA (4.5:1 texto normal, 3:1 texto grande) |
+23: | **Jerarquía mediante surfaces** | 5 niveles de surface-container; nunca opacidad arbitraria |
+24: | **Un concepto, un lugar** | Cada token se define una vez en `colors.css` y se expone via Tailwind |
+25: 
+26: ## Arquitectura de 3 niveles
+27: 
+28: ```
+29: Nivel 1: Tokens Primitivos (escalas Teal, Pink, Neutral 0→100)
+30:          src/lib/styles/colors.css
+31:               ↓ referenciados por
+32: Nivel 2: Roles Semánticos (primary, on-primary, surface, etc.)
+33:          src/lib/styles/colors.css + tailwind.config.js
+34:               ↓ consumidos por
+35: Nivel 3: Componentes / Clases Utility
+36:          src/app.css, src/lib/utils/theme.ts, componentes Svelte
+37: ```
+38: 
+39: ## Archivos canónicos
+40: 
+41: | Archivo | Responsabilidad |
+42: |---------|-----------------|
+43: | `src/lib/styles/colors.css` | Definición de todos los tokens CSS |
+44: | `tailwind.config.js` | Expone tokens como clases Tailwind |
+45: | `src/app.css` | Clases tipográficas; imports base |
+46: | `src/tailwind.css` | @font-face Saira; config Tailwind v4 |
+47: | `src/lib/utils/theme.ts` | Helpers para botones interactivos |
+48: 
+49: ## Documentación completa
+50: 
+51: `docs/ECO-DESIGN-SYSTEM.md` — Single source of truth del sistema.
+52: 
+53: ## Relacionado
+54: 
+55: - [[Tokens primitivos de color]] — Las escalas inmutables de la Capa 1
+56: - [[Roles semánticos de color]] — Los roles de la Capa 2 que cambian entre temas
+57: - [[Surface Containers]] — Los 5 niveles de jerarquía visual
+58: - [[Tipografía Saira]] — La fuente corporativa del sistema
+59: - [[Dark mode reglas]] — Cómo se comportan los roles en modo oscuro
+
+=== COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md sha256=d9e8cc1be54498d21a67a9247f6eb066391a519df86fcbe0ebac88a5860a9ec5 ===
+1: ---
+2: title: "Internacionalización i18n"
+3: type: concepto
+4: tags: [coelsa-intelligent, diseño, i18n, traducciones, es-ar]
+5: aliases: [i18n COELSA, Traducciones COELSA, i18next COELSA]
+6: description: "Usar cuando necesitás agregar o modificar traducciones en COELSA.Intelligent, o cuando querés entender qué idiomas están soportados y cómo configurarlos."
+7: estado: vigente
+8: ---
+9: 
+10: # Internacionalización i18n
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent usa **i18next** como sistema de internacionalización. Los archivos de traducción están en `src/lib/i18n/` organizados por código de idioma.
+15: 
+16: ## Idiomas soportados
+17: 
+18: | Código | Idioma | Estado |
+19: |--------|--------|--------|
+20: | `es-AR` | Castellano Rioplatense | **Default** — ver [[Idioma por defecto es-AR]] |
+21: | `en-GB` | English (British) | Activo |
+22: | `pt-BR` | Português (Brasil) | Activo |
+23: 
+24: ## Idiomas eliminados del fork
+25: 
+26: Removidos en v1.3.0: `es-ES`, `pt-PT`, `en-US`. Ver [[Idioma por defecto es-AR]].
+27: 
+28: ## Configuración
+29: 
+30: ```env
+31: DEFAULT_LOCALE=es-AR
+32: ```
+33: 
+34: En el frontend, el idioma también puede seleccionarse por usuario en Settings (acceso restringido según [[Roles de usuario]]).
+35: 
+36: ## Uso en componentes Svelte
+37: 
+38: ```svelte
+39: <script>
+40:   import { t } from '$lib/i18n';
+41: </script>
+42: 
+43: <button>{$t('common.send')}</button>
+44: <p>{$t('chat.placeholder', { name: userName })}</p>
+45: ```
+46: 
+47: ## Agregar una traducción
+48: 
+49: 1. Localizar la clave en `src/lib/i18n/es-AR.json` (o crear si no existe)
+50: 2. Agregar la misma clave en `en-GB.json` y `pt-BR.json`
+51: 3. Usar `$t('clave')` en el componente Svelte
+52: 
+53: ## Relacionado
+54: 
+55: - [[Idioma por defecto es-AR]] — La decisión de elegir es-AR como default
+56: - [[SvelteKit 2]] — El framework donde se integra i18next
+57: - [[MOC - Diseño y Frontend]] — Índice del cluster de diseño
+
+=== COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md sha256=f4d0cc88113e86e38a36230d26cab8f3303f32d6ae1a4beca0625589aff0b231 ===
+1: ---
+2: title: "Manejo de errores frontend"
+3: type: concepto
+4: tags: [coelsa-intelligent, diseño, frontend, errores, svelte]
+5: aliases: [Error handling frontend, Componentes de error Svelte, ErrorBoundary COELSA]
+6: description: "Usar cuando necesitás implementar manejo de errores en el frontend de COELSA.Intelligent o entender cómo se renderizan los errores HTTP al usuario."
+7: estado: vigente
+8: ---
+9: 
+10: # Manejo de errores frontend
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent tiene un sistema de componentes específicos para cada categoría de error HTTP, más un `ErrorBoundary` para capturar errores de renderizado en componentes Svelte.
+15: 
+16: ## Componentes de error
+17: 
+18: | Componente | Archivo | Cuándo se muestra |
+19: |-----------|---------|-------------------|
+20: | `NetworkError` | `src/lib/components/error/NetworkError.svelte` | Sin conexión o error de red (0, ECONNREFUSED) |
+21: | `TimeoutError` | `src/lib/components/error/TimeoutError.svelte` | La request excedió el timeout |
+22: | `GenericError` | `src/lib/components/error/GenericError.svelte` | Cualquier error HTTP no categorizado |
+23: | `ErrorBoundary` | `src/lib/components/error/ErrorBoundary.svelte` | Error durante el renderizado de un componente hijo |
+24: 
+25: ## Routing de errores HTTP
+26: 
+27: `src/routes/+error.svelte` recibe todos los errores HTTP de SvelteKit y los rutea:
+28: - `0` o sin respuesta → `NetworkError`
+29: - Timeout detectado → `TimeoutError`
+30: - Cualquier otro → `GenericError` (con el código y mensaje del backend)
+31: 
+32: ## ErrorBoundary (para errores de render)
+33: 
+34: Envuelve secciones de UI que podrían fallar durante el renderizado:
+35: 
+36: ```svelte
+37: <ErrorBoundary>
+38:   <ComponenteQuePodriaFallar />
+39: </ErrorBoundary>
+40: ```
+41: 
+42: Si el componente hijo lanza un error durante el render, `ErrorBoundary` lo captura y muestra un fallback en lugar de romper toda la página.
+43: 
+44: ## Relación con el backend
+45: 
+46: Los errores del backend llegan con la estructura estándar del [[Sistema de errores centralizado]]:
+47: ```json
+48: { "message": "...", "status_code": 400, "details": "..." }
+49: ```
+50: 
+51: Los componentes de error extraen el `message` para mostrarlo al usuario.
+52: 
+53: ## Relacionado
+54: 
+55: - [[Sistema de errores centralizado]] — Los errores del backend que estos componentes consumen
+56: - [[SvelteKit 2]] — El framework donde viven estos componentes y el router de errores
+57: - [[MOC - Diseño y Frontend]] — Índice del cluster de diseño

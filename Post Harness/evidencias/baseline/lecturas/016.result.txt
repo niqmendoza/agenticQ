@@ -1,0 +1,243 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 75, "returned": 5, "next_offset": null}
+
+=== COELSA.Intelligent/Stack/Ollama.md sha256=3570fa88ce7532dd0cec9c8309469f00dc1d348c9b799b4a9f1eeb68d8db47a5 ===
+1: ---
+2: title: "Ollama"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, ollama, modelos-ia]
+5: aliases: [Ollama stack, Ollama COELSA]
+6: description: "Usar cuando necesitás configurar Ollama, entender cómo el backend se conecta al servidor de modelos local o diagnosticar errores de routing de modelos."
+7: estado: vigente
+8: ---
+9: 
+10: # Ollama
+11: 
+12: ## Qué es
+13: 
+14: **Ollama** es el servidor de modelos LLM local que COELSA.Intelligent puede usar como backend de inferencia. Es la vía de acceso "nativa" a modelos que corren en la infraestructura propia.
+15: 
+16: ## Configuración
+17: 
+18: ```env
+19: OLLAMA_BASE_URL=http://localhost:11434
+20: ```
+21: 
+22: Puede haber múltiples URLs de Ollama en `OLLAMA_BASE_URLS` (lista JSON).
+23: 
+24: ## Routing de modelos
+25: 
+26: El sistema determina si una request va a Ollama o a [[LiteLLM proxy]] según el campo `urlIdx` del modelo. Si `urlIdx` está ausente, se usa el endpoint de Ollama nativo. Ver [[Routing de modelos IA]] y [[Validación de urlIdx]].
+27: 
+28: **Importante**: modelos con prefijo `ollama/` que están configurados como proxied a través de LiteLLM **deben** tener `urlIdx` para ser correctamente ruteados al endpoint OpenAI, no al nativo de Ollama. Usar el endpoint nativo de Ollama para un modelo proxied LiteLLM genera respuestas vacías.
+29: 
+30: ## Diferencia con LiteLLM
+31: 
+32: | Característica | Ollama (nativo) | LiteLLM proxy |
+33: |----------------|-----------------|---------------|
+34: | Protocolo | API Ollama nativa | OpenAI-compatible |
+35: | Modelos | Solo modelos locales Ollama | Cualquier proveedor |
+36: | Identificador | Sin `urlIdx` (o `urlIdx` = 0) | Con `urlIdx` definido |
+37: 
+38: ## Relacionado
+39: 
+40: - [[LiteLLM proxy]] — El proxy OpenAI-compatible que complementa a Ollama
+41: - [[Routing de modelos IA]] — La lógica de selección de endpoint
+42: - [[Validación de urlIdx]] — El fix clave para el routing correcto
+43: - [[MOC - Stack]] — Contexto de Ollama en el stack completo
+
+=== COELSA.Intelligent/Stack/OpenShift.md sha256=adfef3e0930bd08ab3530f5daefc5765a7b8df3724c7926ae835d12ce3fc246e ===
+1: ---
+2: title: "OpenShift"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, openshift, despliegue, kubernetes]
+5: aliases: [OpenShift COELSA, OCP COELSA]
+6: description: "Usar cuando trabajás con el despliegue de COELSA.Intelligent en OpenShift: ConfigMaps, Routes, timeouts de HAProxy o escalado horizontal."
+7: estado: vigente
+8: ---
+9: 
+10: # OpenShift
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent se despliega en **OpenShift** (Red Hat OpenShift Container Platform), la plataforma de orquestación de contenedores de COELSA. Los pipelines de CI/CD están en Azure DevOps.
+15: 
+16: ## Entornos activos
+17: 
+18: | Entorno | Pipeline |
+19: |---------|---------|
+20: | DEV | `azure-pipeline-DEV.yml` |
+21: | VALIDACION | `azure-pipeline-VALIDACION.yml` |
+22: | PRODUCCIÓN | `azure-pipeline-PROD.yml` |
+23: | Release management | `azure-pipeline-RELEASE.yml` |
+24: 
+25: ## Requisitos de configuración
+26: 
+27: 1. **ConfigMap**: variables de entorno de la app — `docs/OPENSHIFT-CONFIGMAP.yaml`
+28: 2. **Routes**: configuración de ingress con CSP — `docs/OPENSHIFT-ROUTE-CONFIG.yaml`
+29: 3. **Timeout de HAProxy**: debe ser mayor a **300 segundos** para soportar el procesamiento completo de archivos con RAG (embedding + inserción en Milvus puede superar 5 minutos en documentos grandes)
+30: 
+31: ## Redis para escalado horizontal
+32: 
+33: Sin [[Redis]] como canal de WebSockets, escalar la app a múltiples pods haría que los eventos de socket no se propaguen entre instancias. Redis es requisito previo para escalar en OpenShift.
+34: 
+35: ## CSP en el Route
+36: 
+37: La CSP se configura en la definición del Route. Para [[SharePoint OneDrive integración]], los dominios `login.microsoftonline.com` y `graph.microsoft.com` deben estar en la directiva `connect-src`. Ver [[CSP con nonces]].
+38: 
+39: ## Relacionado
+40: 
+41: - [[Pipelines Azure DevOps]] — Los 4 pipelines que despliegan en OpenShift
+42: - [[Despliegue en OpenShift]] — Pasos de despliegue paso a paso
+43: - [[Redis]] — Requerido para escalar horizontalmente
+44: - [[CSP con nonces]] — La CSP que vive en la configuración del Route
+45: - [[MOC - Stack]] — Contexto de OpenShift en el stack completo
+
+=== COELSA.Intelligent/Stack/PostgreSQL.md sha256=d7908f79bbf932207a9c8b02d0a71cec3c2e9d3569f9d503b99277ce9f402270 ===
+1: ---
+2: title: "PostgreSQL"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, postgresql, base-de-datos, sqlalchemy]
+5: aliases: [PostgreSQL stack, BD relacional COELSA]
+6: description: "Usar cuando necesitás configurar o diagnosticar la conexión a PostgreSQL, entender los modelos SQLAlchemy o ejecutar migraciones Alembic."
+7: estado: vigente
+8: ---
+9: 
+10: # PostgreSQL
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent usa **PostgreSQL 14+** como base de datos relacional principal. El acceso se hace a través de **SQLAlchemy** como ORM y **Alembic** para migraciones de esquema.
+15: 
+16: ## Versión mínima
+17: 
+18: PostgreSQL **14** — requerido por el uso de funciones JSON y de ventana.
+19: 
+20: ## Configuración
+21: 
+22: ```env
+23: DATABASE_URL=postgresql://user:pass@localhost:5432/coelsa_intelligent
+24: ```
+25: 
+26: ## Modelos principales
+27: 
+28: | Tabla | Archivo | Descripción |
+29: |-------|---------|-------------|
+30: | `user` | `models/users.py` | Usuarios con rol, email, oauth_sub, settings |
+31: | `chat` | `models/chats.py` | Conversaciones con JSON del historial |
+32: | `file` | `models/files.py` | Metadatos de archivos subidos; `chat_id` para cascada |
+33: | `knowledge` | `models/knowledge.py` | Bases de conocimiento con access_control |
+34: | `group` | `models/groups.py` | Grupos con permisos JSON |
+35: | `config` | `config.py` | Configuración persistente de la app |
+36: 
+37: ## Migraciones
+38: 
+39: Las migraciones se gestionan con Alembic. El servidor las aplica automáticamente al iniciar (`run_migrations()` en `config.py`). Ver [[Migraciones Alembic]] para el flujo manual.
+40: 
+41: ## Relacionado
+42: 
+43: - [[PostgreSQL como base de datos]] — La decisión de migrar de SQLite a PostgreSQL
+44: - [[Migraciones Alembic]] — Cómo gestionar cambios de esquema
+45: - [[Borrado en cascada de archivos]] — El campo `chat_id` en `file` que habilita la cascada
+46: - [[MOC - Stack]] — Contexto de PostgreSQL en el stack completo
+
+=== COELSA.Intelligent/Stack/Redis.md sha256=40ed95854d5545b8a17ca97df0d8a856748987b3281b3b2cc1957c66c2d26e63 ===
+1: ---
+2: title: "Redis"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, redis, websockets, cache]
+5: aliases: [Redis stack, Redis COELSA]
+6: description: "Usar cuando necesitás configurar Redis, entender su rol en los WebSockets o diagnosticar problemas de conectividad entre workers."
+7: estado: vigente
+8: ---
+9: 
+10: # Redis
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent usa **Redis 7+** como backend de canal para WebSockets y como cache distribuida. Es la pieza que permite que múltiples instancias del servidor compartan el estado del socket.
+15: 
+16: ## Versión mínima
+17: 
+18: Redis **7** — para soporte de Streams y configuraciones de seguridad modernas.
+19: 
+20: ## Configuración
+21: 
+22: ```env
+23: # Redis standalone
+24: REDIS_URL=redis://localhost:6379
+25: 
+26: # Redis Sentinel (alta disponibilidad)
+27: REDIS_SENTINEL_HOSTS=sentinel1:26379,sentinel2:26379
+28: REDIS_SENTINEL_PORT=26379
+29: ```
+30: 
+31: La lógica de conexión está en `backend/server/utils/redis.py` y elige entre standalone y Sentinel según las variables definidas.
+32: 
+33: ## Rol en el sistema
+34: 
+35: - **Canal de WebSockets**: `python-socketio` usa Redis como bus de mensajes entre instancias de uvicorn. Sin Redis, los WebSockets solo funcionan con un único worker.
+36: - **Cache distribuida**: algunas operaciones costosas cachean resultados en Redis.
+37: 
+38: ## Relacionado
+39: 
+40: - [[Redis para WebSockets]] — La decisión de arquitectura que justifica el uso de Redis
+41: - [[FastAPI y uvicorn]] — El servidor que usa Redis como canal de socketio
+42: - [[OpenShift]] — El entorno donde escalar horizontalmente requiere Redis
+43: - [[MOC - Stack]] — Contexto de Redis en el stack completo
+
+=== COELSA.Intelligent/Stack/SvelteKit 2.md sha256=0eddcfe12eeae361ed35cdbd08358f12af27a9ee22f805e294d64276550c0fd5 ===
+1: ---
+2: title: "SvelteKit 2"
+3: type: stack
+4: tags: [coelsa-intelligent, stack, frontend, sveltekit, spa]
+5: aliases: [Frontend SvelteKit, SvelteKit COELSA]
+6: description: "Usar cuando trabajás con el frontend de COELSA.Intelligent: rutas, stores, componentes, build o modo de desarrollo."
+7: estado: vigente
+8: ---
+9: 
+10: # SvelteKit 2
+11: 
+12: ## Qué es
+13: 
+14: El frontend de COELSA.Intelligent está construido con **SvelteKit 2** en modo SPA (Single Page Application). SSR está explícitamente deshabilitado. Ver [[SPA con SSR deshabilitado]].
+15: 
+16: ## Estructura de carpetas relevante
+17: 
+18: ```
+19: src/
+20:   routes/
+21:     +layout.js        ← ssr = false; trailingSlash = 'ignore'
+22:     +layout.svelte    ← layout raíz con providers de estado
+23:     (app)/            ← rutas autenticadas (chat, admin, workspace)
+24:     auth/             ← login via Azure AD
+25:     +error.svelte     ← manejo de errores HTTP
+26:   lib/
+27:     components/       ← componentes Svelte reutilizables
+28:     stores/           ← estado global reactivo
+29:     i18n/             ← traducciones (es-AR, en-GB, pt-BR)
+30:     utils/            ← helpers y funciones utilitarias
+31:     apis/             ← cliente HTTP para cada dominio del backend
+32: ```
+33: 
+34: ## Build
+35: 
+36: | Comando | Uso | Diferencia |
+37: |---------|-----|------------|
+38: | `npm run dev` | Desarrollo local | Hot-reload; no compatible con nonces CSP |
+39: | `npm run build` | Local completo | Incluye descarga de Pyodide (~500MB) |
+40: | `npm run build:docker` | CI/CD / Docker | Sin Pyodide; más rápido y liviano |
+41: 
+42: Ver [[Build frontend]] para el detalle de las diferencias y optimizaciones de CI.
+43: 
+44: ## Stack de UI
+45: 
+46: - **TailwindCSS** — Clases utility con el [[ECO Design System]] de COELSA
+47: - **i18next** — Internacionalización (ver [[Internacionalización i18n]])
+48: 
+49: ## Relacionado
+50: 
+51: - [[SPA con SSR deshabilitado]] — La decisión de arquitectura que define el modo SPA
+52: - [[Build frontend]] — Diferencias entre comandos de build y optimizaciones CI
+53: - [[Patrones de componentes Svelte]] — Patrones obligatorios que no deben revertirse
+54: - [[ECO Design System]] — El sistema de diseño que se implementa con Tailwind
+55: - [[MOC - Stack]] — Contexto del frontend en el stack completo

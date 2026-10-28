@@ -1,0 +1,5 @@
+# Modalidad A — lectura completa
+Carpeta de entrega: /Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline
+Leé TODOS los 80 documentos antes de proponer. No usar el recuperador brain.py ni el índice SQLite. Para registrar exactamente el texto presentado, ejecutar read_full.py por lotes de 5 documentos (offset 0,5,10,...75), sin redirección stdout. Ejemplo:
+python3 '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/read_full.py' --snapshot '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias' --offset 0 --limit 5 --log-dir '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas'
+Usar max_output_tokens de 6000 por lote; si la herramienta anuncia truncamiento, volver a leer lotes más pequeños y dejar todos los logs. El objetivo es lectura completa sin pérdidas; NO filtrar previamente por feature. Si necesitás releer usar el mismo lector con offset/limit y log. No inspeccionar otras evidencias ni el directorio fuente directamente. No leer otras carpetas del proyecto. La consigna común es todo el contexto funcional inicial autorizado.

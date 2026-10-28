@@ -1,0 +1,691 @@
+{
+  "invocation": "Leer resultado.json propio y verificar encabezados mediante brain.py show; cada invocación/salida completa conservada por --log-dir",
+  "input": "{\n  \"facts\": [\n    {\n      \"id\": \"F01\",\n      \"text\": \"File y Knowledge usan access_control JSON. None permite lectura a cualquier user; {} se describe como privado del propietario; reglas custom distinguen read y write.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 16,\n          \"end\": 22,\n          \"section\": \"Modos de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 24,\n          \"end\": 38,\n          \"section\": \"Estructura del objeto custom\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F02\",\n      \"text\": \"has_access evalúa propietario con acceso total, admin con acceso total, None con lectura para user y reglas custom por group_ids/user_ids. No se explicita aquí que write implique read.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 24,\n          \"end\": 38,\n          \"section\": \"Estructura del objeto custom\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F03\",\n      \"text\": \"Los roles son admin, user y pending. pending solo ve la espera y no puede usar el chat.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Roles de usuario.md\",\n          \"start\": 12,\n          \"end\": 24,\n          \"section\": \"Qué es / Estado `pending`\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F04\",\n      \"text\": \"JWT interno independiente de Azure AD; HS256, exp en pseudocódigo. HTTPBearer/get_current_user valida el token y verifica existencia del usuario en BD. Los routers no deben obtener identidad leyendo headers directamente.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Especificaciones del token / Generación / Validación\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md\",\n          \"start\": 26,\n          \"end\": 29,\n          \"section\": \"Uso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F05\",\n      \"text\": \"El flujo de acceso comprueba access_control, firma si path es S3 y sirve directamente si es local.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F06\",\n      \"text\": \"La URL firmada se genera para get_object con Bucket/Key específicos; default documental 3600 segundos y expiración configurable. La documentación no fija el intervalo 60..3600 ni el rechazo estricto de tipos.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F07\",\n      \"text\": \"Si cambia access_control, las URLs viejas siguen válidas hasta expirar; no se emiten nuevas para quien perdió acceso.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 29,\n          \"end\": 33,\n          \"section\": \"Por qué URLs firmadas\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F08\",\n      \"text\": \"El storage híbrido recibe local y migra por scheduler actualizando path a s3://bucket/key. Hay proveedores local, S3, GCS y Azure y fallback local general si MinIO no está disponible.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F09\",\n      \"text\": \"StorageProvider separa get_file, upload_file, get_presigned_url(file_path, expiration=3600), delete_file y delete_all_files.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F10\",\n      \"text\": \"Scheduler diario migra y elimina huérfanos o candidatos por antigüedad; con FILE_STORAGE_CLEANUP_DAYS=30, más de 30 días sin acceso habilita candidatura. last_accessed_at registra último acceso. Corre cada 24 horas desde arranque, sin hora fija.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 26,\n          \"end\": 36,\n          \"section\": \"Qué es un archivo huérfano / Cuándo se ejecuta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F11\",\n      \"text\": \"Borrado de chat busca File por chat_id, llama delete_file y elimina registros; es complementario del scheduler. chat_id es nullable e indexado.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F12\",\n      \"text\": \"Los routers usan /api/v1/, Depends(get_current_user), errores centralizados y modelos para BD. Errores documentales: 401 token ausente/inválido, 403 sin permiso, 404 inexistente, 422 esquema, 503 servicio externo no disponible, 504 timeout externo. details se omite en producción.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar router REST.md\",\n          \"start\": 62,\n          \"end\": 67,\n          \"section\": \"Convenciones\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F13\",\n      \"text\": \"Hay guardas chatId, AbortController en loadChat, limpieza de suscripciones al destruir y bloques reactivos unificados. Estos son patrones documentados del chat, no prueba de que ya exista la renovación.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md\",\n          \"start\": 18,\n          \"end\": 34,\n          \"section\": \"Checklist rápido / Consecuencias de revertirlos\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md\",\n          \"start\": 26,\n          \"end\": 57,\n          \"section\": \"2. `AbortController` en `loadChat` (reduce requests duplicados ~80%) / 3. Unsubscribers en `onDestroy` (evita memory leaks)\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F14\",\n      \"text\": \"i18next soporta es-AR default, en-GB y pt-BR. Nuevas claves deben agregarse en los tres archivos; es-ES, en-US y pt-PT fueron removidos en v1.3.0.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md\",\n          \"start\": 12,\n          \"end\": 26,\n          \"section\": \"Qué es / Idiomas soportados / Idiomas eliminados del fork\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md\",\n          \"start\": 46,\n          \"end\": 52,\n          \"section\": \"Agregar una traducción\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F15\",\n      \"text\": \"Los tokens semánticos cambian por tema y deben emparejarse con on-*; los primitivos no se invierten. La app declara ssr=false y renderizado cliente.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md\",\n          \"start\": 12,\n          \"end\": 26,\n          \"section\": \"Qué es / Roles principales (light / dark)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md\",\n          \"start\": 48,\n          \"end\": 55,\n          \"section\": \"Regla de uso de on-* colors\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md\",\n          \"start\": 16,\n          \"end\": 31,\n          \"section\": \"La regla fundamental / Anti-patrones de dark mode\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md\",\n          \"start\": 12,\n          \"end\": 21,\n          \"section\": \"Qué es\"\n        }\n      ]\n    },\n    {\n      \"id\": \"F16\",\n      \"text\": \"Los componentes frontend categorizan red, timeout y genérico; extraen message. ErrorBoundary cubre fallos de render, no sustituye la gestión de rechazo de una request.\",\n      \"kind\": \"documentado\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md\",\n          \"start\": 16,\n          \"end\": 50,\n          \"section\": \"Componentes de error / Routing de errores HTTP / Relación con el backend\"\n        }\n      ]\n    },\n    {\n      \"id\": \"P01\",\n      \"text\": \"P1–P7 describen una extensión propuesta de renovación. No constituyen evidencia de un endpoint ni de una UI implementados.\",\n      \"kind\": \"propuesto\",\n      \"sources\": []\n    }\n  ],\n  \"implementation\": [\n    {\n      \"id\": \"I01\",\n      \"text\": \"Proponer POST /api/v1/files/{file_id}/renew-access en el dominio files con dependencia get_current_user. Método, ruta y esquema de respuesta deben acordarse; no son contrato actual. Router orquesta, modelos consultan BD.\",\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar router REST.md\",\n          \"start\": 62,\n          \"end\": 67,\n          \"section\": \"Convenciones\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I02\",\n      \"text\": \"P1: recibir solo ID y TTL opcional, nunca URL/path del cliente; verificar identidad, existencia del usuario y rol actual activo, obtener metadatos mínimos del File y resolver permisos read actuales antes de resolver path o llamar al storage. No usar rol antiguo del JWT ni identidad enviada en headers. Rechazar pending incluso si figura como propietario.\",\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Roles de usuario.md\",\n          \"start\": 12,\n          \"end\": 24,\n          \"section\": \"Qué es / Estado `pending`\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Especificaciones del token / Generación / Validación\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md\",\n          \"start\": 26,\n          \"end\": 29,\n          \"section\": \"Uso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I03\",\n      \"text\": \"Usar has_access para propietario/admin y reglas read por usuario/grupo actual; no tratar None como anónimo ni {} como público. Ante write sin read, propuesta conservadora de denegar mientras se acuerda la semántica: no declararla hecho documental.\",\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 16,\n          \"end\": 22,\n          \"section\": \"Modos de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 24,\n          \"end\": 38,\n          \"section\": \"Estructura del objeto custom\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I04\",\n      \"text\": \"P2: validar TTL como entero estricto, excluyendo booleanos y texto; rango inclusivo 60..3600 y default solo al omitir. Rechazar inválidos con 422 antes de firmar. La documentación de 3600 configurable no valida estos límites.\",\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I05\",\n      \"text\": \"P2: elegir rama por path persistido autorizado, separar bucket y key del objeto correcto y llamar get_presigned_url con TTL validado para lectura; no usar URL previa como objeto, ni firmar bucket completo. Proponer respuesta discriminada de tipo s3 con URL/expiración.\",\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I06\",\n      \"text\": \"P3: para local devolver referencia a descarga backend protegida por autenticación y permiso vigente, que vuelve a consultar File por ID al descargar; no exponer ruta física, no prometer expiración S3 ni subir a MinIO. El formato concreto y tratamiento del TTL en local siguen abiertos.\",\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I07\",\n      \"text\": \"P4: aislar renovación de upload, RAG, migración, limpieza y cascada. No modificar ACL, contenido ni chat_id y no invocar borrados. No implementar todavía una política de last_accessed_at por inferir que renovar equivale a descargar; pedir decisión de producto.\",\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 24,\n          \"end\": 34,\n          \"section\": \"2. Procesamiento RAG (opcional) / 3. Migración a MinIO (scheduler diario)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I08\",\n      \"text\": \"Proponer coordinación por versión/revalidación de File y permisos antes de emitir la respuesta; si cambia path, chat o ACL, reconsultar sin resucitar registros ni recrear objetos. Definir punto de consistencia y contrato de carrera antes de implementar. No garantizar atomicidad BD/S3 por documentación.\",\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I09\",\n      \"text\": \"P5: mapear autorización, inexistencia, indisponibilidad y timeout a excepciones centralizadas; no entregar éxito ficticio ni cambiar un objeto S3 a local por la mera caída de MinIO. Mensajes públicos seguros; details internos omitidos en producción.\",\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I10\",\n      \"text\": \"P5: agregar acción explícita Renovar acceso en el archivo del chat, estado carga/reintento y contexto capturado chatId/fileId/requestId. Cancelar al navegar/desmontar y también descartar respuestas tardías por contexto o generación; AbortController solo no alcanza como garantía de orden. La deduplicación de clics es una propuesta de UX.\",\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md\",\n          \"start\": 18,\n          \"end\": 34,\n          \"section\": \"Checklist rápido / Consecuencias de revertirlos\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md\",\n          \"start\": 26,\n          \"end\": 57,\n          \"section\": \"2. `AbortController` en `loadChat` (reduce requests duplicados ~80%) / 3. Unsubscribers en `onDestroy` (evita memory leaks)\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I11\",\n      \"text\": \"P6: mostrar texto localizado que advierta que los enlaces S3 anteriores pueden funcionar hasta expirar tras revocar permiso; emitir uno nuevo no invalida por sí mismo el anterior.\",\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 29,\n          \"end\": 33,\n          \"section\": \"Por qué URLs firmadas\"\n        }\n      ]\n    },\n    {\n      \"id\": \"I12\",\n      \"text\": \"P7: agregar claves para acción, carga, éxito, error, reintento y advertencia en es-AR/en-GB/pt-BR; usar tokens semánticos y on-* en ambos temas; mantener ssr=false. Reutilizar categorización frontend para errores de esta acción.\",\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md\",\n          \"start\": 12,\n          \"end\": 26,\n          \"section\": \"Qué es / Idiomas soportados / Idiomas eliminados del fork\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md\",\n          \"start\": 46,\n          \"end\": 52,\n          \"section\": \"Agregar una traducción\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md\",\n          \"start\": 12,\n          \"end\": 26,\n          \"section\": \"Qué es / Roles principales (light / dark)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md\",\n          \"start\": 48,\n          \"end\": 55,\n          \"section\": \"Regla de uso de on-* colors\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md\",\n          \"start\": 16,\n          \"end\": 31,\n          \"section\": \"La regla fundamental / Anti-patrones de dark mode\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md\",\n          \"start\": 12,\n          \"end\": 21,\n          \"section\": \"Qué es\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md\",\n          \"start\": 16,\n          \"end\": 50,\n          \"section\": \"Componentes de error / Routing de errores HTTP / Relación con el backend\"\n        }\n      ]\n    }\n  ],\n  \"cases\": [\n    {\n      \"id\": \"C01\",\n      \"title\": \"Propietario y admin pueden renovar archivo privado\",\n      \"criteria\": [\n        \"A\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"File existente y objeto S3 existente; access_control={}; JWT válido; TTL omitido.\",\n        \"Variantes independientes: user propietario y admin no propietario.\"\n      ],\n      \"steps\": [\n        \"Solicitar renovación por ID en cada variante.\",\n        \"Revisar el diseño de autorización y la llamada al firmador.\"\n      ],\n      \"expected\": [\n        \"Acceso concedido y URL de lectura del File correcto; permiso comprobado antes de resolver path.\",\n        \"Excepción admin respaldada por Evaluación de acceso; conservar tensión textual con la descripción solo propietario de {}.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P2\",\n        \"F01\",\n        \"F02\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 16,\n          \"end\": 22,\n          \"section\": \"Modos de acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C02\",\n      \"title\": \"None es lectura pública para user activo, no acceso anónimo\",\n      \"criteria\": [\n        \"A\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"File S3 con access_control=None; solicitante user no propietario con JWT válido.\"\n      ],\n      \"steps\": [\n        \"Solicitar renovación por ID.\"\n      ],\n      \"expected\": [\n        \"Permite renovar tras autenticar; None no omite autenticación ni habilita escritura.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"F01\",\n        \"F02\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 16,\n          \"end\": 22,\n          \"section\": \"Modos de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C03\",\n      \"title\": \"Usuario ajeno a archivo privado recibe denegación\",\n      \"criteria\": [\n        \"A\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"File existente con {}; user activo no propietario y no admin.\"\n      ],\n      \"steps\": [\n        \"Solicitar renovación por ID.\",\n        \"Inspeccionar secuencia documental propuesta.\"\n      ],\n      \"expected\": [\n        \"403 por ausencia de permiso; no resolver path ni invocar firmador ni revelar storage.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"F01\",\n        \"F12\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 16,\n          \"end\": 22,\n          \"section\": \"Modos de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C04\",\n      \"title\": \"Lectura custom por usuario o grupo, sin confundir capacidades\",\n      \"criteria\": [\n        \"A\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"File custom; user activo no propietario.\",\n        \"Variantes: ID en read.user_ids; miembro actual de read.group_ids; fuera de ambas listas.\",\n        \"Permiso de grupo chat.file_upload=true no equivale por sí mismo a read del File.\"\n      ],\n      \"steps\": [\n        \"Pedir renovar en cada variante con ID del mismo File.\"\n      ],\n      \"expected\": [\n        \"Las dos coincidencias read permiten; la ausencia de coincidencia deniega 403.\",\n        \"Se evalúa pertenencia actual, no el creador del grupo ni un permiso de upload global.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"F02\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 24,\n          \"end\": 38,\n          \"section\": \"Estructura del objeto custom\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md\",\n          \"start\": 16,\n          \"end\": 31,\n          \"section\": \"Modelo de datos (Group)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C05\",\n      \"title\": \"Write sin read: oráculo pendiente de aclaración\",\n      \"criteria\": [\n        \"A\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"User no propietario, no admin; está solamente en write.user_ids o grupo de write; no está en read.\"\n      ],\n      \"steps\": [\n        \"Revisar el diseño del chequeo read para renovación.\",\n        \"Solicitar definición de si write implica read.\"\n      ],\n      \"expected\": [\n        \"P1 exige permiso de lectura; las notas separan read/write pero no explicitan herencia.\",\n        \"Propuesta conservadora: no emitir URL hasta habilitar read o acordar herencia. No calificar un 403 actual como comportamiento validado.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"F02\",\n        \"I03 (inferencia; requiere decisión)\"\n      ],\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 24,\n          \"end\": 38,\n          \"section\": \"Estructura del objeto custom\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C06\",\n      \"title\": \"Pending queda bloqueado incluso con propiedad o ACL pública\",\n      \"criteria\": [\n        \"A\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"JWT válido de usuario pending.\",\n        \"Variantes: File propio, None, coincidencia custom read.\"\n      ],\n      \"steps\": [\n        \"Intentar renovación directa de API eludiendo UI.\"\n      ],\n      \"expected\": [\n        \"No emitir URL ni referencia; 403 propuesto por rol insuficiente, antes de resolver path.\",\n        \"Ser propietario no supera la restricción explícita de P1 para pending.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"F03\",\n        \"F12\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Roles de usuario.md\",\n          \"start\": 12,\n          \"end\": 24,\n          \"section\": \"Qué es / Estado `pending`\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C07\",\n      \"title\": \"JWT ausente, inválido, expirado o identidad eliminada\",\n      \"criteria\": [\n        \"A\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"File existente.\",\n        \"Variantes: sin Bearer, token alterado, token expirado, token de usuario ya inexistente en BD; headers de identidad adulterados.\"\n      ],\n      \"steps\": [\n        \"Solicitar renovación con cada credencial.\"\n      ],\n      \"expected\": [\n        \"No emitir acceso ni operar storage.\",\n        \"401 usando el modelo de errores para credenciales no válidas; headers falsos no reemplazan get_current_user.\",\n        \"Para usuario eliminado, el rechazo está documentado por validación de existencia; confirmar código final de esta rama al acordar contrato.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"F04\",\n        \"F12\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Especificaciones del token / Generación / Validación\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md\",\n          \"start\": 26,\n          \"end\": 29,\n          \"section\": \"Uso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C08\",\n      \"title\": \"Permisos actuales prevalecen sobre JWT o vista viejos\",\n      \"criteria\": [\n        \"A\",\n        \"C\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"Usuario conserva JWT válido emitido antes de cambio.\",\n        \"Variantes: user cambia a pending; se retira read.user_ids; se retira pertenencia al grupo read.\"\n      ],\n      \"steps\": [\n        \"Cambiar el estado antes de comenzar la nueva renovación.\",\n        \"Solicitar con el token y chat aún abiertos.\"\n      ],\n      \"expected\": [\n        \"Nueva renovación denegada según identidad/permiso actual; no reutilizar autorización cacheada.\",\n        \"Si ya había URL S3, su revocación inmediata no está garantizada (C17).\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P6\",\n        \"F02\",\n        \"F04\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Especificaciones del token / Generación / Validación\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 29,\n          \"end\": 33,\n          \"section\": \"Por qué URLs firmadas\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Roles de usuario.md\",\n          \"start\": 12,\n          \"end\": 24,\n          \"section\": \"Qué es / Estado `pending`\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C09\",\n      \"title\": \"TTL omitido y límites inclusivos\",\n      \"criteria\": [\n        \"B\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"File S3 autorizado y existente.\",\n        \"Variantes independientes: campo TTL omitido, 60, 61, 3599, 3600.\"\n      ],\n      \"steps\": [\n        \"Revisar validación y argumento de firmador por variante.\"\n      ],\n      \"expected\": [\n        \"Omitido usa 3600; las otras variantes usan exactamente el entero enviado.\",\n        \"URL de get_object para el objeto específico; límites son propuestos por P2, no deducidos de la configuración existente.\"\n      ],\n      \"oracle\": [\n        \"P2\",\n        \"F06\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C10\",\n      \"title\": \"TTL inválido rechaza con 422 sin coerción\",\n      \"criteria\": [\n        \"B\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"File S3 autorizado.\",\n        \"Matriz: 59, 3601, 0, -1; 60.5 y 3599.9; true y false; texto 60, texto vacío y abc.\"\n      ],\n      \"steps\": [\n        \"Enviar cada variante conservando el tipo JSON indicado (texto entre comillas).\"\n      ],\n      \"expected\": [\n        \"422 en todas; no truncar fracciones, convertir booleanos o parsear texto; no llamar al firmador ni emitir acceso.\",\n        \"La regla numérica y de tipos procede de P2, no del helper documental.\"\n      ],\n      \"oracle\": [\n        \"P2\",\n        \"F12\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C11\",\n      \"title\": \"La URL autoriza solo el objeto correcto\",\n      \"criteria\": [\n        \"B\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"Dos Files S3 distintos, uno autorizado y otro no; nombres parecidos y claves con prefijos comunes; path autorizado s3://bucket/key.\"\n      ],\n      \"steps\": [\n        \"Solicitar renovación por ID autorizado.\",\n        \"Inspeccionar método get_object, Bucket, Key y ExpiresIn del diseño; comparar con el File ajeno.\"\n      ],\n      \"expected\": [\n        \"Firma limitada a bucket/key persistidos del File solicitado; no wildcard, prefijo ni key de otro File; credenciales del bucket no se entregan.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P2\",\n        \"F06\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C12\",\n      \"title\": \"No aceptar URL/path arbitraria del cliente\",\n      \"criteria\": [\n        \"A\",\n        \"B\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"Usuario activo; puede leer F1 pero no F2.\",\n        \"Variantes de input: URL interna, URL S3 ajena, path local absoluto, ../, File ID de F1 acompañado de path de F2.\"\n      ],\n      \"steps\": [\n        \"Intentar reemplazar el ID por una ruta o agregar campos url/path al pedido.\"\n      ],\n      \"expected\": [\n        \"No usar esos valores para acceder, resolver red ni firmar; solo ID y path persistido autorizado.\",\n        \"Rechazo explícito de campos url/path es propuesta de contrato; código de rechazo a acordar, sin inventar que P1 exige 422 para esos campos.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"F05\",\n        \"I02\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Seguridad/Path Traversal.md\",\n          \"start\": 34,\n          \"end\": 42,\n          \"section\": \"Patrón de sanitización\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C13\",\n      \"title\": \"File local devuelve referencia protegida sin promoverlo\",\n      \"criteria\": [\n        \"B\",\n        \"C\",\n        \"D\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"File autorizado existente con path local; TTL omitido o válido.\"\n      ],\n      \"steps\": [\n        \"Renovar por ID.\",\n        \"Revisar respuesta y operaciones de storage.\",\n        \"Descargar mediante referencia backend con usuario autorizado; repetir sin autenticación o tras perder read.\"\n      ],\n      \"expected\": [\n        \"Referencia de descarga protegida por backend; sin ruta física ni URL S3 ficticia ni promesa de expiración S3.\",\n        \"No upload/migración, cambio path ni embeddings por esta acción.\",\n        \"La descarga vuelve a exigir identidad y permiso; política exacta del TTL local sigue en Q03.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P3\",\n        \"P4\",\n        \"F05\",\n        \"I06\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 24,\n          \"end\": 34,\n          \"section\": \"2. Procesamiento RAG (opcional) / 3. Migración a MinIO (scheduler diario)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C14\",\n      \"title\": \"ID inexistente o registro eliminado antes de renovar\",\n      \"criteria\": [\n        \"C\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"Usuario activo con JWT válido; ID inexistente o File borrado antes de empezar.\"\n      ],\n      \"steps\": [\n        \"Solicitar por ID.\"\n      ],\n      \"expected\": [\n        \"404 propuesto según errores de recurso inexistente; no firmar una ruta recordada por el cliente ni recrear File.\",\n        \"La política de ocultación 403/404 para evitar enumeración sigue abierta.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P4\",\n        \"F12\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C15\",\n      \"title\": \"Registro existente con objeto físico ausente\",\n      \"criteria\": [\n        \"C\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"File autorizado en BD; variantes: objeto S3 eliminado o archivo local faltante.\"\n      ],\n      \"steps\": [\n        \"Renovar y, si se emite referencia, recorrer documentalmente su descarga.\"\n      ],\n      \"expected\": [\n        \"No recrear contenido ni indicar que se verificó disponibilidad cuando no se verificó.\",\n        \"Local: error de archivo ausente según contrato acordado. S3: la documentación no prueba que firmar compruebe existencia; decidir chequeo previo o error en descarga.\",\n        \"No exigir 404 de renovación como regla validada sin esa decisión.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P2\",\n        \"P3\",\n        \"P4\",\n        \"F06\",\n        \"Q04\"\n      ],\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C16\",\n      \"title\": \"Indisponibilidad y timeout del storage\",\n      \"criteria\": [\n        \"C\",\n        \"E\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"File S3 autorizado.\",\n        \"Variantes: fallo de servicio al firmar, timeout externo; otra variante local existente con MinIO caído.\"\n      ],\n      \"steps\": [\n        \"Solicitar renovación.\",\n        \"Revisar manejo de fallo y posibilidad de reintento explícito.\"\n      ],\n      \"expected\": [\n        \"Firma fallida no produce URL de éxito ficticia; propuestas 503 indisponibilidad y 504 timeout externo conforme a jerarquía.\",\n        \"UI sale de carga y permite reintentar.\",\n        \"No reinterpretar path S3 como local ni promocionar archivos; el File ya local se atiende por rama local si está disponible.\",\n        \"No convertir timeouts/reintentos boto3 de Windows en SLA de UI.\"\n      ],\n      \"oracle\": [\n        \"P3\",\n        \"P5\",\n        \"F08\",\n        \"F12\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md\",\n          \"start\": 16,\n          \"end\": 50,\n          \"section\": \"Componentes de error / Routing de errores HTTP / Relación con el backend\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C17\",\n      \"title\": \"URLs previas después de nueva firma, revocación y expiración\",\n      \"criteria\": [\n        \"A\",\n        \"C\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"File S3 existente; una URL fue emitida cuando el usuario tenía read.\"\n      ],\n      \"steps\": [\n        \"Renovar aún autorizado, sin eliminar objeto.\",\n        \"Revocar read y pedir otra renovación.\",\n        \"Analizar acceso a URL vieja antes y después de su expiración.\"\n      ],\n      \"expected\": [\n        \"Nueva renovación tras revocación denegada.\",\n        \"No prometer invalidación por nueva firma ni por cambiar ACL: URLs anteriores pueden seguir válidas hasta expirar.\",\n        \"Al alcanzar su expiración, ya no autorizan por esa firma; no extender retroactivamente el TTL anterior.\",\n        \"UI advierte limitación; eliminación física puede impedir acceso antes y no contradice P6.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P2\",\n        \"P6\",\n        \"F07\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 29,\n          \"end\": 33,\n          \"section\": \"Por qué URLs firmadas\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C18\",\n      \"title\": \"Renovar no ejecuta efectos laterales de otros flujos\",\n      \"criteria\": [\n        \"D\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"Snapshot conceptual previo de File, ACL, chat_id, contenido, path, colección de embeddings y colas de tareas.\",\n        \"Variantes: renovación S3 exitosa, local exitosa y rechazo por permisos.\"\n      ],\n      \"steps\": [\n        \"Recorrer operaciones propuestas de cada variante.\",\n        \"Comparar estado lógico antes/después y llamadas a providers/tareas.\"\n      ],\n      \"expected\": [\n        \"ACL, contenido y chat_id intactos; no delete_file/delete_all_files, cascada, scheduler, embeddings ni migración/upload por renovar.\",\n        \"No imponer invariancia ni incremento de last_accessed_at: P4 deja esa política abierta.\"\n      ],\n      \"oracle\": [\n        \"P3\",\n        \"P4\",\n        \"F09\",\n        \"F10\",\n        \"F11\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 24,\n          \"end\": 34,\n          \"section\": \"2. Procesamiento RAG (opcional) / 3. Migración a MinIO (scheduler diario)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C19\",\n      \"title\": \"Último acceso y umbral de limpieza son decisiones separadas\",\n      \"criteria\": [\n        \"D\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"File con last_accessed_at a exactamente 30 días y otro a más de 30, FILE_STORAGE_CLEANUP_DAYS=30; hora de arranque conocida.\"\n      ],\n      \"steps\": [\n        \"Solicitar renovación documentalmente.\",\n        \"Revisar si se pretendía actualizar last_accessed_at o reprogramar scheduler.\"\n      ],\n      \"expected\": [\n        \"No afirmar que renovar reinicia retención ni que el enlace mantendrá vivo el objeto.\",\n        \"Documentación indica más de 30 días como candidato, no eliminación instantánea al cumplir 30; scheduler cada 24 horas desde arranque.\",\n        \"Resultado del timestamp al renovar queda pendiente de producto y su interacción con limpieza debe especificarse.\"\n      ],\n      \"oracle\": [\n        \"P4\",\n        \"F10\",\n        \"Q01\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 26,\n          \"end\": 36,\n          \"section\": \"Qué es un archivo huérfano / Cuándo se ejecuta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C20\",\n      \"title\": \"Renovación compite con borrado de chat o limpieza\",\n      \"criteria\": [\n        \"C\",\n        \"D\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"Pedido autorizado en curso; variantes: cascada del chat elimina File/objeto, scheduler elimina objeto por antigüedad o lo considera huérfano.\"\n      ],\n      \"steps\": [\n        \"Intercalar borrado/limpieza antes de resolver path, durante firma y antes de entregar.\",\n        \"Revisar revalidación y comportamiento al descargar.\"\n      ],\n      \"expected\": [\n        \"No recrear File, chat, objeto ni embeddings; no tocar chat_id para evitar cascada.\",\n        \"Propuesta: si eliminación se detecta antes de entregar, responder error seguro y no mostrar éxito; una URL ya emitida no garantiza existencia futura.\",\n        \"Punto de consistencia, bloqueo y códigos de carrera requieren acuerdo; no derivarlos del mero job diario.\"\n      ],\n      \"oracle\": [\n        \"P4\",\n        \"P5\",\n        \"F10\",\n        \"F11\",\n        \"I08\"\n      ],\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 26,\n          \"end\": 36,\n          \"section\": \"Qué es un archivo huérfano / Cuándo se ejecuta\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C21\",\n      \"title\": \"Renovación compite con migración local a S3\",\n      \"criteria\": [\n        \"C\",\n        \"D\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"File local autorizado; scheduler puede subirlo y cambiar path en BD durante pedido.\"\n      ],\n      \"steps\": [\n        \"Intercalar lectura de metadatos, migración y actualización de path.\",\n        \"Revisar respuesta y revalidación de la descarga por ID.\"\n      ],\n      \"expected\": [\n        \"No promoverlo desde renovación ni modificar path para corregir la carrera.\",\n        \"Propuesta: revalidar versión/path y producir una referencia coherente con la versión vigente o error reintentable; no confundir ruta local previa con key S3.\",\n        \"Descarga protegida debe resolver File nuevamente; atomicidad y política de retries de esta carrera abiertas.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P3\",\n        \"P4\",\n        \"I08\"\n      ],\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C22\",\n      \"title\": \"Revocación de permiso durante firma\",\n      \"criteria\": [\n        \"A\",\n        \"C\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"Usuario autorizado al inicio; ACL o membresía cambia mientras el firmador trabaja.\"\n      ],\n      \"steps\": [\n        \"Intercalar autorización, revocación y entrega de URL.\"\n      ],\n      \"expected\": [\n        \"P1 exige permisos actuales, pero no fija punto de linealización.\",\n        \"Proponer revalidación antes de entrega y descartar resultado si se detectó revocación.\",\n        \"Si ya se entregó una URL, aplicar advertencia P6; no prometer revocación atómica entre BD y S3.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P6\",\n        \"I08\",\n        \"Q05\"\n      ],\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 29,\n          \"end\": 33,\n          \"section\": \"Por qué URLs firmadas\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C23\",\n      \"title\": \"Acción explícita, carga y reintento\",\n      \"criteria\": [\n        \"E\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"Chat abierto, File visible y usuario activo; servicio puede devolver éxito o fallo.\"\n      ],\n      \"steps\": [\n        \"Abrir chat sin hacer clic.\",\n        \"Pulsar Renovar acceso; repetir clic durante carga.\",\n        \"Simular documentalmente fallo transitorio y elegir reintento.\"\n      ],\n      \"expected\": [\n        \"P5: no renovar automáticamente solo por visualizar; acción muestra carga y finaliza en éxito o error con reintento.\",\n        \"Propuesta UX: deshabilitar/deduplicar clic durante carga; reintento captura contexto actual y vuelve a validar backend.\",\n        \"Número exacto de llamadas por clic requiere decisión de UX; no derivar deduplicación del TTL.\"\n      ],\n      \"oracle\": [\n        \"P5\",\n        \"I10\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md\",\n          \"start\": 18,\n          \"end\": 34,\n          \"section\": \"Checklist rápido / Consecuencias de revertirlos\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md\",\n          \"start\": 16,\n          \"end\": 50,\n          \"section\": \"Componentes de error / Routing de errores HTTP / Relación con el backend\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C24\",\n      \"title\": \"Respuesta tardía de otro chat y orden invertido\",\n      \"criteria\": [\n        \"C\",\n        \"E\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"Chats A y B con Files distintos.\",\n        \"Variantes: A responde después de B; dos renovaciones del mismo File responden en orden inverso.\"\n      ],\n      \"steps\": [\n        \"Iniciar renovación A y navegar a B; iniciar B; entregar respuesta A tarde.\",\n        \"Para misma entidad, iniciar una segunda generación y resolver la primera al final.\"\n      ],\n      \"expected\": [\n        \"P5: resultado A no reemplaza estado, enlace, error ni carga de B.\",\n        \"Propuesta para misma entidad: solo generación vigente puede actualizar estado; guarda chatId/fileId/requestId además de abort.\",\n        \"No usar response cancelada como éxito ni actualizar un componente de otro contexto.\"\n      ],\n      \"oracle\": [\n        \"P5\",\n        \"F13\",\n        \"I10\"\n      ],\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md\",\n          \"start\": 18,\n          \"end\": 34,\n          \"section\": \"Checklist rápido / Consecuencias de revertirlos\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md\",\n          \"start\": 26,\n          \"end\": 57,\n          \"section\": \"2. `AbortController` en `loadChat` (reduce requests duplicados ~80%) / 3. Unsubscribers en `onDestroy` (evita memory leaks)\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C25\",\n      \"title\": \"Cancelación, destrucción y suscripciones\",\n      \"criteria\": [\n        \"E\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"Renovación pendiente y componente suscrito a stores del chat.\"\n      ],\n      \"steps\": [\n        \"Cambiar chat o desmontar vista durante request.\",\n        \"Recibir resolución o rechazo posterior; volver a montar.\"\n      ],\n      \"expected\": [\n        \"Cancelar operación anterior y descartar respuestas obsoletas; limpiar suscripciones; no listeners fantasma ni actualización del componente destruido.\",\n        \"Propuesta: cancelación voluntaria no se muestra como error de servicio; mantener guardas chatId y bloques reactivos unificados.\"\n      ],\n      \"oracle\": [\n        \"P5\",\n        \"F13\",\n        \"I10\"\n      ],\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md\",\n          \"start\": 18,\n          \"end\": 34,\n          \"section\": \"Checklist rápido / Consecuencias de revertirlos\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md\",\n          \"start\": 26,\n          \"end\": 57,\n          \"section\": \"2. `AbortController` en `loadChat` (reduce requests duplicados ~80%) / 3. Unsubscribers en `onDestroy` (evita memory leaks)\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C26\",\n      \"title\": \"Errores seguros en producción y categorías frontend\",\n      \"criteria\": [\n        \"E\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"Producción; fallo de renovación con detalles técnicos internos.\",\n        \"Variantes: 401, 403, 404, 422, 503, 504, 500 desconocido, error de red sin respuesta.\"\n      ],\n      \"steps\": [\n        \"Revisar payload público y estado UI ante cada categoría.\"\n      ],\n      \"expected\": [\n        \"message/status_code públicos seguros; details técnico omitido; no stack, credenciales ni paths internos en mensajes.\",\n        \"Red y timeout usan tratamiento pertinente; otros errores tienen fallback genérico; la acción ofrece reintento cuando corresponde sin romper chat.\",\n        \"No confundir ErrorBoundary de render con catch de request.\"\n      ],\n      \"oracle\": [\n        \"P5\",\n        \"F12\",\n        \"F16\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md\",\n          \"start\": 16,\n          \"end\": 50,\n          \"section\": \"Componentes de error / Routing de errores HTTP / Relación con el backend\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C27\",\n      \"title\": \"Traducciones completas en los tres locales\",\n      \"criteria\": [\n        \"E\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"Locales parametrizados es-AR, en-GB, pt-BR; estados acción, carga, éxito, error, reintento y advertencia de URLs previas.\"\n      ],\n      \"steps\": [\n        \"Inspeccionar claves y textos propuestos por locale.\",\n        \"Cambiar locale manteniendo chat y File seleccionados.\"\n      ],\n      \"expected\": [\n        \"Todos los textos propios de acción usan i18n con claves en los tres locales, sin exponer claves crudas ni mensajes técnicos.\",\n        \"es-AR es default documental; no sustituir en-GB por en-US ni pt-BR por pt-PT.\",\n        \"Advertencia conserva el sentido de P6 en los tres idiomas.\"\n      ],\n      \"oracle\": [\n        \"P5\",\n        \"P6\",\n        \"P7\",\n        \"F14\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md\",\n          \"start\": 12,\n          \"end\": 26,\n          \"section\": \"Qué es / Idiomas soportados / Idiomas eliminados del fork\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md\",\n          \"start\": 46,\n          \"end\": 52,\n          \"section\": \"Agregar una traducción\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C28\",\n      \"title\": \"Tokens light/dark y continuidad SPA\",\n      \"criteria\": [\n        \"E\",\n        \"F\",\n        \"G\"\n      ],\n      \"preconditions\": [\n        \"Temas light y dark; acción y estados de carga/error/éxito en chat.\"\n      ],\n      \"steps\": [\n        \"Revisar clases y CSS propuestos.\",\n        \"Cambiar tema y navegar/reintentar dentro del chat.\",\n        \"Revisar configuración SSR del diseño.\"\n      ],\n      \"expected\": [\n        \"Tokens semánticos para fondos y texto/iconos on-* correspondientes, sin fijar blanco/negro o primitivos que no invierten.\",\n        \"Estados siguen legibles en ambos temas; ssr=false permanece; renovación se integra a SPA sin recargar todo el chat como requisito técnico.\"\n      ],\n      \"oracle\": [\n        \"P7\",\n        \"F15\"\n      ],\n      \"kind\": \"propuesto\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md\",\n          \"start\": 12,\n          \"end\": 26,\n          \"section\": \"Qué es / Roles principales (light / dark)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md\",\n          \"start\": 48,\n          \"end\": 55,\n          \"section\": \"Regla de uso de on-* colors\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md\",\n          \"start\": 16,\n          \"end\": 31,\n          \"section\": \"La regla fundamental / Anti-patrones de dark mode\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md\",\n          \"start\": 12,\n          \"end\": 21,\n          \"section\": \"Qué es\"\n        }\n      ]\n    },\n    {\n      \"id\": \"C29\",\n      \"title\": \"Mismo File visible desde varios chats no cambia asociación\",\n      \"criteria\": [\n        \"C\",\n        \"D\",\n        \"F\"\n      ],\n      \"preconditions\": [\n        \"File con chat_id ya definido, accesible por permiso actual desde contexto de otro chat; política de visibilidad a confirmar.\"\n      ],\n      \"steps\": [\n        \"Solicitar renovación desde contexto alternativo usando el ID del mismo File.\"\n      ],\n      \"expected\": [\n        \"P1 autoriza por File y permiso actual; no asumir pertenencia exclusiva al chat como nueva regla.\",\n        \"P4 prohíbe cambiar chat_id para asociarlo al chat activo.\",\n        \"Contrato de pertenencia al chat debe aclararse sin usar un permiso de chat como sustituto de read del File.\"\n      ],\n      \"oracle\": [\n        \"P1\",\n        \"P4\",\n        \"F11\",\n        \"Q06\"\n      ],\n      \"kind\": \"inferencia\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        }\n      ]\n    }\n  ],\n  \"questions\": [\n    {\n      \"id\": \"Q01\",\n      \"text\": \"¿Renovar cuenta como acceso para last_accessed_at? ¿Se actualiza al emitir URL, al descargar local o al descargar S3 fuera del backend? Definir consistencia con scheduler y fallos; P4 lo deja abierto.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 29,\n          \"end\": 33,\n          \"section\": \"Por qué URLs firmadas\"\n        }\n      ]\n    },\n    {\n      \"id\": \"Q02\",\n      \"text\": \"¿Write concede implícitamente read? La estructura muestra operaciones separadas y has_access resumido no explica herencia. Confirmar antes de fijar oráculo binario de C05.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 24,\n          \"end\": 38,\n          \"section\": \"Estructura del objeto custom\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"Q03\",\n      \"text\": \"¿Qué hacer con TTL en rama local (ignorar con indicación explícita, validar igualmente o no admitir campo)? P2 lo vincula a S3 y P3 no permite prometer expiración S3. ¿null equivale a omitido? ¿JSON 60.0 se admite como entero semántico? P2 no precisa esos casos de representación.\",\n      \"sources\": []\n    },\n    {\n      \"id\": \"Q04\",\n      \"text\": \"¿Renovación verifica existencia física antes de firmar? ¿HEAD/consulta al storage, costo/latencia y mapeo de errores? Firmar no prueba documentalmente disponibilidad. Definir archivo local perdido versus registro inexistente.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"Q05\",\n      \"text\": \"¿Cuál es el punto de consistencia para permisos, migración y borrado durante firma? ¿Versión, bloqueo o revalidación? ¿Qué código/reintento ante cambio de path o borrado? Ninguna nota recuperada describe transacción BD/storage.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        }\n      ]\n    },\n    {\n      \"id\": \"Q06\",\n      \"text\": \"¿La acción requiere que File pertenezca al chat actual además de permiso read, o el chat solo aporta contexto UI? ¿Cómo tratar chat_id=null, File compartido y varios chats? P1 habla de File por ID y P4 prohíbe mutar chat_id.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"Q07\",\n      \"text\": \"Acordar ruta/método/esquema de respuesta y errores: ¿403 o 404 para ocultar existencia? ¿Referencia local con endpoint ya existente? ¿Se devuelve expires_at solo S3? La propuesta de I01 no es contrato vigente.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar router REST.md\",\n          \"start\": 62,\n          \"end\": 67,\n          \"section\": \"Convenciones\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md\",\n          \"start\": 16,\n          \"end\": 40,\n          \"section\": \"Backend: tipos de excepción\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"Q08\",\n      \"text\": \"Confirmar jerarquía admin sobre {} y bloqueo pending propietario. P1 resuelve pending para el mock, pero la nota de modos dice solo propietario y evaluación concede admin acceso total.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 16,\n          \"end\": 22,\n          \"section\": \"Modos de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Roles de usuario.md\",\n          \"start\": 12,\n          \"end\": 24,\n          \"section\": \"Qué es / Estado `pending`\"\n        }\n      ]\n    },\n    {\n      \"id\": \"Q09\",\n      \"text\": \"¿La UI permite varias renovaciones simultáneas del mismo File? Definir política de doble clic, reintentos, presupuesto temporal, mensajes de cancelación y orden de respuestas. AbortController en loadChat no especifica por sí solo este nuevo flujo.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md\",\n          \"start\": 26,\n          \"end\": 57,\n          \"section\": \"2. `AbortController` en `loadChat` (reduce requests duplicados ~80%) / 3. Unsubscribers en `onDestroy` (evita memory leaks)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md\",\n          \"start\": 18,\n          \"end\": 34,\n          \"section\": \"Checklist rápido / Consecuencias de revertirlos\"\n        }\n      ]\n    },\n    {\n      \"id\": \"Q10\",\n      \"text\": \"Hay providers GCS/Azure documentados, pero P2/P3 cubren S3/local. Definir respuesta segura para path no soportado o corrupto sin tratarlo como ruta local arbitraria.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        }\n      ]\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"id\": \"X01\",\n      \"text\": \"Tensión textual interna: {} se describe como solo propietario (Modos de acceso), mientras Evaluación de acceso otorga acceso total a admin. Se prioriza la regla explícita de evaluación como propuesta de integración y se pide aclarar, no se oculta la tensión.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 16,\n          \"end\": 22,\n          \"section\": \"Modos de acceso\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 39,\n          \"end\": 46,\n          \"section\": \"Evaluación de acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"X02\",\n      \"text\": \"Fallback local general ante MinIO caído no demuestra que un objeto cuyo path ya es S3 tenga copia local disponible. Aplicarlo ciegamente al endpoint entraría en conflicto con P2/P3; mantener rama por path autorizado y fallar de forma segura.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"X03\",\n      \"text\": \"No es contradicción: expiración configurable de la documentación es más amplia que el intervalo y validación estricta propuestos en P2. Estos límites pertenecen al mock y no se retroatribuyen al helper actual.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        }\n      ]\n    },\n    {\n      \"id\": \"X04\",\n      \"text\": \"No es contradicción: migración y borrado existentes siguen siendo procesos externos a renovación; P3/P4 prohíben dispararlos desde esta acción, sin desactivar scheduler o cascada. Una firma no reserva la vida física del archivo.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        }\n      ]\n    },\n    {\n      \"id\": \"X05\",\n      \"text\": \"Inconsistencia menor de referencias: Flujo de subida remite a Protección SSRF como sanitización de paths, pero Recepción remite a Path Traversal. No inferir que ambas protecciones son equivalentes. El mock evita URL/path del cliente por P1.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 18,\n          \"end\": 22,\n          \"section\": \"1. Recepción (router `files.py`)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 42,\n          \"end\": 48,\n          \"section\": \"Relacionado\"\n        }\n      ]\n    }\n  ],\n  \"omissions\": [\n    {\n      \"id\": \"O01\",\n      \"text\": \"No se recuperó un contrato implementado de renovar acceso; faltan esquema exacto, política de TTL local/null, semántica de write y concurrencia. Se ampliarían con decisión de producto y documentación del endpoint, sin presentar ausencia de resultados léxicos como inexistencia funcional.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar router REST.md\",\n          \"start\": 62,\n          \"end\": 67,\n          \"section\": \"Convenciones\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md\",\n          \"start\": 24,\n          \"end\": 38,\n          \"section\": \"Estructura del objeto custom\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md\",\n          \"start\": 36,\n          \"end\": 41,\n          \"section\": \"4. Acceso\"\n        }\n      ]\n    },\n    {\n      \"id\": \"O02\",\n      \"text\": \"Faltan garantías de existencia física al firmar, integridad de bucket/key, transición path y atomicidad de permisos con S3. Ampliaría documentación específica de provider y consistencia, no lo resolvería invocando la app.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 48,\n          \"section\": \"La interfaz abstracta\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 16,\n          \"end\": 38,\n          \"section\": \"Cómo funciona / Por qué URLs firmadas / Configuración de expiración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md\",\n          \"start\": 16,\n          \"end\": 44,\n          \"section\": \"Flujo completo / Proveedores disponibles / Fallback local\"\n        }\n      ]\n    },\n    {\n      \"id\": \"O03\",\n      \"text\": \"Retención efectiva frente a URL firmada vigente no queda contractualizada: una URL puede vencer después de que scheduler o cascada borre el objeto. Ampliaría política de retención, last_accessed_at y comunicación al usuario.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md\",\n          \"start\": 12,\n          \"end\": 25,\n          \"section\": \"Qué es / Configuración\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md\",\n          \"start\": 20,\n          \"end\": 44,\n          \"section\": \"Implementación / Diferencia con el Scheduler\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md\",\n          \"start\": 29,\n          \"end\": 33,\n          \"section\": \"Por qué URLs firmadas\"\n        }\n      ]\n    },\n    {\n      \"id\": \"O04\",\n      \"text\": \"No hay copy final ni patrón definido para ubicación de la acción, foco/teclado/anuncios de carga, deduplicación y reintento de renovación. Ampliaría diseño UX y accesibilidad con estados/locales/temas; no impongo umbrales de contraste no presentes como regla de las fuentes.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md\",\n          \"start\": 12,\n          \"end\": 26,\n          \"section\": \"Qué es / Idiomas soportados / Idiomas eliminados del fork\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md\",\n          \"start\": 12,\n          \"end\": 26,\n          \"section\": \"Qué es / Roles principales (light / dark)\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md\",\n          \"start\": 16,\n          \"end\": 50,\n          \"section\": \"Componentes de error / Routing de errores HTTP / Relación con el backend\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md\",\n          \"start\": 18,\n          \"end\": 34,\n          \"section\": \"Checklist rápido / Consecuencias de revertirlos\"\n        }\n      ]\n    },\n    {\n      \"id\": \"O05\",\n      \"text\": \"Las consultas OR y límites de resultados no prueban exhaustividad. No revisé código, aplicación, corpus completo, changelog completo ni otros informes. Metadatos vigente y menciones de v1.3.0 orientan navegación, no verifican el comportamiento desplegado.\",\n      \"sources\": [\n        {\n          \"path\": \"COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md\",\n          \"start\": 12,\n          \"end\": 26,\n          \"section\": \"Qué es / Idiomas soportados / Idiomas eliminados del fork\"\n        },\n        {\n          \"path\": \"COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md\",\n          \"start\": 49,\n          \"end\": 51,\n          \"section\": \"Permisos por defecto\"\n        }\n      ]\n    }\n  ]\n}\n",
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Borrado en cascada de archivos"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Por qué existe"
+        },
+        {
+          "line": 20,
+          "text": "Implementación"
+        },
+        {
+          "line": 36,
+          "text": "Diferencia con el Scheduler"
+        },
+        {
+          "line": 45,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Flujo de subida de archivos"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Pasos del flujo"
+        },
+        {
+          "line": 18,
+          "text": "1. Recepción (router `files.py`)"
+        },
+        {
+          "line": 24,
+          "text": "2. Procesamiento RAG (opcional)"
+        },
+        {
+          "line": 29,
+          "text": "3. Migración a MinIO (scheduler diario)"
+        },
+        {
+          "line": 36,
+          "text": "4. Acceso"
+        },
+        {
+          "line": 42,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Scheduler de limpieza"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 18,
+          "text": "Configuración"
+        },
+        {
+          "line": 26,
+          "text": "Qué es un archivo huérfano"
+        },
+        {
+          "line": 34,
+          "text": "Cuándo se ejecuta"
+        },
+        {
+          "line": 38,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/Sistema híbrido de almacenamiento.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Sistema híbrido de almacenamiento"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Flujo completo"
+        },
+        {
+          "line": 32,
+          "text": "Proveedores disponibles"
+        },
+        {
+          "line": 42,
+          "text": "Fallback local"
+        },
+        {
+          "line": 46,
+          "text": "Script de migración"
+        },
+        {
+          "line": 54,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "URLs firmadas MinIO"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Cómo funciona"
+        },
+        {
+          "line": 19,
+          "text": "Pseudocódigo de generación (StorageProvider.get_presigned_url)"
+        },
+        {
+          "line": 29,
+          "text": "Por qué URLs firmadas"
+        },
+        {
+          "line": 35,
+          "text": "Configuración de expiración"
+        },
+        {
+          "line": 39,
+          "text": "Timeouts boto3 (Windows)"
+        },
+        {
+          "line": 47,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Headers de usuario COELSA"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 22,
+          "text": "Por qué el renombre"
+        },
+        {
+          "line": 26,
+          "text": "Uso"
+        },
+        {
+          "line": 30,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "SPA con SSR deshabilitado"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 23,
+          "text": "Por qué está deshabilitado"
+        },
+        {
+          "line": 31,
+          "text": "Implicaciones"
+        },
+        {
+          "line": 37,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Sistema de errores centralizado"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Backend: tipos de excepción"
+        },
+        {
+          "line": 43,
+          "text": "Frontend: componentes de error"
+        },
+        {
+          "line": 54,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Control de acceso a recursos"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Modos de acceso"
+        },
+        {
+          "line": 24,
+          "text": "Estructura del objeto custom"
+        },
+        {
+          "line": 39,
+          "text": "Evaluación de acceso"
+        },
+        {
+          "line": 47,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Grupos y permisos"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Modelo de datos (Group)"
+        },
+        {
+          "line": 32,
+          "text": "Estructura del JSON de permisos"
+        },
+        {
+          "line": 49,
+          "text": "Permisos por defecto"
+        },
+        {
+          "line": 53,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "JWT y sesiones"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Especificaciones del token"
+        },
+        {
+          "line": 22,
+          "text": "Generación"
+        },
+        {
+          "line": 25,
+          "text": "Pseudocódigo del flujo"
+        },
+        {
+          "line": 38,
+          "text": "Validación"
+        },
+        {
+          "line": 42,
+          "text": "Firma HMAC"
+        },
+        {
+          "line": 46,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Roles de usuario"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 22,
+          "text": "Estado `pending`"
+        },
+        {
+          "line": 26,
+          "text": "Restricciones por rol en la UI"
+        },
+        {
+          "line": 34,
+          "text": "Funcionalidades deshabilitadas para todos los roles"
+        },
+        {
+          "line": 41,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Agregar proveedor de almacenamiento"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "La interfaz abstracta"
+        },
+        {
+          "line": 19,
+          "text": "backend/server/storage/provider.py"
+        },
+        {
+          "line": 51,
+          "text": "Pasos para agregar un nuevo provider"
+        },
+        {
+          "line": 53,
+          "text": "1. Crear la clase del provider"
+        },
+        {
+          "line": 56,
+          "text": "backend/server/storage/provider.py — agregar junto a las clases existentes"
+        },
+        {
+          "line": 70,
+          "text": "2. Registrar en la factory"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Agregar router REST.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Agregar router REST"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Pasos"
+        },
+        {
+          "line": 18,
+          "text": "1. Crear el módulo del router"
+        },
+        {
+          "line": 21,
+          "text": "backend/server/routers/mi_nuevo_router.py"
+        },
+        {
+          "line": 41,
+          "text": "2. Importar el router en `main.py`"
+        },
+        {
+          "line": 44,
+          "text": "backend/server/main.py"
+        },
+        {
+          "line": 51,
+          "text": "3. Registrar el router en la app"
+        },
+        {
+          "line": 54,
+          "text": "backend/server/main.py — en la función que monta los routers"
+        },
+        {
+          "line": 62,
+          "text": "Convenciones"
+        },
+        {
+          "line": 69,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Patrones frontend críticos"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 18,
+          "text": "Checklist rápido"
+        },
+        {
+          "line": 27,
+          "text": "Consecuencias de revertirlos"
+        },
+        {
+          "line": 36,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Dark mode reglas"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "La regla fundamental"
+        },
+        {
+          "line": 25,
+          "text": "Anti-patrones de dark mode"
+        },
+        {
+          "line": 34,
+          "text": "Implementación técnica"
+        },
+        {
+          "line": 56,
+          "text": "Surface containers en dark mode"
+        },
+        {
+          "line": 60,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Internacionalización i18n"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Idiomas soportados"
+        },
+        {
+          "line": 24,
+          "text": "Idiomas eliminados del fork"
+        },
+        {
+          "line": 28,
+          "text": "Configuración"
+        },
+        {
+          "line": 36,
+          "text": "Uso en componentes Svelte"
+        },
+        {
+          "line": 47,
+          "text": "Agregar una traducción"
+        },
+        {
+          "line": 53,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Manejo de errores frontend"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Componentes de error"
+        },
+        {
+          "line": 25,
+          "text": "Routing de errores HTTP"
+        },
+        {
+          "line": 32,
+          "text": "ErrorBoundary (para errores de render)"
+        },
+        {
+          "line": 44,
+          "text": "Relación con el backend"
+        },
+        {
+          "line": 53,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Patrones de componentes Svelte"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "1. Guarda de `chatId` (evita loop de renderizado)"
+        },
+        {
+          "line": 27,
+          "text": "2. `AbortController` en `loadChat` (reduce requests duplicados ~80%)"
+        },
+        {
+          "line": 41,
+          "text": "3. Unsubscribers en `onDestroy` (evita memory leaks)"
+        },
+        {
+          "line": 59,
+          "text": "4. Bloques reactivos unificados (evita ejecuciones duplicadas)"
+        },
+        {
+          "line": 77,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Roles semánticos de color"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 16,
+          "text": "Roles principales (light / dark)"
+        },
+        {
+          "line": 29,
+          "text": "Clases Tailwind disponibles"
+        },
+        {
+          "line": 48,
+          "text": "Regla de uso de on-* colors"
+        },
+        {
+          "line": 57,
+          "text": "Relacionado"
+        }
+      ]
+    },
+    {
+      "path": "COELSA.Intelligent/Seguridad/Path Traversal.md",
+      "headings": [
+        {
+          "line": 10,
+          "text": "Path Traversal"
+        },
+        {
+          "line": 12,
+          "text": "Qué es"
+        },
+        {
+          "line": 18,
+          "text": "El fix en StorageProvider"
+        },
+        {
+          "line": 21,
+          "text": "backend/server/storage/provider.py — LocalStorageProvider.upload_file()"
+        },
+        {
+          "line": 22,
+          "text": "Security: Path Injection Prevention"
+        },
+        {
+          "line": 23,
+          "text": "'filename' puede contener '../../../etc/passwd'"
+        },
+        {
+          "line": 25,
+          "text": "Extraer solo el nombre base (sin directorios)"
+        },
+        {
+          "line": 28,
+          "text": "Resolver la ruta final y verificar que esté dentro de UPLOAD_DIR"
+        },
+        {
+          "line": 34,
+          "text": "Patrón de sanitización"
+        },
+        {
+          "line": 44,
+          "text": "Relacionado"
+        }
+      ]
+    }
+  ]
+}

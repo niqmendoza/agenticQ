@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/brain.py",
+    "--db",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/indice.sqlite",
+    "--log-dir",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas",
+    "query",
+    "SPA ssr false SvelteKit",
+    "--limit",
+    "3",
+    "--max-chars",
+    "16000"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-10-27T22:16:46.479498+00:00",
+  "finished_utc": "2026-10-27T22:16:46.517896+00:00",
+  "local_seconds": 0.03828137501841411
+}

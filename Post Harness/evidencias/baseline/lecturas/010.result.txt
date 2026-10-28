@@ -1,0 +1,161 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 45, "returned": 5, "next_offset": 50}
+
+=== COELSA.Intelligent/MOCs/MOC - Desarrollo.md sha256=55792092bfb6f1868646c795d989e976c23bdc5346ef2107faecf64f7fbeb6df ===
+1: ---
+2: title: "MOC — Desarrollo"
+3: type: moc
+4: tags: [coelsa-intelligent, desarrollo, patrones, migraciones, moc]
+5: aliases: [MOC Desarrollo, Dev COELSA, Patrones COELSA]
+6: description: "Usar cuando estás desarrollando en COELSA.Intelligent: patrones obligatorios del frontend, cómo agregar rutas REST, migraciones de BD, logging o ejecución local."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — Desarrollo
+11: 
+12: Este cluster agrupa las guías prácticas para trabajar en el código de COELSA.Intelligent. Los [[Patrones frontend críticos]] son invariantes que resuelven bugs concretos y no deben revertirse sin entender su implicancia.
+13: 
+14: ## Notas de este cluster
+15: 
+16: - [[Patrones frontend críticos]] — Las 4 guardas de código obligatorias en Chat.svelte y componentes relacionados
+17: - [[Migraciones Alembic]] — Flujo de migraciones de base de datos; comandos y cuándo ejecutarlas
+18: - [[Agregar router REST]] — Cómo extender la API de FastAPI con un nuevo router
+19: - [[Agregar proveedor de almacenamiento]] — Cómo implementar la interfaz `StorageProvider` para un nuevo backend
+20: - [[Loguru y logging]] — Configuración de logs con loguru; variable `LOG_LEVEL`; niveles por módulo
+21: - [[Ejecución local]] — Comandos para correr frontend y backend en modo desarrollo
+22: 
+23: ## MOCs vecinos
+24: 
+25: - [[MOC - Arquitectura]] — Las decisiones de diseño que estos patrones materializan
+26: - [[MOC - CI-CD y Despliegue]] — Diferencias entre dev local y el proceso de CI/CD
+27: - [[MOC - Diseño y Frontend]] — El sistema de diseño que el frontend implementa
+28: - [[MOC - Almacenamiento]] — La interfaz StorageProvider que se extiende al agregar providers
+
+=== COELSA.Intelligent/MOCs/MOC - Diseño y Frontend.md sha256=b87f26cb28ef5b8dcb9b4357bbbec870f09a37cad4ddf1967f93e88fc26befb4 ===
+1: ---
+2: title: "MOC — Diseño y Frontend"
+3: type: moc
+4: tags: [coelsa-intelligent, diseño, frontend, eco-design-system, moc]
+5: aliases: [MOC Diseño, Frontend COELSA, ECO Design System MOC]
+6: description: "Usar cuando trabajás con la UI, el sistema de diseño ECO, colores, tipografía, dark mode o componentes de error en COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — Diseño y Frontend
+11: 
+12: El diseño visual está gobernado por el [[ECO Design System]], basado en Material Design 3. Teal (`#06ABB9`) es el color primario COELSA; Pink es solo acento decorativo. El frontend es una [[SvelteKit 2|SPA en SvelteKit 2]] con SSR deshabilitado.
+13: 
+14: ## Notas de este cluster
+15: 
+16: ### Sistema de diseño
+17: - [[ECO Design System]] — Overview del sistema basado en Material Design 3; principios y archivos canónicos
+18: - [[Tokens primitivos de color]] — Escalas inmutables Teal, Pink, Neutral (0→100) usadas para definir roles
+19: - [[Roles semánticos de color]] — `primary`, `secondary`, `tertiary`, `surface` y sus pares `on-*`; cambian entre temas
+20: - [[Surface Containers]] — Los 5 niveles de jerarquía visual (lowest → highest) para profundidad sin opacidad
+21: - [[Tipografía Saira]] — Fuente corporativa Saira; clases tipográficas de `app.css`
+22: - [[Dark mode reglas]] — Cómo se invierten roles (no escalas primitivas) al cambiar de tema
+23: 
+24: ### Componentes y patrones
+25: - [[Patrones de componentes Svelte]] — Guarda chatId; AbortController; unsubscribers en onDestroy; bloques reactivos unificados
+26: - [[Manejo de errores frontend]] — `NetworkError`, `TimeoutError`, `GenericError`, `ErrorBoundary`; routing en `+error.svelte`
+27: - [[Internacionalización i18n]] — es-AR principal; en-GB y pt-BR disponibles; idiomas eliminados
+28: 
+29: ## MOCs vecinos
+30: 
+31: - [[MOC - Arquitectura]] — SSR deshabilitado como decisión de diseño con implicaciones de seguridad
+32: - [[MOC - Desarrollo]] — Patrones críticos que no deben revertirse en el frontend
+33: - [[MOC - Seguridad]] — CSP y nonces que afectan cómo se cargan los scripts del frontend
+
+=== COELSA.Intelligent/MOCs/MOC - Modelos IA y Routing.md sha256=ccb7fa346b046676e4d99caeee26222bb555fa17a29f8ee43945f7e11664363e ===
+1: ---
+2: title: "MOC — Modelos IA y Routing"
+3: type: moc
+4: tags: [coelsa-intelligent, modelos-ia, routing, mcp, moc]
+5: aliases: [MOC Modelos IA, Routing IA COELSA]
+6: description: "Usar cuando trabajás con routing de modelos, LiteLLM, MCP, tool calling o integración con SharePoint en COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — Modelos IA y Routing
+11: 
+12: El sistema soporta dos vías de acceso a modelos: [[Ollama]] nativo y [[LiteLLM proxy]] como proxy OpenAI-compatible. El campo `urlIdx` distingue cuál usar. El tool calling se implementa via [[MCP y tool calling|MCP]] con JSON prompt para modelos sin function calling nativo.
+13: 
+14: ## Notas de este cluster
+15: 
+16: - [[Routing de modelos IA]] — Lógica de selección de endpoint; cuándo va a Ollama y cuándo al proxy
+17: - [[Validación de urlIdx]] — Fix clave: por qué `urlIdx` determina el routing y no solo `owned_by`
+18: - [[MCP y tool calling]] — Non-native function calling con JSON prompt; `json.JSONDecoder().raw_decode()`
+19: - [[Cadena SearXNG Context Forge]] — Cadena completa: Open WebUI → MCPO → Context Forge → searxng-mcp → SearXNG
+20: - [[SharePoint OneDrive integración]] — Microsoft File Picker v8; permisos `Files.Read.All`; requisitos de CSP
+21: - [[PyTorch CPU-only]] — Por qué se usa la variante CPU-only (~200MB vs ~2GB CUDA); impacto en imagen Docker
+22: 
+23: ## MOCs vecinos
+24: 
+25: - [[MOC - Stack]] — Ollama y LiteLLM como componentes del stack
+26: - [[MOC - RAG y Búsqueda Vectorial]] — Cómo los modelos consumen el contexto recuperado por RAG
+27: - [[MOC - Seguridad]] — CSP que debe incluir dominios de Microsoft para SharePoint
+28: - [[MOC - Decisiones]] — Decisión de LiteLLM proxy routing fix (urlIdx)
+
+=== COELSA.Intelligent/MOCs/MOC - RAG y Búsqueda Vectorial.md sha256=5dac6db7a456fa4de857ec68bfe8d324a3d41a2e2ae6c3f20a60091f5ebf3b51 ===
+1: ---
+2: title: "MOC — RAG y Búsqueda Vectorial"
+3: type: moc
+4: tags: [coelsa-intelligent, rag, milvus, vectores, moc]
+5: aliases: [MOC RAG, Búsqueda Vectorial COELSA, RAG COELSA]
+6: description: "Usar cuando trabajás con embeddings, retrieval, colecciones Milvus o chats de referencia en COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — RAG y Búsqueda Vectorial
+11: 
+12: El sistema RAG usa [[Milvus]] con un esquema de [[Milvus multi-tenancy|multi-tenancy]] de 5 colecciones compartidas. El aislamiento entre recursos se logra con filtros por [[Aislamiento por resource_id|resource_id]].
+13: 
+14: ## Notas de este cluster
+15: 
+16: - [[Milvus multi-tenancy]] — Esquema de 5 colecciones compartidas vs una por recurso; decisión de diseño y trade-offs
+17: - [[Cinco colecciones Milvus]] — Las cinco colecciones fijas: `_knowledge`, `_files`, `_memories`, `_web_search`, `_hash_based`
+18: - [[Aislamiento por resource_id]] — Cómo el campo `resource_id` filtra chunks en búsquedas para garantizar aislamiento
+19: - [[Módulo de retrieval]] — Estructura de `backend/server/retrieval/`; cargadores, embeddings, función de búsqueda
+20: - [[Chats de referencia]] — Adjuntar conversaciones previas como contexto en el input de mensajes
+21: 
+22: ## MOCs vecinos
+23: 
+24: - [[MOC - Stack]] — Milvus como componente del stack; dependencia de versión 2.4+
+25: - [[MOC - Modelos IA y Routing]] — Cómo los modelos consumen el contexto generado por RAG
+26: - [[MOC - Almacenamiento]] — Los archivos que se embedden también viven en MinIO
+27: - [[MOC - Decisiones]] — Decisión de multi-tenancy con justificación de overhead de escalado
+
+=== COELSA.Intelligent/MOCs/MOC - Seguridad.md sha256=d175166b06ca7c094c711d2f38d56e6f60b848af61df5d2e0a1dc8d1093901f8 ===
+1: ---
+2: title: "MOC — Seguridad"
+3: type: moc
+4: tags: [coelsa-intelligent, seguridad, owasp, csp, moc]
+5: aliases: [MOC Seguridad, Hardening COELSA, Security COELSA]
+6: description: "Usar cuando necesitás entender el estado de seguridad de COELSA.Intelligent: qué fue remediado, qué está aceptado como riesgo y qué dependencias tienen CVEs."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — Seguridad
+11: 
+12: Las remediaciones de seguridad cubren OWASP Top 10: CSP, ReDoS, SSRF, Path Traversal y dependencias vulnerables. El scan de referencia es OWASP ZAP sobre OpenShift DEV (Febrero 2026).
+13: 
+14: ## Notas de este cluster
+15: 
+16: ### Remediaciones implementadas
+17: - [[CSP con nonces]] — `NonceInjectionMiddleware`; diferencia entre dev (unsafe-inline) y OpenShift (nonces)
+18: - [[Hardening ReDoS]] — 11 expresiones regulares convertidas a bounded quantifiers
+19: - [[Protección SSRF]] — 9 endpoints con validación de URLs outbound; rechazo de IPs privadas y loopback
+20: - [[Path Traversal]] — 8 endpoints con sanitización de paths de entrada de usuario
+21: 
+22: ### Dependencias
+23: - [[Dependencias vulnerables]] — jspdf, tar y sus overrides en `package.json`; política de actualización
+24: - [[CVE-2025-7969 markdown-it]] — Por qué es un falso positivo (SSR deshabilitado) y cómo está suprimido en SonarCloud
+25: 
+26: ### Riesgos aceptados
+27: - [[Riesgos de seguridad aceptados]] — `style-src unsafe-inline`, `script-src unsafe-eval`, SSL deshabilitado en build
+28: 
+29: ## MOCs vecinos
+30: 
+31: - [[MOC - Arquitectura]] — SSR deshabilitado elimina el vector del CVE de markdown-it
+32: - [[MOC - Autenticación y Permisos]] — bcrypt, JWT y Azure AD como primera línea de defensa
+33: - [[MOC - CI-CD y Despliegue]] — El Dockerfile tiene SSL deshabilitado temporalmente; riesgo documentado
+34: - [[MOC - Decisiones]] — Las decisiones de seguridad y sus justificaciones indexadas

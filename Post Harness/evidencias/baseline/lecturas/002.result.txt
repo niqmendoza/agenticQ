@@ -1,0 +1,225 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 5, "returned": 5, "next_offset": 10}
+
+=== COELSA.Intelligent/Almacenamiento/URLs firmadas MinIO.md sha256=45ab53acb192acc80c560d357d61560d2b1f8909fa3fc43aaee264ad7b232b4e ===
+1: ---
+2: title: "URLs firmadas MinIO"
+3: type: concepto
+4: tags: [coelsa-intelligent, almacenamiento, minio, presigned-url, seguridad]
+5: aliases: [Presigned URLs, URLs firmadas S3, Signed URLs MinIO]
+6: description: "Usar cuando necesitás entender cómo los clientes acceden a archivos en MinIO de forma segura y temporaria sin exponer credenciales."
+7: estado: vigente
+8: ---
+9: 
+10: # URLs firmadas MinIO
+11: 
+12: ## Qué es
+13: 
+14: Las **URLs firmadas** (presigned URLs) son URLs de acceso temporal a objetos en [[MinIO S3]] que no requieren que el cliente tenga credenciales del bucket. El servidor firma la URL con las credenciales S3 y establece un tiempo de expiración.
+15: 
+16: ## Cómo funciona
+17: 
+18: ```python
+19: # Pseudocódigo de generación (StorageProvider.get_presigned_url)
+20: url = s3_client.generate_presigned_url(
+21:     'get_object',
+22:     Params={'Bucket': S3_BUCKET_NAME, 'Key': file_path},
+23:     ExpiresIn=3600  # 1 hora por defecto
+24: )
+25: ```
+26: 
+27: La URL resultante incluye la firma criptográfica y la fecha de expiración en los query params. Solo es válida hasta esa fecha y solo para el objeto específico.
+28: 
+29: ## Por qué URLs firmadas
+30: 
+31: - **Seguridad**: el cliente nunca recibe credenciales del bucket; solo puede acceder al archivo específico por el tiempo configurado
+32: - **Control de acceso**: si el [[Control de acceso a recursos|access_control]] del archivo cambia, las URLs viejas siguen siendo válidas hasta su expiración pero no se generan nuevas
+33: - **Descarga directa**: el cliente descarga directo de MinIO sin pasar por el backend, reduciendo la carga del servidor
+34: 
+35: ## Configuración de expiración
+36: 
+37: La expiración por defecto es **3600 segundos (1 hora)**. El parámetro `ExpiresIn` es configurable en la llamada a `get_presigned_url()`.
+38: 
+39: ## Timeouts boto3 (Windows)
+40: 
+41: Para evitar timeouts en entornos Windows con latencia de red:
+42: - Connect timeout: 30s
+43: - Read timeout: 120s
+44: - 10 reintentos con backoff exponencial
+45: - TCP keepalive habilitado
+46: 
+47: ## Relacionado
+48: 
+49: - [[MinIO S3]] — El proveedor que genera estas URLs
+50: - [[Flujo de subida de archivos]] — Cuándo se genera la URL firmada en el ciclo de vida del archivo
+51: - [[Sistema híbrido de almacenamiento]] — El contexto general del sistema de almacenamiento
+52: - [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento
+
+=== COELSA.Intelligent/Arquitectura/Fork de Open WebUI.md sha256=724e0c32512dcf36d3e01a794f15372a2d0cb12467cde9e652f2d9f6e1d93a10 ===
+1: ---
+2: title: "Fork de Open WebUI"
+3: type: decision
+4: tags: [coelsa-intelligent, arquitectura, fork, open-webui]
+5: aliases: [Open WebUI fork, Base del fork]
+6: description: "Usar cuando necesitás entender qué es COELSA.Intelligent, de dónde viene y por qué no se sigue el upstream Open WebUI directamente."
+7: estado: vigente
+8: ---
+9: 
+10: # Fork de Open WebUI
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent es un fork interno de [Open WebUI](https://github.com/open-webui/open-webui), una plataforma de chat con IA generativa de código abierto (licencia MIT). El fork se tomó sobre una versión base estabilizada y los cambios se aplican deliberadamente sobre esa base.
+15: 
+16: **No se mantiene compatibilidad directa con el upstream.** Esto significa que las actualizaciones del proyecto original no se incorporan automáticamente; cualquier cambio relevante del upstream debe evaluarse y portarse manualmente.
+17: 
+18: ## Qué cambia respecto al upstream
+19: 
+20: | Área | Upstream (Open WebUI) | COELSA.Intelligent |
+21: |------|----------------------|-------------------|
+22: | Base de datos | SQLite (default) | [[PostgreSQL]] |
+23: | Autenticación | Múltiples proveedores + registro local | Solo [[Azure AD OAuth]] |
+24: | Almacenamiento | Local (`data/uploads/`) | Híbrido local + [[MinIO S3]] |
+25: | Búsqueda vectorial | Una colección por recurso | [[Milvus multi-tenancy]] (5 colecciones) |
+26: | Identidad visual | Open WebUI branding | [[ECO Design System]] COELSA |
+27: | Idioma por defecto | `en-US` | `es-AR` |
+28: | Despliegue | Docker genérico | [[OpenShift]] + Azure DevOps |
+29: 
+30: ## Por qué no se sigue el upstream
+31: 
+32: El upstream evoluciona rápido y no está optimizado para las restricciones corporativas de COELSA (Azure AD, OpenShift, proxy corporativo, identidad visual propia). Mantener sincronización con el upstream requeriría resolver conflictos continuamente en áreas que COELSA deliberadamente modificó. La decisión es mantener una versión estabilizada y hacer cherry-pick de mejoras puntuales cuando sea necesario.
+33: 
+34: ## Relacionado
+35: 
+36: - [[MOC - Arquitectura]] — Índice de todas las decisiones del fork
+37: - [[SPA con SSR deshabilitado]] — Otra decisión de arquitectura que diverge del upstream
+38: - [[PostgreSQL como base de datos]] — Primera y más importante migración de infraestructura
+39: - [[ECO Design System]] — El rebranding visual completo que diferencia el fork
+40: - [[MOC - Decisiones]] — Índice completo de decisiones con justificaciones
+
+=== COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md sha256=e55a93237b5781aace21c113e9fc71906c2e056ce44d8b649ca78f812934966b ===
+1: ---
+2: title: "Headers de usuario COELSA"
+3: type: concepto
+4: tags: [coelsa-intelligent, arquitectura, http-headers]
+5: aliases: [Encabezados HTTP COELSA, X-COELSA headers]
+6: description: "Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # Headers de usuario COELSA
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent renombró los encabezados HTTP que propagan la identidad del usuario autenticado entre componentes. La convención es:
+15: 
+16: ```
+17: X-COELSA.Intelligent-User-*
+18: ```
+19: 
+20: Estos headers viajan en las requests del proxy y del middleware de autenticación hacia los servicios internos.
+21: 
+22: ## Por qué el renombre
+23: 
+24: El upstream Open WebUI usaba nombres de header genéricos. El renombre hace que el origen de los headers sea inequívoco en logs y en reglas de seguridad de red, y evita colisiones con otros sistemas que puedan pasar headers similares.
+25: 
+26: ## Uso
+27: 
+28: Los headers se inyectan automáticamente por el middleware de autenticación al validar el token JWT. Los routers que necesitan la identidad del usuario usan el sistema estándar de dependencias de FastAPI (`get_current_user`) en lugar de leer los headers directamente.
+29: 
+30: ## Relacionado
+31: 
+32: - [[JWT y sesiones]] — El token JWT que valida la sesión antes de inyectar estos headers
+33: - [[FastAPI y uvicorn]] — El servidor donde el middleware de auth corre
+34: - [[Azure AD login exclusivo]] — La fuente de identidad que genera estos headers
+35: - [[MOC - Arquitectura]] — Contexto de la convención en el sistema
+
+=== COELSA.Intelligent/Arquitectura/Idioma por defecto es-AR.md sha256=e7ac2c3e4599bbaaddded5b4274a475222f41ce97123336814ecf65daa4df43c ===
+1: ---
+2: title: "Idioma por defecto es-AR"
+3: type: decision
+4: tags: [coelsa-intelligent, arquitectura, i18n, localizacion]
+5: aliases: [es-AR default, Castellano Rioplatense COELSA, Localización COELSA]
+6: description: "Usar cuando necesitás saber qué idiomas soporta COELSA.Intelligent, cuál es el default y cuáles fueron eliminados del fork."
+7: estado: vigente
+8: ---
+9: 
+10: # Idioma por defecto es-AR
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent tiene configurado **Castellano Rioplatense (`es-AR`)** como idioma por defecto de la interfaz.
+15: 
+16: ```env
+17: DEFAULT_LOCALE=es-AR
+18: ```
+19: 
+20: ## Idiomas disponibles
+21: 
+22: | Idioma | Código | Estado |
+23: |--------|--------|--------|
+24: | Castellano Rioplatense | `es-AR` | **Activo — default** |
+25: | English (British) | `en-GB` | Activo |
+26: | Português (Brasil) | `pt-BR` | Activo |
+27: 
+28: ## Idiomas eliminados del fork
+29: 
+30: Los siguientes idiomas fueron removidos porque no aplican al contexto corporativo de COELSA:
+31: 
+32: - `es-ES` — Castellano de España (reemplazado por es-AR)
+33: - `pt-PT` — Portugués de Portugal (reemplazado por pt-BR)
+34: - `en-US` — Inglés americano (reemplazado por en-GB)
+35: 
+36: ## Sistema de i18n
+37: 
+38: El sistema de internacionalización usa `i18next`. Los archivos de traducción están en `src/lib/i18n/`. Ver [[Internacionalización i18n]] para el detalle de cómo se usa en componentes.
+39: 
+40: ## Relacionado
+41: 
+42: - [[Internacionalización i18n]] — Detalle técnico del sistema de traducciones
+43: - [[Fork de Open WebUI]] — El upstream usaba en-US como default; este es uno de los cambios del fork
+44: - [[MOC - Arquitectura]] — Contexto de la decisión de localización
+45: - [[MOC - Decisiones]] — D-18 en el índice de decisiones
+
+=== COELSA.Intelligent/Arquitectura/PostgreSQL como base de datos.md sha256=04cc623242d1b61f7af296d22c19ff43384472865c6dcece091329de16d2f275 ===
+1: ---
+2: title: "PostgreSQL como base de datos"
+3: type: decision
+4: tags: [coelsa-intelligent, arquitectura, postgresql, base-de-datos]
+5: aliases: [Migración a PostgreSQL, PostgreSQL decision]
+6: description: "Usar cuando necesitás entender por qué se usa PostgreSQL en lugar de SQLite y cómo se gestiona el esquema con Alembic."
+7: estado: vigente
+8: ---
+9: 
+10: # PostgreSQL como base de datos
+11: 
+12: ## Qué es
+13: 
+14: El upstream Open WebUI usa SQLite por defecto. COELSA.Intelligent **migró a PostgreSQL** para soportar múltiples workers concurrentes, backups corporativos y el modelo de despliegue en [[OpenShift]].
+15: 
+16: ## Configuración
+17: 
+18: ```env
+19: DATABASE_URL=postgresql://user:pass@host:5432/coelsa_intelligent
+20: ```
+21: 
+22: El esquema se gestiona con **Alembic**. Las migraciones están en `backend/server/migrations/`. El servidor ejecuta `alembic upgrade head` automáticamente al arrancar (via `run_migrations()` en `config.py`).
+23: 
+24: ## Por qué PostgreSQL
+25: 
+26: - SQLite no admite múltiples writers concurrentes; con uvicorn en múltiples workers genera errores de lock.
+27: - PostgreSQL tiene soporte corporativo, backup integrado con las herramientas de COELSA, y funcionalidades como JSON columns (usadas en varios modelos).
+28: - La versión mínima requerida es **14+** por el uso de `json_agg` y funciones de ventana.
+29: 
+30: ## Stack de acceso a datos
+31: 
+32: - **ORM**: SQLAlchemy (con `get_db()` como context manager de sesión)
+33: - **Migraciones**: Alembic (ver [[Migraciones Alembic]])
+34: - **Modelos**: `backend/server/models/` — User, Chat, File, Knowledge, Group, Memory, etc.
+35: 
+36: ## Relacionado
+37: 
+38: - [[PostgreSQL]] — Nota de stack con versiones y configuración de conexión
+39: - [[Migraciones Alembic]] — Cómo gestionar cambios de esquema
+40: - [[MOC - Arquitectura]] — Contexto de la decisión en el sistema
+41: - [[MOC - Decisiones]] — D-02 en el índice de decisiones
+42: - [[Redis para WebSockets]] — La otra pieza de infraestructura de persistencia del sistema

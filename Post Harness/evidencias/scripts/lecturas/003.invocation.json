@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/brain.py",
+    "--db",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/indice.sqlite",
+    "--log-dir",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas",
+    "query",
+    "archivo último acceso limpieza borrado chat",
+    "--limit",
+    "3",
+    "--max-chars",
+    "9000"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-10-27T22:16:16.136231+00:00",
+  "finished_utc": "2026-10-27T22:16:16.176513+00:00",
+  "local_seconds": 0.04009166598552838
+}

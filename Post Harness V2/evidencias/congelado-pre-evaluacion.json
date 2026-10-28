@@ -1,0 +1,12 @@
+{
+  "timestamp_utc": "2026-10-28T02:13:44.623991+00:00",
+  "files": {
+    "scripts/brain.py": "9ebac8e591f9619826ea64d9cb853bd3f44b174d32050997bbb2200f5c7cdc55",
+    "scripts/document_utils.py": "e57ee8661f62dbf9df55f303cd360a01a9354aeedb4b2d539558aa7e28be0cfc",
+    "evidencias/consigna-comun.md": "7d88455f389b684f0011644ea3afa87ebcb345ea8196081a7858db7d3f491b21",
+    "evidencias/consultas-evaluacion.json": "54d0ac3c4a797a978b5fb100cf15ddcd47ef1c4bf4c71d0ecd4de34ebb928f3e",
+    "evidencias/requirements.json": "c51ee9ef8f3878bc1825c3b7c2f21aba5af3474fff7105c0809fe4aa7970b99e",
+    "evidencias/modalidad-v2.md": "65f220193e4f4b968e3755a9fb143916374f0c318ee97c816d762a1af8521ad5",
+    "evidencias/protocolo-v2.md": "2a20fa8863c5a990b6c6d5d30f2e71b07fbe04d27fb3ba9344484b6add90c274"
+  }
+}

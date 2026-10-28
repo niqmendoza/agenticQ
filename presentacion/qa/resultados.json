@@ -1,0 +1,848 @@
+{
+  "slides": 12,
+  "resolutions": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "font": true,
+      "slides": [
+        {
+          "n": 1,
+          "title": "QA con Copilot",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 2,
+          "title": "Punto de partida",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 3,
+          "title": "Recorrido de trabajo",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 4,
+          "title": "Conocimiento compartido",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 5,
+          "title": "Cómo elegimos lo esperado",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 6,
+          "title": "Herramientas según cada sistema",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 7,
+          "title": "Comprobaciones de negocio",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 8,
+          "title": "Ejecución y diagnóstico",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 9,
+          "title": "Mantenimiento por versión",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 10,
+          "title": "Primer piloto",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 11,
+          "title": "Sistema integrado",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 12,
+          "title": "Qué medimos y cómo seguimos",
+          "outside": [],
+          "horizontalOverflow": false
+        }
+      ],
+      "details": [
+        {
+          "n": 1,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 2,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 3,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 4,
+          "open": true,
+          "paragraphs": 50,
+          "overflow": false
+        },
+        {
+          "n": 5,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 6,
+          "open": true,
+          "paragraphs": 18,
+          "overflow": false
+        },
+        {
+          "n": 7,
+          "open": true,
+          "paragraphs": 27,
+          "overflow": false
+        },
+        {
+          "n": 8,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 9,
+          "open": true,
+          "paragraphs": 17,
+          "overflow": false
+        },
+        {
+          "n": 10,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 11,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 12,
+          "open": true,
+          "paragraphs": 9,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "font": true,
+      "slides": [
+        {
+          "n": 1,
+          "title": "QA con Copilot",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 2,
+          "title": "Punto de partida",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 3,
+          "title": "Recorrido de trabajo",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 4,
+          "title": "Conocimiento compartido",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 5,
+          "title": "Cómo elegimos lo esperado",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 6,
+          "title": "Herramientas según cada sistema",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 7,
+          "title": "Comprobaciones de negocio",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 8,
+          "title": "Ejecución y diagnóstico",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 9,
+          "title": "Mantenimiento por versión",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 10,
+          "title": "Primer piloto",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 11,
+          "title": "Sistema integrado",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 12,
+          "title": "Qué medimos y cómo seguimos",
+          "outside": [],
+          "horizontalOverflow": false
+        }
+      ],
+      "details": [
+        {
+          "n": 1,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 2,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 3,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 4,
+          "open": true,
+          "paragraphs": 50,
+          "overflow": false
+        },
+        {
+          "n": 5,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 6,
+          "open": true,
+          "paragraphs": 18,
+          "overflow": false
+        },
+        {
+          "n": 7,
+          "open": true,
+          "paragraphs": 27,
+          "overflow": false
+        },
+        {
+          "n": 8,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 9,
+          "open": true,
+          "paragraphs": 17,
+          "overflow": false
+        },
+        {
+          "n": 10,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 11,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 12,
+          "open": true,
+          "paragraphs": 9,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "font": true,
+      "slides": [
+        {
+          "n": 1,
+          "title": "QA con Copilot",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 2,
+          "title": "Punto de partida",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 3,
+          "title": "Recorrido de trabajo",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 4,
+          "title": "Conocimiento compartido",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 5,
+          "title": "Cómo elegimos lo esperado",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 6,
+          "title": "Herramientas según cada sistema",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 7,
+          "title": "Comprobaciones de negocio",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 8,
+          "title": "Ejecución y diagnóstico",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 9,
+          "title": "Mantenimiento por versión",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 10,
+          "title": "Primer piloto",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 11,
+          "title": "Sistema integrado",
+          "outside": [],
+          "horizontalOverflow": false
+        },
+        {
+          "n": 12,
+          "title": "Qué medimos y cómo seguimos",
+          "outside": [],
+          "horizontalOverflow": false
+        }
+      ],
+      "details": [
+        {
+          "n": 1,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 2,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 3,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 4,
+          "open": true,
+          "paragraphs": 50,
+          "overflow": false
+        },
+        {
+          "n": 5,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 6,
+          "open": true,
+          "paragraphs": 18,
+          "overflow": false
+        },
+        {
+          "n": 7,
+          "open": true,
+          "paragraphs": 27,
+          "overflow": false
+        },
+        {
+          "n": 8,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 9,
+          "open": true,
+          "paragraphs": 17,
+          "overflow": false
+        },
+        {
+          "n": 10,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 11,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 12,
+          "open": true,
+          "paragraphs": 9,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "font": true,
+      "slides": [
+        {
+          "n": 1,
+          "title": "QA con Copilot",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 2,
+          "title": "Punto de partida",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 3,
+          "title": "Recorrido de trabajo",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 4,
+          "title": "Conocimiento compartido",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 5,
+          "title": "Cómo elegimos lo esperado",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 6,
+          "title": "Herramientas según cada sistema",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 7,
+          "title": "Comprobaciones de negocio",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 8,
+          "title": "Ejecución y diagnóstico",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 9,
+          "title": "Mantenimiento por versión",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 10,
+          "title": "Primer piloto",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 11,
+          "title": "Sistema integrado",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 12,
+          "title": "Qué medimos y cómo seguimos",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        }
+      ],
+      "details": [
+        {
+          "n": 1,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 2,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 3,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 4,
+          "open": true,
+          "paragraphs": 50,
+          "overflow": false
+        },
+        {
+          "n": 5,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 6,
+          "open": true,
+          "paragraphs": 18,
+          "overflow": false
+        },
+        {
+          "n": 7,
+          "open": true,
+          "paragraphs": 27,
+          "overflow": false
+        },
+        {
+          "n": 8,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 9,
+          "open": true,
+          "paragraphs": 17,
+          "overflow": false
+        },
+        {
+          "n": 10,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 11,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 12,
+          "open": true,
+          "paragraphs": 9,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "font": true,
+      "slides": [
+        {
+          "n": 1,
+          "title": "QA con Copilot",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 2,
+          "title": "Punto de partida",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 3,
+          "title": "Recorrido de trabajo",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 4,
+          "title": "Conocimiento compartido",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 5,
+          "title": "Cómo elegimos lo esperado",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 6,
+          "title": "Herramientas según cada sistema",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 7,
+          "title": "Comprobaciones de negocio",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 8,
+          "title": "Ejecución y diagnóstico",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 9,
+          "title": "Mantenimiento por versión",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 10,
+          "title": "Primer piloto",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 11,
+          "title": "Sistema integrado",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        },
+        {
+          "n": 12,
+          "title": "Qué medimos y cómo seguimos",
+          "outside": [],
+          "horizontalOverflow": false,
+          "footerAccessible": true
+        }
+      ],
+      "details": [
+        {
+          "n": 1,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 2,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 3,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 4,
+          "open": true,
+          "paragraphs": 50,
+          "overflow": false
+        },
+        {
+          "n": 5,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 6,
+          "open": true,
+          "paragraphs": 18,
+          "overflow": false
+        },
+        {
+          "n": 7,
+          "open": true,
+          "paragraphs": 27,
+          "overflow": false
+        },
+        {
+          "n": 8,
+          "open": true,
+          "paragraphs": 16,
+          "overflow": false
+        },
+        {
+          "n": 9,
+          "open": true,
+          "paragraphs": 17,
+          "overflow": false
+        },
+        {
+          "n": 10,
+          "open": true,
+          "paragraphs": 19,
+          "overflow": false
+        },
+        {
+          "n": 11,
+          "open": true,
+          "paragraphs": 10,
+          "overflow": false
+        },
+        {
+          "n": 12,
+          "open": true,
+          "paragraphs": 9,
+          "overflow": false
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "network": [],
+  "navigation": {
+    "arrow-1920": true,
+    "button-1920": true,
+    "end-1920": true,
+    "home-1920": true,
+    "index-1920": true,
+    "detail-1920": true,
+    "help-1920": true,
+    "sources-1920": true,
+    "license-1920": true,
+    "deep-link-1920": true,
+    "arrow-1280": true,
+    "button-1280": true,
+    "end-1280": true,
+    "home-1280": true,
+    "index-1280": true,
+    "detail-1280": true,
+    "help-1280": true,
+    "sources-1280": true,
+    "license-1280": true,
+    "deep-link-1280": true,
+    "arrow-1366": true,
+    "button-1366": true,
+    "end-1366": true,
+    "home-1366": true,
+    "index-1366": true,
+    "detail-1366": true,
+    "help-1366": true,
+    "sources-1366": true,
+    "license-1366": true,
+    "deep-link-1366": true,
+    "arrow-390": true,
+    "button-390": true,
+    "end-390": true,
+    "home-390": true,
+    "index-390": true,
+    "detail-390": true,
+    "help-390": true,
+    "sources-390": true,
+    "license-390": true,
+    "deep-link-390": true,
+    "arrow-360": true,
+    "button-360": true,
+    "end-360": true,
+    "home-360": true,
+    "index-360": true,
+    "detail-360": true,
+    "help-360": true,
+    "sources-360": true,
+    "license-360": true,
+    "deep-link-360": true
+  }
+}

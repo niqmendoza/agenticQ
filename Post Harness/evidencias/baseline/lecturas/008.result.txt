@@ -1,0 +1,318 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 35, "returned": 5, "next_offset": 40}
+
+=== COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md sha256=6ae535d7d011734543b9246447d02388f744ce098c5f61cd842d9656bac8fae0 ===
+1: ---
+2: title: "Patrones de componentes Svelte"
+3: type: concepto
+4: tags: [coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]
+5: aliases: [Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]
+6: description: "Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse."
+7: estado: vigente
+8: ---
+9: 
+10: # Patrones de componentes Svelte
+11: 
+12: ## Qué es
+13: 
+14: Hay **4 patrones de código en el frontend** que resuelven bugs concretos. Su omisión o reversión reproduce los bugs originales. Documentados aquí como referencia obligatoria al trabajar en `Chat.svelte` y componentes relacionados.
+15: 
+16: ## 1. Guarda de `chatId` (evita loop de renderizado)
+17: 
+18: ```typescript
+19: // src/routes/(app)/c/[id]/+page.svelte o Chat.svelte
+20: if ($chatId !== chatIdProp) {
+21:     chatId.set(chatIdProp);
+22: }
+23: ```
+24: 
+25: **Por qué**: sin esta guarda, el cambio de chat dispara una actualización del store que a su vez dispara otro cambio de chat, generando un **loop de renderizado infinito**.
+26: 
+27: ## 2. `AbortController` en `loadChat` (reduce requests duplicados ~80%)
+28: 
+29: ```typescript
+30: let currentController: AbortController | null = null;
+31: 
+32: async function loadChat(id: string) {
+33:     currentController?.abort();  // Cancela la carga anterior
+34:     currentController = new AbortController();
+35:     const data = await fetchChat(id, { signal: currentController.signal });
+36: }
+37: ```
+38: 
+39: **Por qué**: si el usuario cambia de chat antes de que termine de cargar el anterior, sin `AbortController` ambas requests corren en paralelo y pueden pisarse. Reduce ~80% de requests duplicados.
+40: 
+41: ## 3. Unsubscribers en `onDestroy` (evita memory leaks)
+42: 
+43: ```typescript
+44: import { onMount, onDestroy } from 'svelte';
+45: 
+46: let unsub: () => void;
+47: 
+48: onMount(() => {
+49:     unsub = someStore.subscribe(value => { ... });
+50: });
+51: 
+52: onDestroy(() => {
+53:     unsub?.();  // OBLIGATORIO: limpiar la suscripción
+54: });
+55: ```
+56: 
+57: **Por qué**: los stores suscritos en `onMount` acumulan listeners si no se destruyen en `onDestroy`. Los listeners fantasma disparan requests adicionales y pueden causar actualizaciones en componentes desmontados.
+58: 
+59: ## 4. Bloques reactivos unificados (evita ejecuciones duplicadas)
+60: 
+61: ```typescript
+62: // MAL — separados generan doble ejecución:
+63: $: if (selectedModels) updateModels();
+64: $: if (selectedModels) setToolIds();
+65: 
+66: // BIEN — unificados:
+67: $: {
+68:     if (selectedModels) {
+69:         updateModels();
+70:         setToolIds();
+71:     }
+72: }
+73: ```
+74: 
+75: **Por qué**: los bloques `$:` separados que dependen del mismo reactive value se ejecutan independientemente. Al unificarlos, solo hay una ejecución por cambio de estado.
+76: 
+77: ## Relacionado
+78: 
+79: - [[SvelteKit 2]] — El framework donde aplican estos patrones
+80: - [[MOC - Desarrollo]] — Índice del cluster de desarrollo
+81: - [[MOC - Decisiones]] — D-20 en el índice de decisiones (AbortController fix)
+
+=== COELSA.Intelligent/Diseño Frontend/Roles semánticos de color.md sha256=633414976a121f28a1d4355819b770ec1b3aea9384a634acee0df24e05c86e0e ===
+1: ---
+2: title: "Roles semánticos de color"
+3: type: referencia
+4: tags: [coelsa-intelligent, diseño, colores, roles, tailwind, css-variables]
+5: aliases: [Semantic color roles, Roles de color, Color roles COELSA]
+6: description: "Usar cuando necesitás la lista de roles de color disponibles en Tailwind y CSS variables para implementar componentes en COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # Roles semánticos de color
+11: 
+12: ## Qué es
+13: 
+14: Los **roles semánticos** son tokens de tema que cambian automáticamente entre light y dark mode via CSS custom properties. Son la capa 2 del [[ECO Design System]]. Siempre se prefieren sobre las escalas primitivas en componentes.
+15: 
+16: ## Roles principales (light / dark)
+17: 
+18: | Rol CSS | Light | Dark | Uso |
+19: |---------|-------|------|-----|
+20: | `--color-primary` | `#006972` (teal-40) | `#57D8E6` (teal-80) | Botones CTA, acciones principales |
+21: | `--color-on-primary` | `#FFFFFF` | `#00363B` (teal-20) | Texto/icono sobre primary |
+22: | `--color-secondary` | `#004F56` (teal-30) | `#90F2FE` (teal-90) | Acciones secundarias, outlined buttons |
+23: | `--color-on-secondary` | `#FFFFFF` | `#00363B` (teal-20) | Texto/icono sobre secondary |
+24: | `--color-tertiary` | `#9D0061` (custom) | `#FFB0CF` (pink-80) | Badges, notificaciones, acentos |
+25: | `--color-on-tertiary` | `#FFFFFF` | `#63003C` (pink-20) | Texto/icono sobre tertiary |
+26: | `--color-surface` | `#FFFFFF` | `#191C1D` | Fondo base de la app |
+27: | `--color-on-surface` | `#191C1D` | `#EFF1F1` | Texto principal |
+28: 
+29: ## Clases Tailwind disponibles
+30: 
+31: ```html
+32: <!-- Botón principal -->
+33: <button class="bg-primary text-on-primary hover:opacity-90">
+34:   Acción Principal
+35: </button>
+36: 
+37: <!-- Botón secundario -->
+38: <button class="border-2 border-secondary text-secondary hover:bg-secondary/10">
+39:   Acción Secundaria
+40: </button>
+41: 
+42: <!-- Badge de acento -->
+43: <span class="bg-tertiary text-on-tertiary px-3 py-1 rounded-full">
+44:   Badge
+45: </span>
+46: ```
+47: 
+48: ## Regla de uso de on-* colors
+49: 
+50: **Siempre** usar el color `on-*` para texto/iconos sobre un fondo de rol:
+51: - Fondo `bg-primary` → texto `text-on-primary`
+52: - Fondo `bg-secondary` → texto `text-on-secondary`
+53: - Fondo `bg-surface` → texto `text-on-surface`
+54: 
+55: No asumir que "el texto siempre es blanco" o "siempre es negro"; los roles invierten en dark mode.
+56: 
+57: ## Relacionado
+58: 
+59: - [[Tokens primitivos de color]] — Los valores hex que definen estos roles
+60: - [[Surface Containers]] — Los 5 roles de superficie para jerarquía visual
+61: - [[Dark mode reglas]] — Cómo se invierten los roles en dark mode
+62: - [[ECO Design System]] — El sistema del que estos roles son parte
+
+=== COELSA.Intelligent/Diseño Frontend/Surface Containers.md sha256=f7ba875c8328d2302f0536131fd2a9078903ccdaa5e516fb36f6f9b6ffb8c897 ===
+1: ---
+2: title: "Surface Containers"
+3: type: referencia
+4: tags: [coelsa-intelligent, diseño, surfaces, jerarquia-visual, tailwind]
+5: aliases: [Surface containers COELSA, Niveles de superficie, Material surfaces]
+6: description: "Usar cuando necesitás crear jerarquía visual entre elementos anidados en COELSA.Intelligent sin usar opacidad arbitraria."
+7: estado: vigente
+8: ---
+9: 
+10: # Surface Containers
+11: 
+12: ## Qué es
+13: 
+14: Material Design 3 define **5 niveles de superficie** para crear jerarquía visual. En el [[ECO Design System]] de COELSA.Intelligent, estos niveles se expresan con clases Tailwind `bg-surface-container-*`.
+15: 
+16: ## Los 5 niveles
+17: 
+18: | Nivel | Clase Tailwind | Light | Dark | Uso semántico |
+19: |-------|---------------|-------|------|---------------|
+20: | **Lowest** | `bg-surface-container-lowest` | `#FFFFFF` | `#090F10` | Elementos embebidos sin énfasis; fondos de scroll |
+21: | **Low** | `bg-surface-container-low` | `#EFF5F5` | `#171D1D` | Separación ligera; sidebar background |
+22: | **Default** | `bg-surface-container` | `#E9EFEF` | `#1B2121` | Cards estándar; contenedor por defecto |
+23: | **High** | `bg-surface-container-high` | `#E4E9EA` | `#252B2C` | Modals, dialogs; elementos destacados |
+24: | **Highest** | `bg-surface-container-highest` | `#DEE3E4` | `#303637` | Tooltips, popovers; máximo foco |
+25: 
+26: ## Patrón de uso correcto (jerarquía anidada)
+27: 
+28: ```html
+29: <!-- Fondo base de la pantalla -->
+30: <div class="bg-surface text-on-surface min-h-screen">
+31: 
+32:   <!-- Card estándar -->
+33:   <div class="bg-surface-container rounded-xl p-6">
+34:     <h3 class="text-title-large text-on-surface">Título</h3>
+35: 
+36:     <!-- Sección más destacada dentro de la card -->
+37:     <div class="bg-surface-container-high rounded-lg p-4 mt-4">
+38:       Elemento con más énfasis
+39:     </div>
+40:   </div>
+41: 
+42: </div>
+43: ```
+44: 
+45: ## Anti-patrones
+46: 
+47: - ❌ **No** usar `opacity-50` o `bg-black/10` para crear profundidad
+48: - ❌ **No** saltar niveles (de `lowest` directo a `highest`)
+49: - ❌ **No** usar valores hex de colores neutros directamente en componentes
+50: 
+51: ## Relacionado
+52: 
+53: - [[Roles semánticos de color]] — Los roles de los que surface-container es parte
+54: - [[ECO Design System]] — El sistema de diseño general
+55: - [[Dark mode reglas]] — Cómo cambian los valores de surface en dark mode
+56: - [[MOC - Diseño y Frontend]] — Índice del cluster de diseño
+
+=== COELSA.Intelligent/Diseño Frontend/Tipografía Saira.md sha256=3f35c98a83027d8c36bcf4cf90f5a7f4be871af8ae447d35b8a05d5edc6ab3a0 ===
+1: ---
+2: title: "Tipografía Saira"
+3: type: referencia
+4: tags: [coelsa-intelligent, diseño, tipografia, saira, fuentes]
+5: aliases: [Fuente Saira, Saira font, Typography COELSA]
+6: description: "Usar cuando necesitás usar la tipografía correcta en componentes de COELSA.Intelligent o entender las clases tipográficas disponibles."
+7: estado: vigente
+8: ---
+9: 
+10: # Tipografía Saira
+11: 
+12: ## Qué es
+13: 
+14: **Saira** es la fuente corporativa de COELSA.Intelligent. Es una fuente sans-serif variable con distintos pesos, definida con `@font-face` en `src/tailwind.css` y cargada desde los assets locales de la app.
+15: 
+16: ## Carga de la fuente
+17: 
+18: ```css
+19: /* src/tailwind.css */
+20: @font-face {
+21:   font-family: 'Saira';
+22:   src: url('/assets/fonts/Saira-VariableFont.woff2') format('woff2-variations');
+23:   font-weight: 100 900;
+24:   font-display: swap;
+25: }
+26: ```
+27: 
+28: Los archivos de fuente están en `static/assets/fonts/`.
+29: 
+30: ## Clases tipográficas (Material Design 3)
+31: 
+32: Las clases tipográficas siguiendo la escala de Material Design 3 están definidas en `src/app.css`:
+33: 
+34: | Clase | Uso semántico |
+35: |-------|--------------|
+36: | `text-display-large` | Títulos hero muy grandes |
+37: | `text-display-medium` | Títulos hero medianos |
+38: | `text-headline-large` | Encabezados de sección principales |
+39: | `text-headline-medium` | Encabezados de sección secundarios |
+40: | `text-title-large` | Títulos de card o dialog |
+41: | `text-title-medium` | Subtítulos |
+42: | `text-body-large` | Cuerpo de texto principal |
+43: | `text-body-medium` | Cuerpo de texto secundario |
+44: | `text-label-large` | Etiquetas de botón |
+45: | `text-label-small` | Chips, badges |
+46: 
+47: ## Configuración Tailwind
+48: 
+49: La fuente Saira está registrada en `tailwind.config.js` como `font-sans` por defecto, por lo que todos los elementos usan Saira automáticamente sin necesidad de clases adicionales.
+50: 
+51: ## Relacionado
+52: 
+53: - [[ECO Design System]] — El sistema de diseño donde vive la tipografía
+54: - [[Roles semánticos de color]] — Las clases de color que se combinan con la tipografía
+55: - [[MOC - Diseño y Frontend]] — Índice del cluster de diseño
+
+=== COELSA.Intelligent/Diseño Frontend/Tokens primitivos de color.md sha256=cf036480441186251bdc119526054164035a6bc6e903c7b9043e40afa5a870f5 ===
+1: ---
+2: title: "Tokens primitivos de color"
+3: type: referencia
+4: tags: [coelsa-intelligent, diseño, colores, tokens, teal, pink, neutral]
+5: aliases: [Color primitives, Escalas de color COELSA, Teal Pink Neutral]
+6: description: "Usar cuando necesitás la escala de valores hex de los colores primitivos de COELSA.Intelligent (Teal, Pink, Neutral) para definir o revisar tokens semánticos."
+7: estado: vigente
+8: ---
+9: 
+10: # Tokens primitivos de color
+11: 
+12: ## Qué es
+13: 
+14: Las **escalas de color primitivas** son los valores hex base del [[ECO Design System]]. Son **inmutables** (no cambian entre light y dark mode) y van de 0 (negro puro) a 100 (blanco puro). Se usan exclusivamente para **definir roles semánticos**; no deben usarse directamente en componentes.
+15: 
+16: ## Teal — Color primario COELSA
+17: 
+18: | Tono | Hex | Uso en roles |
+19: |------|-----|-------------|
+20: | `teal-40` | `#006972` | **primary-light** (~6.2:1 sobre blanco ✓ AA) |
+21: | `teal-60` | `#00A0AD` | Solo texto grande sobre blanco (3.2:1) |
+22: | `teal-80` | `#57D8E6` | **primary-dark** |
+23: | `teal-90` | `#90F2FE` | secondary-dark |
+24: 
+25: > Teal-60 (#00A0AD) **no pasa WCAG AA** para texto normal sobre blanco (3.2:1). Solo texto grande (≥18px o ≥14px bold).
+26: 
+27: ## Pink — Acento decorativo
+28: 
+29: | Tono | Hex | Uso en roles |
+30: |------|-----|-------------|
+31: | `pink-60` | `#FF43A8` | Sombras, acentos decorativos (2.5:1 — no textual) |
+32: | `pink-80` | `#FFB0CF` | **tertiary-dark** |
+33: | custom | `#9D0061` | tertiary-light (5.1:1 sobre blanco ✓ AA) |
+34: 
+35: > Pink-60 (#FF43A8) **no pasa WCAG AA**. Solo efectos decorativos no-textuales.
+36: > `#9D0061` es un valor custom fuera de la escala estándar, usado por necesidad de contraste.
+37: 
+38: ## Neutral — Surfaces y grises
+39: 
+40: | Tono | Hex | Uso en roles |
+41: |------|-----|-------------|
+42: | `neutral-10` | `#191C1D` | on-surface-dark |
+43: | `neutral-95` | `#EFF1F1` | Surface containers light |
+44: | `neutral-100` | `#FFFFFF` | Blanco |
+45: 
+46: > `gray-*` en Tailwind es alias de `neutral-*` para retrocompatibilidad. En código nuevo usar `neutral-*` o roles.
+47: 
+48: ## Relacionado
+49: 
+50: - [[ECO Design System]] — El sistema del que estas escalas forman la base
+51: - [[Roles semánticos de color]] — Los roles construidos sobre estas escalas
+52: - [[Dark mode reglas]] — Cómo los mismos primitivos se usan diferente en cada tema
+53: - [[MOC - Diseño y Frontend]] — Índice del cluster de diseño

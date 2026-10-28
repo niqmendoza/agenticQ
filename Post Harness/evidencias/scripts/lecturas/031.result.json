@@ -1,0 +1,211 @@
+{
+  "query": "access_control write read herencia permisos",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "access_control",
+    "herencia",
+    "permisos",
+    "read",
+    "write"
+  ],
+  "missing_terms": [
+    "herencia"
+  ],
+  "total_matches": 68,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+      "sha256": "63512785920e4b1035f23e1a5f0d7bbe736ea15a3c2e51845d3dc6ebe1e7c339",
+      "section": "Estructura del objeto custom",
+      "start": 24,
+      "end": 38,
+      "score": 19.2115,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Control de acceso a recursos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, access-control, knowledge, files]\naliases: [access_control, Permisos de recursos, Resource access control]\ndescription: \"Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.\"\nestado: vigente\n---",
+        "title": "Control de acceso a recursos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, access-control, knowledge, files]",
+        "aliases": "[access_control, Permisos de recursos, Resource access control]",
+        "description": "Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Estructura del objeto custom\n\n```json\n{\n  \"read\": {\n    \"group_ids\": [\"grupo-id-1\", \"grupo-id-2\"],\n    \"user_ids\": [\"user-id-1\"]\n  },\n  \"write\": {\n    \"group_ids\": [],\n    \"user_ids\": [\"user-id-admin\"]\n  }\n}\n```\n",
+      "relations": [
+        {
+          "target": "Roles de usuario",
+          "fragment": "",
+          "line": 49,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Grupos y permisos",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 3,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md",
+      "sha256": "2d2d8bbec28f33cb389bf605b71b21a8a914a2b323a62d5f78344811fe3ac84e",
+      "section": "Relacionado",
+      "start": 53,
+      "end": 57,
+      "score": 8.3989,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Grupos y permisos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, grupos, permisos]\naliases: [Groups COELSA, Permisos de grupo]\ndescription: \"Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.\"\nestado: vigente\n---",
+        "title": "Grupos y permisos",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, grupos, permisos]",
+        "aliases": "[Groups COELSA, Permisos de grupo]",
+        "description": "Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Relacionado\n\n- [[Roles de usuario]] — El rol es la primera capa; los grupos son la segunda capa granular\n- [[Control de acceso a recursos]] — Cómo los grupos interactúan con el access_control de Knowledge y Files\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+      "relations": [
+        {
+          "target": "Roles de usuario",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Roles de usuario",
+          "fragment": "",
+          "line": 55,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Control de acceso a recursos",
+          "fragment": "",
+          "line": 56,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 57,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 4,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+      "sha256": "d07b8455c519b053c6a243d3e79b181f42196e4ff2bfc709eec4bdd8cbf8974d",
+      "section": "Relacionado",
+      "start": 41,
+      "end": 46,
+      "score": 7.9116,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---",
+        "title": "Roles de usuario",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, auth, roles, permisos]",
+        "aliases": "[User roles, Roles COELSA, admin user pending]",
+        "description": "Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Relacionado\n\n- [[Grupos y permisos]] — Permisos granulares dentro del rol `user`\n- [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos\n- [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+      "relations": [
+        {
+          "target": "Grupos y permisos",
+          "fragment": "",
+          "line": 43,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Control de acceso a recursos",
+          "fragment": "",
+          "line": 44,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Azure AD login exclusivo",
+          "fragment": "",
+          "line": 45,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Autenticación y Permisos",
+          "fragment": "",
+          "line": 46,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 4,
+      "relations_truncated": false
+    }
+  ],
+  "next_offset": 3,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ]
+}

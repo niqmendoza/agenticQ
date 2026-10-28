@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"El borrador contiene 38 casos documentales con trazabilidad y matrices de variantes. La validación final revisará la estructura y los hashes; las expectativas condicionadas por decisiones pendientes quedan señaladas como propuestas o inferencias.\n","annotations":[],"logprobs":[]}]

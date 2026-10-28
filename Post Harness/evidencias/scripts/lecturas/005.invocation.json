@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/brain.py",
+    "--db",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/indice.sqlite",
+    "--log-dir",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas",
+    "query",
+    "frontend chat solicitudes cancelación i18n tokens semánticos",
+    "--limit",
+    "3",
+    "--max-chars",
+    "9000"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-10-27T22:16:21.070239+00:00",
+  "finished_utc": "2026-10-27T22:16:21.111752+00:00",
+  "local_seconds": 0.0413433340145275
+}

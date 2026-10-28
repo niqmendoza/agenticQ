@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Desarrollo/Patrones frontend críticos.md",
+  "sha256": "b9f8fbcba69774de6e357757821f48334827276223788bf756c423cf1581f049",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Patrones frontend críticos\"\ntype: concepto\ntags: [coelsa-intelligent, desarrollo, frontend, svelte, patrones, bugs]\naliases: [Critical frontend patterns, Patrones obligatorios frontend]\ndescription: \"Usar como checklist antes de mergear cambios en Chat.svelte o componentes de chat — los 4 patrones que no deben revertirse bajo ninguna circunstancia.\"\nestado: vigente\n---",
+    "title": "Patrones frontend críticos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, desarrollo, frontend, svelte, patrones, bugs]",
+    "aliases": "[Critical frontend patterns, Patrones obligatorios frontend]",
+    "description": "Usar como checklist antes de mergear cambios en Chat.svelte o componentes de chat — los 4 patrones que no deben revertirse bajo ninguna circunstancia.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 41,
+  "total_lines": 41,
+  "text": "---\ntitle: \"Patrones frontend críticos\"\ntype: concepto\ntags: [coelsa-intelligent, desarrollo, frontend, svelte, patrones, bugs]\naliases: [Critical frontend patterns, Patrones obligatorios frontend]\ndescription: \"Usar como checklist antes de mergear cambios en Chat.svelte o componentes de chat — los 4 patrones que no deben revertirse bajo ninguna circunstancia.\"\nestado: vigente\n---\n\n# Patrones frontend críticos\n\n## Qué es\n\nCuatro patrones de código en el frontend de COELSA.Intelligent que resuelven bugs concretos documentados. Su omisión o reversión reproduce los bugs originales. Son **invariantes del codebase**.\n\n> **Referencia completa**: ver [[Patrones de componentes Svelte]] para el código y explicación detallada de cada patrón.\n\n## Checklist rápido\n\nAntes de mergear cambios en `Chat.svelte` o componentes relacionados:\n\n- [ ] **Guarda de `chatId`**: el setter del store solo se llama si `$chatId !== chatIdProp`\n- [ ] **AbortController en `loadChat`**: se cancela la request anterior antes de iniciar la nueva\n- [ ] **Unsubscribers en `onDestroy`**: todo store suscrito en `onMount` se desuscribe en `onDestroy`\n- [ ] **Bloques reactivos unificados**: los bloques `$:` que dependen del mismo state están en un solo bloque\n\n## Consecuencias de revertirlos\n\n| Patrón omitido | Consecuencia |\n|---------------|-------------|\n| Guarda de chatId | Loop de renderizado infinito al cambiar de chat |\n| AbortController ausente | ~80% más de requests duplicados y errores 404 de chunks |\n| Unsubscribers ausentes | Memory leaks; listeners fantasma; requests adicionales |\n| Bloques reactivos separados | Doble ejecución por cambio de estado |\n\n## Relacionado\n\n- [[Patrones de componentes Svelte]] — El código completo con explicaciones detalladas\n- [[SvelteKit 2]] — El framework donde aplican estos patrones\n- [[MOC - Desarrollo]] — Índice del cluster de desarrollo\n- [[MOC - Decisiones]] — D-20 en el índice de decisiones",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

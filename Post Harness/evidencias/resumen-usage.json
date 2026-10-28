@@ -1,0 +1,104 @@
+{
+  "comparison": {
+    "input_tokens": {
+      "baseline": 1367118,
+      "scripts": 1239741,
+      "difference": 127377,
+      "reduction_percent": 9.3171913470527,
+      "denominator": 1367118
+    },
+    "cached_input_tokens": {
+      "baseline": 1289728,
+      "scripts": 1161984,
+      "difference": 127744,
+      "reduction_percent": 9.904724096863838,
+      "denominator": 1289728
+    },
+    "cache_write_input_tokens": {
+      "baseline": 0,
+      "scripts": 0,
+      "difference": 0,
+      "reduction_percent": null,
+      "denominator": 0
+    },
+    "output_tokens": {
+      "baseline": 16037,
+      "scripts": 18510,
+      "difference": -2473,
+      "reduction_percent": -15.42058988588888,
+      "denominator": 16037
+    },
+    "reasoning_output_tokens": {
+      "baseline": 1881,
+      "scripts": 2650,
+      "difference": -769,
+      "reduction_percent": -40.882509303561946,
+      "denominator": 1881
+    },
+    "total_tokens": {
+      "baseline": 1383155,
+      "scripts": 1258251,
+      "difference": 124904,
+      "reduction_percent": 9.030368975277536,
+      "denominator": 1383155
+    },
+    "uncached_input_tokens": {
+      "baseline": 77390,
+      "scripts": 77757,
+      "difference": -367,
+      "reduction_percent": -0.4742214756428442,
+      "denominator": 77390
+    }
+  },
+  "turns": {
+    "baseline": [
+      {
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "model_responses": 21,
+        "usage_sum": {
+          "input_tokens": 1367118,
+          "cached_input_tokens": 1289728,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 16037,
+          "reasoning_output_tokens": 1881,
+          "total_tokens": 1383155
+        },
+        "matches_last_turn_counter": true,
+        "observed_duration_seconds": 376.21
+      }
+    ],
+    "scripts": [
+      {
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "model_responses": 21,
+        "usage_sum": {
+          "input_tokens": 1239741,
+          "cached_input_tokens": 1161984,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 18510,
+          "reasoning_output_tokens": 2650,
+          "total_tokens": 1258251
+        },
+        "matches_last_turn_counter": true,
+        "observed_duration_seconds": 406.583
+      },
+      {
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "model_responses": 1,
+        "usage_sum": {
+          "input_tokens": 97077,
+          "cached_input_tokens": 96512,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 634,
+          "reasoning_output_tokens": 349,
+          "total_tokens": 97711
+        },
+        "matches_last_turn_counter": true,
+        "observed_duration_seconds": 14.632
+      }
+    ]
+  }
+}

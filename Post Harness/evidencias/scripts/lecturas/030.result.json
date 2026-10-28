@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+  "sha256": "6ae535d7d011734543b9246447d02388f744ce098c5f61cd842d9656bac8fae0",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Patrones de componentes Svelte\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]\naliases: [Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]\ndescription: \"Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.\"\nestado: vigente\n---",
+    "title": "Patrones de componentes Svelte",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]",
+    "aliases": "[Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]",
+    "description": "Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.",
+    "estado": "vigente"
+  },
+  "start": 81,
+  "end": 81,
+  "total_lines": 81,
+  "text": "- [[MOC - Decisiones]] — D-20 en el índice de decisiones (AbortController fix)",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 81,
+  "beyond_eof": false
+}

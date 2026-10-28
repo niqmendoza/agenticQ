@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Auth y Permisos/Control de acceso a recursos.md",
+  "sha256": "63512785920e4b1035f23e1a5f0d7bbe736ea15a3c2e51845d3dc6ebe1e7c339",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Control de acceso a recursos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, access-control, knowledge, files]\naliases: [access_control, Permisos de recursos, Resource access control]\ndescription: \"Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.\"\nestado: vigente\n---",
+    "title": "Control de acceso a recursos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, auth, access-control, knowledge, files]",
+    "aliases": "[access_control, Permisos de recursos, Resource access control]",
+    "description": "Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 51,
+  "total_lines": 51,
+  "text": "---\ntitle: \"Control de acceso a recursos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, access-control, knowledge, files]\naliases: [access_control, Permisos de recursos, Resource access control]\ndescription: \"Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.\"\nestado: vigente\n---\n\n# Control de acceso a recursos\n\n## Qué es\n\nLos modelos `Knowledge` y `File` tienen un campo `access_control` en formato JSON que define quién puede leer y escribir ese recurso. El campo `None` significa acceso público para todos los `user`.\n\n## Modos de acceso\n\n| Valor de `access_control` | Significado |\n|--------------------------|-------------|\n| `None` | Acceso público — cualquier usuario con rol `user` puede leer |\n| `{}` (objeto vacío) | Acceso privado — solo el propietario puede acceder |\n| Objeto con reglas | Acceso custom — según grupos y usuarios específicos |\n\n## Estructura del objeto custom\n\n```json\n{\n  \"read\": {\n    \"group_ids\": [\"grupo-id-1\", \"grupo-id-2\"],\n    \"user_ids\": [\"user-id-1\"]\n  },\n  \"write\": {\n    \"group_ids\": [],\n    \"user_ids\": [\"user-id-admin\"]\n  }\n}\n```\n\n## Evaluación de acceso\n\nLa función `has_access()` en `backend/server/utils/access_control.py` evalúa si un usuario tiene permiso sobre un recurso. La evaluación verifica:\n1. Si el usuario es el propietario → acceso total\n2. Si el usuario tiene rol `admin` → acceso total\n3. Si el `access_control` es `None` → acceso de lectura para `user`\n4. Si hay reglas custom → verifica `group_ids` y `user_ids`\n\n## Relacionado\n\n- [[Roles de usuario]] — El rol del usuario es el primer criterio de la evaluación\n- [[Grupos y permisos]] — Los `group_ids` en access_control referencian grupos del sistema\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

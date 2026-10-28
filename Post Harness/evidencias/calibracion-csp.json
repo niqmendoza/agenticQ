@@ -1,0 +1,198 @@
+{
+  "query": "CSP nonces desarrollo OpenShift",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "csp",
+    "desarrollo",
+    "nonces",
+    "openshift"
+  ],
+  "missing_terms": [],
+  "total_matches": 149,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Seguridad/CSP con nonces.md",
+      "sha256": "2e44b4dc1f0488cdb2709466c01d81f5afa142ac45b54f90653b9cdb77baa286",
+      "section": "Configuración por entorno",
+      "start": 16,
+      "end": 24,
+      "score": 16.5919,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"CSP con nonces\"\ntype: concepto\ntags: [coelsa-intelligent, seguridad, csp, nonces, openshift]\naliases: [Content Security Policy, CSP nonces COELSA, NonceInjectionMiddleware]\ndescription: \"Usar cuando necesitás entender la configuración de Content Security Policy de COELSA.Intelligent, por qué los nonces no funcionan en dev, o cómo se configura en OpenShift.\"\nestado: vigente\n---",
+        "title": "CSP con nonces",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, seguridad, csp, nonces, openshift]",
+        "aliases": "[Content Security Policy, CSP nonces COELSA, NonceInjectionMiddleware]",
+        "description": "Usar cuando necesitás entender la configuración de Content Security Policy de COELSA.Intelligent, por qué los nonces no funcionan en dev, o cómo se configura en OpenShift.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Configuración por entorno\n\n| Entorno | `ENABLE_CSP_NONCES` | `script-src` |\n|---------|---------------------|-------------|\n| Localhost / dev | `false` (obligatorio) | `'unsafe-inline'` (requerido por SvelteKit dev) |\n| OpenShift | `true` | `'nonce-{valor}'` (sin unsafe-inline) |\n\n**Importante**: `ENABLE_CSP_NONCES=true` en desarrollo **rompe la app**. SvelteKit en modo dev genera scripts dinámicamente en el browser; el nonce se inyecta en el HTML del servidor antes de que esos scripts existan, por lo que no coinciden.\n",
+      "relations": [
+        {
+          "target": "SharePoint OneDrive integración",
+          "fragment": "",
+          "line": 37,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Modelos IA/SharePoint OneDrive integración.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Riesgos de seguridad aceptados",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/Riesgos de seguridad aceptados.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SPA con SSR deshabilitado",
+          "fragment": "",
+          "line": 54,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Despliegue en OpenShift",
+          "fragment": "",
+          "line": 55,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/CI-CD/Despliegue en OpenShift.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Riesgos de seguridad aceptados",
+          "fragment": "",
+          "line": 56,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/Riesgos de seguridad aceptados.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Seguridad",
+          "fragment": "",
+          "line": 57,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Seguridad.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 6,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/OpenShift.md",
+      "sha256": "adfef3e0930bd08ab3530f5daefc5765a7b8df3724c7926ae835d12ce3fc246e",
+      "section": "CSP en el Route",
+      "start": 35,
+      "end": 38,
+      "score": 12.3409,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"OpenShift\"\ntype: stack\ntags: [coelsa-intelligent, stack, openshift, despliegue, kubernetes]\naliases: [OpenShift COELSA, OCP COELSA]\ndescription: \"Usar cuando trabajás con el despliegue de COELSA.Intelligent en OpenShift: ConfigMaps, Routes, timeouts de HAProxy o escalado horizontal.\"\nestado: vigente\n---",
+        "title": "OpenShift",
+        "type": "stack",
+        "tags": "[coelsa-intelligent, stack, openshift, despliegue, kubernetes]",
+        "aliases": "[OpenShift COELSA, OCP COELSA]",
+        "description": "Usar cuando trabajás con el despliegue de COELSA.Intelligent en OpenShift: ConfigMaps, Routes, timeouts de HAProxy o escalado horizontal.",
+        "estado": "vigente"
+      },
+      "excerpt": "## CSP en el Route\n\nLa CSP se configura en la definición del Route. Para [[SharePoint OneDrive integración]], los dominios `login.microsoftonline.com` y `graph.microsoft.com` deben estar en la directiva `connect-src`. Ver [[CSP con nonces]].\n",
+      "relations": [
+        {
+          "target": "Redis",
+          "fragment": "",
+          "line": 33,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Redis.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SharePoint OneDrive integración",
+          "fragment": "",
+          "line": 37,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Modelos IA/SharePoint OneDrive integración.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "CSP con nonces",
+          "fragment": "",
+          "line": 37,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/CSP con nonces.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Pipelines Azure DevOps",
+          "fragment": "",
+          "line": 41,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/CI-CD/Pipelines Azure DevOps.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Despliegue en OpenShift",
+          "fragment": "",
+          "line": 42,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/CI-CD/Despliegue en OpenShift.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Redis",
+          "fragment": "",
+          "line": 43,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Redis.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 8,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}

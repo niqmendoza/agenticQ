@@ -1,0 +1,988 @@
+{
+  "baseline": {
+    "source_file": "/Users/nmendoza/.codex/sessions/2026/10/27/rollout-2026-10-27T19-15-50-01a17f6f-1baf-7fa2-80f9-b25d39da341f.jsonl",
+    "scope": "Ítems observables del primer turno, contados una vez; razonamiento cifrado excluido; contenedores JSON son proxy de serialización.",
+    "items": [
+      {
+        "timestamp": "2026-10-27T22:15:51.625Z",
+        "category": "tool_definitions",
+        "tokens_once": 20794,
+        "bytes": 85530,
+        "sha256": "a4b0c3b5c24e505b059f0c30faeb0324c76dbded62a1ba8514272888a95d213f",
+        "serialization": "compact JSON proxy",
+        "file": "001-tool_definitions.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:51.626Z",
+        "category": "message_developer",
+        "tokens_once": 4321,
+        "bytes": 21815,
+        "sha256": "529298519e8d2b929882213e80788808dd46a6e1004ce89c9fda4cc38bcfd9d9",
+        "serialization": "compact JSON proxy",
+        "withheld": "Sólo conteo y hash; no se exportan instrucciones system/developer"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:51.626Z",
+        "category": "message_developer",
+        "tokens_once": 4285,
+        "bytes": 18420,
+        "sha256": "2b6e464a22ef063ba965fc16818fad004d0c9c63df1a484e12f33886153a4670",
+        "serialization": "compact JSON proxy",
+        "withheld": "Sólo conteo y hash; no se exportan instrucciones system/developer"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:51.626Z",
+        "category": "message_developer",
+        "tokens_once": 585,
+        "bytes": 2522,
+        "sha256": "e801211a6c52a4a4f5b14c41359dbc61b0a6e3d7a9e3d0631a1e0d973dc84ee3",
+        "serialization": "compact JSON proxy",
+        "withheld": "Sólo conteo y hash; no se exportan instrucciones system/developer"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:51.626Z",
+        "category": "message_developer",
+        "tokens_once": 63,
+        "bytes": 304,
+        "sha256": "e994daf24c7158fb058aa12960da031bf3bfc847c9ccb5c712d13c7acfda82ef",
+        "serialization": "compact JSON proxy",
+        "withheld": "Sólo conteo y hash; no se exportan instrucciones system/developer"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:51.626Z",
+        "category": "message_user",
+        "tokens_once": 175,
+        "bytes": 568,
+        "sha256": "025a860fb1fc610fd8f4cc85dd90b46c11077021db7edf1d99c4c94bcd95898e",
+        "serialization": "compact JSON proxy",
+        "file": "006-message_user.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:51.633Z",
+        "category": "coordination_messages",
+        "tokens_once": 502,
+        "bytes": 865,
+        "sha256": "05a2fa35b6e6d61cfd8a0799555f91e636c80f7e5a667f26d06f5c9bc9ad6f77",
+        "serialization": "compact JSON proxy",
+        "file": "007-coordination_messages.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:53.630Z",
+        "category": "tool_invocations",
+        "tokens_once": 42,
+        "bytes": 163,
+        "sha256": "72341842be3e6cdfde1b562aab100aa1ae9543d9eb0037a744aee870ae340a7f",
+        "serialization": "raw string",
+        "file": "008-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:53.705Z",
+        "category": "tool_results",
+        "tokens_once": 1346,
+        "bytes": 5544,
+        "sha256": "e686b495e858b302fb22e4f9423d0a6c101851b069710c6ba1c7dcce7c8a83ca",
+        "serialization": "compact JSON proxy",
+        "file": "009-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:00.226Z",
+        "category": "message_assistant",
+        "tokens_once": 53,
+        "bytes": 242,
+        "sha256": "b308f74cca5e95eb089bbfbfd9fc41968635d8504de12aa4e649b2e17673ecbc",
+        "serialization": "compact JSON proxy",
+        "file": "010-message_assistant.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:00.977Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 351,
+        "sha256": "29baf21412bbff28121ae660570d1eb51b8127fa0db06690b697d89a66804284",
+        "serialization": "raw string",
+        "file": "011-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:01.087Z",
+        "category": "tool_results",
+        "tokens_once": 3613,
+        "bytes": 12074,
+        "sha256": "d8a092b7385b7ad15b323a29719646f30ad3c8042aa14edd7f91a4f3e4f70aa5",
+        "serialization": "compact JSON proxy",
+        "file": "012-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:07.081Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 351,
+        "sha256": "bfad54b61eab4f672e9c6e03432d95db002a4043a5171332f2aa604da7b8f1b1",
+        "serialization": "raw string",
+        "file": "013-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:07.181Z",
+        "category": "tool_results",
+        "tokens_once": 3604,
+        "bytes": 12155,
+        "sha256": "9dd19fffe8a8001f0797b7e0cad053af95c1bbbb87e2dd1f610827e442f69395",
+        "serialization": "compact JSON proxy",
+        "file": "014-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:09.123Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "37478ba51d3c38bc2ee41ad276a42b305980876f25d447e9af6e9aca7ccf27e4",
+        "serialization": "raw string",
+        "file": "015-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:09.224Z",
+        "category": "tool_results",
+        "tokens_once": 3802,
+        "bytes": 12791,
+        "sha256": "c2211b8c854715104e73e923c74a713c0d81c39b193a9b08303712e04974fc38",
+        "serialization": "compact JSON proxy",
+        "file": "016-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:11.388Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "cec9ba8a6aa3a5d4f51e7bdad51cbd7374c8bd8ac29ec4dad28f8853fe712adc",
+        "serialization": "raw string",
+        "file": "017-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:11.486Z",
+        "category": "tool_results",
+        "tokens_once": 3766,
+        "bytes": 12352,
+        "sha256": "87851f8672bbb1754ca41967f8a6f0de995d008001caba8c3242db0644536b97",
+        "serialization": "compact JSON proxy",
+        "file": "018-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:13.829Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "f9c60dc8e5962702a2052037a627b17d192ea809b48d50e80292ddfa39bc42f5",
+        "serialization": "raw string",
+        "file": "019-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:13.932Z",
+        "category": "tool_results",
+        "tokens_once": 4303,
+        "bytes": 13825,
+        "sha256": "81f66cdec9c5030b0e28b33fbc889f8ab27c6d93fcaeeaa75072761db88bcd3f",
+        "serialization": "compact JSON proxy",
+        "file": "020-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:17.894Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "e463bc10e9af02f39d7645347a71d436a8e89c7da023f708e588687f286601c0",
+        "serialization": "raw string",
+        "file": "021-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:17.996Z",
+        "category": "tool_results",
+        "tokens_once": 4603,
+        "bytes": 14558,
+        "sha256": "b215ca9ec76b96c73c38c3eb60db1f69ea9898acb788be9aa0b263d3a503c634",
+        "serialization": "compact JSON proxy",
+        "file": "022-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:20.254Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "719ecda202214ae1017eb1b65db6a442f45972947df5e5d83d766f551c71df52",
+        "serialization": "raw string",
+        "file": "023-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:20.339Z",
+        "category": "tool_results",
+        "tokens_once": 4236,
+        "bytes": 13570,
+        "sha256": "f1fc497c83a7b6cf60b35c241b4439132b441fe75b74af02b7de0e3e2a753ac3",
+        "serialization": "compact JSON proxy",
+        "file": "024-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:22.812Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "c44bb53bfe8ee7457dc843aa045d8bdb13c725659dcc7d81c9abcd615b7b7570",
+        "serialization": "raw string",
+        "file": "025-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:22.916Z",
+        "category": "tool_results",
+        "tokens_once": 4919,
+        "bytes": 15120,
+        "sha256": "621d812759f421b4eef9df4434338e9e95029c277312b341841c599bbf9d1806",
+        "serialization": "compact JSON proxy",
+        "file": "026-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:25.119Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "138232fb325d69c413b97a27ac4ac1626cb87e7e990eb381eacf331bb19b097f",
+        "serialization": "raw string",
+        "file": "027-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:25.218Z",
+        "category": "tool_results",
+        "tokens_once": 3400,
+        "bytes": 11106,
+        "sha256": "e80f5412cac6461c467313ec07ea038a57100a9b474aff8e47a7df5528e033e5",
+        "serialization": "compact JSON proxy",
+        "file": "028-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:28.641Z",
+        "category": "message_assistant",
+        "tokens_once": 64,
+        "bytes": 308,
+        "sha256": "18171a1b8d7d733395eb31b3908eeeb053a716078e64adc4f75865a6f13a6a5b",
+        "serialization": "compact JSON proxy",
+        "file": "029-message_assistant.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:29.253Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "055fe2b2d2b90e6d6470bb69108afa48af9e8aecf5338daea1a2ea5b4c89729f",
+        "serialization": "raw string",
+        "file": "030-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:29.354Z",
+        "category": "tool_results",
+        "tokens_once": 3208,
+        "bytes": 10684,
+        "sha256": "71cdbd556e6f9e278d806351cfee5a8ede10f7eb113e0fae3560e29da71a4b4a",
+        "serialization": "compact JSON proxy",
+        "file": "031-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:31.844Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "90837258d054bd7c6ce416c7438eb33e53181b91f0cbc38805e067136212ce6c",
+        "serialization": "raw string",
+        "file": "032-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:31.945Z",
+        "category": "tool_results",
+        "tokens_once": 4083,
+        "bytes": 12939,
+        "sha256": "8ac99148cb840b9a1de75c57c14cb27c3b10023227d9697b25cbbb6292aa97ed",
+        "serialization": "compact JSON proxy",
+        "file": "033-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:34.311Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "05ce54bed5c47b1def060dec37a7de2046a2319b346bd737f0403e48a12acf4d",
+        "serialization": "raw string",
+        "file": "034-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:34.420Z",
+        "category": "tool_results",
+        "tokens_once": 6376,
+        "bytes": 19027,
+        "sha256": "5f1dc53ef1b2513c7ed9c8b0530b5e8f3f769eb9715fa501d733259dbfefaa06",
+        "serialization": "compact JSON proxy",
+        "file": "035-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:36.874Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "e8a1c51f6b70b8e5fc2d87a88ddaccf3d1a93c21f789fd415a0359b700cf77ac",
+        "serialization": "raw string",
+        "file": "036-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:36.969Z",
+        "category": "tool_results",
+        "tokens_once": 4079,
+        "bytes": 13668,
+        "sha256": "bbbafafef3aad6ea7a2c78ec54daac9f646677d13ff3ea33a19d8b53e3118c71",
+        "serialization": "compact JSON proxy",
+        "file": "037-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:39.244Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "343b62d19437e388904538bc430fb9033788a42c54f56ecd8eb06bf7da57e580",
+        "serialization": "raw string",
+        "file": "038-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:39.327Z",
+        "category": "tool_results",
+        "tokens_once": 3972,
+        "bytes": 12856,
+        "sha256": "6d44ad515c2a6e8d4a98a0de18abc7d11d8434496fb7741f3c7e57796ccb1651",
+        "serialization": "compact JSON proxy",
+        "file": "039-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:41.794Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "efccfa3cf3ca2cec89d12ae6cfaca829051315f27ad032d6656713ed2cd2a977",
+        "serialization": "raw string",
+        "file": "040-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:41.897Z",
+        "category": "tool_results",
+        "tokens_once": 3805,
+        "bytes": 12397,
+        "sha256": "e1950b1a445de378258569bcfad5d2ab784079c9092f590fe2d7510437067873",
+        "serialization": "compact JSON proxy",
+        "file": "041-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:44.409Z",
+        "category": "tool_invocations",
+        "tokens_once": 92,
+        "bytes": 352,
+        "sha256": "6453bf197bf59fd07ecd4a4508469806292241470e84acd83152d6b1d193859c",
+        "serialization": "raw string",
+        "file": "042-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:44.514Z",
+        "category": "tool_results",
+        "tokens_once": 3689,
+        "bytes": 11818,
+        "sha256": "a64799987bf7b4655012c3f7fb6d50946c0e9c05b4cd1c1cc922b459a2a64894",
+        "serialization": "compact JSON proxy",
+        "file": "043-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:47.725Z",
+        "category": "tool_invocations",
+        "tokens_once": 358,
+        "bytes": 555,
+        "sha256": "88d0abc293e38a0deb4284efb5154c18a9825a84df1d3381a7812449ec613250",
+        "serialization": "raw string",
+        "file": "044-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:47.824Z",
+        "category": "tool_results",
+        "tokens_once": 0,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "serialization": "raw string",
+        "file": "045-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:17:27.397Z",
+        "category": "message_assistant",
+        "tokens_once": 70,
+        "bytes": 352,
+        "sha256": "4b1b649aa45dcb0d90505f847fd1ae6c3f56ed7836afaf902a2fd2eabf3b35c7",
+        "serialization": "compact JSON proxy",
+        "file": "046-message_assistant.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:21:24.963Z",
+        "category": "tool_invocations",
+        "tokens_once": 11034,
+        "bytes": 43490,
+        "sha256": "54a331df3b871b07ca5172ff97f0abb5053a909925441802b80ec0f1cbcf485b",
+        "serialization": "raw string",
+        "file": "047-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:21:25.060Z",
+        "category": "tool_results",
+        "tokens_once": 131,
+        "bytes": 407,
+        "sha256": "93cd208b60adfc2c51b4c801494f53d6552fca006cfeafb322bd1aad01c618ff",
+        "serialization": "compact JSON proxy",
+        "file": "048-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:21:35.082Z",
+        "category": "message_assistant",
+        "tokens_once": 64,
+        "bytes": 316,
+        "sha256": "edae8ab4bf0c4d86a98133302ec6e411e86136b9e1d4c89c85f9602425b00257",
+        "serialization": "compact JSON proxy",
+        "file": "049-message_assistant.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:22:03.815Z",
+        "category": "tool_invocations",
+        "tokens_once": 1005,
+        "bytes": 3832,
+        "sha256": "a6c0991bead2b7169f123f87be7bb7903dd5d6b4964a01de31ab3a31b6353d5c",
+        "serialization": "raw string",
+        "file": "050-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:22:03.903Z",
+        "category": "tool_results",
+        "tokens_once": 255,
+        "bytes": 661,
+        "sha256": "0a9c9d1e63173becaa04d878f6679f70267dfdd2308fa3c97a529d6f4a9c0305",
+        "serialization": "compact JSON proxy",
+        "file": "051-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:22:06.723Z",
+        "category": "message_assistant",
+        "tokens_once": 123,
+        "bytes": 456,
+        "sha256": "cdf4ccd7a3f87a72ce17a3ab05c6815a1ac6e2835abc6bc2931121042290f4db",
+        "serialization": "compact JSON proxy",
+        "file": "052-message_assistant.txt"
+      }
+    ],
+    "category_tokens_once": {
+      "coordination_messages": 502,
+      "message_assistant": 374,
+      "message_developer": 9254,
+      "message_user": 175,
+      "tool_definitions": 20794,
+      "tool_invocations": 13911,
+      "tool_results": 67190
+    },
+    "sum_tokens_once": 112200
+  },
+  "scripts": {
+    "source_file": "/Users/nmendoza/.codex/sessions/2026/10/27/rollout-2026-10-27T19-15-55-01a17f6f-2ea7-78e0-9111-19ba2bba905d.jsonl",
+    "scope": "Ítems observables del primer turno, contados una vez; razonamiento cifrado excluido; contenedores JSON son proxy de serialización.",
+    "items": [
+      {
+        "timestamp": "2026-10-27T22:15:56.414Z",
+        "category": "tool_definitions",
+        "tokens_once": 20794,
+        "bytes": 85530,
+        "sha256": "a4b0c3b5c24e505b059f0c30faeb0324c76dbded62a1ba8514272888a95d213f",
+        "serialization": "compact JSON proxy",
+        "file": "001-tool_definitions.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:56.415Z",
+        "category": "message_developer",
+        "tokens_once": 4321,
+        "bytes": 21815,
+        "sha256": "529298519e8d2b929882213e80788808dd46a6e1004ce89c9fda4cc38bcfd9d9",
+        "serialization": "compact JSON proxy",
+        "withheld": "Sólo conteo y hash; no se exportan instrucciones system/developer"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:56.415Z",
+        "category": "message_developer",
+        "tokens_once": 4285,
+        "bytes": 18420,
+        "sha256": "2b6e464a22ef063ba965fc16818fad004d0c9c63df1a484e12f33886153a4670",
+        "serialization": "compact JSON proxy",
+        "withheld": "Sólo conteo y hash; no se exportan instrucciones system/developer"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:56.415Z",
+        "category": "message_developer",
+        "tokens_once": 585,
+        "bytes": 2522,
+        "sha256": "e801211a6c52a4a4f5b14c41359dbc61b0a6e3d7a9e3d0631a1e0d973dc84ee3",
+        "serialization": "compact JSON proxy",
+        "withheld": "Sólo conteo y hash; no se exportan instrucciones system/developer"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:56.415Z",
+        "category": "message_developer",
+        "tokens_once": 63,
+        "bytes": 304,
+        "sha256": "e994daf24c7158fb058aa12960da031bf3bfc847c9ccb5c712d13c7acfda82ef",
+        "serialization": "compact JSON proxy",
+        "withheld": "Sólo conteo y hash; no se exportan instrucciones system/developer"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:56.415Z",
+        "category": "message_user",
+        "tokens_once": 175,
+        "bytes": 568,
+        "sha256": "025a860fb1fc610fd8f4cc85dd90b46c11077021db7edf1d99c4c94bcd95898e",
+        "serialization": "compact JSON proxy",
+        "file": "006-message_user.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:56.423Z",
+        "category": "coordination_messages",
+        "tokens_once": 511,
+        "bytes": 864,
+        "sha256": "42c5da9770d4e63cbed347f568c95bb74e41ce32e29fdadf5be50ff98d3f355b",
+        "serialization": "compact JSON proxy",
+        "file": "007-coordination_messages.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:58.826Z",
+        "category": "message_assistant",
+        "tokens_once": 43,
+        "bytes": 177,
+        "sha256": "5c5428920104945b68eb9f0e5eff82122890a583b66f46e89d74719a80a3e4f8",
+        "serialization": "compact JSON proxy",
+        "file": "008-message_assistant.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:59.358Z",
+        "category": "tool_invocations",
+        "tokens_once": 58,
+        "bytes": 217,
+        "sha256": "2a52236fcfea322ca7d8d538696b56a8087285957bb2db51f135e967b2884ecf",
+        "serialization": "raw string",
+        "file": "009-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:15:59.417Z",
+        "category": "tool_results",
+        "tokens_once": 1502,
+        "bytes": 6185,
+        "sha256": "0b87b4953d8cf85cfbb8b2fde161ee13d517b3f510b7c9aac69772f7baecb9ba",
+        "serialization": "compact JSON proxy",
+        "file": "010-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:06.327Z",
+        "category": "tool_invocations",
+        "tokens_once": 173,
+        "bytes": 616,
+        "sha256": "4cdd490f5f085213a47d79d1b98f6a89701b601548d230ed171a146781947372",
+        "serialization": "raw string",
+        "file": "011-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:06.415Z",
+        "category": "tool_results",
+        "tokens_once": 153,
+        "bytes": 604,
+        "sha256": "ff2bc2f51e4937d4b79848b27f9ae754fd45372a2e766022b98cdf547fab7417",
+        "serialization": "compact JSON proxy",
+        "file": "012-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:08.647Z",
+        "category": "tool_invocations",
+        "tokens_once": 110,
+        "bytes": 457,
+        "sha256": "a50e16974b4c0eb8f8c433cb2eb274efbdbf4d66540760b25f251c193c12d2ad",
+        "serialization": "raw string",
+        "file": "013-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:08.806Z",
+        "category": "tool_results",
+        "tokens_once": 2360,
+        "bytes": 7862,
+        "sha256": "36c99cd58f41cb21794aef8f4f8a872c72cc8cdd541ea067aed8d8e25a9173b7",
+        "serialization": "compact JSON proxy",
+        "file": "014-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:12.141Z",
+        "category": "tool_invocations",
+        "tokens_once": 109,
+        "bytes": 420,
+        "sha256": "094b9bccc1f06b1969da26eaf834305fa12db17958777735ee8263e75ac43948",
+        "serialization": "raw string",
+        "file": "015-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:12.296Z",
+        "category": "tool_results",
+        "tokens_once": 2874,
+        "bytes": 9437,
+        "sha256": "a5216a74d18cbaac9831da816c07300fa8bac93e0879a338c1c1cbe4fef1a06d",
+        "serialization": "compact JSON proxy",
+        "file": "016-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:16.053Z",
+        "category": "tool_invocations",
+        "tokens_once": 106,
+        "bytes": 413,
+        "sha256": "956f330a315f41b414117871d3e3ddcc0be73cb6b6fadd6ba26f8858c3ef2a44",
+        "serialization": "raw string",
+        "file": "017-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:16.206Z",
+        "category": "tool_results",
+        "tokens_once": 2736,
+        "bytes": 9124,
+        "sha256": "a192eccff7a0e1e2f0fbc8360b22dbde96ff0462acc120d801c5553ccfbe3f06",
+        "serialization": "compact JSON proxy",
+        "file": "018-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:18.439Z",
+        "category": "tool_invocations",
+        "tokens_once": 107,
+        "bytes": 420,
+        "sha256": "429942f9ce6531c595240916517deefdb758ad79def26dba7e10371569739cdc",
+        "serialization": "raw string",
+        "file": "019-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:18.584Z",
+        "category": "tool_results",
+        "tokens_once": 2802,
+        "bytes": 9540,
+        "sha256": "c1036f10ed62f3f62a16b7fd298a7713915bb31007067cc35ed5ea4a41fff1a5",
+        "serialization": "compact JSON proxy",
+        "file": "020-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:20.986Z",
+        "category": "tool_invocations",
+        "tokens_once": 111,
+        "bytes": 431,
+        "sha256": "c6a6ecc13b4924a06e3fa5f0521c3e9aaf4c87422a2b4a86570e480c95a67a58",
+        "serialization": "raw string",
+        "file": "021-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:21.142Z",
+        "category": "tool_results",
+        "tokens_once": 2981,
+        "bytes": 9652,
+        "sha256": "a63070b8d752e790add1da2924ae8eced6c6ca1977136e2c24be6566cc60375c",
+        "serialization": "compact JSON proxy",
+        "file": "022-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:27.879Z",
+        "category": "message_assistant",
+        "tokens_once": 72,
+        "bytes": 324,
+        "sha256": "2fe3f7f0eb41a4848c97a54d822eb55e0c2de1503bbfe5d548a839addf29e84f",
+        "serialization": "compact JSON proxy",
+        "file": "023-message_assistant.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:29.487Z",
+        "category": "tool_invocations",
+        "tokens_once": 188,
+        "bytes": 683,
+        "sha256": "d8b00b815e8bcab3fb1a123cfc69ceacef1a221cf0a22ec592fb0aba33166e8a",
+        "serialization": "raw string",
+        "file": "024-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:29.673Z",
+        "category": "tool_results",
+        "tokens_once": 3321,
+        "bytes": 11502,
+        "sha256": "64ff6ed893600c8be47d0c69ba65d51babd8e2c5aa1ec7b4bcb580e953d895c6",
+        "serialization": "compact JSON proxy",
+        "file": "025-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:32.519Z",
+        "category": "tool_invocations",
+        "tokens_once": 205,
+        "bytes": 766,
+        "sha256": "a1e620d7818f95c3af0fcbe07948888f61dbe92f68c63c7a03887ecc9683e8a3",
+        "serialization": "raw string",
+        "file": "026-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:32.736Z",
+        "category": "tool_results",
+        "tokens_once": 4299,
+        "bytes": 15032,
+        "sha256": "f0850fb68b84b0e41421f1338189de7795f563834c9ca7a4d01d886033d2c344",
+        "serialization": "compact JSON proxy",
+        "file": "027-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:35.848Z",
+        "category": "tool_invocations",
+        "tokens_once": 206,
+        "bytes": 758,
+        "sha256": "8a448f254d032e7992400f38d999f20a474254b8ccbfa3d749c33534375db53b",
+        "serialization": "raw string",
+        "file": "028-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:36.085Z",
+        "category": "tool_results",
+        "tokens_once": 4751,
+        "bytes": 16201,
+        "sha256": "799bfae211122538bb76ef91338f7d7a095e5a332388775ca4ab747bfcd0ee1f",
+        "serialization": "compact JSON proxy",
+        "file": "029-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:39.742Z",
+        "category": "tool_invocations",
+        "tokens_once": 209,
+        "bytes": 754,
+        "sha256": "e26da121edf05fff046d90c5c0df9631e2f982f82e95fd1fffc495322b775ac3",
+        "serialization": "raw string",
+        "file": "030-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:39.980Z",
+        "category": "tool_results",
+        "tokens_once": 5037,
+        "bytes": 16887,
+        "sha256": "33e2ff3d878dd51c384caab4b9de00cf55c1ee6b78e500caafc92cb0a1c8070b",
+        "serialization": "compact JSON proxy",
+        "file": "031-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:46.304Z",
+        "category": "tool_invocations",
+        "tokens_once": 162,
+        "bytes": 596,
+        "sha256": "b5284305d74558026116d0f45cbba9163855d7df748dd407c97317c9a3bc81f8",
+        "serialization": "raw string",
+        "file": "032-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:46.605Z",
+        "category": "tool_results",
+        "tokens_once": 11785,
+        "bytes": 39017,
+        "sha256": "318de5615f46f79cdb2cd1c537a859701ca3b854bf8f8408242772f8095bafb1",
+        "serialization": "compact JSON proxy",
+        "file": "033-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:52.107Z",
+        "category": "message_assistant",
+        "tokens_once": 73,
+        "bytes": 348,
+        "sha256": "42b733f5986728d07411a2f23f37c46094ca36056d3d777293de2022ab242e67",
+        "serialization": "compact JSON proxy",
+        "file": "034-message_assistant.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:53.843Z",
+        "category": "tool_invocations",
+        "tokens_once": 219,
+        "bytes": 803,
+        "sha256": "3bf849e8e46569a2cf7c480e2ed5c4e1d8fff37701fbd3fcefadf2be4ef6b35a",
+        "serialization": "raw string",
+        "file": "035-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:16:54.127Z",
+        "category": "tool_results",
+        "tokens_once": 5715,
+        "bytes": 19717,
+        "sha256": "a2209e9c8f86409ef06a8192b928c593c00c3c6b424948b7dc839a1a34a38ca8",
+        "serialization": "compact JSON proxy",
+        "file": "036-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:17:01.772Z",
+        "category": "tool_invocations",
+        "tokens_once": 220,
+        "bytes": 802,
+        "sha256": "c17a9ea1539b63f79ecedeb33bac483114a4f9cc12a6a68e7f801eb9ec021614",
+        "serialization": "raw string",
+        "file": "037-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:17:01.996Z",
+        "category": "tool_results",
+        "tokens_once": 4458,
+        "bytes": 14657,
+        "sha256": "c663217056da8b25b36f0f20cda73c87c91eae71867b1e3359d393602af385a9",
+        "serialization": "compact JSON proxy",
+        "file": "038-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:17:05.720Z",
+        "category": "tool_invocations",
+        "tokens_once": 395,
+        "bytes": 599,
+        "sha256": "8b235951cad89ef7883843433529c1dc6ed0600793c3a17175750b995bf3936a",
+        "serialization": "raw string",
+        "file": "039-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:17:05.784Z",
+        "category": "tool_results",
+        "tokens_once": 0,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "serialization": "raw string",
+        "file": "040-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:17:26.952Z",
+        "category": "message_assistant",
+        "tokens_once": 70,
+        "bytes": 329,
+        "sha256": "b5c15cb1f6b7dc18efc63e0a1b8dcc162db93bac207cd2c2e13147aa7d4d69b3",
+        "serialization": "compact JSON proxy",
+        "file": "041-message_assistant.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:20:55.174Z",
+        "category": "tool_invocations",
+        "tokens_once": 10017,
+        "bytes": 40664,
+        "sha256": "15ee2c5d411eca273e61ee184686a2150da58bd53a355f743c0f7550676e557c",
+        "serialization": "raw string",
+        "file": "042-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:20:55.263Z",
+        "category": "tool_results",
+        "tokens_once": 140,
+        "bytes": 439,
+        "sha256": "0c30cf33357298eb8786ade672ce5f8fdae054d13892a5cfc7a645da82abc912",
+        "serialization": "compact JSON proxy",
+        "file": "043-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:21:15.956Z",
+        "category": "tool_invocations",
+        "tokens_once": 354,
+        "bytes": 1289,
+        "sha256": "ae461d9bca68db2cf5fd41352e5c537abe10082f3af35ca9e131cd3999701f79",
+        "serialization": "raw string",
+        "file": "044-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:21:16.978Z",
+        "category": "tool_results",
+        "tokens_once": 4232,
+        "bytes": 12106,
+        "sha256": "afacb125f3d60f9c58b2c03234a104e39f0a93ff02ce6a9d35c819581394dc81",
+        "serialization": "compact JSON proxy",
+        "file": "045-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:21:48.604Z",
+        "category": "tool_invocations",
+        "tokens_once": 1152,
+        "bytes": 3957,
+        "sha256": "dd9dd4a8112403a0a745537cd0bef2773227dad891d1b8f3dad34ebdd0ba95e7",
+        "serialization": "raw string",
+        "file": "046-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:21:48.691Z",
+        "category": "tool_results",
+        "tokens_once": 95,
+        "bytes": 343,
+        "sha256": "477c4ec210b6452cb244aea7128eef8b0072911045357a1d94f7394b7bef0c03",
+        "serialization": "compact JSON proxy",
+        "file": "047-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:21:48.692Z",
+        "category": "coordination_messages",
+        "tokens_once": 499,
+        "bytes": 843,
+        "sha256": "2f772901e55e0d54d82c704b2b402346f8d9aeb67a4518e03ca60889888df89f",
+        "serialization": "compact JSON proxy",
+        "file": "048-coordination_messages.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:22:09.919Z",
+        "category": "message_assistant",
+        "tokens_once": 80,
+        "bytes": 376,
+        "sha256": "fce656e3bc510721334ad18675e20e5c9bd92bbdef0acbd09cba48c6e1e59b51",
+        "serialization": "compact JSON proxy",
+        "file": "049-message_assistant.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:22:24.615Z",
+        "category": "tool_invocations",
+        "tokens_once": 662,
+        "bytes": 2936,
+        "sha256": "b3b95bdf4d6785e946adfb6ee5adadf8e6546ac017cfc589a136f80ab8157636",
+        "serialization": "raw string",
+        "file": "050-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:22:24.689Z",
+        "category": "tool_results",
+        "tokens_once": 94,
+        "bytes": 334,
+        "sha256": "a89102f4c4debcf39546c95212f61ff309c421d6d171507a9bec611949703acb",
+        "serialization": "compact JSON proxy",
+        "file": "051-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:22:38.788Z",
+        "category": "tool_invocations",
+        "tokens_once": 752,
+        "bytes": 2760,
+        "sha256": "fc9d6ab5d3ecd25ca77eb1b8a8dc6f83dab58a3067706d578a7ae57f75dc072f",
+        "serialization": "raw string",
+        "file": "052-tool_invocations.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:22:38.876Z",
+        "category": "tool_results",
+        "tokens_once": 241,
+        "bytes": 647,
+        "sha256": "85b5b2ee2af1f5cdef1dd3e3bc066d07badc3f6756a7a8980ce4bfc51a569cce",
+        "serialization": "compact JSON proxy",
+        "file": "053-tool_results.txt"
+      },
+      {
+        "timestamp": "2026-10-27T22:22:41.950Z",
+        "category": "message_assistant",
+        "tokens_once": 170,
+        "bytes": 632,
+        "sha256": "0fad2ed0b3b6fc32df386272e15d33aa12cacf925d294face490ba4ab2eff1b1",
+        "serialization": "compact JSON proxy",
+        "file": "054-message_assistant.txt"
+      }
+    ],
+    "category_tokens_once": {
+      "coordination_messages": 1010,
+      "message_assistant": 508,
+      "message_developer": 9254,
+      "message_user": 175,
+      "tool_definitions": 20794,
+      "tool_invocations": 15515,
+      "tool_results": 59576
+    },
+    "sum_tokens_once": 106832
+  }
+}

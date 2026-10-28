@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"Las cinco consultas iniciales devolvieron salidas acotadas y marcadas como truncadas; no las tomo como exhaustivas. Voy a ampliar por líneas las notas de permisos, almacenamiento y frontend para recuperar reglas y excepciones que los extractos no muestran.\n","annotations":[],"logprobs":[]}]

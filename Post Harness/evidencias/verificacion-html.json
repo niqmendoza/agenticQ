@@ -1,0 +1,22 @@
+{
+  "desktop": {
+    "width": 1440,
+    "scrollWidth": 1440,
+    "title": "Post Harness · Ensayo documental de QA agentizada",
+    "sections": 10,
+    "details": 164,
+    "images": 0
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390
+  },
+  "errors": [],
+  "external_requests": [],
+  "broken_links": [],
+  "all_delivery_details_expanded": true,
+  "local_links_checked": 506,
+  "anchors_checked": 477,
+  "broken_anchors": [],
+  "visual_inspection": "Capturas de escritorio, móvil y tabla de usage inspeccionadas; legibles y sin overflow horizontal."
+}

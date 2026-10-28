@@ -1,0 +1,5 @@
+// @exec: {"max_output_tokens": 16000}
+const b=load("base");
+text(await tools.exec_command({cmd:b+" show 'COELSA.Intelligent/Almacenamiento/Storage Dashboard.md' --start 1 --end 120 --max-lines 120 --max-tokens 5000 --max-chars 20000","max_output_tokens":6500}));
+text(await tools.exec_command({cmd:b+" show 'COELSA.Intelligent/Auth y Permisos/Azure AD login exclusivo.md' --start 1 --end 120 --max-lines 120 --max-tokens 5000 --max-chars 20000","max_output_tokens":6500}));
+text(await tools.exec_command({cmd:b+" links 'COELSA.Intelligent/MOCs/MOC - Diseño y Frontend.md' --limit 12 --offset 0","max_output_tokens":3000}));

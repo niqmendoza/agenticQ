@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+  "sha256": "1de1408046f7e94fde09b8c6e366b80176643850b5f4bfa8caed57b1286de56f",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---",
+    "title": "JWT y sesiones",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, auth, jwt, sesiones, tokens]",
+    "aliases": "[JWT COELSA, Tokens de sesión, HS256 COELSA]",
+    "description": "Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 51,
+  "total_lines": 51,
+  "text": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---\n\n# JWT y sesiones\n\n## Qué es\n\nDespués de un login OAuth exitoso con [[Azure AD OAuth|Azure AD]], COELSA.Intelligent genera un **JWT interno** (JSON Web Token) que el frontend usa en todas las requests subsiguientes. Este token es independiente del token de Azure AD.\n\n## Especificaciones del token\n\n- **Algoritmo**: HS256 (HMAC con SHA-256)\n- **Clave secreta**: `WEBUI_SECRET_KEY` (variable de entorno)\n- **Módulo**: `backend/server/utils/auth.py`\n\n## Generación\n\n```python\n# Pseudocódigo del flujo\ntoken = jwt.encode(\n    {\n        \"id\": user.id,\n        \"email\": user.email,\n        \"role\": user.role,\n        \"exp\": datetime.utcnow() + timedelta(hours=SESSION_HOURS)\n    },\n    SESSION_SECRET,  # WEBUI_SECRET_KEY\n    algorithm=ALGORITHM  # HS256\n)\n```\n\n## Validación\n\nCada endpoint protegido valida el token usando el `HTTPBearer` security scheme de FastAPI. El decorador `get_current_user` extrae el usuario del token y verifica que exista en la base de datos.\n\n## Firma HMAC\n\nPara verificación de webhooks entre servicios internos, existe una firma HMAC separada (`verify_signature()`) usando `TRUSTED_SIGNATURE_KEY`. Usa `hmac.compare_digest` para prevenir timing attacks.\n\n## Relacionado\n\n- [[Azure AD login exclusivo]] — El flujo OAuth que termina en la generación del JWT\n- [[bcrypt para contraseñas]] — La otra pieza de auth; para contraseñas locales (deshabilitadas en COELSA)\n- [[FastAPI y uvicorn]] — El servidor donde se registran las dependencias de validación\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

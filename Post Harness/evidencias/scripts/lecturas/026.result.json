@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Seguridad/Path Traversal.md",
+  "sha256": "1861c722febbbc8130bfb56b97b52204032c855053bde3f5ba027254e7a9b32d",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Path Traversal\"\ntype: concepto\ntags: [coelsa-intelligent, seguridad, path-traversal, owasp, archivos]\naliases: [Path traversal protection, Directory traversal, Sanitización de paths]\ndescription: \"Usar cuando agregás un endpoint que opera sobre rutas de archivos o nombres de archivo provistos por el usuario — para asegurarte de sanitizar el input.\"\nestado: vigente\n---",
+    "title": "Path Traversal",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, seguridad, path-traversal, owasp, archivos]",
+    "aliases": "[Path traversal protection, Directory traversal, Sanitización de paths]",
+    "description": "Usar cuando agregás un endpoint que opera sobre rutas de archivos o nombres de archivo provistos por el usuario — para asegurarte de sanitizar el input.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 49,
+  "total_lines": 49,
+  "text": "---\ntitle: \"Path Traversal\"\ntype: concepto\ntags: [coelsa-intelligent, seguridad, path-traversal, owasp, archivos]\naliases: [Path traversal protection, Directory traversal, Sanitización de paths]\ndescription: \"Usar cuando agregás un endpoint que opera sobre rutas de archivos o nombres de archivo provistos por el usuario — para asegurarte de sanitizar el input.\"\nestado: vigente\n---\n\n# Path Traversal\n\n## Qué es\n\n**Path Traversal** (también llamado Directory Traversal) es una vulnerabilidad donde un atacante usa secuencias como `../../../etc/passwd` en nombres de archivo o paths para acceder a archivos fuera del directorio esperado.\n\nCOELSA.Intelligent aplicó sanitización de paths de entrada en **8 endpoints**.\n\n## El fix en StorageProvider\n\n```python\n# backend/server/storage/provider.py — LocalStorageProvider.upload_file()\n# Security: Path Injection Prevention\n# 'filename' puede contener '../../../etc/passwd'\n\n# Extraer solo el nombre base (sin directorios)\nsafe_filename = os.path.basename(filename)\n\n# Resolver la ruta final y verificar que esté dentro de UPLOAD_DIR\nfile_path = os.path.realpath(os.path.join(UPLOAD_DIR, safe_filename))\nif not file_path.startswith(os.path.realpath(UPLOAD_DIR)):\n    raise ValueError(\"Path traversal detectado\")\n```\n\n## Patrón de sanitización\n\n1. **`os.path.basename()`**: elimina cualquier componente de directorio del nombre\n2. **`os.path.realpath()`**: resuelve symlinks y `..`\n3. **Verificar prefijo**: confirmar que la ruta final esté dentro del directorio permitido\n\nEste patrón debe aplicarse en **cualquier endpoint nuevo** que:\n- Acepte un nombre de archivo del usuario\n- Use ese nombre para operar sobre el sistema de archivos\n\n## Relacionado\n\n- [[Hardening ReDoS]] — Otra remediación OWASP del mismo ciclo de hardening\n- [[Protección SSRF]] — Otra remediación del mismo ciclo\n- [[Flujo de subida de archivos]] — El flujo donde aplica esta sanitización\n- [[MOC - Seguridad]] — Índice del cluster de seguridad",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

@@ -1,0 +1,44 @@
+{
+  "quality_notes": {
+    "full": "Referencia histórica: núcleo cubierto, contraste 4,5:1/3:1 explícito y riesgos adicionales; contratos de concurrencia/ACL aún abiertos.",
+    "v1": "Núcleo cubierto; faltó recuperar la fuente AA y parte de la matriz de efectos bajo error. La cantidad de casos no permite medir calidad.",
+    "v2": "Núcleo cubierto; recuperó la fuente AA, verificó 193 citas y marcó nueve decisiones pendientes. Conviene explicitar los umbrales AA en el esperado y vincular la duda 403/404 a cada caso afectado."
+  },
+  "changes": [
+    {"title":"Paquete multiconsulta","before":"El agente ejecutaba consultas separadas y elegía qué ampliar.","after":"Una operación combina preguntas y equilibra candidatos por consulta."},
+    {"title":"Memoria por intervalos","before":"Las relecturas no distinguían evidencia ya entregada.","after":"La sesión devuelve sólo líneas faltantes; replay permite releer explícitamente."},
+    {"title":"Fuentes compactas","before":"Se repetían rutas, metadatos crudos y campos derivados.","after":"Una tabla de fuentes por paquete y texto numerado con límites claros."},
+    {"title":"Relaciones acotadas","before":"Seguir enlaces dependía de cada decisión del agente.","after":"Un salto automático y candidatos pendientes visibles, sin reglas específicas de OWUI."},
+    {"title":"Verificador en lote","before":"El agente organizó 21 relecturas para revisar encabezados.","after":"Rangos, entrega, requisitos y pendientes se verifican en lote; el significado sigue requiriendo revisión."},
+    {"title":"Índice con derivados persistidos","before":"Cada query recalculaba estadísticas y resolvía enlaces por resultado.","after":"SQLite conserva ranking, encabezados y grafo; SHA256 sigue validando cambios."}
+  ],
+  "coverage": [
+    {"criterion":"Identidad y permisos","full":"Núcleo + duda write/read","v1":"Núcleo + duda write/read","v2":"Núcleo + pendiente explícito"},
+    {"criterion":"TTL y validación","full":"Bordes y ambiguos separados","v1":"Bordes; null/60.0 en dudas","v2":"Bordes; null/60.0 pendientes"},
+    {"criterion":"S3, local y carreras","full":"Cubierto; consistencia abierta","v1":"Cubierto; consistencia abierta","v2":"Cubierto; consistencia abierta"},
+    {"criterion":"Efectos laterales","full":"Éxito/error + P4 abierto","v1":"Matriz de error incompleta","v2":"Éxito/error + P4 abierto"},
+    {"criterion":"Accesibilidad UI","full":"AA 4,5:1/3:1 explícito","v1":"Faltó fuente AA","v2":"Fuente AA; explicitar umbral"},
+    {"criterion":"Fuentes y oráculos","full":"Citas válidas; dudas en texto","v1":"Citas válidas; dudas en texto","v2":"193 citas; 9 pendientes marcados"},
+    {"criterion":"Duplicados exactos","full":"0","v1":"0","v2":"0"}
+  ],
+  "detailed_findings": [
+    "V2 C01–C11 recuperan identidad, pending, propietario/admin, None, {}, concesiones custom y cambios vigentes. C08 conserva write→read como pendiente Q02. Los códigos 403/404 se califican como propuestos, pero Q05 sobre ocultamiento no se enlaza con open_questions en todos los casos afectados (C06/C07/C17/C18): queda un límite de la verificación estructural.",
+    "V2 C12–C15 cubren default, 60/3600, 59/3601, fracciones/bool/texto y objeto exacto. C14 marca 60.0 pendiente Q09 sin convertir esa interpretación en regla existente. C38 hace explícita la decisión null y TTL local. Agrupar muchas variantes no agrega un punto de calidad por cada valor.",
+    "V2 C16–C27 distinguen URL previa, revocación, falta de registro frente a falta física, rama local protegida, fallback no garantizado y carreras. Los contratos de consistencia siguen pendientes; no se afirma que firmar compruebe existencia o garantice atomicidad.",
+    "V2 C28 incluye revisión del camino de éxito y rechazo/error para efectos prohibidos. C29 no fija last_accessed_at ni promete extender retención; conserva Q01. Esto hace explícita una matriz que V1 C18 dejaba más acotada.",
+    "V2 F15/C36 citan ECO Design System y el evaluador recibió su cuerpo, incluida la fila con AA 4,5:1/3:1. Se reparó la omisión de recuperación de V1. Sin embargo, C36 sólo dice mantener WCAG AA documentada: conviene escribir los valores concretos en el esperado antes de convertirlo en una prueba implementable. El baseline C35 sí los explicitaba.",
+    "Los 38 casos V2 no prueban equivalencia con los 38 del baseline: las particiones difieren. Providers GCS/Azure quedan en Q08 sin un caso equivalente al C38 condicional del baseline; la distinción de adjunto type=chat del baseline tampoco se desarrolla como caso propio. No son requisitos P1–P7 nuevos por defecto, pero muestran cobertura adicional que no conviene borrar de la revisión.",
+    "La validación final informa 193 citas con rangos válidos y devueltos, P1–P7 y etiquetas A–G presentes, cero duplicados exactos y nueve casos ligados a preguntas abiertas. C32 también tiene kind=inferencia y se incluye entre diez casos para revisión; tener nueve marcas pendientes no significa que sólo existan nueve inferencias.",
+    "El evaluador informó una elisión de aproximadamente 152 tokens en la presentación del primer pack y la reparó con show 32–60 --replay del documento afectado. El aviso no aparece en los payloads de rollout exportados; no se puede deducir de ellos que la presentación estuvo libre de elisiones. El conteo documental V2 de 32.195 usa payloads CLI registrados e incluye la relectura: es un proxy, con esa limitación de presentación. El usage nativo acumulado se obtiene de contadores independientes y no se corrige restando una cifra aproximada.",
+    "La V2 redujo total nativo 20,15% frente a V1 y entrada no cacheada de 77.757 a 46.994. El turno observado duró 440,334 s frente a 406,583 s en V1: no se demostró menor latencia. Cada brazo tiene una sola ejecución."
+  ],
+  "limitations": [
+    "Dos ejecuciones históricas y una nueva, mismo mock conocido: regresión exploratoria sin conclusión causal, estadística ni porcentaje universal.",
+    "Mismo modelo/esfuerzo observado; la modalidad, el formato y la navegación cambian. Semilla, snapshot interno, carga y temperatura no están controlados.",
+    "V2 redujo tokens y llamadas, pero el turno duró 440 s frente a 407 s de V1; no se demostró una mejora de velocidad.",
+    "Menos tokens nativos no se traduce aquí a dinero: no se consultaron precios y caché/razonamiento son subconjuntos, sin doble conteo.",
+    "La fuente AA se recuperó; aún conviene explicitar sus umbrales en el esperado. El validador no prueba apoyo semántico ni detecta toda contradicción entre dudas y casos.",
+    "El primer paquete tuvo una elisión reportada y reparada con replay. Los tokens documentales son proxy de payloads registrados; el contador nativo es la medida acumulada principal.",
+    "La calidad se revisó sin ciego. La consigna ya explicitaba varias excepciones; no es una prueba de descubrimiento espontáneo de todas las reglas ni una validación sobre otras aplicaciones."
+  ]
+}

@@ -1,0 +1,519 @@
+{
+  "scope": "Proxy de contenido documental observable; cada pieza se cuenta una vez. Usage nativo acumulado en usage-nativo.json.",
+  "tokenizer": {
+    "package": "tiktoken",
+    "version": "0.14.0",
+    "encoding": "o200k_base",
+    "encoding_fingerprint_sha256": "8e2ba5c21a82b46f512310fc0a49a87ab340cebf4eed2ddf108b78576ca49481"
+  },
+  "environment": {
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 17.0.0 (clang-1700.6.4.2)]",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+  },
+  "corpus": {
+    "documents": 80,
+    "bytes": 170573,
+    "raw_tokens_sum_per_file": 42721,
+    "raw_tokens_concatenated": 42722,
+    "annotated_context_tokens": 53391,
+    "snapshot_revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524"
+  },
+  "arms": {
+    "baseline": {
+      "native_local_results_tokens_sum": 57652,
+      "instructions_tokens_sum": 1323,
+      "tool_results_tokens_sum": 57652,
+      "serialized_invocations_proxy_tokens_sum": 2686,
+      "generated_artifact_tokens_sum": 20690,
+      "constructed_prompt_tokens": 59128,
+      "calls": 16,
+      "result_files": [
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/001.result.txt",
+          "bytes": 11232,
+          "tokens": 3181,
+          "sha256": "6c737779124f6a23a03ecbdf96f585799471591b47a4a716a63748c3165615e5"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/002.result.txt",
+          "bytes": 11373,
+          "tokens": 3203,
+          "sha256": "48359a105a32a721c7244841817ee2d47537809fa5ad92967b44aea6d75f5351"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/003.result.txt",
+          "bytes": 11869,
+          "tokens": 3325,
+          "sha256": "764303f74c6780d98513250d6dcf0628f27d47b0e053697b0f26c5a81fa16898"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/004.result.txt",
+          "bytes": 11446,
+          "tokens": 3297,
+          "sha256": "5eb2a5e22eb030de507cfa67941d699edb9edd16ed0f13d66e2d1b866296c132"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/005.result.txt",
+          "bytes": 12918,
+          "tokens": 3816,
+          "sha256": "573d6a71259ffa8febfdcd16d52bc65510c18de07a79268a5880518704568488"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/006.result.txt",
+          "bytes": 13246,
+          "tokens": 3875,
+          "sha256": "3802293bd1f43bfc731d628fbc3831f527ecfe04144ee6adfe0bc0ac67671a07"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/007.result.txt",
+          "bytes": 12610,
+          "tokens": 3704,
+          "sha256": "ed60d2af03a67feeb5b69152c7f5cb6e1367389bfb8ac374ec5f82da601edf0f"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/008.result.txt",
+          "bytes": 14098,
+          "tokens": 4315,
+          "sha256": "93e4c15b83b5ce630c56b9074e35ec633afe61b25c1f6e7ac17aa08204d3d079"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/009.result.txt",
+          "bytes": 10405,
+          "tokens": 3045,
+          "sha256": "469fb3f7f0706b73e94ee328c78ff37a085e452d6847e7b1e119513009d70e4d"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/010.result.txt",
+          "bytes": 10030,
+          "tokens": 2905,
+          "sha256": "dcaf9cf26277fe2498c688eee7016da0e27cf1701dc46c93cfb5ed0a8dca9043"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/011.result.txt",
+          "bytes": 11962,
+          "tokens": 3587,
+          "sha256": "4e94d7d7dc572bf0ee992b50b2ed5546c67f384b12bb6a2180fc454f8be145de"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/012.result.txt",
+          "bytes": 17826,
+          "tokens": 5672,
+          "sha256": "67caae693ad5ee5b9ac5abec955a24d89f2059de6d3770a788876aa539f286a6"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/013.result.txt",
+          "bytes": 12832,
+          "tokens": 3646,
+          "sha256": "0f7616a50c43cf953fe48411f38804233b9af746dfde586ca0842c57719cc0c0"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/014.result.txt",
+          "bytes": 11900,
+          "tokens": 3462,
+          "sha256": "a4bd99bfa8cdddfeb0c2cbb9c55bbf9ef0f7a5cc66f98097236ab446258a38f1"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/015.result.txt",
+          "bytes": 11531,
+          "tokens": 3361,
+          "sha256": "f0cc6057234611377bfbb15f56aed943445c6276a5d999463c9bc25407ec8242"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas/016.result.txt",
+          "bytes": 10994,
+          "tokens": 3258,
+          "sha256": "34d5fea49f64a37b626e156640a505d2b1a974b726ed6b6246d8051fb5b775d1"
+        }
+      ],
+      "generated_files": [
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/resultado.json",
+          "bytes": 78585,
+          "tokens": 19827,
+          "sha256": "4ae25cd0712159c2efc53c14871a3a47560292b254f10c4f4f0c0591d4c2d9e6"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/comportamiento.md",
+          "bytes": 3740,
+          "tokens": 863,
+          "sha256": "9fc2a9db944f9dc1819e64a08a539b9754153a64d66bd10cea4c8d10c407c427"
+        }
+      ],
+      "observed_artifact_sum_proxy": 82351,
+      "local_tool_seconds_sum": 0.03660316806053743,
+      "first_tool_utc": "2026-10-27T22:16:01.056201+00:00",
+      "last_tool_utc": "2026-10-27T22:16:44.484593+00:00"
+    },
+    "scripts": {
+      "native_local_results_tokens_sum": 59437,
+      "instructions_tokens_sum": 1619,
+      "tool_results_tokens_sum": 42496,
+      "serialized_invocations_proxy_tokens_sum": 10700,
+      "generated_artifact_tokens_sum": 27569,
+      "constructed_prompt_tokens": 44411,
+      "calls": 52,
+      "result_files": [
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/001.result.json",
+          "bytes": 6226,
+          "tokens": 1622,
+          "sha256": "5acd479b3f98226e06ed4ea2c23b2306b2935a2494fc1f24b815b088891f5283"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/002.result.json",
+          "bytes": 7371,
+          "tokens": 1933,
+          "sha256": "1fdedf9df87777b92d410f455d55ad4fa9743fc92ae54134e1887bbf6a00d099"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/003.result.json",
+          "bytes": 7175,
+          "tokens": 1842,
+          "sha256": "010cbd29017c5bd3bc2a82428709c2a2476116ee0d1c7505ae7ce2c2e7c3d1a8"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/004.result.json",
+          "bytes": 7588,
+          "tokens": 1907,
+          "sha256": "1f0e21a5ad5535ac0e90166e713db4edffc49bde4af5dd91293998065e0b8229"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/005.result.json",
+          "bytes": 7668,
+          "tokens": 2070,
+          "sha256": "b5565d9531d34644b2974d19da622926246f2b82a0a32d442618f286b8f11f84"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/006.result.json",
+          "bytes": 3159,
+          "tokens": 883,
+          "sha256": "eaac00910a237f341205122693bad7bcf73300d7cd15853f8964e2426879beb9"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/007.result.json",
+          "bytes": 3181,
+          "tokens": 860,
+          "sha256": "12c51a3e0d48ff3bae26571fdba4d612b5c7874d9060b3ab9c713036977f572c"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/008.result.json",
+          "bytes": 3491,
+          "tokens": 959,
+          "sha256": "c49dec60c18e524843692b263c006ffe8869a8939473a9dd12815b94eb925f88"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/009.result.json",
+          "bytes": 3182,
+          "tokens": 854,
+          "sha256": "86e24d1fab5289683cb3594d203f258557e206c1338f01f937dcada5c52ebb37"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/010.result.json",
+          "bytes": 3144,
+          "tokens": 871,
+          "sha256": "ebda48bc6621bed6caa50ad69c1cf4d8b5754028c996de5a4af92ddeb8a54f1f"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/011.result.json",
+          "bytes": 3466,
+          "tokens": 963,
+          "sha256": "2d63ea45a8b75c2ea3006d284e0aa4b57c857a0151fc0c1b31922e263d00c575"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/012.result.json",
+          "bytes": 3262,
+          "tokens": 869,
+          "sha256": "13e9e8660637fdbb0f9bc8db3a7050244c66e8f6f8a165164c06632309d5fba3"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/013.result.json",
+          "bytes": 3464,
+          "tokens": 965,
+          "sha256": "c44254f5eb4c7ef31c3281db8d75665e6ccfdb8b7110e6256956860761eb18c7"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/014.result.json",
+          "bytes": 3668,
+          "tokens": 976,
+          "sha256": "d9a6153269147f159bda87a33f93a00b6317a54b8ea43dcb76e677a59920efcf"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/015.result.json",
+          "bytes": 3039,
+          "tokens": 952,
+          "sha256": "02fc9f3119c6f84ce815fd8f08d5a1caf4c8d9a45ca5afd022bd80963017f882"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/016.result.json",
+          "bytes": 3665,
+          "tokens": 987,
+          "sha256": "e4e8703df10d172b1ee11840745eedc080ede5671747aa99da735e033bef6416"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/017.result.json",
+          "bytes": 3875,
+          "tokens": 1172,
+          "sha256": "bcd436e62cae496e8148053b269c2e6acf381ba8459f06b7af9f82ae3a1e5c1d"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/018.result.json",
+          "bytes": 3500,
+          "tokens": 1025,
+          "sha256": "f3a4e18d66e80af26d527f8c46d3f5d32f94f3b6f5a81e6c06ddd2ba5ad48650"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/019.result.json",
+          "bytes": 4133,
+          "tokens": 1134,
+          "sha256": "94c0ea5c42fcd10377121cab00372fa4b41df0d406f25cbf3007d543e1502a27"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/020.result.json",
+          "bytes": 3023,
+          "tokens": 851,
+          "sha256": "d3f35ebf995c22ebcd0fee896da1f1b38e091cf4491c9ebd685aaeee3007101e"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/021.result.json",
+          "bytes": 9598,
+          "tokens": 2488,
+          "sha256": "1ce9485dc464eb913b5836b3eaa99b8274a0895bf70daa4ec4972566662ee4ee"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/022.result.json",
+          "bytes": 11265,
+          "tokens": 2955,
+          "sha256": "d5a013a53c56fd4e4aba666529dcc9b5b69f1bf9673273c9333452012a458b0c"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/023.result.json",
+          "bytes": 10440,
+          "tokens": 2698,
+          "sha256": "e7746df74a67a4a1b3720309699c30e535a38c22bbd2c7aa89ca4c110f178163"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/024.result.json",
+          "bytes": 3107,
+          "tokens": 894,
+          "sha256": "47675275bba688d52b8c7e896be992027f5a78bfb80a84d34608f3fde8fd60c7"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/025.result.json",
+          "bytes": 3410,
+          "tokens": 977,
+          "sha256": "7e3955b1f244ebca0b108c6dc6d9c3ee3b960745fc5a37b898aa22543ea2461f"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/026.result.json",
+          "bytes": 3294,
+          "tokens": 879,
+          "sha256": "c42736685a4a901ec9296cc861644e61728c1ef98e81329ed5e023fd371e7da3"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/027.result.json",
+          "bytes": 3281,
+          "tokens": 930,
+          "sha256": "13d755ed89a9a184fa874fc4d9eb266155bf9a474e95413ac805a744405537d1"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/028.result.json",
+          "bytes": 3874,
+          "tokens": 1008,
+          "sha256": "beac40c02cdfd29f14504ce999f3a5b197461a19faed8e6c52e967d68ed53a10"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/029.result.json",
+          "bytes": 1829,
+          "tokens": 495,
+          "sha256": "9ff10c700f95ad8408895fd00eff4c1c8a9a107d81ac65ec554f45ace60e41da"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/030.result.json",
+          "bytes": 1374,
+          "tokens": 411,
+          "sha256": "c0ae839ab7a944f969f257a4a4027abe730bf7fbe22f32930fe2b02a17fa63e4"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/031.result.json",
+          "bytes": 8527,
+          "tokens": 2250,
+          "sha256": "171f665b28aa03c7f00df7c234510777067e0d6e062057fb9ada19091da707fd"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/032.result.json",
+          "bytes": 3144,
+          "tokens": 871,
+          "sha256": "ebda48bc6621bed6caa50ad69c1cf4d8b5754028c996de5a4af92ddeb8a54f1f"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/033.result.json",
+          "bytes": 3281,
+          "tokens": 930,
+          "sha256": "13d755ed89a9a184fa874fc4d9eb266155bf9a474e95413ac805a744405537d1"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/034.result.json",
+          "bytes": 3182,
+          "tokens": 854,
+          "sha256": "86e24d1fab5289683cb3594d203f258557e206c1338f01f937dcada5c52ebb37"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/035.result.json",
+          "bytes": 3466,
+          "tokens": 963,
+          "sha256": "2d63ea45a8b75c2ea3006d284e0aa4b57c857a0151fc0c1b31922e263d00c575"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/036.result.json",
+          "bytes": 3491,
+          "tokens": 959,
+          "sha256": "c49dec60c18e524843692b263c006ffe8869a8939473a9dd12815b94eb925f88"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/037.result.json",
+          "bytes": 2737,
+          "tokens": 748,
+          "sha256": "8cdc42f52b4834fb708422eb7052fb901348d0d0ce1783985488204763bdfa90"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/038.result.json",
+          "bytes": 3410,
+          "tokens": 977,
+          "sha256": "7e3955b1f244ebca0b108c6dc6d9c3ee3b960745fc5a37b898aa22543ea2461f"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/039.result.json",
+          "bytes": 3668,
+          "tokens": 976,
+          "sha256": "d9a6153269147f159bda87a33f93a00b6317a54b8ea43dcb76e677a59920efcf"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/040.result.json",
+          "bytes": 3159,
+          "tokens": 883,
+          "sha256": "eaac00910a237f341205122693bad7bcf73300d7cd15853f8964e2426879beb9"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/041.result.json",
+          "bytes": 3023,
+          "tokens": 851,
+          "sha256": "d3f35ebf995c22ebcd0fee896da1f1b38e091cf4491c9ebd685aaeee3007101e"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/042.result.json",
+          "bytes": 3107,
+          "tokens": 894,
+          "sha256": "47675275bba688d52b8c7e896be992027f5a78bfb80a84d34608f3fde8fd60c7"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/043.result.json",
+          "bytes": 3181,
+          "tokens": 860,
+          "sha256": "12c51a3e0d48ff3bae26571fdba4d612b5c7874d9060b3ab9c713036977f572c"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/044.result.json",
+          "bytes": 3874,
+          "tokens": 1008,
+          "sha256": "beac40c02cdfd29f14504ce999f3a5b197461a19faed8e6c52e967d68ed53a10"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/045.result.json",
+          "bytes": 3464,
+          "tokens": 965,
+          "sha256": "c44254f5eb4c7ef31c3281db8d75665e6ccfdb8b7110e6256956860761eb18c7"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/046.result.json",
+          "bytes": 3262,
+          "tokens": 869,
+          "sha256": "13e9e8660637fdbb0f9bc8db3a7050244c66e8f6f8a165164c06632309d5fba3"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/047.result.json",
+          "bytes": 3500,
+          "tokens": 1025,
+          "sha256": "f3a4e18d66e80af26d527f8c46d3f5d32f94f3b6f5a81e6c06ddd2ba5ad48650"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/048.result.json",
+          "bytes": 3039,
+          "tokens": 952,
+          "sha256": "02fc9f3119c6f84ce815fd8f08d5a1caf4c8d9a45ca5afd022bd80963017f882"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/049.result.json",
+          "bytes": 3665,
+          "tokens": 987,
+          "sha256": "e4e8703df10d172b1ee11840745eedc080ede5671747aa99da735e033bef6416"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/050.result.json",
+          "bytes": 4133,
+          "tokens": 1134,
+          "sha256": "94c0ea5c42fcd10377121cab00372fa4b41df0d406f25cbf3007d543e1502a27"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/051.result.json",
+          "bytes": 3875,
+          "tokens": 1172,
+          "sha256": "bcd436e62cae496e8148053b269c2e6acf381ba8459f06b7af9f82ae3a1e5c1d"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/052.result.json",
+          "bytes": 3294,
+          "tokens": 879,
+          "sha256": "c42736685a4a901ec9296cc861644e61728c1ef98e81329ed5e023fd371e7da3"
+        }
+      ],
+      "generated_files": [
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/resultado.json",
+          "bytes": 101301,
+          "tokens": 25692,
+          "sha256": "4c86efb978d768699d6423463719873ef3746ec224ef6cbd443a85f1d41b1651"
+        },
+        {
+          "path": "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/comportamiento.md",
+          "bytes": 8845,
+          "tokens": 1877,
+          "sha256": "77f9cd295205104c54203656c832755f200bfb49acf0ae33d3f6a6de0add6888"
+        }
+      ],
+      "observed_artifact_sum_proxy": 82384,
+      "local_tool_seconds_sum": 0.5354964150465094,
+      "first_tool_utc": "2026-10-27T22:16:08.730094+00:00",
+      "last_tool_utc": "2026-10-27T22:21:16.969108+00:00"
+    }
+  },
+  "comparison": {
+    "tool_results_tokens_sum": {
+      "baseline": 57652,
+      "scripts": 42496,
+      "difference": 15156,
+      "reduction_percent": 26.288767085270237,
+      "denominator": "baseline.tool_results_tokens_sum"
+    },
+    "constructed_prompt_tokens": {
+      "baseline": 59128,
+      "scripts": 44411,
+      "difference": 14717,
+      "reduction_percent": 24.890069002841297,
+      "denominator": "baseline.constructed_prompt_tokens"
+    },
+    "observed_artifact_sum_proxy": {
+      "baseline": 82351,
+      "scripts": 82384,
+      "difference": -33,
+      "reduction_percent": -0.04007237313450318,
+      "denominator": "baseline.observed_artifact_sum_proxy"
+    }
+  },
+  "preparation": {
+    "index_bytes": 688128,
+    "local_llm_calls": 0,
+    "corpus_tokens_processed_locally": 42721,
+    "calibration_result_tokens_sum": 3979,
+    "notes": "Indexación/validación procesan bytes en Python sin inferencia. El coordinador leyó el corpus para diseñar el ensayo; su preparación tiene snapshot nativo separado en usage-nativo.json. No pertenece al costo por consulta del producto."
+  }
+}

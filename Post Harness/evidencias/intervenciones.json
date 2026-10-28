@@ -1,0 +1,6 @@
+{
+  "during_scripts_evaluation": [
+    "Observación para registrar en tu bitácora (sin cambiar tu estrategia por un objetivo de ahorro): hay relecturas show de archivos ya consultados. Explicá el motivo y cualquier transformación/paginación/truncamiento de stdout que haya hecho que el contenido efectivamente presentado difiera de *.result.json. La medición debe reflejar fielmente esas repeticiones. No necesitás informarme tus casos hasta congelarlos."
+  ],
+  "followup_excluded": "Aclaración posterior al congelado de qué partes de revision-citas.json y 000-instrucciones-y-consultas.json se imprimieron; un turno adicional, reportado por separado en usage-nativo.json."
+}

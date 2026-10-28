@@ -1,0 +1,185 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 40, "returned": 5, "next_offset": 45}
+
+=== COELSA.Intelligent/MOCs/MOC - Almacenamiento.md sha256=901cb1a046fc470631e370d90d58eda66e02b5160b5a4252e27fafd5c219f4c1 ===
+1: ---
+2: title: "MOC — Almacenamiento"
+3: type: moc
+4: tags: [coelsa-intelligent, almacenamiento, minio, moc]
+5: aliases: [MOC Almacenamiento, Storage COELSA]
+6: description: "Usar cuando trabajás con subida, acceso, limpieza o monitoreo de archivos en COELSA.Intelligent — cubre el sistema híbrido local+MinIO."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — Almacenamiento
+11: 
+12: El almacenamiento de archivos sigue un flujo híbrido: primero local, luego migrado a [[MinIO S3]]. El acceso siempre se hace con [[URLs firmadas MinIO|URLs firmadas]].
+13: 
+14: ## Notas de este cluster
+15: 
+16: - [[Sistema híbrido de almacenamiento]] — Visión general del flujo local → MinIO y cómo coexisten los dos providers
+17: - [[Flujo de subida de archivos]] — Ciclo completo: recepción → guardado local → scheduler → MinIO
+18: - [[URLs firmadas MinIO]] — Cómo se generan presigned URLs para acceso seguro temporal
+19: - [[Scheduler de limpieza]] — Job diario que elimina archivos huérfanos y vencidos (`FILE_STORAGE_CLEANUP_DAYS`)
+20: - [[Borrado en cascada de archivos]] — Al eliminar un chat se eliminan sus archivos en MinIO automáticamente
+21: - [[Storage Dashboard]] — Endpoint `/api/v1/storage/status`; métricas de uso para administradores
+22: 
+23: ## MOCs vecinos
+24: 
+25: - [[MOC - Stack]] — MinIO S3 como componente del stack de almacenamiento
+26: - [[MOC - Arquitectura]] — Decisión de diseño del sistema híbrido y el scheduler
+27: - [[MOC - Autenticación y Permisos]] — El Storage Dashboard requiere rol `admin`
+28: - [[MOC - CI-CD y Despliegue]] — Variables de entorno S3 que deben estar en el ConfigMap de OpenShift
+
+=== COELSA.Intelligent/MOCs/MOC - Arquitectura.md sha256=9114673a7b48db07ed2db34f3861bf6e55fb4e58475ac0fe40d6e08d699b07db ===
+1: ---
+2: title: "MOC — Arquitectura"
+3: type: moc
+4: tags: [coelsa-intelligent, arquitectura, moc]
+5: aliases: [Arquitectura COELSA, MOC Arquitectura]
+6: description: "Usar cuando necesitás entender las decisiones de diseño estructural de COELSA.Intelligent — qué componentes existen y por qué se tomó cada decisión."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — Arquitectura
+11: 
+12: COELSA.Intelligent es un [[Fork de Open WebUI]] adaptado para infraestructura corporativa. Las decisiones de este cluster definen **qué** es el sistema y **por qué** se alejó del upstream.
+13: 
+14: ## Notas de este cluster
+15: 
+16: - [[Fork de Open WebUI]] — Qué es el fork, qué cambia y por qué no se sigue el upstream directamente
+17: - [[SPA con SSR deshabilitado]] — Por qué `ssr = false` y sus implicaciones de seguridad y compatibilidad
+18: - [[PostgreSQL como base de datos]] — Migración de SQLite a PostgreSQL para escalar en producción
+19: - [[Redis para WebSockets]] — Backend de canal que permite múltiples workers sin pérdida de eventos
+20: - [[Sistema de errores centralizado]] — Jerarquía estándar de 10 tipos de excepción con respuestas JSON consistentes
+21: - [[Headers de usuario COELSA]] — Convención de encabezados HTTP `X-COELSA.Intelligent-User-*`
+22: - [[Idioma por defecto es-AR]] — Castellano Rioplatense como único español; idiomas eliminados del fork
+23: 
+24: ## MOCs vecinos
+25: 
+26: - [[MOC - Stack]] — Las tecnologías concretas que implementan esta arquitectura
+27: - [[MOC - Decisiones]] — Índice completo de todas las decisiones con sus justificaciones
+28: - [[MOC - Seguridad]] — Hardening y remediaciones aplicadas sobre la arquitectura base
+29: - [[MOC - Desarrollo]] — Patrones de código que materializan las decisiones de arquitectura
+
+=== COELSA.Intelligent/MOCs/MOC - Autenticación y Permisos.md sha256=62ea96d10252175a083b78bfcf4f595257e62f0c0d0b4ad60a9f20aa095b836a ===
+1: ---
+2: title: "MOC — Autenticación y Permisos"
+3: type: moc
+4: tags: [coelsa-intelligent, autenticacion, permisos, moc]
+5: aliases: [MOC Autenticación, Auth COELSA, Permisos COELSA]
+6: description: "Usar cuando trabajás con login, roles, grupos, tokens o control de acceso a recursos en COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — Autenticación y Permisos
+11: 
+12: Todo acceso al sistema pasa por [[Azure AD login exclusivo]]. Los [[Roles de usuario]] y [[Grupos y permisos]] determinan qué puede hacer cada usuario dentro de la aplicación.
+13: 
+14: ## Notas de este cluster
+15: 
+16: - [[Azure AD login exclusivo]] — Solo OAuth Azure AD; registro local y formulario de usuario deshabilitados
+17: - [[Roles de usuario]] — Los tres roles: `admin`, `user`, `pending`; qué puede hacer cada uno
+18: - [[Grupos y permisos]] — Modelo de grupos con JSON de permisos granulares; acceso por grupo o usuario
+19: - [[JWT y sesiones]] — Generación y validación de tokens HS256; `WEBUI_SECRET_KEY`
+20: - [[bcrypt para contraseñas]] — Por qué se migró de passlib a bcrypt nativo; problema de truncación UTF-8
+21: - [[Control de acceso a recursos]] — Campo `access_control` en Knowledge y Files; modos public/private/custom
+22: 
+23: ## MOCs vecinos
+24: 
+25: - [[MOC - Arquitectura]] — Decisión de usar Azure AD exclusivo como parte del diseño del fork
+26: - [[MOC - Seguridad]] — CSP, SSRF y otras remediaciones que complementan la autenticación
+27: - [[MOC - Diseño y Frontend]] — Cómo se restringen tabs de Settings solo para admin en la UI
+
+=== COELSA.Intelligent/MOCs/MOC - CI-CD y Despliegue.md sha256=29f0d34c8d9944496354acf50b2fc6e0bb0b65a7068a32dce969644d38856fe6 ===
+1: ---
+2: title: "MOC — CI-CD y Despliegue"
+3: type: moc
+4: tags: [coelsa-intelligent, cicd, openshift, docker, moc]
+5: aliases: [MOC CICD, CI-CD COELSA, Despliegue COELSA]
+6: description: "Usar cuando trabajás con pipelines de Azure DevOps, el Dockerfile, el build del frontend o el despliegue en OpenShift de COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — CI-CD y Despliegue
+11: 
+12: El ciclo de vida de versiones pasa por 4 pipelines de Azure DevOps (DEV → VALIDACION → PROD → RELEASE). El runtime es [[OpenShift]] con imágenes construidas en Docker.
+13: 
+14: ## Notas de este cluster
+15: 
+16: - [[Pipelines Azure DevOps]] — Los 4 pipelines y sus responsabilidades: DEV, VALIDACION, PROD, RELEASE
+17: - [[Dockerfile]] — CPU-only PyTorch; sin Pyodide; workarounds de SSL corporativo
+18: - [[Build frontend]] — Diferencia entre `npm run build` (con Pyodide) y `npm run build:docker` (sin Pyodide, para CI)
+19: - [[SSL corporativo en build]] — Por qué `NODE_TLS_REJECT_UNAUTHORIZED=0` está en el Dockerfile y qué riesgo implica
+20: - [[Despliegue en OpenShift]] — ConfigMap, Routes, timeout de HAProxy, creación del bucket MinIO
+21: 
+22: ## MOCs vecinos
+23: 
+24: - [[MOC - Stack]] — Las tecnologías que se contienerizan y despliegan
+25: - [[MOC - Seguridad]] — El riesgo de SSL deshabilitado en build es un riesgo aceptado
+26: - [[MOC - Desarrollo]] — Qué comandos de build usar en cada contexto (dev vs CI)
+27: - [[MOC - Almacenamiento]] — El bucket MinIO debe crearse antes del primer despliegue
+
+=== COELSA.Intelligent/MOCs/MOC - Decisiones.md sha256=19f4193e467dc6c581cad890908dddb8bd3304bf525f4bf3cf8dc87089a372f8 ===
+1: ---
+2: title: "MOC — Decisiones"
+3: type: moc
+4: tags: [coelsa-intelligent, decisiones, adr, moc]
+5: aliases: [MOC Decisiones, ADR COELSA, Decisiones de Arquitectura]
+6: description: "Usar cuando necesitás el índice de todas las decisiones de diseño y arquitectura del fork — para entender el por qué de cada elección sin leer todos los docs."
+7: estado: vigente
+8: ---
+9: 
+10: # MOC — Decisiones
+11: 
+12: Índice de todas las decisiones de arquitectura, diseño y producto tomadas en COELSA.Intelligent. Cada decisión tiene su nota atómica con contexto, justificación y consecuencias.
+13: 
+14: ## Decisiones de infraestructura y backend
+15: 
+16: | ID | Decisión | Nota |
+17: |----|----------|------|
+18: | D-01 | Fork de Open WebUI como base | [[Fork de Open WebUI]] |
+19: | D-02 | PostgreSQL en lugar de SQLite | [[PostgreSQL como base de datos]] |
+20: | D-03 | Redis como backend de WebSockets | [[Redis para WebSockets]] |
+21: | D-04 | MinIO/S3 con flujo híbrido | [[Sistema híbrido de almacenamiento]] |
+22: | D-05 | Milvus multi-tenancy (5 colecciones) | [[Milvus multi-tenancy]] |
+23: | D-06 | CPU-only PyTorch en Docker | [[PyTorch CPU-only]] |
+24: | D-07 | bcrypt nativo en lugar de passlib | [[bcrypt para contraseñas]] |
+25: 
+26: ## Decisiones de routing y modelos IA
+27: 
+28: | ID | Decisión | Nota |
+29: |----|----------|------|
+30: | D-08 | Validación de urlIdx para routing LiteLLM | [[Validación de urlIdx]] |
+31: | D-09 | JSON prompt para MCP non-native | [[MCP y tool calling]] |
+32: | D-10 | Cadena SearXNG via Context Forge | [[Cadena SearXNG Context Forge]] |
+33: 
+34: ## Decisiones de autenticación y acceso
+35: 
+36: | ID | Decisión | Nota |
+37: |----|----------|------|
+38: | D-11 | Azure AD como único medio de login | [[Azure AD login exclusivo]] |
+39: | D-12 | SSR deshabilitado (SPA pura) | [[SPA con SSR deshabilitado]] |
+40: 
+41: ## Decisiones de seguridad
+42: 
+43: | ID | Decisión | Nota |
+44: |----|----------|------|
+45: | D-13 | Nonces CSP en OpenShift | [[CSP con nonces]] |
+46: | D-14 | ReDoS: bounded quantifiers en 11 regexes | [[Hardening ReDoS]] |
+47: | D-15 | SSRF: validación de URLs outbound | [[Protección SSRF]] |
+48: | D-16 | Path Traversal: sanitización de paths | [[Path Traversal]] |
+49: | D-17 | Riesgos aceptados documentados | [[Riesgos de seguridad aceptados]] |
+50: 
+51: ## Decisiones de producto y UX
+52: 
+53: | ID | Decisión | Nota |
+54: |----|----------|------|
+55: | D-18 | es-AR como idioma principal | [[Idioma por defecto es-AR]] |
+56: | D-19 | Sistema de errores centralizado | [[Sistema de errores centralizado]] |
+57: | D-20 | AbortController en loadChat (fix requests duplicados) | [[Patrones frontend críticos]] |
+58: 
+59: ## MOCs vecinos
+60: 
+61: - [[MOC - Arquitectura]] — Contexto técnico de las decisiones de diseño estructural
+62: - [[MOC - Seguridad]] — Detalle de las decisiones de hardening
+63: - [[MOC - Modelos IA y Routing]] — Contexto de las decisiones de routing e IA

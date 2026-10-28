@@ -1,0 +1,322 @@
+[
+  {
+    "ch": "Propuesta de trabajo",
+    "title": "QA agentizada",
+    "lead": "Más capacidad de prueba, con conocimiento compartido y evidencia.",
+    "body": "<div class=\"cover-meta\">Una evolución del workbook que ya usamos<br>Para QA, Desarrollo, Negocio y gerentes</div><div class=\"cover-words\"><span>Conocimiento</span><span>Pruebas</span><span>Mantenimiento</span></div><div class=\"cover-number\" aria-hidden=\"true\">QA</div>",
+    "cls": "cover",
+    "note": "Propuesta de primer MVP. Las integraciones nuevas requieren validación en el entorno del equipo."
+  },
+  {
+    "ch": "01 / Propósito",
+    "title": "Más trabajo cubierto con la capacidad disponible",
+    "lead": "El objetivo es cubrir más pruebas, o sostener la misma carga con menos dedicación del equipo.",
+    "body": "<div class=\"columns\"><div class=\"col\"><div class=\"statement\"><strong>Capacidad</strong><p>Copilot ayuda a preparar, ejecutar y documentar trabajo repetible.</p></div></div><div class=\"col\"><h3>Agentizar un proceso</h3><p>Darle a un asistente un objetivo, contexto y herramientas permitidas para realizar tareas encadenadas.</p><h3>Cómo evaluar el resultado</h3><p>Medir el trabajo aceptado, incluyendo revisión, retrabajo y mantenimiento.</p></div></div><div class=\"callout\">El ahorro y los cambios de dotación son objetivos a evaluar. Todavía no son resultados demostrados.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "01 / Punto de partida",
+    "title": "El workbook ya es nuestra base",
+    "lead": "Cada colaborador tiene GitHub Copilot en su PC. Ya hay instrucciones y procesos para usarlo en QA.",
+    "body": "<div class=\"flow\"><div class=\"step\"><span class=\"step-n\">01</span><h3>Diseñar casos</h3><p>Copilot ayuda a transformar una necesidad en pasos y resultados esperados.</p></div><div class=\"step\"><span class=\"step-n\">02</span><h3>Ejecutar pruebas</h3><p>El workbook ya usa Playwright MCP para navegar la UI web.</p></div><div class=\"step\"><span class=\"step-n\">03</span><h3>Entregar evidencia</h3><p>Genera reportes y Markdown para reproducir y corregir bugs.</p></div></div><div class=\"callout\">El equipo de automatizaciones aporta los runners y las prácticas existentes. La propuesta amplía ese trabajo.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "01 / Recorrido",
+    "title": "Un ciclo por aplicación, módulo o flujo",
+    "lead": "Podemos avanzar con pocos flujos críticos sin esperar a documentar toda la compañía.",
+    "body": "<div class=\"ribbon\"><span>Conocer</span><span>Validar</span><span>Probar</span><span>Aprender</span></div><div class=\"columns\"><div class=\"col\"><h3>Conocimiento</h3><p>Notas técnicas conectadas y documentación funcional revisada.</p></div><div class=\"col\"><h3>Pruebas</h3><p>Casos, automatizaciones y ejecuciones con evidencia.</p></div><div class=\"col\"><h3>Cambios</h3><p>Features y bugs actualizan los documentos y las pruebas relacionadas.</p></div></div><div class=\"callout\">La unidad de avance es un flujo con entregables completos y una versión identificable.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "01 / Personas",
+    "title": "Responsabilidades que se complementan",
+    "lead": "El agente prepara trabajo. Las personas aportan criterio y deciden lo que necesita validación.",
+    "body": "<div class=\"rows\"><div class=\"row\"><h3>Desarrollo</h3><p>Aporta qué cambió, sus dependencias y los detalles de implementación.</p></div><div class=\"row\"><h3>QA y automatizaciones</h3><p>Revisan cobertura y resultados, aceptan pruebas reutilizables y clasifican fallos.</p></div><div class=\"row\"><h3>Negocio o responsable del proceso</h3><p>Confirma reglas críticas, condiciones y excepciones.</p></div><div class=\"row\"><h3>Responsable del conocimiento</h3><p>Coordina revisión, publicación y sincronización. No reconstruye todo solo.</p></div><div class=\"row\"><h3>Copilot</h3><p>Redacta, propone casos, ayuda a mantener pruebas y usa herramientas autorizadas.</p></div></div>",
+    "cls": "roles",
+    "note": ""
+  },
+  {
+    "ch": "01 / Azure DevOps",
+    "title": "Cada herramienta tiene una función",
+    "lead": "Boards, Test Plans, Repos y Pipelines se conectan, pero guardan cosas distintas.",
+    "body": "<div class=\"four-roles\"><div><span class=\"role-letter\">B</span><h3>Boards</h3><p>Trabajo, features y bugs. Relaciones y seguimiento.</p></div><div><span class=\"role-letter\">T</span><h3>Test Plans</h3><p>Casos, suites y planes. Cobertura y resultados asociados.</p></div><div><span class=\"role-letter\">R</span><h3>Azure Repos</h3><p>Git: historial de documentos, código y pruebas.</p></div><div><span class=\"role-letter\">P</span><h3>Pipelines</h3><p>Ejecuciones repetibles, resultados y artefactos.</p></div></div><div class=\"callout\">Git conserva revisiones exactas. Un runner es el programa que ejecuta las pruebas.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "02 / Proceso completo",
+    "title": "Primero, una base confiable",
+    "lead": "Pasos 1 a 4. Cada etapa deja algo concreto que la siguiente puede usar.",
+    "body": "<div class=\"process-list\"><div class=\"item\"><span class=\"num\">01</span><div><h3>Segundo cerebro técnico</h3><p>Copilot identifica fuentes, dependencias, comportamiento y dudas.</p></div></div><div class=\"item\"><span class=\"num\">02</span><div><h3>Borrador funcional</h3><p>Describe procesos y resultados. Distingue lo observado de lo inferido.</p></div></div><div class=\"item\"><span class=\"num\">03</span><div><h3>Validación focalizada</h3><p>QA, negocio o el responsable revisan las reglas críticas. Publicamos lo aprobado y mantenemos pendientes explícitos.</p></div></div><div class=\"item\"><span class=\"num\">04</span><div><h3>Casos trazables</h3><p>Copilot propone y QA revisa resultados esperados y cobertura. Vinculamos regla y caso en Test Plans y Boards.</p></div></div></div>",
+    "cls": "process",
+    "note": ""
+  },
+  {
+    "ch": "02 / Proceso completo",
+    "title": "Después, pruebas que vuelven a servir",
+    "lead": "Pasos 5 a 8. El ciclo termina cuando el trabajo se puede repetir y mantener.",
+    "body": "<div class=\"process-list\"><div class=\"item\"><span class=\"num\">05</span><div><h3>Automatizaciones UI, API y base</h3><p>Preparación de datos, verificaciones y herramientas autorizadas.</p></div></div><div class=\"item\"><span class=\"num\">06</span><div><h3>Ejecución y evidencia</h3><p>Guardamos resultados. Las pruebas aceptadas pasan a Pipelines.</p></div></div><div class=\"item\"><span class=\"num\">07</span><div><h3>Reporte y seguimiento</h3><p>Clasificamos los fallos y registramos defectos confirmados con sus relaciones.</p></div></div><div class=\"item\"><span class=\"num\">08</span><div><h3>Mantenimiento por cambio</h3><p>Actualizamos conocimiento, documentación, casos y automatizaciones impactadas.</p></div></div></div>",
+    "cls": "process light",
+    "note": ""
+  },
+  {
+    "ch": "03 / Conocimiento",
+    "title": "Un segundo cerebro técnico",
+    "lead": "Notas Markdown (archivos de texto) pequeñas y conectadas que explican la aplicación y sus dependencias.",
+    "body": "<div class=\"knowledge-map\"><div class=\"map-center\"><h3>Cancelar pedido</h3><p>Proceso bajo análisis</p></div><div class=\"map-node n1\">Código<br><small>servicio de pedidos</small></div><div class=\"map-node n2\">Reglas<br><small>estado y excepciones</small></div><div class=\"map-node n3\">Datos<br><small>pedido y stock</small></div><div class=\"map-node n4\">Dependencias<br><small>reservas e inventario</small></div></div><div class=\"callout\">Las notas se enlazan entre sí y con sus fuentes. Cada nota conserva el contexto necesario para leerla sola.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "03 / Conocimiento",
+    "title": "Una nota que se puede verificar",
+    "lead": "La brevedad ayuda a encontrar información. La procedencia permite confiar en ella.",
+    "body": "<div class=\"note-sheet\"><div class=\"note-heading\">cancelacion-pedido.md <span>Ejemplo ilustrativo</span></div><div class=\"note-grid\"><div><b>Contenido</b><p>El servicio devuelve stock al cancelar un pedido pendiente.</p><b>Fuente y versión</b><p>Archivo / método + revisión Git.<br>Sistema 2.4, ambiente QA.</p><b>Relaciones</b><p>Pedido, reserva, inventario y casos asociados.</p></div><div><b>Estado de la afirmación</b><p><em>Validado</em>: confirmado por responsable.<br><em>Observado</em>: visto en código o ejecución.<br><em>Inferido</em>: hipótesis a revisar.<br><em>Pendiente</em>: falta resolver.</p><b>Validación</b><p>Rol responsable, fecha y dudas abiertas.</p></div></div></div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "03 / Documentación",
+    "title": "Se puede arrancar aunque falten documentos",
+    "lead": "El segundo cerebro se construye con el material y los accesos disponibles.",
+    "body": "<div class=\"flow\"><div class=\"step\"><span class=\"step-n\">01</span><h3>Reunir fuentes</h3><p>Código, Swagger/OpenAPI, consultas, tickets y pruebas existentes.</p></div><div class=\"step\"><span class=\"step-n\">02</span><h3>Reconstruir comportamiento</h3><p>Copilot describe qué hace el sistema y dónde encontró cada afirmación.</p></div><div class=\"step\"><span class=\"step-n\">03</span><h3>Redactar para negocio</h3><p>Explica procesos, condiciones, resultados y excepciones en lenguaje funcional.</p></div></div><div class=\"callout\">La documentación funcional nace de esa base técnica. Las inferencias quedan visibles para revisión.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "03 / Documentación",
+    "title": "Del código a una regla explicable",
+    "lead": "Ejemplo ilustrativo: la cancelación de un pedido y su efecto sobre el stock.",
+    "body": "<div class=\"columns\"><div class=\"col\"><span class=\"label\">Comportamiento observado</span><h3>El código devuelve stock</h3><p>Copilot encuentra una actualización de inventario cuando se cancela el pedido.</p><p>La nota enlaza el método y la versión analizada.</p></div><div class=\"col\"><span class=\"label\">Borrador funcional</span><h3>¿Cuándo corresponde?</h3><p>Describe estado permitido, precondiciones, resultado y excepciones.</p><p>Quedan dudas sobre pedidos despachados y reservas parciales.</p></div></div><div class=\"callout\">El código muestra lo implementado. Un conocedor del proceso confirma qué debería pasar.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "03 / Validación",
+    "title": "Revisión humana donde aporta criterio",
+    "lead": "QA, negocio o el responsable revisan borradores cortos y resuelven las dudas críticas.",
+    "body": "<div class=\"review-layout\"><div class=\"quote\">“¿Un pedido despachado puede cancelarse y devolver stock?”</div><div><div class=\"item\"><span class=\"num\">1</span><div><h3>Confirmar la regla</h3><p>Alguien con conocimiento del proceso define las condiciones y excepciones.</p></div></div><div class=\"item\"><span class=\"num\">2</span><div><h3>Aprobar la versión</h3><p>La documentación registra quién validó y qué quedó pendiente.</p></div></div><div class=\"item\"><span class=\"num\">3</span><div><h3>Usar esa referencia</h3><p>Los casos toman el resultado esperado de la regla revisada.</p></div></div></div></div><div class=\"callout\">No hace falta escribir todo desde cero ni revisar manualmente cada corrida. La revisión se concentra en reglas y cambios.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "03 / Incertidumbre",
+    "title": "Cuando nadie puede confirmar una regla",
+    "lead": "El conocimiento sigue siendo útil si su estado queda claro.",
+    "body": "<div class=\"columns\"><div class=\"col\"><div class=\"statement\"><strong>Observado</strong><p>Conservamos lo que hace hoy el sistema, con fuente y versión.</p></div></div><div class=\"col\"><h3>Pruebas de caracterización</h3><p>Registran el comportamiento actual y detectan si cambia.</p><h3>Alcance del resultado</h3><p>Sirven para regresión. La corrección funcional sigue pendiente de validación.</p></div></div><div class=\"callout\">Cada pendiente mantiene un responsable o un punto de resolución. La IA no convierte una observación en una regla aprobada.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "03 / Modelos",
+    "title": "Separar tareas mejora la revisión",
+    "lead": "Podés usar el mismo modelo en sesiones separadas o modelos distintos para sumar perspectivas.",
+    "body": "<div class=\"model-example\"><div class=\"percent\">20<span>%</span><small>Dos modelos lo aceptan</small></div><div class=\"model-rule\"><h3>La regla real permite 10%</h3><p>Si ambos usan una fuente equivocada, pueden repetir el mismo error.</p><p>Cambiar de modelo no garantiza independencia.</p></div></div><div class=\"callout\">Separá responsabilidades y contrastá fuentes. Cada resultado esperado necesita respaldo revisado.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "03 / Recuperación",
+    "title": "El buscador devuelve fragmentos relevantes",
+    "lead": "RAG es recuperar conocimiento para darle contexto al asistente. La respuesta depende de qué fragmentos encuentra.",
+    "body": "<div class=\"columns\"><div class=\"col\"><h3>Consulta con contexto</h3><p>Aplicación, módulo, ambiente y versión del sistema. Estado de validación y revisión del documento.</p><h3>Información completa para el caso</h3><p>Regla, precondiciones, excepciones y dependencias relacionadas.</p></div><div class=\"col\"><h3>Validación en el piloto</h3><p>Probar preguntas conocidas. Revisar si aparecen los fragmentos necesarios y si corresponden a la versión elegida.</p><h3>Buscador compartido</h3><p>RAGFlow es una opción para el MVP. Confirmar la implementación y verificar metadatos y filtros en la versión instalada.</p></div></div><div class=\"callout\">Recuperar un fragmento no garantiza comprender todo el proceso.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "03 / Publicación",
+    "title": "Git conserva la historia del conocimiento",
+    "lead": "Azure Repos es la fuente canónica de notas técnicas y documentación funcional.",
+    "body": "<div class=\"flow\"><div class=\"step\"><span class=\"step-n\">01</span><h3>Azure Repos</h3><p>Markdown con historial, responsables y revisiones exactas.</p></div><div class=\"step\"><span class=\"step-n\">02</span><h3>Publicación aprobada</h3><p>Sincronización propuesta de una versión revisada, identificada por su revisión Git.</p></div><div class=\"step\"><span class=\"step-n\">03</span><h3>Buscador compartido</h3><p>Indexa esa publicación y recupera fragmentos con los mismos metadatos.</p></div></div><div class=\"callout\">Subir archivos al buscador no reemplaza el historial Git. No asumimos versionado Git nativo de RAGFlow.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "04 / Casos",
+    "title": "Dos fuentes para diseñar una prueba",
+    "lead": "La documentación funcional dice qué debe pasar. El segundo cerebro técnico ayuda a comprobarlo.",
+    "body": "<div class=\"case-inputs\"><div><span class=\"label\">Referencia funcional validada</span><h3>Resultado esperado</h3><p>“Al cancelar un pedido pendiente, se libera el stock reservado”.</p></div><div class=\"join\">+</div><div><span class=\"label\">Conocimiento técnico</span><h3>Cómo verificarlo</h3><p>UI o endpoint, estado del pedido, reserva e inventario.</p></div></div><div class=\"case-output\"><h3>Caso propuesto por Copilot, revisado por QA</h3><p>Precondiciones, datos, pasos, verificaciones y cobertura de excepciones.</p></div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "04 / Trazabilidad",
+    "title": "La relación regla y caso empieza al diseñar",
+    "lead": "Test Plans registra los casos. Boards los vincula con el trabajo que les da origen.",
+    "body": "<div class=\"trace-chain\"><div><small>Documento aprobado</small><h3>Regla R-07</h3><p>Cancelación permitida</p></div><div><small>Azure Test Plans</small><h3>Caso C-12</h3><p>Datos + esperado</p></div><div><small>Azure Repos</small><h3>Prueba A-12</h3><p>Código reutilizable</p></div><div><small>Azure Pipelines</small><h3>Corrida E-31</h3><p>Versión + evidencia</p></div></div><div class=\"callout\">La feature o el bug de Boards enlaza estos elementos. QA revisa resultados esperados y cobertura antes de automatizar.</div>",
+    "cls": "trace",
+    "note": ""
+  },
+  {
+    "ch": "04 / Automatización",
+    "title": "La exploración deja una prueba reutilizable",
+    "lead": "Cada exploración automatizable termina en código que el equipo puede aceptar y repetir.",
+    "body": "<div class=\"columns\"><div class=\"col\"><div class=\"checkline\">01 <span>Preparación de datos y ambiente</span></div><div class=\"checkline\">02 <span>Acciones y verificaciones explícitas</span></div><div class=\"checkline\">03 <span>Evidencia y limpieza cuando corresponda</span></div><div class=\"checkline\">04 <span>Versionado y revisión del equipo</span></div></div><div class=\"col\"><h3>Copilot crea y mantiene</h3><p>Ayuda a convertir la exploración en una automatización estable.</p><h3>El runner ejecuta</h3><p>Pipelines repite las pruebas aceptadas. La regresión no depende de una nueva exploración libre del modelo en cada corrida.</p></div></div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "05 / Conexiones",
+    "title": "Copilot y Azure DevOps MCP",
+    "lead": "MCP es una interfaz para que el asistente use herramientas y datos de un sistema.",
+    "body": "<div class=\"mcp-diagram\"><div class=\"mcp-main\"><h3>GitHub Copilot</h3><p>Cliente en modo agente</p></div><div class=\"mcp-bridge\"><h3>Azure DevOps MCP</h3><p>Servidor oficial, local o remoto</p></div><div class=\"mcp-targets\"><span>Boards</span><span>Test Plans</span><span>Azure Repos</span><span>Pipelines</span></div></div><div class=\"callout\">Conexión propuesta. Verificar entorno/cliente, versión, autenticación, permisos y dominios habilitados. El catálogo no implica que toda operación esté disponible.</div><p class=\"micro\">Este es el MCP de Azure DevOps. Azure MCP para recursos cloud tiene otro alcance.</p>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "05 / UI web",
+    "title": "La conexión que ya usa el workbook",
+    "lead": "Playwright MCP permite que Copilot navegue la interfaz web y ayude a explorar flujos.",
+    "body": "<div class=\"wide-path\"><div><h3>Copilot</h3><p>Interpreta el caso</p></div><div><h3>Playwright MCP</h3><p>Herramientas de navegador</p></div><div><h3>UI web</h3><p>Acciones y evidencia</p></div></div><div class=\"columns\"><div class=\"col\"><h3>Exploración asistida</h3><p>Recorrer el flujo, identificar controles y observar resultados.</p></div><div class=\"col\"><h3>Regresión repetible</h3><p>Guardar una prueba aceptada y versionada. El runner la vuelve a ejecutar.</p></div></div><div class=\"callout\">UI significa interfaz de usuario. El alcance de esta conexión es la web.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "05 / Tecnologías",
+    "title": "La metodología se adapta al sistema",
+    "lead": "Conviven aplicaciones actuales y sistemas antiguos (legacy) de unos diez años. La herramienta depende de la tecnología.",
+    "body": "<div class=\"rows\"><div class=\"row\"><h3>Web</h3><p>Reusar Playwright y las automatizaciones de navegador existentes.</p></div><div class=\"row\"><h3>Servicios / API</h3><p>Probar endpoints y reglas con el runner o cliente de API apropiado.</p></div><div class=\"row\"><h3>Base de datos</h3><p>Comprobar estados y efectos con consultas SELECT controladas.</p></div><div class=\"row\"><h3>Escritorio y otros legacy</h3><p>Relevar tecnología y automatizaciones existentes. Elegir una herramienta compatible.</p></div></div><div class=\"callout\">Priorizamos flujos críticos y regresión. Playwright para web no es una promesa de automatizar aplicaciones de escritorio.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "05 / API",
+    "title": "Swagger describe el contrato técnico",
+    "lead": "OpenAPI define puntos de acceso (endpoints), entradas y respuestas. La prueba también verifica el negocio.",
+    "body": "<div class=\"api-example\"><div class=\"http\"><strong>200</strong><span>HTTP exitoso</span><p>La solicitud respondió.<br>Eso es una señal técnica.</p></div><div class=\"api-assertions\"><h3>Cancelar un pedido</h3><p>¿Cambió al estado correcto?</p><p>¿Se liberó el stock que correspondía?</p><p>¿Se respetaron estados prohibidos y excepciones?</p><p>¿Los valores y efectos coinciden con la regla validada?</p></div></div><div class=\"callout\">API es la interfaz entre sistemas. Una respuesta exitosa no alcanza para demostrar corrección funcional.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "05 / Datos",
+    "title": "Operaciones SQL con un alcance definido",
+    "lead": "SQL es el lenguaje para consultar datos. El agente elige una operación aprobada. El ejecutor conserva el SQL fijo.",
+    "body": "<div class=\"flow\"><div class=\"step\"><span class=\"step-n\">01</span><h3>Copilot solicita</h3><p>consultar_estado_pedido con un identificador válido.</p></div><div class=\"step\"><span class=\"step-n\">02</span><h3>Ejecutor controlado</h3><p>Valida parámetros, ambiente permitido y operación del catálogo.</p></div><div class=\"step\"><span class=\"step-n\">03</span><h3>Base responde</h3><p>Conexión con lectura mínima, límites de tiempo y cantidad de resultados.</p></div></div><div class=\"callout\">Puede ser un script o CLI, o una herramienta MCP. MCP ofrece la interfaz. Los permisos se imponen también en el ejecutor y la base.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "05 / Datos",
+    "title": "Ejemplo: consultar el estado de un pedido",
+    "lead": "La operación responde una pregunta de QA sin habilitar SQL arbitrario.",
+    "body": "<div class=\"sql-example\"><div><span class=\"label\">Solicitud del agente</span><pre>consultar_estado_pedido\n  pedido_id: 1042\n  ambiente: QA</pre><p>El ejecutor valida el identificador y el ambiente antes de consultar.</p></div><div><span class=\"label\">SQL fijo en el ejecutor</span><pre>SELECT id, estado\nFROM pedidos\nWHERE id = :pedido_id</pre><p>El parámetro se vincula de forma segura, sin concatenar SQL.</p></div></div><div class=\"result-line\"><b>Resultado ilustrativo</b><span>id: 1042</span><span>estado: cancelado</span></div><div class=\"callout\">QA compara el estado con el esperado. Otras operaciones aprobadas pueden verificar reserva y stock.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "05 / Datos",
+    "title": "El control habilita el uso del agente",
+    "lead": "El límite funciona cuando las restricciones existen fuera de la conversación.",
+    "body": "<div class=\"columns\"><div class=\"col\"><h3>Ejecutor protegido</h3><p>El agente no modifica las operaciones aprobadas ni accede a credenciales por otra vía.</p><p>El catálogo define parámetros, ambiente, tiempos y cantidad de filas.</p></div><div class=\"col\"><h3>Conexión y base</h3><p>Permisos mínimos de lectura y acceso acotado a los datos necesarios.</p><p>Si el agente puede editar el script o usar otra conexión, puede saltear el límite del catálogo.</p></div></div><div class=\"callout\">Los controles permiten automatizar consultas concretas con un alcance verificable. Un prompt, por sí solo, no impone permisos.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "06 / Ejecución",
+    "title": "Una corrida que se puede repetir",
+    "lead": "Pipelines ejecuta las automatizaciones aceptadas con el runner que el equipo ya utiliza.",
+    "body": "<div class=\"flow\"><div class=\"step\"><span class=\"step-n\">01</span><h3>Fijar la corrida</h3><p>Versión del sistema, ambiente, revisión de conocimiento y revisión de pruebas.</p></div><div class=\"step\"><span class=\"step-n\">02</span><h3>Preparar y ejecutar</h3><p>Datos identificables y verificaciones claras. Guardar logs, trazas y resultados.</p></div><div class=\"step\"><span class=\"step-n\">03</span><h3>Conservar evidencia</h3><p>Artefactos asociados a corrida, caso y prueba. Permiten investigar y reproducir.</p></div></div><div class=\"callout\">La evidencia respalda qué pasó. La preparación de datos y las condiciones hacen posible volver a probar.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "06 / Resultados",
+    "title": "Un rojo necesita diagnóstico",
+    "lead": "El reporte distingue la causa antes de registrar un defecto de producto.",
+    "body": "<div class=\"failure-types\"><div><span class=\"failure-mark product\">P</span><h3>Producto</h3><p>El sistema contradice un resultado esperado con respaldo validado.</p></div><div><span class=\"failure-mark env\">A</span><h3>Ambiente</h3><p>Servicio caído, acceso, datos o configuración impiden evaluar el caso.</p></div><div><span class=\"failure-mark test\">T</span><h3>Prueba</h3><p>El script, selector o preparación falla. Hay que corregir la automatización.</p></div></div><div class=\"callout\">QA revisa la evidencia. Cada rojo no se convierte automáticamente en bug, y la expectativa no cambia solo para que la prueba pase.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "06 / Defectos",
+    "title": "Un bug que Desarrollo puede reproducir",
+    "lead": "El Markdown del workbook se mantiene como una salida útil. Boards registra el defecto confirmado.",
+    "body": "<div class=\"bug-report\"><div class=\"bug-title\"><span>BUG</span><h3>Cancelación conserva una reserva</h3></div><div class=\"bug-body\"><div><b>Contexto</b><p>Versión, ambiente, datos y precondiciones.</p><b>Reproducción</b><p>Pasos mínimos, esperado respaldado y resultado observado.</p></div><div><b>Evidencia</b><p>Capturas, request/response, logs y consulta autorizada.</p><b>Relaciones</b><p>Feature, regla, caso, prueba y corrida. Responsable y seguimiento.</p></div></div></div><div class=\"callout\">Copilot ayuda a redactar. QA confirma el defecto y su clasificación antes del registro.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "07 / Mantenimiento",
+    "title": "El cambio empieza en Boards",
+    "lead": "Una feature registra el cambio esperado. Desarrollo aporta qué cambió y qué puede impactar.",
+    "body": "<div class=\"maintenance-line\"><div class=\"item\"><span class=\"num\">1</span><div><h3>Feature con contexto</h3><p>Regla nueva o modificada, dependencias y versión objetivo del sistema.</p></div></div><div class=\"item\"><span class=\"num\">2</span><div><h3>Actualización en una rama</h3><p>Copilot prepara notas técnicas y borrador funcional. Desarrollo aporta la información.</p></div></div><div class=\"item\"><span class=\"num\">3</span><div><h3>Coordinación y revisión</h3><p>El responsable del conocimiento convoca a quienes validan el cambio.</p></div></div></div><div class=\"callout\">Una rama permite trabajar sin alterar la publicación vigente. El responsable coordina, pero necesita aportes del equipo.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "07 / Publicación",
+    "title": "La revisión aprueba el cambio de conocimiento",
+    "lead": "Una pull request reúne los cambios y se vincula a la feature.",
+    "body": "<div class=\"flow\"><div class=\"step\"><span class=\"step-n\">01</span><h3>Pull request</h3><p>Propuesta de cambio en Azure Repos. Revisión técnica y validación funcional.</p></div><div class=\"step\"><span class=\"step-n\">02</span><h3>Integración a main</h3><p>Solo contenido aprobado. Políticas de ramas, revisores y vínculos según el proceso del equipo.</p></div><div class=\"step\"><span class=\"step-n\">03</span><h3>Sincronización</h3><p>El buscador recibe la misma revisión aprobada, con versión de sistema y metadatos.</p></div></div><div class=\"callout\">PR significa propuesta de cambio para revisión. Main es la rama principal, no la versión que necesariamente está desplegada en QA.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "07 / Versiones",
+    "title": "La corrida usa la versión del sistema bajo prueba",
+    "lead": "La última revisión de main puede describir una funcionalidad que todavía no llegó a QA.",
+    "body": "<div class=\"version-example\"><div><small>Ejemplo ilustrativo</small><h3>Desarrollo / main</h3><strong>2.5</strong><p>Nuevo límite de descuento: 15%.<br>Documentación aprobada para 2.5.</p></div><div><small>Ambiente bajo prueba</small><h3>QA desplegado</h3><strong>2.4</strong><p>Límite vigente: 10%.<br>Usar documentación de 2.4.</p></div></div><div class=\"callout\">Cada corrida fija sistema + ambiente + revisión de conocimiento/docs + revisión de pruebas. Los analistas traen esa revisión, no “latest” sin verificar.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "07 / Impacto",
+    "title": "Una regla modificada tiene relaciones",
+    "lead": "Los vínculos permiten actualizar solo los documentos y las pruebas alcanzados por el cambio.",
+    "body": "<div class=\"impact-flow\"><div class=\"impact-origin\"><h3>Feature o bug</h3><p>Cambio confirmado</p></div><div class=\"impact-branches\"><span>Notas técnicas y documentación funcional</span><span>Casos y resultados esperados</span><span>Automatizaciones, datos y verificaciones</span><span>Publicación e índice del buscador</span></div></div><div class=\"callout\">Conservamos evidencia e historial. Un fallo de prueba no autoriza cambiar una regla por cuenta propia.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "08 / Primer MVP",
+    "title": "Un piloto con pocos flujos críticos",
+    "lead": "Un MVP es una primera versión acotada. Elegimos una aplicación para recorrer el ciclo completo.",
+    "body": "<div class=\"columns\"><div class=\"col\"><div class=\"statement\"><strong>1 flujo</strong><p>Idealmente, una UI o API con validación SQL del resultado.</p></div></div><div class=\"col\"><h3>Preparación concreta</h3><p>Asignar responsables reales por rol. Reusar Copilot, workbook y Azure existentes.</p><p>Comprobar entorno/cliente, permisos, ambiente y tecnología. Habilitar solo los dominios MCP necesarios.</p><p>El equipo de automatizaciones participa en la aceptación y ejecución repetible.</p></div></div><div class=\"callout\">Es el primer MVP propuesto, todavía no una implementación terminada.</div>",
+    "cls": "",
+    "note": ""
+  },
+  {
+    "ch": "08 / Entregables",
+    "title": "Qué tiene que quedar al cerrar el piloto",
+    "lead": "El producto del MVP es un flujo que el equipo pueda revisar, ejecutar y mantener.",
+    "body": "<div class=\"deliverables\"><div><span>01</span><h3>Conocimiento y documento</h3><p>Versionados, con fuentes, validación y pendientes.</p></div><div><span>02</span><h3>Casos trazables</h3><p>Reglas y trabajo vinculados en Test Plans y Boards.</p></div><div><span>03</span><h3>Prueba reutilizable</h3><p>Datos, verificaciones y revisión del equipo.</p></div><div><span>04</span><h3>Ejecución y evidencia</h3><p>Runner en Pipelines y resultados investigables.</p></div><div><span>05</span><h3>Defectos confirmados</h3><p>Reproducción y seguimiento en Boards.</p></div><div><span>06</span><h3>Ciclo de mantenimiento</h3><p>Un cambio actualiza el conjunto relacionado.</p></div></div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "08 / Medición",
+    "title": "La capacidad se mide con trabajo aceptado",
+    "lead": "El piloto crea una línea de base. Los números se completan con evidencia real.",
+    "body": "<div class=\"rows\"><div class=\"row\"><h3>Tiempo total por automatización aceptada</h3><p>Preparación, generación, revisión, retrabajo y mantenimiento.</p></div><div class=\"row\"><h3>Estabilidad</h3><p>Fallos intermitentes y causas. Un fallo intermitente pasa o falla sin cambio relevante.</p></div><div class=\"row\"><h3>Cobertura crítica</h3><p>Flujos y reglas críticas con casos y automatizaciones aceptados.</p></div><div class=\"row\"><h3>Defectos detectados</h3><p>Defectos confirmados, evidencia y aporte al proceso de QA.</p></div><div class=\"row\"><h3>Recuperación de conocimiento</h3><p>Fragmentos correctos, completos y de la versión elegida.</p></div></div><div class=\"callout\">Todavía no hay una línea de base ni retorno de inversión (ROI) demostrado. Escalar depende de los resultados del piloto.</div>",
+    "cls": "metrics",
+    "note": ""
+  },
+  {
+    "ch": "09 / Arquitectura",
+    "title": "Dos circuitos conectados por la versión",
+    "lead": "El conocimiento aprobado guía las pruebas. Los cambios y resultados vuelven al conocimiento.",
+    "body": "<div class=\"two-circuits\"><div><span class=\"label\">Circuito de conocimiento</span><h3>Fuentes + Copilot + personas</h3><p>Notas y documento funcional revisados</p><div class=\"circuit-end\">Azure Repos · revisión aprobada<br>Publicación e índice del buscador</div></div><div><span class=\"label\">Circuito de pruebas</span><h3>Copilot + herramientas permitidas</h3><p>Casos y automatizaciones aceptadas</p><div class=\"circuit-end\">Test Plans · Pipelines · evidencia<br>Boards · seguimiento del cambio</div></div></div><div class=\"callout\">En ambos circuitos: misma versión del sistema y revisiones identificadas. Arquitectura propuesta sobre herramientas existentes.</div>",
+    "cls": "light",
+    "note": ""
+  },
+  {
+    "ch": "09 / Sistema completo",
+    "title": "El ciclo integral de QA agentizada",
+    "lead": "Una versión aprobada conecta conocimiento, casos, herramientas y resultados.",
+    "body": "<svg class=\"integral\" viewBox=\"0 0 1312 445\" role=\"img\" aria-labelledby=\"integralTitle integralDesc\"><title id=\"integralTitle\">Sistema completo y ciclo de QA</title><desc id=\"integralDesc\">Las fuentes alimentan un borrador de Copilot, validado por personas y aprobado en Repos. El buscador publica esa revisión. Copilot diseña casos y usa herramientas autorizadas, dejando pruebas en Repos. Pipelines ejecuta y entrega evidencia para diagnosticar. Azure DevOps MCP conecta Copilot con Test Plans, Repos, Pipelines y Boards. Boards aporta features y bugs al siguiente cambio.</desc><defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#9caab9\"/></marker></defs><path d=\"M 255 48 H 285\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 525 48 H 555\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 795 48 H 825\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 1065 48 H 1095\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 1195 100 V 115 H 945 V 146\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 825 193 H 795\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 555 193 H 525\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 285 193 H 255\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 135 239 V 295\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 255 343 H 285\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 525 343 H 555\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 795 343 H 825\" fill=\"none\" stroke=\"#76e6d0\" stroke-width=\"2.4\"  marker-end=\"url(#arrow)\"/><path d=\"M 945 390 V 418 H 14 V 48 H 25\" fill=\"none\" stroke=\"#edb8de\" stroke-width=\"2.4\" stroke-dasharray=\"7 6\" marker-end=\"url(#arrow)\"/><path d=\"M 1065 193 H 1093\" fill=\"none\" stroke=\"#d5f78a\" stroke-width=\"2.4\" stroke-dasharray=\"5 5\" marker-end=\"url(#arrow)\"/><path d=\"M 1200 243 V 296\" fill=\"none\" stroke=\"#d5f78a\" stroke-width=\"2.4\" stroke-dasharray=\"5 5\" marker-end=\"url(#arrow)\"/><path d=\"M 1200 243 V 264 H 945 V 296\" fill=\"none\" stroke=\"#d5f78a\" stroke-width=\"2.4\" stroke-dasharray=\"5 5\" marker-end=\"url(#arrow)\"/><g class=\"diagram-node\"><rect x=\"25\" y=\"2\" width=\"230\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#76e6d0\" stroke-opacity=\".65\"/><text x=\"41\" y=\"31\" fill=\"#76e6d0\" font-size=\"23\" font-weight=\"650\"><tspan x=\"41\" dy=\"0\">Fuentes</tspan></text><text x=\"41\" y=\"60\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"41\" dy=\"0\">Código, tickets, reglas</tspan></text></g><g class=\"diagram-node\"><rect x=\"285\" y=\"2\" width=\"240\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#76e6d0\" stroke-opacity=\".65\"/><text x=\"301\" y=\"31\" fill=\"#76e6d0\" font-size=\"23\" font-weight=\"650\"><tspan x=\"301\" dy=\"0\">Copilot</tspan></text><text x=\"301\" y=\"60\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"301\" dy=\"0\">Notas + borrador</tspan></text></g><g class=\"diagram-node\"><rect x=\"555\" y=\"2\" width=\"240\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#edb8de\" stroke-opacity=\".65\"/><text x=\"571\" y=\"31\" fill=\"#edb8de\" font-size=\"23\" font-weight=\"650\"><tspan x=\"571\" dy=\"0\">QA / Negocio</tspan></text><text x=\"571\" y=\"60\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"571\" dy=\"0\">Validación focalizada</tspan></text></g><g class=\"diagram-node\"><rect x=\"825\" y=\"2\" width=\"240\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#d5f78a\" stroke-opacity=\".65\"/><text x=\"841\" y=\"31\" fill=\"#d5f78a\" font-size=\"23\" font-weight=\"650\"><tspan x=\"841\" dy=\"0\">Azure Repos</tspan></text><text x=\"841\" y=\"60\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"841\" dy=\"0\">PR + revisión aprobada</tspan></text></g><g class=\"diagram-node\"><rect x=\"1095\" y=\"2\" width=\"205\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#76e6d0\" stroke-opacity=\".65\"/><text x=\"1111\" y=\"31\" fill=\"#76e6d0\" font-size=\"23\" font-weight=\"650\"><tspan x=\"1111\" dy=\"0\">Buscador</tspan></text><text x=\"1111\" y=\"60\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"1111\" dy=\"0\">Índice aprobado</tspan></text></g><g class=\"diagram-node\"><rect x=\"825\" y=\"147\" width=\"240\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#76e6d0\" stroke-opacity=\".65\"/><text x=\"841\" y=\"176\" fill=\"#76e6d0\" font-size=\"23\" font-weight=\"650\"><tspan x=\"841\" dy=\"0\">Copilot</tspan></text><text x=\"841\" y=\"205\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"841\" dy=\"0\">Contexto por versión</tspan></text></g><g class=\"diagram-node\"><rect x=\"555\" y=\"147\" width=\"240\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#76e6d0\" stroke-opacity=\".65\"/><text x=\"571\" y=\"176\" fill=\"#76e6d0\" font-size=\"23\" font-weight=\"650\"><tspan x=\"571\" dy=\"0\">UI / API / SQL</tspan></text><text x=\"571\" y=\"205\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"571\" dy=\"0\">Acceso autorizado</tspan></text></g><g class=\"diagram-node\"><rect x=\"285\" y=\"147\" width=\"240\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#d5f78a\" stroke-opacity=\".65\"/><text x=\"301\" y=\"176\" fill=\"#d5f78a\" font-size=\"23\" font-weight=\"650\"><tspan x=\"301\" dy=\"0\">Prueba aceptada</tspan></text><text x=\"301\" y=\"205\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"301\" dy=\"0\">Datos + código en Git</tspan></text></g><g class=\"diagram-node\"><rect x=\"25\" y=\"147\" width=\"230\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#76e6d0\" stroke-opacity=\".65\"/><text x=\"41\" y=\"176\" fill=\"#76e6d0\" font-size=\"23\" font-weight=\"650\"><tspan x=\"41\" dy=\"0\">Versiones fijadas</tspan></text><text x=\"41\" y=\"205\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"41\" dy=\"0\">Sistema + docs + tests</tspan></text></g><g class=\"diagram-node\"><rect x=\"25\" y=\"297\" width=\"230\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#d5f78a\" stroke-opacity=\".65\"/><text x=\"41\" y=\"326\" fill=\"#d5f78a\" font-size=\"23\" font-weight=\"650\"><tspan x=\"41\" dy=\"0\">Pipelines</tspan></text><text x=\"41\" y=\"355\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"41\" dy=\"0\">Runner repetible</tspan></text></g><g class=\"diagram-node\"><rect x=\"285\" y=\"297\" width=\"240\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#76e6d0\" stroke-opacity=\".65\"/><text x=\"301\" y=\"326\" fill=\"#76e6d0\" font-size=\"23\" font-weight=\"650\"><tspan x=\"301\" dy=\"0\">Evidencia</tspan></text><text x=\"301\" y=\"355\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"301\" dy=\"0\">Resultados + artefactos</tspan></text></g><g class=\"diagram-node\"><rect x=\"555\" y=\"297\" width=\"240\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#edb8de\" stroke-opacity=\".65\"/><text x=\"571\" y=\"326\" fill=\"#edb8de\" font-size=\"23\" font-weight=\"650\"><tspan x=\"571\" dy=\"0\">QA diagnostica</tspan></text><text x=\"571\" y=\"355\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"571\" dy=\"0\">Producto / ambiente</tspan><tspan x=\"571\" dy=\"24\">/ prueba</tspan></text></g><g class=\"diagram-node\"><rect x=\"825\" y=\"297\" width=\"240\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#d5f78a\" stroke-opacity=\".65\"/><text x=\"841\" y=\"326\" fill=\"#d5f78a\" font-size=\"23\" font-weight=\"650\"><tspan x=\"841\" dy=\"0\">Boards</tspan></text><text x=\"841\" y=\"355\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"841\" dy=\"0\">Bug / feature + vínculos</tspan></text></g><g class=\"diagram-node\"><rect x=\"1095\" y=\"297\" width=\"205\" height=\"92\" rx=\"12\" fill=\"#172431\" stroke=\"#d5f78a\" stroke-opacity=\".65\"/><text x=\"1111\" y=\"326\" fill=\"#d5f78a\" font-size=\"23\" font-weight=\"650\"><tspan x=\"1111\" dy=\"0\">Test Plans</tspan></text><text x=\"1111\" y=\"355\" fill=\"#e1e6ee\" font-size=\"19\"><tspan x=\"1111\" dy=\"0\">Casos + planes</tspan></text></g><text x=\"1100\" y=\"147\" fill=\"#d5f78a\" font-size=\"22\" font-weight=\"600\">Azure DevOps MCP</text><text x=\"1100\" y=\"175\" fill=\"#e1e6ee\" font-size=\"18\">Conecta Copilot con</text><text x=\"1100\" y=\"201\" fill=\"#e1e6ee\" font-size=\"18\">Boards, Test Plans,</text><text x=\"1100\" y=\"227\" fill=\"#e1e6ee\" font-size=\"18\">Repos y Pipelines¹</text><text x=\"175\" y=\"442\" fill=\"#edb8de\" font-size=\"20\">Feedback por feature o bug: Desarrollo aporta el cambio y el conocimiento se actualiza</text></svg><p class=\"micro\">¹ Integración propuesta. UI web mediante Playwright MCP. API según runner. SQL mediante ejecutor protegido. El buscador recupera la versión elegida.</p>",
+    "cls": "system",
+    "note": ""
+  },
+  {
+    "ch": "10 / Referencias y próximos pasos",
+    "title": "Base técnica y decisión del piloto",
+    "lead": "Elegir aplicación, flujos críticos y responsables. Validar las conexiones en el entorno real.",
+    "body": "<div class=\"source-list\"><a href=\"https://learn.microsoft.com/en-us/azure/devops/mcp-server/mcp-server-overview?view=azure-devops\" target=\"_blank\" rel=\"noopener\">01 <span>Microsoft Learn · Azure DevOps MCP</span><small>Compatibilidad y conexión oficial</small></a><a href=\"https://github.com/microsoft/azure-devops-mcp/blob/main/docs/TOOLSET.md\" target=\"_blank\" rel=\"noopener\">02 <span>Microsoft · Catálogo de herramientas</span><small>Boards, repos, pipelines y Test Plans</small></a><a href=\"https://github.com/microsoft/playwright-mcp\" target=\"_blank\" rel=\"noopener\">03 <span>Microsoft · Playwright MCP</span><small>Herramientas para la web</small></a><a href=\"https://github.com/infiniflow/ragflow/blob/main/docs/guides/dataset/configuration.md\" target=\"_blank\" rel=\"noopener\">04 <span>RAGFlow · Configuración</span><small>Metadatos y filtros, verificar versión instalada</small></a><a href=\"https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies-overview?view=azure-devops\" target=\"_blank\" rel=\"noopener\">05 <span>Microsoft Learn · Políticas de ramas</span><small>Revisores y vínculos de PR</small></a></div><div class=\"source-footer\"><span>Herramientas disponibles ≠ integraciones ya instaladas.<br>Buscador del MVP: confirmar implementación y versión. Notas Markdown conectadas.</span><button class=\"text-button\" data-license>Saira · licencia OFL 1.1</button></div>",
+    "cls": "light sources",
+    "note": ""
+  }
+]

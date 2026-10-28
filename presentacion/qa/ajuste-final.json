@@ -1,0 +1,37 @@
+[
+  {
+    "width": 199.75,
+    "height": 1080,
+    "label": "Reglas del proceso",
+    "available": 220,
+    "passes": true
+  },
+  {
+    "width": 199.75,
+    "height": 720,
+    "label": "Reglas del proceso",
+    "available": 220,
+    "passes": true
+  },
+  {
+    "width": 199.75,
+    "height": 768,
+    "label": "Reglas del proceso",
+    "available": 220,
+    "passes": true
+  },
+  {
+    "width": 199.73109436035156,
+    "height": 844,
+    "label": "Reglas del proceso",
+    "available": 220,
+    "passes": true
+  },
+  {
+    "width": 199.73109436035156,
+    "height": 640,
+    "label": "Reglas del proceso",
+    "available": 220,
+    "passes": true
+  }
+]

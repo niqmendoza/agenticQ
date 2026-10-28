@@ -1,0 +1,35 @@
+{
+  "invocation": "Verificación estructural de entregables propios y encabezados de citas recuperados mediante brain.py; sin ejecutar tests de aplicación",
+  "read_paths": [
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/resultado.json",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/comportamiento.md",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas/revision-citas.json"
+  ],
+  "result": {
+    "status": "correcto",
+    "counts": {
+      "facts": 17,
+      "implementation": 12,
+      "cases": 29,
+      "questions": 10,
+      "conflicts": 5,
+      "omissions": 5
+    },
+    "criteria_covered": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "duplicate_exact_case_signatures": 0,
+    "sources_with_exact_known_heading": true,
+    "hashes": {
+      "resultado.json": "4c86efb978d768699d6423463719873ef3746ec224ef6cbd443a85f1d41b1651",
+      "comportamiento.md": "77f9cd295205104c54203656c832755f200bfb49acf0ae33d3f6a6de0add6888"
+    },
+    "application_executed": false
+  }
+}

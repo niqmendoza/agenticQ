@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#001F23">
+  <meta name="description" content="Plantilla autónoma y editable de diagramas de arquitectura.">
+  <title>Plantilla de arquitectura</title>
+  <!-- ESTILO: conservar salvo que la persona solicite cambiar el diseño. -->
+  <style>
+:root{color-scheme:dark;--black:#000;--deep:#001F23;--surface:#00363B;--line:#004F56;--mid:#006972;--bright:#00848F;--cyan:#00A0AD;--pink:#E11F8F;--text:#E8F6F6;--muted:#92B7BB;--gold:#D8BF70;--gold-line:#8F7D43;--gold-bg:#292615;font-family:"Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:#000;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}body{margin:0;min-width:340px}button,input,textarea{font:inherit;color:inherit}button{cursor:pointer;touch-action:manipulation}button,input,textarea{transition:background .18s,border-color .18s,color .18s}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--pink);outline-offset:3px}button{border:0}button:disabled{cursor:default;opacity:.45}svg{flex:none}::selection{background:var(--mid);color:#fff}[hidden]{display:none!important}a{color:#83D9E2}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}::-webkit-scrollbar-track{background:#001014}
+.shell{height:100dvh;display:flex;flex-direction:column;position:relative;isolation:isolate;overflow:hidden;background:#000}.hex-background{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse at 48% 15%,#001F2350,transparent 68%),#000}.hex-background canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.topbar{height:72px;min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 28px;border-bottom:1px solid #00363B;background:#001014f0;z-index:40}.brand{display:flex;align-items:center;gap:12px;background:none;text-align:left;padding:0}.brand-mark{display:grid;place-items:center;width:37px;height:37px;color:#B9F7FA;border:1px solid var(--bright);border-radius:9px;background:linear-gradient(145deg,#004F56,#001F23)}.brand strong{font-size:17px;letter-spacing:.12em;font-weight:650}.brand .slash{color:var(--pink);padding:0 7px}.brand small{display:block;font-size:8px;letter-spacing:.21em;color:var(--muted);margin-top:4px}.topbar-message{font-size:11px;color:var(--muted);text-align:center}.topbar-actions{display:flex;gap:8px}.utility{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:#001F2366;border:1px solid #00363B;border-radius:6px;padding:9px 11px;font-size:11px;color:#B5D3D5}.utility:hover{background:#00363B;border-color:#00848F;color:#fff}.icon-button{padding:6px;background:none;color:#A4C7CC;display:flex;align-items:center;justify-content:center}.page{flex:1;min-height:0;overflow:auto;padding:0 28px 40px;scrollbar-gutter:stable;background:none}.shell.with-inspector .page{padding-right:365px}.page-heading{max-width:1060px;margin:28px auto 0;padding:25px 28px 0;border:1px solid #00363B;border-radius:9px;background:#001014ed}.breadcrumb{font-size:11px;color:#759FA5;margin-bottom:25px;display:flex;align-items:center;gap:8px}.page-heading h1{font-size:38px;line-height:1.2;letter-spacing:-.04em;font-weight:600;margin:0 0 10px}.heading-period{color:var(--pink)}.page-heading>p{font-size:14px;line-height:1.6;color:var(--muted);margin:0}.heading-bottom{display:flex;justify-content:space-between;gap:20px;align-items:center;border-top:1px solid #00363B;margin-top:28px;font-size:10px;color:#739CA2}.heading-tab{display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--cyan);color:#D1EFF1;padding:14px 0;font-size:12px}.workspace{display:grid;grid-template-columns:145px minmax(0,1060px);gap:28px;justify-content:center;align-items:start;max-width:1270px;margin:23px auto 0}.with-inspector .workspace{grid-template-columns:110px minmax(0,1fr);gap:18px}.navigator{position:sticky;top:18px;z-index:20;padding:10px 7px;background:linear-gradient(90deg,#000e,#000b 80%,transparent);border-radius:6px}.navigator-label{font-size:8px;letter-spacing:.15em;color:#69969E}.navigator-spine{display:flex;flex-direction:column;gap:6px;position:relative;margin:18px 0}.navigator-spine:before{content:"";position:absolute;left:13px;top:16px;bottom:16px;border-left:1px solid var(--mid)}.navigator-spine button{display:flex;align-items:center;gap:10px;padding:7px 0;background:none;text-align:left;color:#82ACB2;font-size:10px;line-height:1.4;position:relative;z-index:1}.navigator-spine button:hover,.navigator-spine button.active{color:#E8FCFE}.navigator-dot{display:grid;place-items:center;width:27px;height:27px;flex:none;border:1px solid var(--line);border-radius:5px;background:#001014;color:#76AEB6;font:9px ui-monospace,monospace}.active .navigator-dot{background:#004F56;border-color:var(--cyan);color:#fff}.navigator>p{font-size:10px;color:#638F96;line-height:1.6;margin:0 0 16px}.legend{display:flex;align-items:center;gap:7px;font-size:9px;color:#7CA6AE;margin:9px 0}.legend i{width:17px;height:1px;background:var(--cyan)}.legend.dotted i{height:0;background:none;border-top:2px dotted #006972}.legend.return i{height:0;background:none;border-top:1px dashed var(--pink)}.legend.optional i{height:8px;border:1px solid var(--gold);background:var(--gold-bg);border-radius:2px}.map-area{min-width:0}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #00363B;padding:0 0 13px;background:#0009}.toolbar-actions{display:flex;gap:7px;flex-wrap:wrap}.toolbar .utility{font-size:10px;padding:8px 9px}.search-wrap{position:relative;display:flex;align-items:center;gap:7px;width:225px;padding:8px 10px;background:#001418;border:1px solid #00363B;border-radius:5px;color:#7EAEB4}.search-wrap:focus-within{border-color:var(--cyan)}.search-wrap input{border:0;outline:0;background:none;width:100%;min-width:0;font-size:11px}.search-wrap input::placeholder{color:#759BA0}.search-results{position:absolute;top:39px;right:0;width:320px;max-height:320px;overflow:auto;z-index:45;padding:6px;background:#001F23;border:1px solid #006972;border-radius:8px;box-shadow:0 15px 50px #000d}.search-results button{width:100%;padding:10px;border-radius:5px;display:flex;justify-content:space-between;align-items:center;background:none;text-align:left;font-size:11px;gap:9px}.search-results button:hover{background:#00363B}.search-results small{display:block;color:#83ADB4;font-size:9px;margin-top:3px}.search-results>p{font-size:11px;padding:8px}.base-note{padding:14px 16px;margin:16px 0 0;border:1px solid #004F56;border-left:3px solid var(--cyan);border-radius:6px;background:#00191ded}.base-note strong{font-size:11px;color:#BAE2E7}.base-note p{font-size:12px;line-height:1.65;color:#93BFC6;margin:6px 0 9px}.base-note small{font-size:10px;line-height:1.6;color:#C1AE76;display:block}.instruction{font-size:11px;color:#91B7BD;text-align:center;line-height:1.6;margin:18px 0 0}.internal-toggle{display:inline-flex;gap:7px;align-items:center;font-size:10px;color:#82ABB3;margin-top:12px}.internal-toggle input{accent-color:var(--cyan)}.map{position:relative;isolation:isolate;padding:75px 18px 85px}.map-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:-1;pointer-events:none}.map-lines path{fill:none}.map-lines .structure{stroke:#006972;stroke-width:2;stroke-dasharray:1 5;stroke-linecap:round}.map-lines .edge{stroke-width:1.8}.map-lines .edge-label-bg{fill:#001014;stroke:#00363B;stroke-width:.5}.map-lines .edge-label{fill:#B0D2D6;font-size:9px;text-anchor:middle;font-family:inherit}.map-endpoint{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:7px;max-width:250px;padding:5px 10px;background:#000;text-align:center;color:#8AB8BE;font-size:8px;letter-spacing:.09em;line-height:1.5}.map-start{top:10px}.map-end{bottom:0}.row{display:grid;grid-template-columns:minmax(0,1fr) 222px minmax(0,1fr);column-gap:48px;row-gap:15px;align-items:center;min-height:230px;padding:27px 0;position:relative;scroll-margin-top:80px}.row.collapsed{min-height:175px}.phase{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:center;min-width:0}.phase-sequence{font:8px ui-monospace,monospace;letter-spacing:.15em;background:#000;color:#82B0B7;margin-bottom:8px;padding:4px 7px}.phase-condition{background:#000;color:#E591C1;font-size:8px;padding:4px 6px;margin-bottom:6px;line-height:1.5;text-align:center}.phase-button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;width:100%;padding:12px;border:1.5px solid var(--cyan);border-radius:5px;background:#006972;color:#F1FFFF;font-size:14px;line-height:1.4;font-weight:650;text-align:center}.phase-button:hover{background:#00848F}.phase-owner{background:#000;padding:3px 7px;margin-top:7px;color:#7AAAB1;font-size:9px;text-align:center;line-height:1.4}.phase-fold{background:#000;color:#6599A2;font-size:9px;padding:4px 6px;margin-top:3px}.phase-fold:hover{color:#C1EDF0}.phase-button.human{border-color:var(--pink);background:#351127;color:#F7D7EA}.side{display:flex;flex-direction:column;gap:10px;min-width:0}.left{grid-column:1;grid-row:1}.right{grid-column:3;grid-row:1}.topic{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;min-height:44px;border:1px solid var(--mid);border-radius:4px;background:#001F23;color:#C2E0E3;font-size:12px;line-height:1.4;text-align:center}.topic>span:first-child{flex:1}.topic:hover{background:#00363B;border-color:var(--cyan);color:#fff}.topic.group{background:#00363B;border-color:#00848F;font-weight:550}.topic .toggle{font-size:15px;font-weight:400;color:#8ECBD3}.selected{outline:2px solid #E11F8F;outline-offset:2px}.phase-button.selected{outline-color:#C7F8FC}.topic.human,.topic.decision,.topic.validation{border-color:#E11F8F77}.topic.artifact{border-style:dashed}.children{display:flex;flex-direction:column;gap:7px;padding:10px 0 1px 12px;margin-left:8px;border-left:1px dotted #006972}.children>.branch{position:relative}.children>.branch:before{content:"";position:absolute;left:-13px;top:21px;width:12px;border-top:1px dotted #006972}.children .topic{font-size:11px;min-height:41px;padding:9px 10px;background:#001216}.children .topic.group{background:#00282D}.phase-button.optional,.topic.optional,.children .topic.optional,.optional-link{background:var(--gold-bg)!important;border:1px solid var(--gold-line)!important;color:#F1DEA5!important}.topic.optional:hover,.optional-link:hover{background:#39331A!important;border-color:var(--gold)!important}.optional .toggle{color:var(--gold)}.optional-label{display:block;font-size:8px;color:#C1AC70;line-height:1.4;margin-top:4px;font-weight:450}.returns{grid-column:1/-1;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;margin-top:3px}.returns button{display:flex;gap:5px;align-items:center;padding:6px 8px;border:1px dashed #E11F8F66;border-radius:4px;background:#000;color:#CF9AB8;font-size:9px;text-align:left;line-height:1.5}.returns button:hover{border-color:var(--pink);color:#F1C5DF}.map-footer{margin-top:20px;padding:22px;border-top:1px solid #00363B;background:#001014;border-radius:0 0 6px 6px}.map-footer strong{font-size:12px;color:#B0D5DB;font-weight:550}.map-footer p{font-size:11px;line-height:1.7;color:#7CA8AF;margin:9px 0}.map-footer small{font-size:9px;color:#628D94}.inspector{position:fixed;right:0;top:72px;bottom:0;width:340px;z-index:50;background:#001418;border-left:1px solid #006972;box-shadow:-15px 0 60px #0005;display:flex;flex-direction:column}.inspector-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #00363B}.inspector-header>span{font-size:8px;letter-spacing:.14em;color:#8AB7BE}.inspector-body{overflow:auto;flex:1;min-height:0;padding:20px}.detail-path{font-size:9px;color:#76A7B0;line-height:1.6;margin-bottom:14px}.detail-type{font-size:9px;color:#8DC7CD;letter-spacing:.12em;text-transform:uppercase}.inspector h2{font-size:22px;font-weight:500;line-height:1.3;letter-spacing:-.025em;margin:15px 0 10px}.detail-lead{font-size:13px;color:#A1C1C6;line-height:1.65}.status{display:inline-block;padding:5px 7px;font-size:9px;border:1px solid #004F56;border-radius:4px;color:#A0D9DE;background:#00363B55}.status.optional{background:var(--gold-bg);border-color:var(--gold-line);color:#F1DEA5}.detail-section{padding-top:15px;margin-top:17px;border-top:1px solid #00363B}.detail-section h3{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#75A9B0;margin:0 0 8px}.detail-section p,.detail-section ul{font-size:12px;color:#C5DBDE;line-height:1.7;margin:0}.detail-section ul{padding-left:18px}.detail-section li{padding:2px 0}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.detail-links{display:flex;flex-direction:column;gap:6px}.detail-links button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border:1px solid #004F56;border-radius:6px;background:#001F23;color:#C9E4E7;padding:10px;font-size:11px;line-height:1.5}.detail-links button:hover{background:#00363B;border-color:#00848F}.detail-links small{display:block;color:#80ADB3;font-size:10px;margin-top:4px}.optional-note{border:1px solid #8F7D4388;border-left:3px solid var(--gold);border-radius:6px;background:var(--gold-bg);padding:12px;margin-top:15px}.optional-note strong{font-size:11px;color:#F1DEA5}.optional-note p{font-size:12px;line-height:1.65;color:#D4C38F;margin:7px 0 0}.inspector-actions{padding:12px;border-top:1px solid #00363B}.inspector-actions .utility{width:100%}.modal-backdrop{position:fixed;inset:0;display:grid;place-items:center;padding:24px;background:#000b;backdrop-filter:blur(7px);z-index:100}.modal{width:730px;max-width:100%;max-height:88dvh;display:flex;flex-direction:column;padding:22px 25px;background:linear-gradient(140deg,#00363B,#001417 65%);border:1px solid #006972;border-radius:13px;box-shadow:0 30px 100px #000}.modal-header{display:flex;align-items:center;justify-content:space-between;gap:15px}.modal h2{font-size:25px;font-weight:500;letter-spacing:-.03em;margin:4px 0}.modal>p{font-size:12px;color:#9CBEC5;line-height:1.6;margin:12px 0}.modal-scroll{overflow:auto;min-height:0}.modal dl{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:20px 0}.modal dt{font-size:12px;font-weight:600;margin-bottom:7px}.modal dd{font-size:12px;line-height:1.65;margin:0;color:#9CBEC5}.data-editor{resize:vertical;min-height:220px;height:45dvh;width:100%;background:#000c;color:#CBE9EB;border:1px solid #006972;border-radius:6px;padding:14px;font:12px/1.65 ui-monospace,SFMono-Regular,monospace;tab-size:2}.modal-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:15px}.error{padding:11px;border:1px solid #E11F8F;background:#E11F8F18;border-radius:5px;color:#F3BADB;font-size:12px;line-height:1.6;margin-top:12px;white-space:pre-wrap}.notice{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);padding:11px 18px;border:1px solid #006972;border-radius:6px;background:#001F23;box-shadow:0 10px 30px #000a;font-size:12px;z-index:110;max-width:90vw}.helper{font-size:10px;color:#8BB0B8;line-height:1.6}.fatal{max-width:800px;margin:30px auto;background:#351127;border:1px solid var(--pink);border-radius:8px;padding:25px}.fatal h1{font-size:22px}.fatal pre{white-space:pre-wrap;font-size:12px;color:#E9B3D5}
+@media(max-width:1200px){.page{padding-left:20px;padding-right:20px}.workspace{grid-template-columns:115px minmax(0,1fr);gap:20px}.row{grid-template-columns:minmax(0,1fr) 195px minmax(0,1fr);column-gap:30px}.with-inspector .row{grid-template-columns:minmax(0,1fr) 170px minmax(0,1fr);column-gap:20px}.with-inspector .topic{font-size:11px;padding:10px 8px}.with-inspector .navigator>p,.with-inspector .legend{display:none}.with-inspector .workspace{grid-template-columns:95px minmax(0,1fr);gap:15px}.with-inspector .navigator-spine button{font-size:9px;gap:6px}.with-inspector .phase-button{font-size:12px;padding:11px 13px}.topbar-message{display:none}}
+@media(max-width:1000px){.shell.with-inspector .page{padding-right:20px}.inspector{width:345px;box-shadow:-20px 0 80px #000b}.row,.with-inspector .row{grid-template-columns:minmax(0,1fr) 175px minmax(0,1fr);column-gap:24px}.with-inspector .workspace{grid-template-columns:115px minmax(0,1fr);gap:20px}.with-inspector .navigator>p,.with-inspector .legend{display:flex}.toolbar .search-wrap{width:100%}.topic{font-size:11px;padding:10px 8px}.phase-button{font-size:13px}}
+@media(max-width:700px){.topbar{height:62px;min-height:62px;padding:0 13px;gap:10px}.brand-mark{height:31px;width:31px}.brand strong{font-size:14px}.brand small{font-size:7px}.brand{gap:8px}.topbar-actions{gap:5px}.topbar-actions .utility{padding:8px;font-size:10px}.topbar-actions .short-label{display:none}.page,.shell.with-inspector .page{padding:0 12px 30px}.page-heading{margin-top:16px;padding:18px 17px 0}.breadcrumb{margin-bottom:19px;font-size:10px}.page-heading h1{font-size:29px}.page-heading>p{font-size:12px}.heading-bottom{gap:9px;margin-top:20px}.heading-tab{font-size:10px}.heading-bottom>span:last-child{font-size:8px;text-align:right}.workspace,.with-inspector .workspace{display:block;margin-top:18px}.navigator{position:sticky;top:0;background:#001014f5;border:1px solid #00363B;padding:9px 7px;z-index:25;margin-bottom:17px;backdrop-filter:blur(8px)}.navigator-label,.navigator>p,.with-inspector .navigator>p,.legend,.with-inspector .legend{display:none}.navigator-spine{display:flex;flex-direction:row;gap:8px;margin:0;overflow-x:auto}.navigator-spine:before{left:15px;right:15px;top:12px;bottom:auto;border-left:0;border-top:1px solid #006972}.navigator-spine button,.with-inspector .navigator-spine button{flex:1;min-width:45px;flex-direction:column;gap:4px;padding:0;text-align:center;font-size:7px;line-height:1.3}.navigator-dot{height:23px;width:23px;font-size:8px}.map{padding:67px 0 110px}.map-endpoint{left:58px;width:115px;padding:6px 0;font-size:7px}.map-start{top:8px}.row,.with-inspector .row{grid-template-columns:116px minmax(0,1fr);column-gap:22px;row-gap:10px;padding:24px 0;min-height:200px}.row.collapsed{min-height:153px}.phase{grid-column:1;grid-row:1/span 2}.left{grid-column:2;grid-row:1}.right{grid-column:2;grid-row:2}.phase-button,.with-inspector .phase-button{font-size:12px;min-height:55px;line-height:1.4}.phase-owner,.phase-fold{font-size:8px}.phase-condition{font-size:7px}.topic,.with-inspector .topic{font-size:11px}.children{padding-left:8px;margin-left:5px}.children>.branch:before{left:-9px;width:8px}.children .topic{font-size:10px;padding:8px 6px}.returns{grid-column:2;justify-content:flex-start}.returns button{font-size:8px;padding:5px}.base-note{padding:12px}.base-note p{font-size:11px}.base-note small{font-size:9px}.instruction{font-size:10px;text-align:left}.search-wrap{width:100%}.search-results{width:100%}.map-footer{padding:18px}.inspector{top:auto;bottom:0;left:0;right:0;width:100%;height:52dvh;border-left:0;border-top:1px solid #00848F;border-radius:12px 12px 0 0;box-shadow:0 -15px 70px #000b}.inspector-header{padding:12px 18px}.inspector-body{padding:15px 18px}.inspector h2{font-size:20px}.inspector-actions{padding:8px 12px}.with-inspector .map-area{padding-bottom:48dvh}.modal-backdrop{padding:14px}.modal{padding:18px}.modal dl{grid-template-columns:1fr;gap:20px}.modal h2{font-size:23px}.data-editor{font-size:11px}.map-lines .edge-label{font-size:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+<div class="shell" id="shell">
+  <div class="hex-background" id="hex-field" aria-hidden="true"><canvas id="hex-base"></canvas><canvas id="hex-glow"></canvas></div>
+  <header class="topbar">
+    <button class="brand" id="home-button" type="button" aria-label="Volver al inicio"><span class="brand-mark" aria-hidden="true">⬡</span><span><strong><span id="brand-left"></span><span class="slash">/</span><span id="brand-right"></span></strong><small>MAPA DE ARQUITECTURA</small></span></button>
+    <span class="topbar-message" id="topbar-message"></span>
+    <div class="topbar-actions"><button type="button" class="utility" id="glossary-button" aria-label="Abrir guía de términos">? <span class="short-label">Términos</span></button><button type="button" class="utility" id="edit-button" aria-label="Editar el contenido del diagrama">✎ <span class="short-label">Editar datos</span></button><button type="button" class="utility" id="download-button" aria-label="Guardar un nuevo archivo HTML">↓ <span class="short-label">Guardar HTML</span></button></div>
+  </header>
+  <main class="page" id="page">
+    <header class="page-heading"><div class="breadcrumb">◇ <span id="topic"></span><span>›</span><span>Arquitectura</span></div><h1><span id="title"></span><span class="heading-period">.</span></h1><p id="subtitle"></p><div class="heading-bottom"><span class="heading-tab">⑂ Mapa del proceso</span><span id="statistics"></span></div></header>
+    <div class="workspace"><nav class="navigator" id="navigator" aria-label="Recorrido maestro siempre visible"></nav><section class="map-area" aria-label="Diagrama de arquitectura"><div class="toolbar"><div class="toolbar-actions"><button class="utility" type="button" id="expand-button">＋ Expandir todo</button><button class="utility" type="button" id="collapse-button">− Contraer todo</button></div><div class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" aria-label="Buscar en el mapa" placeholder="Buscar en el mapa…" autocomplete="off"><div class="search-results" id="search-results" hidden></div></div></div><div class="base-note" id="base-note"></div><p class="instruction">Seguí el recorrido central. Abrí las ramas con ＋ y seleccioná un recuadro para entenderlo.</p><label class="internal-toggle"><input type="checkbox" id="internal-connections"> Mostrar conexiones internas y sus etiquetas</label><div class="map" id="map" aria-label="Mapa con fases, componentes y relaciones"></div><footer class="map-footer" id="footer"></footer></section></div>
+  </main>
+  <aside class="inspector" id="inspector" aria-label="Explicación del recuadro seleccionado" hidden><div class="inspector-header"><span>EN ESTA PARTE DEL MAPA</span><button class="icon-button" type="button" id="close-inspector" aria-label="Cerrar explicación">✕</button></div><div class="inspector-body" id="inspector-body"></div><div class="inspector-actions"><button class="utility" type="button" id="show-connections">⑂ Ver sus conexiones en el mapa</button></div></aside>
+</div>
+<div class="modal-backdrop" id="editor-backdrop" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="editor-title"><div class="modal-header"><h2 id="editor-title">Editar el contenido</h2><button class="icon-button" id="close-editor" type="button" aria-label="Cerrar editor">✕</button></div><p>Modificá el JSON o pegá el que preparó tu LLM. Los cambios se aplican en esta ventana; usá «Guardar HTML» para conservarlos en un archivo nuevo.</p><textarea class="data-editor" id="data-editor" spellcheck="false" aria-label="Contenido del diagrama en JSON"></textarea><div class="error" id="editor-error" role="alert" hidden></div><div class="modal-actions"><button class="utility" type="button" id="apply-data">Aplicar cambios</button><button class="utility" type="button" id="import-data">Cargar JSON</button><input type="file" id="json-file" accept=".json,application/json" hidden><span class="helper">El archivo se procesa aquí; no se envía a un servidor.</span></div></section></div>
+<div class="modal-backdrop" id="glossary-backdrop" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="glossary-title"><div class="modal-header"><h2 id="glossary-title">Un idioma compartido</h2><button class="icon-button" id="close-glossary" type="button" aria-label="Cerrar términos">✕</button></div><div class="modal-scroll"><dl id="glossary-list"></dl></div></section></div>
+<div class="notice" id="notice" role="status" hidden></div>
+
+<!-- INICIO DEL CONTENIDO EDITABLE. El LLM cambia ESTE JSON y conserva el motor y el diseño. -->
+<script id="diagram-data" type="application/json">
+{
+  "schemaVersion": "1.0",
+  "meta": {
+    "title": "Tu próxima arquitectura",
+    "subtitle": "Ejemplo genérico: reemplazá este contenido para explicar tu sistema, proceso o solución.",
+    "topic": "Plantilla reutilizable",
+    "brandLeft": "ARQ",
+    "brandRight": "EQUIPO",
+    "tagline": "Un recorrido compartido, de la necesidad al resultado",
+    "baseTitle": "El punto de partida",
+    "baseDescription": "Contá qué existe hoy, con qué personas y herramientas se puede trabajar y qué resultado se busca. Este texto es de ejemplo.",
+    "startLabel": "NECESIDAD IDENTIFICADA",
+    "startId": "necesidad",
+    "endLabel": "RESULTADO REVISADO Y APRENDIZAJE",
+    "endId": "entrega",
+    "footerTitle": "Tu tema, el mismo lenguaje visual",
+    "footerText": "Esta plantilla muestra un ejemplo de estructura, no una arquitectura implementada. Reemplazá todos los ejemplos con la información de tu proyecto."
+  },
+  "glossary": [
+    {
+      "term": "Recuadro",
+      "meaning": "Una actividad, persona, sistema, decisión o documento de tu arquitectura."
+    },
+    {
+      "term": "Rama",
+      "meaning": "Una parte que pertenece a otro recuadro. La línea punteada expresa esa relación; no indica por sí sola un orden de ejecución."
+    },
+    {
+      "term": "Conexión",
+      "meaning": "Una relación explícita entre dos recuadros. Su flecha indica dirección y su etiqueta explica qué pasa o qué se intercambia."
+    },
+    {
+      "term": "Opcional",
+      "meaning": "Una mejora o alternativa que puede omitirse o sustituirse. El recuadro explica cómo cubrir hoy esa tarea."
+    }
+  ],
+  "groups": [
+    {
+      "id": "necesidad",
+      "type": "group",
+      "title": "Entender la necesidad",
+      "description": "Definir el objetivo, las reglas y los límites antes de proponer una solución.",
+      "owner": "Personas que conocen el problema",
+      "children": [
+        {
+          "id": "fuentes",
+          "type": "group",
+          "title": "Reunir la información",
+          "description": "Separar la información confirmada de las dudas por resolver.",
+          "children": [
+            {
+              "id": "objetivo",
+              "type": "input",
+              "title": "Objetivo acordado",
+              "description": "Explicar para qué se necesita la solución y qué resultado demostraría que funcionó.",
+              "status": "propuesto",
+              "inputs": [
+                "Necesidad del equipo"
+              ],
+              "outputs": [
+                "Objetivo y criterios claros"
+              ],
+              "owner": "Responsable del tema",
+              "checks": [
+                "El objetivo se puede explicar en una frase",
+                "Se sabe quién debe confirmarlo"
+              ]
+            },
+            {
+              "id": "documento",
+              "type": "artifact",
+              "title": "Documento de referencia",
+              "description": "Guardar las reglas y los acuerdos que sirven como base.",
+              "status": "actual",
+              "outputs": [
+                "Reglas confirmadas y dudas identificadas"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "responsable",
+          "type": "human",
+          "title": "Responsable del alcance",
+          "description": "La persona responsable aclara qué entra en el proyecto y qué queda fuera.",
+          "status": "propuesto",
+          "humanReview": "Confirma los límites y resuelve las preguntas abiertas."
+        }
+      ]
+    },
+    {
+      "id": "diseno",
+      "type": "group",
+      "title": "Preparar la solución",
+      "description": "Proponer los componentes y explicar cómo van a colaborar.",
+      "owner": "Equipo que diseña e implementa",
+      "children": [
+        {
+          "id": "solucion-base",
+          "type": "process",
+          "title": "Solución con lo disponible",
+          "description": "Describir cómo resolver el trabajo con las herramientas y capacidades actuales.",
+          "status": "actual",
+          "purpose": "Mostrar una base que no dependa de incorporar todas las mejoras.",
+          "inputs": [
+            "Objetivo acordado",
+            "Recursos actuales"
+          ],
+          "outputs": [
+            "Propuesta de solución"
+          ]
+        },
+        {
+          "id": "opciones",
+          "type": "group",
+          "title": "Mejoras que se pueden evaluar",
+          "description": "Separar las mejoras opcionales del camino que ya es suficiente.",
+          "children": [
+            {
+              "id": "componente-opcional",
+              "type": "tool",
+              "title": "Componente opcional",
+              "description": "Ejemplo de una herramienta que podría facilitar una parte del trabajo.",
+              "status": "opcional",
+              "alternative": "Hoy esta tarea puede hacerla el equipo con la solución base. La nueva herramienta se evaluaría si aporta una mejora comprobable.",
+              "checks": [
+                "Se conoce el beneficio que se busca",
+                "Existe una alternativa sin incorporar este componente"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "propuesta",
+          "type": "artifact",
+          "title": "Propuesta preparada",
+          "description": "Documento o conjunto de acuerdos que se presenta para revisión.",
+          "status": "propuesto",
+          "inputs": [
+            "Objetivo",
+            "Componentes y responsabilidades"
+          ],
+          "outputs": [
+            "Propuesta revisable"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revision",
+      "type": "group",
+      "title": "Revisar y decidir",
+      "description": "Las personas responsables revisan la propuesta y acuerdan si puede continuar.",
+      "owner": "Responsable del tema + equipo implementador",
+      "review": true,
+      "children": [
+        {
+          "id": "revision-funcional",
+          "type": "human",
+          "title": "Revisar lo que se necesita",
+          "description": "Comprobar que la propuesta responde al objetivo y a las reglas.",
+          "status": "propuesto",
+          "humanReview": "La persona responsable puede aprobar o pedir ajustes."
+        },
+        {
+          "id": "revision-tecnica",
+          "type": "human",
+          "title": "Revisar cómo se hará",
+          "description": "Comprobar que el equipo puede implementar, operar y mantener la solución.",
+          "status": "propuesto",
+          "humanReview": "El equipo implementador explica dudas, límites y cambios necesarios."
+        },
+        {
+          "id": "decision",
+          "type": "decision",
+          "title": "¿La propuesta está lista?",
+          "description": "Si se cumplen los criterios acordados, la propuesta continúa. Si faltan cambios, vuelve a diseño.",
+          "status": "propuesto",
+          "checks": [
+            "Los responsables confirmaron la propuesta",
+            "Las dudas pendientes tienen una resolución"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "entrega",
+      "type": "group",
+      "title": "Ejecutar y mejorar",
+      "description": "Aplicar la propuesta, observar el resultado y decidir los próximos pasos.",
+      "owner": "Equipo responsable de la entrega",
+      "condition": "Continuar sólo con la propuesta aprobada",
+      "children": [
+        {
+          "id": "trabajo",
+          "type": "group",
+          "title": "Realizar el trabajo",
+          "description": "Preparar, ejecutar y conservar lo que permita revisar el resultado.",
+          "children": [
+            {
+              "id": "ejecucion",
+              "type": "process",
+              "title": "Ejecutar la propuesta",
+              "description": "Realizar el trabajo de acuerdo con la versión aprobada.",
+              "status": "propuesto",
+              "inputs": [
+                "Propuesta aprobada"
+              ],
+              "outputs": [
+                "Resultado y registros"
+              ]
+            },
+            {
+              "id": "evidencia",
+              "type": "artifact",
+              "title": "Guardar la evidencia",
+              "description": "Conservar información suficiente para comprender y reproducir lo que pasó.",
+              "status": "propuesto",
+              "outputs": [
+                "Resultados y observaciones"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "resultado",
+          "type": "validation",
+          "title": "Revisar el resultado",
+          "description": "Comparar el resultado con el objetivo. Los ajustes se documentan y vuelven a la etapa correspondiente.",
+          "status": "propuesto",
+          "humanReview": "La persona responsable confirma el resultado con evidencia.",
+          "checks": [
+            "Se comparó el resultado con el objetivo",
+            "Los cambios necesarios tienen un responsable"
+          ]
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "macro-1",
+      "source": "necesidad",
+      "target": "diseno",
+      "type": "data",
+      "label": "Objetivo y reglas acordados"
+    },
+    {
+      "id": "macro-2",
+      "source": "diseno",
+      "target": "revision",
+      "type": "normal",
+      "label": "Propuesta lista para revisar"
+    },
+    {
+      "id": "macro-3",
+      "source": "revision",
+      "target": "entrega",
+      "type": "conditional",
+      "label": "El equipo aprueba",
+      "condition": "Se cumplen los criterios y se resuelven las dudas"
+    },
+    {
+      "id": "ajuste-propuesta",
+      "source": "revision",
+      "target": "diseno",
+      "type": "feedback",
+      "label": "Pedir ajustes a la propuesta"
+    },
+    {
+      "id": "aprendizaje",
+      "source": "entrega",
+      "target": "diseno",
+      "type": "feedback",
+      "label": "El resultado requiere una mejora"
+    },
+    {
+      "id": "detalle-1",
+      "source": "objetivo",
+      "target": "solucion-base",
+      "type": "data",
+      "label": "Necesidad y criterios de éxito"
+    },
+    {
+      "id": "detalle-2",
+      "source": "solucion-base",
+      "target": "propuesta",
+      "type": "normal",
+      "label": "Preparar la propuesta"
+    },
+    {
+      "id": "opcion-1",
+      "source": "componente-opcional",
+      "target": "propuesta",
+      "type": "optional",
+      "label": "Mejora si se adopta"
+    },
+    {
+      "id": "detalle-3",
+      "source": "propuesta",
+      "target": "revision-funcional",
+      "type": "approval",
+      "label": "Revisar el objetivo"
+    },
+    {
+      "id": "detalle-4",
+      "source": "propuesta",
+      "target": "revision-tecnica",
+      "type": "approval",
+      "label": "Revisar la implementación"
+    },
+    {
+      "id": "detalle-5",
+      "source": "revision-funcional",
+      "target": "decision",
+      "type": "approval",
+      "label": "Confirmación funcional"
+    },
+    {
+      "id": "detalle-6",
+      "source": "revision-tecnica",
+      "target": "decision",
+      "type": "approval",
+      "label": "Confirmación técnica"
+    },
+    {
+      "id": "detalle-7",
+      "source": "decision",
+      "target": "ejecucion",
+      "type": "conditional",
+      "label": "Aprobado",
+      "condition": "Todos los criterios acordados se cumplen"
+    },
+    {
+      "id": "detalle-8",
+      "source": "decision",
+      "target": "propuesta",
+      "type": "feedback",
+      "label": "Corregir lo solicitado"
+    },
+    {
+      "id": "detalle-9",
+      "source": "ejecucion",
+      "target": "evidencia",
+      "type": "normal",
+      "label": "Registrar lo que ocurrió"
+    },
+    {
+      "id": "detalle-10",
+      "source": "evidencia",
+      "target": "resultado",
+      "type": "data",
+      "label": "Evidencia para revisar"
+    }
+  ]
+}
+</script>
+<!-- FIN DEL CONTENIDO EDITABLE. -->
+
+<!-- MOTOR REUTILIZABLE: no requiere librerías, servidor ni compilación. -->
+<script id="diagram-engine">
+'use strict';
+(() => {
+  const $ = id => document.getElementById(id);
+  // Capture an unrendered copy so each export contains the template + its current JSON, not runtime DOM.
+  const sourceDocument = document.documentElement.cloneNode(true);
+  const state = { model: null, byId: new Map(), parent: new Map(), expanded: new Set(), selected: null, internal: false };
+  const typeNames = {group:'Parte con detalle',process:'Actividad',tool:'Herramienta',human:'Persona',decision:'Decisión',model:'Modelo de IA',artifact:'Documento',external:'Sistema externo',input:'Entrada',output:'Salida',validation:'Validación'};
+  const statusNames = {actual:'Ya existe / base actual',propuesto:'Diseño propuesto',opcional:'Opcional · reemplazable'};
+  const edgeNames = {normal:'Avance',data:'Intercambio de información',approval:'Revisión humana',conditional:'Condición',feedback:'Retorno o corrección',optional:'Conexión opcional'};
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  let mapObserver = null, phaseObserver = null, measureFrame = 0, noticeTimer = 0, activePhase = null;
+  const ns = 'http://www.w3.org/2000/svg';
+  const group = node => node.type === 'group';
+  const optional = node => node.status === 'opcional' || (group(node) && node.children.length > 0 && node.children.every(optional));
+  function element(tag, className, text) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text !== undefined) el.textContent = text;
+    return el;
+  }
+  function button(text, className, action) {
+    const el = element('button',className,text); el.type = 'button'; el.onclick = action; return el;
+  }
+  function svgElement(tag, attrs) {
+    const el = document.createElementNS(ns,tag);
+    Object.entries(attrs || {}).forEach(([key,value]) => el.setAttribute(key,String(value)));
+    return el;
+  }
+  function pathOf(id) {
+    const path = []; let cursor = id;
+    while (cursor) { path.unshift(state.byId.get(cursor)); cursor = state.parent.get(cursor); }
+    return path.filter(Boolean);
+  }
+  function rootOf(id) { return pathOf(id)[0]?.id; }
+  function notify(message) {
+    $('notice').textContent = message; $('notice').hidden = false;
+    clearTimeout(noticeTimer); noticeTimer = setTimeout(() => { $('notice').hidden = true; },3500);
+  }
+
+  /* VALIDATION_START: pure validation; errors are shown without replacing the current diagram. */
+  function validateModel(model) {
+    if (!model || typeof model !== 'object' || model.schemaVersion !== '1.0') throw Error('schemaVersion debe ser "1.0".');
+    if (!model.meta || typeof model.meta !== 'object') throw Error('Falta meta.');
+    for (const key of ['title','subtitle','brandLeft','brandRight']) {
+      if (typeof model.meta[key] !== 'string' || !model.meta[key].trim()) throw Error(`Falta meta.${key}.`);
+    }
+    for (const key of ['topic','tagline','baseTitle','baseDescription','startLabel','endLabel','startId','endId','footerTitle','footerText']) {
+      if (model.meta[key] !== undefined && typeof model.meta[key] !== 'string') throw Error(`meta.${key} debe ser texto.`);
+    }
+    if (!Array.isArray(model.groups) || !model.groups.length) throw Error('groups debe tener al menos un grupo principal.');
+    if (!Array.isArray(model.edges)) throw Error('edges debe ser una lista (puede estar vacía).');
+    const ids = new Set(), edgeIds = new Set(), groupIds = new Set();
+    const types = new Set(['group','process','tool','human','decision','model','artifact','external','input','output','validation']);
+    function visit(node) {
+      if (!node || typeof node !== 'object' || !/^[a-z][a-z0-9-]*$/.test(node.id || '')) throw Error('Cada recuadro necesita un id único, en minúsculas, sin espacios: ejemplo, sistema-entrada.');
+      if (ids.has(node.id)) throw Error(`id duplicado: ${node.id}`);
+      ids.add(node.id);
+      if (!types.has(node.type)) throw Error(`Tipo desconocido: ${node.id}`);
+      for (const key of ['title','description']) if (typeof node[key] !== 'string' || !node[key].trim()) throw Error(`Falta ${key} en ${node.id}.`);
+      if (node.status !== undefined && !['actual','propuesto','opcional'].includes(node.status)) throw Error(`Estado inválido: ${node.id}`);
+      for (const key of ['owner','condition','purpose','how','humanReview','alternative']) if (node[key] !== undefined && typeof node[key] !== 'string') throw Error(`${node.id}.${key} debe ser texto.`);
+      for (const key of ['inputs','outputs','tools','checks']) if (node[key] !== undefined && (!Array.isArray(node[key]) || node[key].some(value => typeof value !== 'string'))) throw Error(`${node.id}.${key} debe ser una lista de textos.`);
+      if (node.review !== undefined && typeof node.review !== 'boolean') throw Error(`${node.id}.review debe ser true o false.`);
+      if (node.status === 'opcional' && !node.alternative?.trim()) throw Error(`Explicá en ${node.id}.alternative cómo se cubre hoy la tarea sin esa opción.`);
+      if (node.type === 'group') {
+        groupIds.add(node.id);
+        if (!Array.isArray(node.children)) throw Error(`${node.id}.children debe ser una lista.`);
+        node.children.forEach(visit);
+      } else if (node.children !== undefined) throw Error(`${node.id} necesita type: "group" para tener children.`);
+    }
+    model.groups.forEach(node => { if (node.type !== 'group') throw Error('Los elementos principales de groups deben tener type: "group".'); visit(node); });
+    if (model.meta.initialExpanded !== undefined && (!Array.isArray(model.meta.initialExpanded) || model.meta.initialExpanded.some(id => typeof id !== 'string' || !groupIds.has(id)))) throw Error('meta.initialExpanded debe contener IDs de grupos existentes.');
+    const roots = new Set(model.groups.map(node => node.id));
+    for (const key of ['startId','endId']) if (model.meta[key] && !roots.has(model.meta[key])) throw Error(`meta.${key} debe ser el id de un grupo principal.`);
+    for (const edge of model.edges) {
+      if (!edge || typeof edge.id !== 'string' || !edge.id.trim() || edgeIds.has(edge.id)) throw Error(`Falta id de conexión o está duplicado: ${edge?.id}`);
+      edgeIds.add(edge.id);
+      if (!ids.has(edge.source) || !ids.has(edge.target)) throw Error(`La conexión ${edge.id} apunta a un recuadro inexistente.`);
+      if (!['normal','data','approval','conditional','feedback','optional'].includes(edge.type)) throw Error(`Tipo de conexión desconocido: ${edge.id}`);
+      if (typeof edge.label !== 'string' || !edge.label.trim()) throw Error(`Falta etiqueta en la conexión ${edge.id}.`);
+      if (edge.condition !== undefined && typeof edge.condition !== 'string') throw Error(`${edge.id}.condition debe ser texto.`);
+      if (edge.type === 'conditional' && !edge.condition?.trim()) throw Error(`Explicá la condición en ${edge.id}.condition.`);
+    }
+    if (model.glossary !== undefined && (!Array.isArray(model.glossary) || model.glossary.some(entry => !entry || typeof entry.term !== 'string' || typeof entry.meaning !== 'string'))) throw Error('glossary debe ser una lista de objetos con term y meaning.');
+    function noCoordinates(value) {
+      if (!value || typeof value !== 'object') return;
+      for (const [key,child] of Object.entries(value)) {
+        if (['x','y','position','coordinates'].includes(key)) throw Error(`No se guardan coordenadas en los datos: ${key}`);
+        noCoordinates(child);
+      }
+    }
+    noCoordinates(model);
+    return true;
+  }
+  /* VALIDATION_END */
+
+  function loadModel(model) {
+    validateModel(model);
+    document.querySelector('.fatal')?.remove();
+    state.model = model; state.byId.clear(); state.parent.clear(); state.selected = null;
+    function index(node,parent) {
+      state.byId.set(node.id,node); state.parent.set(node.id,parent);
+      if (group(node)) node.children.forEach(child => index(child,node.id));
+    }
+    model.groups.forEach(node => index(node,null));
+    state.expanded = new Set(model.meta.initialExpanded ?? model.groups.map(node => node.id));
+    activePhase = model.groups[0].id;
+    $('inspector').hidden = true; $('shell').classList.remove('with-inspector');
+    renderPresentation();
+  }
+  function renderPresentation() {
+    const {meta,groups,glossary = []} = state.model;
+    document.title = `${meta.brandLeft} / ${meta.brandRight} · ${meta.title}`;
+    document.querySelector('meta[name="description"]').content = meta.subtitle;
+    for (const [id,value] of Object.entries({'brand-left':meta.brandLeft,'brand-right':meta.brandRight,'topbar-message':meta.tagline || '',topic:meta.topic || 'Arquitectura',title:meta.title,subtitle:meta.subtitle})) $(id).textContent = value;
+    const leaves = [...state.byId.values()].filter(node => !group(node)).length;
+    $('statistics').textContent = `${groups.length} partes · ${leaves} actividades · ${state.model.edges.length} conexiones`;
+    $('base-note').replaceChildren();
+    $('base-note').hidden = !meta.baseDescription;
+    if (meta.baseDescription) $('base-note').append(element('strong','',meta.baseTitle || 'Punto de partida'),element('p','',meta.baseDescription),element('small','','Amarillo: una opción que puede omitirse o reemplazarse. Consultá su explicación para ver la alternativa.'));
+    $('footer').replaceChildren(element('strong','',meta.footerTitle || 'Acuerdos y próximos pasos'),element('p','',meta.footerText || ''),element('small','','Línea con flecha: conexión declarada · Línea punteada sin flecha: una parte pertenece a otra · Magenta: revisión o retorno · Amarillo: opcional'));
+    $('glossary-button').hidden = !glossary.length;
+    $('glossary-list').replaceChildren(...glossary.map(entry => { const div = element('div'); div.append(element('dt','',entry.term),element('dd','',entry.meaning)); return div; }));
+    renderNavigator(); renderMap();
+  }
+  function renderNavigator() {
+    const nav = $('navigator'); nav.replaceChildren(element('span','navigator-label','EL RECORRIDO'));
+    const spine = element('div','navigator-spine');
+    state.model.groups.forEach((node,index) => {
+      const el = button('','',() => navigate(node.id)); el.dataset.navId = node.id;
+      el.append(element('span','navigator-dot',String(index + 1).padStart(2,'0')),element('span','',node.title)); spine.append(el);
+    });
+    nav.append(spine,element('p','','Las partes principales permanecen visibles mientras explorás los detalles.'));
+    [['','Conexión principal'],['dotted','Detalle de una parte'],['return','Revisión o corrección'],['optional','Opcional o reemplazable']].forEach(([kind,text]) => { const el = element('span',`legend ${kind}`); el.append(element('i'),document.createTextNode(text)); nav.append(el); });
+    updateSelectionStyles();
+  }
+  function topicButton(node,root = false) {
+    const hasChildren = group(node) && node.children.length > 0;
+    const open = state.expanded.has(node.id);
+    const classes = root ? `phase-button ${node.review ? 'human' : ''}` : `topic ${node.type}`;
+    const el = button('',`${classes} ${optional(node) ? 'optional' : ''}`,() => {
+      if (hasChildren && !root) toggle(node.id);
+      select(node.id);
+    });
+    el.dataset.nodeId = node.id;
+    const title = element('span','',node.title);
+    if (optional(node)) title.append(element('small','optional-label','Opcional · reemplazable'));
+    el.append(title);
+    if (!root) {
+      if (hasChildren) { el.append(element('span','toggle',open ? '−' : '+')); el.setAttribute('aria-expanded',String(open)); }
+      else el.append(element('span','','↗'));
+    }
+    return el;
+  }
+  function branch(node) {
+    const wrapper = element('div','branch'); wrapper.append(topicButton(node));
+    if (group(node) && state.expanded.has(node.id) && node.children.length) {
+      const children = element('div','children'); node.children.forEach(child => children.append(branch(child))); wrapper.append(children);
+    }
+    return wrapper;
+  }
+  function toggle(id) {
+    state.expanded.has(id) ? state.expanded.delete(id) : state.expanded.add(id);
+    renderMap();
+  }
+  function renderMap() {
+    mapObserver?.disconnect(); phaseObserver?.disconnect();
+    const map = $('map'); map.replaceChildren();
+    const svg = svgElement('svg',{class:'map-lines','aria-hidden':'true'}); map.append(svg);
+    const meta = state.model.meta;
+    if (meta.startLabel && meta.startId) map.append(element('div','map-endpoint map-start',meta.startLabel + ' ↓'));
+    state.model.groups.forEach((node,index) => {
+      const row = element('section',`row ${state.expanded.has(node.id) ? '' : 'collapsed'}`); row.dataset.phase = node.id; row.setAttribute('aria-label',node.title);
+      const left = element('div','side left'), right = element('div','side right');
+      if (state.expanded.has(node.id)) node.children.forEach((child,n) => (n % 2 ? right : left).append(branch(child)));
+      const phase = element('div','phase'); phase.append(element('span','phase-sequence',`PARTE ${String(index + 1).padStart(2,'0')}`));
+      if (node.condition) phase.append(element('span','phase-condition',node.condition));
+      phase.append(topicButton(node,true));
+      if (node.owner) phase.append(element('span','phase-owner',node.owner));
+      if (node.children.length) {
+        const fold = button(state.expanded.has(node.id) ? '− Contraer ramas' : '+ Desplegar ramas','phase-fold',() => toggle(node.id)); fold.setAttribute('aria-expanded',String(state.expanded.has(node.id))); phase.append(fold);
+      }
+      row.append(left,phase,right);
+      const feedback = state.model.edges.filter(edge => edge.type === 'feedback' && rootOf(edge.source) === node.id);
+      if (feedback.length) {
+        const list = element('div','returns');
+        feedback.forEach(edge => list.append(button(`↶ ${edge.label} →`,'',() => navigate(edge.target)))); row.append(list);
+      }
+      map.append(row);
+    });
+    if (meta.endLabel && meta.endId) map.append(element('div','map-endpoint map-end',meta.endLabel));
+    updateSelectionStyles();
+    mapObserver = new ResizeObserver(scheduleMeasure); mapObserver.observe(map);
+    map.querySelectorAll('[data-node-id],.row').forEach(el => mapObserver.observe(el));
+    phaseObserver = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible[0] && !state.selected) { activePhase = visible[0].target.dataset.phase; updateSelectionStyles(); }
+    },{root:$('page'),rootMargin:'-15% 0px -50% 0px',threshold:0});
+    map.querySelectorAll('.row').forEach(el => phaseObserver.observe(el));
+    scheduleMeasure();
+  }
+  function scheduleMeasure() {
+    cancelAnimationFrame(measureFrame); measureFrame = requestAnimationFrame(drawConnections);
+  }
+  function drawConnections() {
+    const map = $('map'), svg = map.querySelector('svg'); if (!svg) return;
+    svg.replaceChildren();
+    const defs = svgElement('defs');
+    [['normal','#00A0AD'],['data','#00848F'],['approval','#E11F8F'],['conditional','#E11F8F'],['feedback','#E11F8F'],['optional','#D8BF70']].forEach(([kind,color]) => {
+      const marker = svgElement('marker',{id:`arrow-${kind}`,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:5,markerHeight:5,orient:'auto'});
+      marker.append(svgElement('path',{d:'M0 0 L10 5 L0 10Z',style:`fill:${color}`})); defs.append(marker);
+    }); svg.append(defs);
+    const box = map.getBoundingClientRect(), rects = new Map();
+    map.querySelectorAll('[data-node-id]').forEach(el => {
+      const r = el.getBoundingClientRect(); rects.set(el.dataset.nodeId,{left:r.left-box.left,right:r.right-box.left,top:r.top-box.top,bottom:r.bottom-box.top,x:r.left-box.left+r.width/2,y:r.top-box.top+r.height/2});
+    });
+    function representative(id) { let cursor = id; while (cursor && !rects.has(cursor)) cursor = state.parent.get(cursor); return cursor; }
+    // A dotted hierarchy line is distinct from any declared operational connection.
+    for (const node of state.byId.values()) if (group(node) && state.expanded.has(node.id) && rects.has(node.id)) {
+      const a = rects.get(node.id);
+      node.children.forEach(child => {
+        const b = rects.get(child.id); if (!b) return;
+        if (state.parent.get(node.id) !== null) return; // Nested hierarchy already has CSS tree connectors.
+        const left = b.x < a.x, x1 = left ? a.left : a.right, x2 = left ? b.right : b.left, mid = (x1+x2)/2;
+        svg.append(svgElement('path',{d:`M${x1},${a.y} C${mid},${a.y} ${mid},${b.y} ${x2},${b.y}`,class:'structure'}));
+      });
+    }
+    const rootIds = new Set(state.model.groups.map(node => node.id)), seen = new Set();
+    const colors = {normal:'#00A0AD',data:'#00848F',approval:'#E11F8F',conditional:'#E11F8F',feedback:'#E11F8F',optional:'#D8BF70'};
+    state.model.edges.forEach(edge => {
+      const source = representative(edge.source), target = representative(edge.target);
+      if (!source || !target || (source === target && edge.source !== edge.target)) return;
+      const macro = rootIds.has(edge.source) && rootIds.has(edge.target);
+      if (!macro && !state.internal && source !== state.selected && target !== state.selected) return;
+      const key = `${source}|${target}|${edge.type}|${edge.label}`; if (seen.has(key)) return; seen.add(key);
+      const a = rects.get(source), b = rects.get(target);
+      let d, lx, ly;
+      if (edge.type === 'feedback' || source === target) {
+        const lane = Math.min(box.width - 5,Math.max(a.right,b.right) + 20);
+        d = `M${a.right},${a.y} C${lane},${a.y} ${lane},${b.y-25} ${b.right},${b.y-5}`;
+        lx = lane - 70; ly = (a.y+b.y)/2;
+      } else if (Math.abs(a.x-b.x) < 8) {
+        const down = b.y >= a.y, y1 = down ? a.bottom : a.top, y2 = down ? b.top : b.bottom;
+        d = `M${a.x},${y1} V${y2}`; lx = a.x; ly = (y1+y2)/2;
+      } else {
+        const right = b.x > a.x, x1 = right ? a.right : a.left, x2 = right ? b.left : b.right, mid = (x1+x2)/2;
+        d = `M${x1},${a.y} C${mid},${a.y} ${mid},${b.y} ${x2},${b.y}`; lx = mid; ly = (a.y+b.y)/2;
+      }
+      const path = svgElement('path',{d,class:'edge',stroke:colors[edge.type],'marker-end':`url(#arrow-${edge.type})`,opacity:edge.type==='feedback'?.5:.9});
+      if (['feedback','optional'].includes(edge.type)) path.setAttribute('stroke-dasharray','5 5');
+      const tooltip = svgElement('title'); tooltip.textContent = `${state.byId.get(edge.source).title} → ${state.byId.get(edge.target).title}: ${edge.label}${edge.condition ? ' · '+edge.condition : ''}`; path.append(tooltip); svg.append(path);
+      // Feedback labels remain readable in the return buttons, rather than covering the cards.
+      if (edge.type !== 'feedback') {
+        const text = edge.label.length > 43 ? edge.label.slice(0,40) + '…' : edge.label;
+        const w = Math.min(250,text.length*5.2+16);
+        svg.append(svgElement('rect',{x:lx-w/2,y:ly-9,width:w,height:18,rx:4,class:'edge-label-bg'}));
+        const label = svgElement('text',{x:lx,y:ly+3,class:'edge-label'}); label.textContent = text; svg.append(label);
+      }
+    });
+    if (state.model.meta.startId && state.model.meta.startLabel) {
+      const a = rects.get(state.model.meta.startId); if (a) svg.append(svgElement('path',{d:`M${a.x},42 V${a.top}`,class:'edge',stroke:'#00A0AD','marker-end':'url(#arrow-normal)'}));
+    }
+    if (state.model.meta.endId && state.model.meta.endLabel) {
+      const a = rects.get(state.model.meta.endId); if (a) svg.append(svgElement('path',{d:`M${a.x},${a.bottom} V${box.height-40}`,class:'edge',stroke:'#00A0AD','marker-end':'url(#arrow-normal)'}));
+    }
+  }
+  function updateSelectionStyles() {
+    document.querySelectorAll('[data-node-id]').forEach(el => { el.classList.toggle('selected',el.dataset.nodeId === state.selected); el.setAttribute('aria-pressed',String(el.dataset.nodeId === state.selected)); });
+    const current = state.selected ? rootOf(state.selected) : activePhase;
+    document.querySelectorAll('[data-nav-id]').forEach(el => {
+      const active = el.dataset.navId === current; el.classList.toggle('active',active);
+      if (active) el.setAttribute('aria-current','step'); else el.removeAttribute('aria-current');
+    });
+  }
+  function select(id) { state.selected = id; activePhase = rootOf(id); $('shell').classList.add('with-inspector'); $('inspector').hidden = false; renderDetails(); updateSelectionStyles(); scheduleMeasure(); }
+  function navigate(id) {
+    if (!state.byId.has(id)) return;
+    pathOf(id).filter(group).forEach(node => state.expanded.add(node.id));
+    renderMap(); select(id);
+    requestAnimationFrame(() => {
+      const target = [...$('map').querySelectorAll('[data-node-id]')].find(el => el.dataset.nodeId === id);
+      if (!target) return;
+      const page = $('page'); page.scrollTo({top:page.scrollTop+target.getBoundingClientRect().top-page.getBoundingClientRect().top-(innerWidth<=700?100:80),behavior:motion.matches?'auto':'smooth'});
+    });
+  }
+  function detailSection(title,text) { const section = element('section','detail-section'); section.append(element('h3','',title),element('p','',text)); return section; }
+  function detailList(title,values) {
+    if (!values?.length) return null;
+    const section = element('section','detail-section'), list = element('ul'); values.forEach(value => list.append(element('li','',value))); section.append(element('h3','',title),list); return section;
+  }
+  function renderDetails() {
+    const node = state.byId.get(state.selected), body = $('inspector-body'); if (!node) return;
+    body.replaceChildren(element('div','detail-path',pathOf(node.id).map(n=>n.title).join(' › ')),element('span','detail-type',typeNames[node.type]),element('h2','',node.title),element('p','detail-lead',node.description));
+    if (node.status) body.append(element('span',`status ${optional(node)?'optional':''}`,statusNames[node.status]));
+    if (optional(node)) {
+      const note = element('div','optional-note'); note.append(element('strong','','Opcional · se puede reemplazar'),element('p','',node.alternative || 'Esta rama agrupa alternativas. Abrí cada opción para conocer cómo cubrir la tarea sin incorporarla.')); body.append(note);
+    }
+    if (group(node) && node.children.length) {
+      const section = element('section','detail-section'), links = element('div','detail-links'); section.append(element('h3','','Dentro de esta parte'));
+      node.children.forEach(child => links.append(button(child.title + ' ›',optional(child)?'optional-link':'',()=>navigate(child.id)))); section.append(links); body.append(section);
+    }
+    [['Para qué sirve',node.purpose],['Cómo se hace',node.how],['Responsable',node.owner],['Intervención humana',node.humanReview],['Condición de entrada',node.condition]].forEach(([label,value])=>{if(value)body.append(detailSection(label,value));});
+    const columns = element('div','detail-grid');
+    for (const [label,values] of [['Qué recibe',node.inputs],['Qué entrega',node.outputs]]) {const list=detailList(label,values);if(list)columns.append(list);}
+    if(columns.childElementCount)body.append(columns);
+    for(const [label,values] of [['Herramientas',node.tools],['Cómo sabemos que está listo',node.checks]]){const list=detailList(label,values);if(list)body.append(list);}
+    const related=state.model.edges.filter(edge=>edge.source===node.id||edge.target===node.id);
+    if(related.length){
+      const section=element('section','detail-section'),links=element('div','detail-links');section.append(element('h3','','Conexiones declaradas'));
+      related.forEach(edge=>{
+        const outgoing=edge.source===node.id,other=state.byId.get(outgoing?edge.target:edge.source);
+        const el=button('',optional(other)?'optional-link':'',()=>navigate(other.id)),span=element('span');
+        span.append(element('strong','',`${outgoing?'Hacia':'Desde'} ${other.title}`),element('small','',`${edgeNames[edge.type]} · ${edge.label}${edge.condition?' · Si: '+edge.condition:''}`));el.append(span,element('span','','↗'));links.append(el);
+      });section.append(links);body.append(section);
+    }
+  }
+  function search() {
+    const value=$('search').value.trim().toLocaleLowerCase('es'),results=$('search-results');results.replaceChildren();results.hidden=value.length<2;if(results.hidden)return;
+    const found=[...state.byId.values()].filter(node=>`${node.title} ${node.description}`.toLocaleLowerCase('es').includes(value)).slice(0,10);
+    if(!found.length)results.append(element('p','','Sin coincidencias.'));
+    found.forEach(node=>{const el=button('','',()=>{$('search').value='';results.hidden=true;navigate(node.id);}),text=element('span');text.append(element('strong','',node.title),element('small','',group(node)?'Abrir esta parte':'Ver explicación'));el.append(text,element('span','','↗'));results.append(el);});
+  }
+  let returnFocus=null;
+  function openModal(id){returnFocus=document.activeElement;$(id).hidden=false;requestAnimationFrame(()=>$(id).querySelector('button,textarea,input')?.focus());}
+  function closeModal(id){$(id).hidden=true;returnFocus?.focus();}
+  function applyEditor(){try{const parsed=JSON.parse($('data-editor').value);loadModel(parsed);closeModal('editor-backdrop');notify('Contenido aplicado. Guardá un HTML nuevo para conservarlo.');}catch(error){$('editor-error').hidden=false;$('editor-error').textContent=error.message;}}
+  function saveHTML(){
+    const copy=sourceDocument.cloneNode(true);
+    const json=JSON.stringify(state.model,null,2).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
+    copy.querySelector('#diagram-data').textContent='\n'+json+'\n';
+    copy.querySelector('title').textContent=`${state.model.meta.brandLeft} / ${state.model.meta.brandRight} · ${state.model.meta.title}`;
+    copy.querySelector('meta[name="description"]').setAttribute('content',state.model.meta.subtitle);
+    const blob=new Blob(['<!doctype html>\n'+copy.outerHTML],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),link=document.createElement('a');
+    link.href=url;link.download=(state.model.meta.title.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'diagrama')+'.html';
+    link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('HTML preparado para descargar. Incluye el contenido y el diseño.');
+  }
+  $('home-button').onclick=()=>{$('page').scrollTo({top:0,behavior:motion.matches?'auto':'smooth'});};
+  $('expand-button').onclick=()=>{state.expanded=new Set([...state.byId.values()].filter(group).map(node=>node.id));renderMap();};
+  $('collapse-button').onclick=()=>{state.expanded.clear();renderMap();};
+  $('close-inspector').onclick=()=>{state.selected=null;$('inspector').hidden=true;$('shell').classList.remove('with-inspector');updateSelectionStyles();scheduleMeasure();};
+  $('show-connections').onclick=()=>{state.internal=true;$('internal-connections').checked=true;pathOf(state.selected).filter(group).forEach(node=>state.expanded.add(node.id));renderMap();notify('Las conexiones internas están visibles. Sus etiquetas también están en la explicación.');};
+  $('internal-connections').onchange=event=>{state.internal=event.target.checked;scheduleMeasure();};
+  $('search').oninput=search;$('search').onkeydown=event=>{if(event.key==='Escape'){$('search-results').hidden=true;$('search').value='';}};
+  $('edit-button').onclick=()=>{$('data-editor').value=JSON.stringify(state.model,null,2);$('editor-error').hidden=true;openModal('editor-backdrop');};
+  $('close-editor').onclick=()=>closeModal('editor-backdrop');$('apply-data').onclick=applyEditor;
+  $('import-data').onclick=()=>$('json-file').click();$('json-file').onchange=async event=>{const file=event.target.files[0];if(!file)return;try{$('data-editor').value=await file.text();$('editor-error').hidden=true;}catch(error){$('editor-error').hidden=false;$('editor-error').textContent=error.message;}event.target.value='';};
+  $('glossary-button').onclick=()=>openModal('glossary-backdrop');$('close-glossary').onclick=()=>closeModal('glossary-backdrop');$('download-button').onclick=()=>{if(state.model)saveHTML();else notify('Corregí y aplicá los datos antes de guardar.');};
+  ['editor-backdrop','glossary-backdrop'].forEach(id=>{
+    $(id).onclick=event=>{if(event.target===$(id))closeModal(id);};
+    $(id).onkeydown=event=>{
+      if(event.key==='Escape')closeModal(id);
+      if(event.key==='Tab'){
+        const items=[...$(id).querySelectorAll('button,input,textarea,[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length);
+        const first=items[0],last=items[items.length-1];
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+      }
+    };
+  });
+  document.addEventListener('click',event=>{if(!event.target.closest('.search-wrap'))$('search-results').hidden=true;});
+  try{loadModel(JSON.parse($('diagram-data').textContent));}
+  catch(error){const panel=element('section','fatal');panel.append(element('h1','','No se pudo abrir el contenido del diagrama'),element('pre','',error.message),element('p','','Revisá el bloque JSON con id="diagram-data". Conservá el resto del HTML.'));$('page').prepend(panel);$('edit-button').onclick=()=>{$('data-editor').value=$('diagram-data').textContent;openModal('editor-backdrop');};}
+
+  // Decorative background: no external images, no pointer capture, no animation when inactive.
+  function startHexBackground(){
+    const host=$('hex-field'),base=$('hex-base'),glow=$('hex-glow');
+    const ctx=base.getContext('2d'),light=glow.getContext('2d');if(!ctx||!light)return;
+    const fine=matchMedia('(hover: hover) and (pointer: fine)'),radius=33,rowHeight=Math.sqrt(3)*radius;
+    let width=0,height=0,cells=[],pointer=null,frame=0,last=0;
+    function paint(time){
+      frame=0;if(document.hidden)return;
+      if(!motion.matches&&last&&time-last<30){frame=requestAnimationFrame(paint);return;}
+      const elapsed=Math.min(time-(last||time-33),80),ease=motion.matches?1:1-Math.exp(-elapsed/170);last=time;
+      light.clearRect(0,0,width,height);let alive=false;
+      for(const cell of cells){
+        const distance=pointer?Math.hypot(pointer.x-cell.x,pointer.y-cell.y):Infinity,target=Math.max(0,1-distance/185)**1.6;
+        cell.energy+=(target-cell.energy)*ease;if(cell.energy<.006&&target===0){cell.energy=0;continue;}alive=true;
+        const breath=motion.matches?.8:.73+Math.sin(time/680-cell.phase)*.27,strength=cell.energy*breath;
+        light.fillStyle=`rgba(225,31,143,${strength*.19})`;light.strokeStyle=`rgba(225,31,143,${strength*.82})`;light.lineWidth=.85+strength*.65;light.shadowColor=`rgba(225,31,143,${strength*.6})`;light.shadowBlur=strength*13;light.fill(cell.path);light.stroke(cell.path);
+      }
+      light.shadowBlur=0;if(alive&&!motion.matches)frame=requestAnimationFrame(paint);
+    }
+    function requestPaint(){if(!frame&&!document.hidden)frame=requestAnimationFrame(paint);}
+    function resize(){
+      const rect=host.getBoundingClientRect();width=rect.width;height=rect.height;const scale=Math.min(devicePixelRatio||1,1.75);
+      for(const canvas of [base,glow]){canvas.width=Math.round(width*scale);canvas.height=Math.round(height*scale);}
+      ctx.setTransform(scale,0,0,scale,0,0);light.setTransform(scale,0,0,scale,0,0);ctx.clearRect(0,0,width,height);ctx.lineWidth=.7;cells=[];
+      for(let col=-1;col<width/(radius*1.5)+1;col++)for(let row=-1;row<height/rowHeight+1;row++){
+        const x=col*radius*1.5,y=row*rowHeight+(Math.abs(col%2)?rowHeight/2:0),path=new Path2D();
+        for(let n=0;n<6;n++){const angle=n*Math.PI/3,px=x+radius*Math.cos(angle),py=y+radius*Math.sin(angle);n?path.lineTo(px,py):path.moveTo(px,py);}path.closePath();
+        const phase=(Math.sin(col*13.7+row*7.9)+1)*Math.PI;ctx.fillStyle=`rgba(0,79,86,${.035+(Math.sin(phase)+1)*.018})`;ctx.strokeStyle='rgba(0,132,143,0.20)';ctx.fill(path);ctx.stroke(path);cells.push({x,y,path,energy:0,phase});
+      }requestPaint();
+    }
+    const observer=new ResizeObserver(resize);observer.observe(host);
+    document.addEventListener('pointermove',event=>{if(event.pointerType==='touch'||!fine.matches)return;const rect=host.getBoundingClientRect();pointer={x:event.clientX-rect.left,y:event.clientY-rect.top};requestPaint();},{passive:true});
+    function leave(){pointer=null;requestPaint();}
+    document.documentElement.addEventListener('pointerleave',leave);window.addEventListener('blur',leave);
+    document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(frame);frame=0;pointer=null;last=0;cells.forEach(cell=>cell.energy=0);light.clearRect(0,0,width,height);}else requestPaint();});
+    function preferences(){cancelAnimationFrame(frame);frame=0;last=0;if(!fine.matches)pointer=null;requestPaint();}
+    motion.addEventListener('change',preferences);fine.addEventListener('change',preferences);
+  }
+  startHexBackground();
+})();
+</script>
+</body>
+</html>

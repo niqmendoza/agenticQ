@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/brain.py",
+    "--db",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/indice.sqlite",
+    "--log-dir",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas",
+    "query",
+    "JWT get_current_user expiración autenticación",
+    "--limit",
+    "3",
+    "--max-chars",
+    "16000"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-10-27T22:16:46.402008+00:00",
+  "finished_utc": "2026-10-27T22:16:46.441121+00:00",
+  "local_seconds": 0.03898029198171571
+}

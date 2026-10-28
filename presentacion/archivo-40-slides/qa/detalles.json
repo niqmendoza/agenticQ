@@ -1,0 +1,804 @@
+{
+  "contrast": [
+    {
+      "name": "Cuerpo oscuro",
+      "ratio": 9.29,
+      "passesAA": true
+    },
+    {
+      "name": "Título oscuro",
+      "ratio": 14.5,
+      "passesAA": true
+    },
+    {
+      "name": "Aqua oscuro",
+      "ratio": 10.5,
+      "passesAA": true
+    },
+    {
+      "name": "Lima oscuro",
+      "ratio": 13.13,
+      "passesAA": true
+    },
+    {
+      "name": "Rosa oscuro",
+      "ratio": 9.39,
+      "passesAA": true
+    },
+    {
+      "name": "Cuerpo claro",
+      "ratio": 6.63,
+      "passesAA": true
+    },
+    {
+      "name": "Título claro",
+      "ratio": 13.06,
+      "passesAA": true
+    },
+    {
+      "name": "Aqua claro",
+      "ratio": 5.77,
+      "passesAA": true
+    },
+    {
+      "name": "Lima claro",
+      "ratio": 5.73,
+      "passesAA": true
+    },
+    {
+      "name": "Rosa claro",
+      "ratio": 5.93,
+      "passesAA": true
+    },
+    {
+      "name": "Diagrama",
+      "ratio": 12.57,
+      "passesAA": true
+    }
+  ],
+  "textOverlaps": [],
+  "diagramLabels": [
+    {
+      "text": "Fuentes",
+      "width": 86.5,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Código, tickets, reglas",
+      "width": 188.015625,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Copilot",
+      "width": 74.890625,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Notas + borrador",
+      "width": 146.71875,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "QA / Negocio",
+      "width": 139.015625,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Validación focalizada",
+      "width": 184.21875,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Azure Repos",
+      "width": 135.609375,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "PR + revisión aprobada",
+      "width": 201.90625,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Buscador",
+      "width": 100.09375,
+      "available": 175,
+      "passes": true
+    },
+    {
+      "text": "Índice aprobado",
+      "width": 140.703125,
+      "available": 175,
+      "passes": true
+    },
+    {
+      "text": "Copilot",
+      "width": 74.890625,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Contexto por versión",
+      "width": 180.234375,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "UI / API / SQL",
+      "width": 145.140625,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Acceso autorizado",
+      "width": 160.265625,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Prueba aceptada",
+      "width": 180.9375,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Datos + código en Git",
+      "width": 183.4375,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Versiones fijadas",
+      "width": 184.734375,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Sistema + docs + tests",
+      "width": 192.828125,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Pipelines",
+      "width": 98.375,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Runner repetible",
+      "width": 146.75,
+      "available": 200,
+      "passes": true
+    },
+    {
+      "text": "Evidencia",
+      "width": 102.6875,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Resultados + artefactos",
+      "width": 206.21875,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "QA diagnostica",
+      "width": 161.5625,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Producto / ambiente",
+      "width": 177.90625,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "/ prueba",
+      "width": 73.484375,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Boards",
+      "width": 75.71875,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Bug / feature + vínculos",
+      "width": 206.109375,
+      "available": 210,
+      "passes": true
+    },
+    {
+      "text": "Test Plans",
+      "width": 110.109375,
+      "available": 175,
+      "passes": true
+    },
+    {
+      "text": "Casos + planes",
+      "width": 129.171875,
+      "available": 175,
+      "passes": true
+    }
+  ],
+  "checks": {
+    "fullscreen": true,
+    "ambientNormal": true,
+    "reducedMotion": true,
+    "modalFocus": true
+  },
+  "mobile": [
+    {
+      "width": 390,
+      "slide": 1,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 2,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 3,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 4,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 5,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 6,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 7,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 8,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 9,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 10,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 11,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 12,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 13,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 14,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 15,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 16,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 17,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 18,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 19,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 20,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 21,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 22,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 23,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 24,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 25,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 26,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 27,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 28,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 29,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 30,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 31,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 32,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 33,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 34,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 35,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 36,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 37,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 38,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 39,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "slide": 40,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 1,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 2,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 3,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 4,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 5,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 6,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 7,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 8,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 9,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 10,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 11,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 12,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 13,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 14,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 15,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 16,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 17,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 18,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 19,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 20,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 21,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 22,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 23,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 24,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 25,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 26,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 27,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 28,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 29,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 30,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 31,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 32,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 33,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 34,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 35,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 36,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 37,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 38,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 39,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    },
+    {
+      "width": 360,
+      "slide": 40,
+      "footerVisible": true,
+      "pageHorizontalOverflow": false,
+      "slideHorizontalOverflow": false
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+// @exec: {"max_output_tokens": 9000}
+const b=load("base");
+text(await tools.exec_command({cmd:b+" links 'COELSA.Intelligent/MOCs/MOC - Diseño y Frontend.md' --limit 12 --offset 12","max_output_tokens":2500}));
+text(await tools.exec_command({cmd:b+" show 'COELSA.Intelligent/Diseño Frontend/ECO Design System.md' --start 1 --end 120 --max-lines 120 --max-tokens 5000 --max-chars 20000","max_output_tokens":6500}));

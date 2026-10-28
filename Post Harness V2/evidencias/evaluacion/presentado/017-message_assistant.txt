@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"La documentación distingue permisos del recurso, autenticación y rol activo, y también separa el acceso local de las URLs S3. Estoy ampliando las excepciones de UI, almacenamiento y limpieza para no tratar políticas abiertas como comportamientos ya definidos.","annotations":[],"logprobs":[]}]

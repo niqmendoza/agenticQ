@@ -1,0 +1,1 @@
+text(await tools.exec_command({cmd:"python3 '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/read_full.py' --snapshot '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias' --offset 50 --limit 5 --log-dir '/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/baseline/lecturas'","max_output_tokens":6000}));

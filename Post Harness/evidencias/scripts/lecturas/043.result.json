@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Auth y Permisos/Roles de usuario.md",
+  "sha256": "d07b8455c519b053c6a243d3e79b181f42196e4ff2bfc709eec4bdd8cbf8974d",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---",
+    "title": "Roles de usuario",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, auth, roles, permisos]",
+    "aliases": "[User roles, Roles COELSA, admin user pending]",
+    "description": "Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 46,
+  "total_lines": 46,
+  "text": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---\n\n# Roles de usuario\n\n## Qué es\n\nCOELSA.Intelligent define tres roles de usuario, almacenados en el campo `role` del modelo `User`:\n\n| Rol | Descripción | Capacidades principales |\n|-----|-------------|------------------------|\n| `admin` | Administrador del sistema | Acceso total; gestión de usuarios, grupos, modelos, configuración |\n| `user` | Usuario activo | Chat, upload de archivos, uso de bases de conocimiento según permisos |\n| `pending` | En espera de aprobación | Solo puede ver la pantalla de espera; no puede usar el chat |\n\n## Estado `pending`\n\nUn usuario recién logeado por primera vez via Azure AD puede quedar en estado `pending` si la configuración requiere aprobación manual. Un admin debe cambiar el rol a `user` para habilitar el acceso.\n\n## Restricciones por rol en la UI\n\nEn la vista de **Settings**, las siguientes tabs están restringidas a `admin`:\n- **Personalization** — configuración visual de la app\n- **Audio** — configuración de síntesis y transcripción de voz\n\nLos usuarios `user` ven estas tabs pero no pueden acceder a su contenido.\n\n## Funcionalidades deshabilitadas para todos los roles\n\nIndependientemente del rol, estas funcionalidades están desactivadas en el fork:\n- Sugerencias de chat automáticas\n- Ejecución de Python en CodeBlocks\n- Webhooks en la sección Account\n\n## Relacionado\n\n- [[Grupos y permisos]] — Permisos granulares dentro del rol `user`\n- [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos\n- [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

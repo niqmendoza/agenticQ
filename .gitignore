@@ -1,0 +1,27 @@
+# Entornos y dependencias locales
+**/.venv/
+**/venv/
+**/node_modules/
+
+# Cachés y archivos del sistema
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+*.log
+
+# Credenciales y configuración privada local
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+
+# Los HTML compilados, capturas, PDF, ZIP y SQLite de evidencias
+# se conservan deliberadamente como parte de la entrega.

@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/brain.py",
+    "--db",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/indice.sqlite",
+    "--log-dir",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas",
+    "show",
+    "COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md",
+    "--start",
+    "81",
+    "--end",
+    "81",
+    "--max-lines",
+    "80"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-10-27T22:17:01.904746+00:00",
+  "finished_utc": "2026-10-27T22:17:01.908397+00:00",
+  "local_seconds": 0.0035165000008419156
+}

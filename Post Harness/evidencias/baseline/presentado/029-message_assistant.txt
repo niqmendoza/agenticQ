@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"La lectura avanza sin truncamientos. La documentación distingue el acceso local del firmado S3 y deja una tensión en un índice que habla de acceso “siempre” firmado; la evaluación conservará esa diferencia como conflicto documental.\n","annotations":[],"logprobs":[]}]

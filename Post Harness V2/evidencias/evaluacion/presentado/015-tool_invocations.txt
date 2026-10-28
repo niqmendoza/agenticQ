@@ -1,0 +1,5 @@
+// @exec: {"max_output_tokens": 21000}
+const b=load("base");
+text(await tools.exec_command({cmd:b+" show 'COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md' --start 1 --end 120 --max-lines 120 --max-tokens 5000 --max-chars 20000","max_output_tokens":6000}));
+text(await tools.exec_command({cmd:b+" show 'COELSA.Intelligent/Diseño Frontend/Patrones de componentes Svelte.md' --start 1 --end 120 --max-lines 120 --max-tokens 5000 --max-chars 20000","max_output_tokens":7000}));
+text(await tools.exec_command({cmd:b+" show 'COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md' --start 1 --end 120 --max-lines 120 --max-tokens 5000 --max-chars 20000","max_output_tokens":6000}));

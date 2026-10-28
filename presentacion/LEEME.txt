@@ -1,0 +1,47 @@
+QA CON COPILOT — PRESENTACIÓN HTML
+12 slides principales con detalle ampliable por tema.
+
+ABRIR
+Hacé doble clic en QA-agentizada.html o abrilo desde tu navegador.
+No necesita instalación, build, servidor ni conexión a Internet.
+El HTML incluye Saira, el visual de portada, estilos, diagramas y navegación.
+Si tenías una versión anterior abierta, recargá esa pestaña.
+
+RECORRER
+Usá izquierda / derecha o los botones Anterior / Siguiente.
+Espacio / Page Down: siguiente. Page Up: anterior.
+Inicio / Fin: primera / última slide.
+I: índice. D: ampliar el tema. F: pantalla completa. ?: ayuda.
+Esc: cerrar un diálogo.
+
+CONTENIDO
+La exposición principal tiene 12 slides con texto directo.
+“Ampliar este tema” conserva el detalle de conocimiento, validación,
+herramientas, datos, versiones, mantenimiento y decisiones del piloto.
+La slide 12 ofrece fuentes oficiales y supuestos técnicos.
+En celular, las slides permiten desplazamiento vertical. Los diagramas
+se recorren horizontalmente. Los enlaces externos requieren Internet.
+La opción Imprimir del navegador genera las 12 slides horizontales.
+
+DISTRIBUIR
+Podés compartir solo el HTML, que es autocontenido.
+QA-agentizada-distribucion.zip incluye ese mismo HTML, estas instrucciones
+y la licencia completa de Saira. Las evidencias no son necesarias para abrirlo.
+
+ALCANCE
+Propuesta de primer piloto sobre el workbook actual.
+El piloto confirma responsables, conexiones, versiones, permisos y ambientes.
+El buscador compartido requiere confirmar implementación y versión.
+Los pedidos, reglas, versiones e identificadores son ejemplos ilustrativos.
+
+RECURSOS
+Saira variable, Google Fonts / Omnibus-Type, sin modificar.
+SIL Open Font License 1.1, incluida en el HTML y fuentes/OFL-Saira.txt.
+Visual de portada generado con image_gen incorporado. Imagen original en
+assets/conocimiento-volumen.png y prompt completo en assets/prompt-portada.txt.
+Las formas y conexiones de los diagramas permanecen editables en el código.
+
+PROYECTO
+src/: contenido y código de generación.
+qa/: informe, registros y capturas del entregable actual.
+archivo-40-slides/ y archivo-version-clara/: versiones previas para referencia.

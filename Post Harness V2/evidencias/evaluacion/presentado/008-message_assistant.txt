@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"Voy a leer la consigna y la modalidad V2 para realizar la evaluación y registrar la evidencia con el mecanismo indicado.","annotations":[],"logprobs":[]}]

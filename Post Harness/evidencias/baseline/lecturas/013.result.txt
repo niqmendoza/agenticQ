@@ -1,0 +1,252 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 60, "returned": 5, "next_offset": 65}
+
+=== COELSA.Intelligent/RAG/Cinco colecciones Milvus.md sha256=739fc3c157e0721ac63fcef16e5b5e6bfda7b2bfd9e7da665af926838972990a ===
+1: ---
+2: title: "Cinco colecciones Milvus"
+3: type: referencia
+4: tags: [coelsa-intelligent, rag, milvus, colecciones]
+5: aliases: [Colecciones Milvus, Milvus collections COELSA]
+6: description: "Usar cuando necesitás saber a qué colección de Milvus va un tipo específico de contenido (archivos, knowledge, memorias, web, URLs)."
+7: estado: vigente
+8: ---
+9: 
+10: # Cinco colecciones Milvus
+11: 
+12: ## Qué es
+13: 
+14: En el esquema de [[Milvus multi-tenancy]], hay exactamente **5 colecciones fijas** en [[Milvus]]. Cada tipo de contenido tiene su colección designada.
+15: 
+16: ## Las colecciones
+17: 
+18: | Colección | Contenido | Cuándo se usa |
+19: |-----------|-----------|---------------|
+20: | `_knowledge` | Chunks de bases de conocimiento | Al embedir una Knowledge base |
+21: | `_files` | Chunks de archivos subidos por usuarios | Al embedir un archivo de chat |
+22: | `_memories` | Memorias de usuario | Al guardar o recuperar memorias personalizadas |
+23: | `_web_search` | Resultados de búsqueda web embebidos | Al indexar resultados de búsqueda para RAG |
+24: | `_hash_based` | URLs: páginas web, videos YouTube | Al indexar contenido de URLs |
+25: 
+26: ## Cómo se determina la colección
+27: 
+28: La función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` analiza el nombre o el tipo del recurso para determinar a qué colección pertenece. Usa **convenciones de prefijos** en los nombres generados por el frontend.
+29: 
+30: **Regla crítica**: El frontend y esta función deben estar en sincronía. Si el frontend cambia cómo nombra los recursos, esta función debe actualizarse.
+31: 
+32: ## Aislamiento dentro de cada colección
+33: 
+34: Dentro de cada colección, los registros de diferentes usuarios/recursos están separados por el campo `resource_id`. Ver [[Aislamiento por resource_id]].
+35: 
+36: ## Relacionado
+37: 
+38: - [[Milvus multi-tenancy]] — El diseño de las 5 colecciones compartidas
+39: - [[Aislamiento por resource_id]] — El mecanismo de aislamiento por recurso
+40: - [[Módulo de retrieval]] — El módulo que escribe y lee de estas colecciones
+41: - [[MOC - RAG y Búsqueda Vectorial]] — Índice del cluster de RAG
+
+=== COELSA.Intelligent/RAG/Milvus multi-tenancy.md sha256=e3ad2bb8099648991f68c2e3a1facd196a4f5097edf3a39cf9650db5fbc52fea ===
+1: ---
+2: title: "Milvus multi-tenancy"
+3: type: decision
+4: tags: [coelsa-intelligent, rag, milvus, multi-tenancy, arquitectura]
+5: aliases: [Multi-tenancy Milvus, 5 colecciones Milvus, Milvus shared collections]
+6: description: "Usar cuando necesitás entender por qué Milvus usa 5 colecciones compartidas en lugar de una por recurso, y qué trade-offs implica esta decisión."
+7: estado: vigente
+8: ---
+9: 
+10: # Milvus multi-tenancy
+11: 
+12: ## Qué es
+13: 
+14: La implementación de [[Milvus]] en COELSA.Intelligent usa un esquema de **multi-tenancy con 5 colecciones fijas compartidas** para todos los usuarios y recursos, en lugar del esquema del upstream que crea una colección por cada archivo o recurso.
+15: 
+16: ## Motivación del cambio
+17: 
+18: El esquema del upstream (una colección por recurso) genera **overhead significativo al escalar**:
+19: - Milvus tiene un límite práctico de colecciones que puede gestionar eficientemente
+20: - Con muchos usuarios subiendo archivos, el número de colecciones crece sin límite
+21: - El tiempo de carga de colecciones al iniciar Milvus escala con la cantidad de colecciones
+22: 
+23: Con 5 colecciones fijas, el overhead de gestión de colecciones es constante independientemente de cuántos usuarios y archivos tenga el sistema.
+24: 
+25: ## Aislamiento garantizado
+26: 
+27: El aislamiento entre recursos se logra mediante el campo `resource_id` en cada vector. Ver [[Aislamiento por resource_id]].
+28: 
+29: ## Advertencia crítica
+30: 
+31: El mapeo de colecciones depende de convenciones de prefijos de nombres (cómo el frontend genera los nombres de colección). La función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` implementa esta lógica.
+32: 
+33: **Si el frontend cambia cómo genera nombres de colección sin actualizar esta función, puede ocurrir mezcla de datos entre recursos.** Este es el riesgo más crítico de este diseño.
+34: 
+35: ## Módulo
+36: 
+37: ```
+38: backend/server/retrieval/vector/dbs/milvus_multitenancy.py
+39: ```
+40: 
+41: ## Relacionado
+42: 
+43: - [[Cinco colecciones Milvus]] — Las 5 colecciones y qué tipo de datos almacena cada una
+44: - [[Aislamiento por resource_id]] — El mecanismo de aislamiento dentro de colecciones compartidas
+45: - [[Milvus]] — El stack de base de datos vectorial
+46: - [[MOC - Decisiones]] — D-05 en el índice de decisiones
+47: - [[MOC - RAG y Búsqueda Vectorial]] — Índice del cluster de RAG
+
+=== COELSA.Intelligent/RAG/Módulo de retrieval.md sha256=a991ec02091ce63244b9c8cc7a678a9f001d56ebdffa9b2746d9accb940eeb1b ===
+1: ---
+2: title: "Módulo de retrieval"
+3: type: concepto
+4: tags: [coelsa-intelligent, rag, retrieval, embeddings, cargadores]
+5: aliases: [Retrieval module, Pipeline de RAG, backend retrieval]
+6: description: "Usar cuando necesitás entender la estructura del sistema RAG en el backend: cómo se cargan documentos, se generan embeddings y se realizan búsquedas vectoriales."
+7: estado: vigente
+8: ---
+9: 
+10: # Módulo de retrieval
+11: 
+12: ## Qué es
+13: 
+14: El módulo de retrieval (RAG) de COELSA.Intelligent está ubicado en `backend/server/retrieval/` y orquesta el pipeline completo de indexación y búsqueda de documentos.
+15: 
+16: ## Estructura
+17: 
+18: ```
+19: backend/server/retrieval/
+20: ├── utils.py        ← Utilidades de RAG: formateo de contexto, chats de referencia
+21: ├── models/         ← Modelos de embedding (sentence-transformers, etc.)
+22: ├── loaders/        ← Cargadores de documentos por tipo (PDF, DOCX, TXT, web, YouTube)
+23: ├── vector/
+24: │   ├── dbs/
+25: │   │   └── milvus_multitenancy.py  ← Implementación de Milvus con multi-tenancy
+26: └── web/            ← Integración con búsqueda web (SearXNG, etc.)
+27: ```
+28: 
+29: ## Flujo de indexación
+30: 
+31: 1. **Loader**: carga el documento según su tipo (PDF, web, YouTube, etc.)
+32: 2. **Chunking**: divide el texto en fragmentos con overlap configurable
+33: 3. **Embedding**: genera vectores con el modelo de embedding configurado
+34: 4. **Inserción**: guarda vectores en [[Milvus]] con su `resource_id`
+35: 
+36: ## Flujo de búsqueda
+37: 
+38: 1. **Query embedding**: genera el vector de la consulta del usuario
+39: 2. **Búsqueda vectorial**: busca en la colección de Milvus con filtro por `resource_id`
+40: 3. **Reranking** (opcional): ordena los chunks por relevancia
+41: 4. **Contexto**: los chunks recuperados se inyectan en el prompt del modelo
+42: 
+43: ## Chats de referencia
+44: 
+45: `retrieval/utils.py` también maneja la recuperación de [[Chats de referencia|chats de referencia]] adjuntos al mensaje: busca el chat por ID y lo formatea como bloque Markdown para inyectarlo al contexto.
+46: 
+47: ## Relacionado
+48: 
+49: - [[Milvus multi-tenancy]] — El backend vectorial que almacena los chunks
+50: - [[Cinco colecciones Milvus]] — Las colecciones donde se insertan los vectores
+51: - [[Aislamiento por resource_id]] — El mecanismo de filtrado por recurso
+52: - [[Chats de referencia]] — Uso de retrieval/utils.py para contexto de chats previos
+53: - [[MOC - RAG y Búsqueda Vectorial]] — Índice del cluster de RAG
+
+=== COELSA.Intelligent/Seguridad/CSP con nonces.md sha256=2e44b4dc1f0488cdb2709466c01d81f5afa142ac45b54f90653b9cdb77baa286 ===
+1: ---
+2: title: "CSP con nonces"
+3: type: concepto
+4: tags: [coelsa-intelligent, seguridad, csp, nonces, openshift]
+5: aliases: [Content Security Policy, CSP nonces COELSA, NonceInjectionMiddleware]
+6: description: "Usar cuando necesitás entender la configuración de Content Security Policy de COELSA.Intelligent, por qué los nonces no funcionan en dev, o cómo se configura en OpenShift."
+7: estado: vigente
+8: ---
+9: 
+10: # CSP con nonces
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent usa **nonces de Content Security Policy (CSP)** en producción (OpenShift) para eliminar `'unsafe-inline'` de la directiva `script-src`. El middleware `NonceInjectionMiddleware` genera un nonce único por request.
+15: 
+16: ## Configuración por entorno
+17: 
+18: | Entorno | `ENABLE_CSP_NONCES` | `script-src` |
+19: |---------|---------------------|-------------|
+20: | Localhost / dev | `false` (obligatorio) | `'unsafe-inline'` (requerido por SvelteKit dev) |
+21: | OpenShift | `true` | `'nonce-{valor}'` (sin unsafe-inline) |
+22: 
+23: **Importante**: `ENABLE_CSP_NONCES=true` en desarrollo **rompe la app**. SvelteKit en modo dev genera scripts dinámicamente en el browser; el nonce se inyecta en el HTML del servidor antes de que esos scripts existan, por lo que no coinciden.
+24: 
+25: ## Cómo funciona en OpenShift
+26: 
+27: Con `ENABLE_CSP_NONCES=true`:
+28: 1. `NonceInjectionMiddleware` genera un valor aleatorio criptográficamente seguro por request
+29: 2. El nonce se inyecta en todos los `<script>` tags del HTML devuelto
+30: 3. El header `Content-Security-Policy` incluye `'nonce-{valor}'` en `script-src`
+31: 4. `'unsafe-inline'` se elimina automáticamente de `script-src`
+32: 
+33: El nonce se regenera en **cada request** (no es reutilizable).
+34: 
+35: ## Dominio CSP para SharePoint
+36: 
+37: Para que [[SharePoint OneDrive integración]] funcione, la CSP del Route debe incluir:
+38: ```
+39: connect-src: login.microsoftonline.com graph.microsoft.com
+40: ```
+41: 
+42: Ver `docs/OPENSHIFT-ROUTE-CONFIG.yaml`.
+43: 
+44: ## Estado de alertas ZAP
+45: 
+46: | Alerta | Estado |
+47: |--------|--------|
+48: | `script-src unsafe-inline` | ✅ Resuelta — nonces implementados |
+49: | `style-src unsafe-inline` | ⚠️ No resoluble sin refactoring profundo |
+50: | `script-src unsafe-eval` | ⚠️ Riesgo aceptado — ver [[Riesgos de seguridad aceptados]] |
+51: 
+52: ## Relacionado
+53: 
+54: - [[SPA con SSR deshabilitado]] — Por qué los nonces no funcionan en dev
+55: - [[Despliegue en OpenShift]] — Donde se activa ENABLE_CSP_NONCES
+56: - [[Riesgos de seguridad aceptados]] — Los riesgos CSP aceptados
+57: - [[MOC - Seguridad]] — Índice del cluster de seguridad
+
+=== COELSA.Intelligent/Seguridad/CVE-2025-7969 markdown-it.md sha256=27703ed84c409f2e53b44717d7722e5bd6adc56f0a9cbff7108fd566606c6153 ===
+1: ---
+2: title: "CVE-2025-7969 markdown-it"
+3: type: referencia
+4: tags: [coelsa-intelligent, seguridad, cve, markdown-it, falso-positivo]
+5: aliases: [CVE-2025-7969, markdown-it XSS, Falso positivo markdown-it]
+6: description: "Usar cuando alguien cuestiona el CVE de markdown-it en COELSA.Intelligent — contiene la justificación de por qué es un falso positivo y cómo está documentado en SonarCloud."
+7: estado: vigente
+8: ---
+9: 
+10: # CVE-2025-7969 markdown-it
+11: 
+12: ## Qué es
+13: 
+14: **CVE-2025-7969** es una vulnerabilidad de tipo XSS (Cross-Site Scripting) en el paquete `markdown-it`. La vulnerabilidad afecta la renderización de markdown en contextos **Server-Side Rendering (SSR)**.
+15: 
+16: ## Por qué es un falso positivo en COELSA.Intelligent
+17: 
+18: COELSA.Intelligent tiene el SSR **explícitamente deshabilitado**:
+19: 
+20: ```javascript
+21: // src/routes/+layout.js
+22: export const ssr = false;
+23: ```
+24: 
+25: El vector de ataque del CVE requiere que el servidor renderice markdown con input de usuario no sanitizado. Sin SSR, ese path de código no existe en la aplicación.
+26: 
+27: **Conclusión**: la vulnerabilidad no es aplicable a esta configuración.
+28: 
+29: ## Cómo está manejado
+30: 
+31: 1. **SonarCloud**: la alerta está suprimida con justificación documentada indicando que SSR está deshabilitado
+32: 2. **No se actualiza `markdown-it`**: no hay una versión más reciente que resuelva el issue; la mitigación real es la arquitectura
+33: 3. **Condición de reapertura**: si SSR se habilita en el futuro, este CVE debe reevaluarse inmediatamente
+34: 
+35: ## Diferencia con otros CVEs
+36: 
+37: A diferencia de [[Dependencias vulnerables|jspdf y tar]] (donde había versiones seguras disponibles), en este caso no hay una versión de `markdown-it` que resuelva el CVE; la mitigación es arquitectural.
+38: 
+39: ## Relacionado
+40: 
+41: - [[SPA con SSR deshabilitado]] — La decisión que convierte este CVE en un falso positivo
+42: - [[Dependencias vulnerables]] — El contexto general de gestión de CVEs
+43: - [[MOC - Seguridad]] — Índice del cluster de seguridad

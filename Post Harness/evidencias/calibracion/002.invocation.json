@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "Post Harness/scripts/brain.py",
+    "--db",
+    "Post Harness/evidencias/indice.sqlite",
+    "--log-dir",
+    "Post Harness/evidencias/calibracion",
+    "query",
+    "CSP nonces desarrollo OpenShift",
+    "--limit",
+    "3",
+    "--max-chars",
+    "10000"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-10-27T22:14:37.714022+00:00",
+  "finished_utc": "2026-10-27T22:14:37.752550+00:00",
+  "local_seconds": 0.03841104096500203
+}

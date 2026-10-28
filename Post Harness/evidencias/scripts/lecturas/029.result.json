@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md",
+  "sha256": "cd1aefbdb2327f1bf5ffb436760b22afe277fdd692c635d6cf8dd949c9fd1f4b",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Agregar proveedor de almacenamiento\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]\naliases: [Nuevo storage provider, StorageProvider interface, Agregar backend storage]\ndescription: \"Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.\"\nestado: vigente\n---",
+    "title": "Agregar proveedor de almacenamiento",
+    "type": "referencia",
+    "tags": "[coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]",
+    "aliases": "[Nuevo storage provider, StorageProvider interface, Agregar backend storage]",
+    "description": "Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider.",
+    "estado": "vigente"
+  },
+  "start": 81,
+  "end": 94,
+  "total_lines": 94,
+  "text": "else:\n    Storage = LocalStorageProvider()\n```\n\n## Notas de seguridad\n\nSiempre incluir sanitización de path traversal en `upload_file`. Ver [[Path Traversal]].\n\n## Relacionado\n\n- [[Sistema híbrido de almacenamiento]] — El contexto donde opera el provider\n- [[MinIO S3]] — El provider S3 como referencia de implementación\n- [[Path Traversal]] — La sanitización de paths obligatoria en upload_file\n- [[MOC - Desarrollo]] — Índice del cluster de desarrollo",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 94,
+  "beyond_eof": false
+}

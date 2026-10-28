@@ -1,0 +1,1 @@
+[{"type":"input_text","text":"Script completed\nWall time 0.1 seconds\nOutput:\n"},{"type":"input_text","text":"{\"chunk_id\":\"a2a254\",\"wall_time_seconds\":0.00000825,\"exit_code\":0,\"original_token_count\":25,\"output\":\"Bitácora ampliada con las 21 relecturas, selección explícita de encabezados y paginación real.\\n\"}"}]

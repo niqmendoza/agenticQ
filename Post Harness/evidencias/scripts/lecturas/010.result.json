@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md",
+  "sha256": "3f7223b1d2b55617d97bde656755b2e7158b6ebaab7592ecd24aa53a153fa5c5",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---",
+    "title": "Borrado en cascada de archivos",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, almacenamiento, cascada, archivos, chats]",
+    "aliases": "[Cascade delete files, Eliminación en cascada]",
+    "description": "Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 50,
+  "total_lines": 50,
+  "text": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---\n\n# Borrado en cascada de archivos\n\n## Qué es\n\nCuando un usuario **elimina una conversación (chat)**, COELSA.Intelligent elimina automáticamente todos los archivos asociados a esa conversación, tanto en la base de datos como en [[MinIO S3]].\n\n## Por qué existe\n\nSin esta funcionalidad, eliminar un chat dejaría archivos huérfanos en MinIO indefinidamente. A largo plazo, esto genera acumulación de storage sin posibilidad de recuperarlo sin una migración manual.\n\n## Implementación\n\nEl modelo `File` tiene una columna `chat_id` (con índice):\n\n```python\nclass File(Base):\n    chat_id = Column(String, nullable=True, index=True)\n    # Vinculación con chats para borrado en cascada\n```\n\nCuando el endpoint de eliminación de chat se ejecuta:\n1. Busca todos los registros `File` donde `chat_id == chat.id`\n2. Para cada archivo: llama a `StorageProvider.delete_file(file.path)`\n3. Elimina los registros de la tabla `file`\n4. Elimina el registro del chat\n\n## Diferencia con el Scheduler\n\n| Mecanismo | Cuándo actúa | Qué elimina |\n|-----------|-------------|-------------|\n| **Borrado en cascada** | Al eliminar un chat | Archivos del chat eliminado |\n| **[[Scheduler de limpieza]]** | Diariamente | Huérfanos + archivos vencidos |\n\nAmbos mecanismos son complementarios.\n\n## Relacionado\n\n- [[Sistema híbrido de almacenamiento]] — El sistema del que la cascada es parte\n- [[Scheduler de limpieza]] — El mecanismo diario de limpieza de archivos\n- [[MinIO S3]] — El storage donde se eliminan los objetos\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

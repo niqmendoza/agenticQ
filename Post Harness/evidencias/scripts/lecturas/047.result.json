@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Dark mode reglas.md",
+  "sha256": "1f9c3996cf851072ec73af8e52c1b35763cd7f939adba6655cf35a6293535a3f",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Dark mode reglas\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, dark-mode, tema, colores]\naliases: [Dark mode COELSA, Modo oscuro, Inversión de roles]\ndescription: \"Usar cuando implementás o verificás el comportamiento de dark mode en componentes de COELSA.Intelligent — especialmente para entender qué cambia y qué no.\"\nestado: vigente\n---",
+    "title": "Dark mode reglas",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, dark-mode, tema, colores]",
+    "aliases": "[Dark mode COELSA, Modo oscuro, Inversión de roles]",
+    "description": "Usar cuando implementás o verificás el comportamiento de dark mode en componentes de COELSA.Intelligent — especialmente para entender qué cambia y qué no.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 65,
+  "total_lines": 65,
+  "text": "---\ntitle: \"Dark mode reglas\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, dark-mode, tema, colores]\naliases: [Dark mode COELSA, Modo oscuro, Inversión de roles]\ndescription: \"Usar cuando implementás o verificás el comportamiento de dark mode en componentes de COELSA.Intelligent — especialmente para entender qué cambia y qué no.\"\nestado: vigente\n---\n\n# Dark mode reglas\n\n## Qué es\n\nEl dark mode de COELSA.Intelligent **invierte los roles semánticos**, no los colores primitivos. La escala Teal sigue siendo Teal; solo cambia qué tono de la escala se asigna a cada rol.\n\n## La regla fundamental\n\n```\nLight mode: primary = teal-40 (#006972, oscuro)\nDark mode:  primary = teal-80 (#57D8E6, claro)\n```\n\nLos primitivos no cambian; cambia qué primitivo se asigna a qué rol.\n\n## Anti-patrones de dark mode\n\n| Anti-patrón | Por qué está mal |\n|------------|-----------------|\n| Usar escala directa (`bg-teal-40`) | No se invierte en dark mode |\n| Asumir que `text-on-primary` es siempre blanco | En dark mode `on-primary` = teal-20 (oscuro) |\n| Hardcodear `text-white` sobre `bg-primary` | Rompe en light mode si se ajustan los roles |\n| Usar `opacity-50` para el texto secundario | Debe usarse `text-on-surface/75` (opacity utility) |\n\n## Implementación técnica\n\nLas CSS custom properties se definen en `src/lib/styles/colors.css` con dos bloques:\n\n```css\n/* Light mode (por defecto) */\n:root {\n  --color-primary: #006972;\n  --color-on-primary: #FFFFFF;\n  /* ... */\n}\n\n/* Dark mode */\n[data-theme=\"dark\"], .dark {\n  --color-primary: #57D8E6;\n  --color-on-primary: #00363B;\n  /* ... */\n}\n```\n\nTailwind usa estas variables via `tailwind.config.js`.\n\n## Surface containers en dark mode\n\nLos [[Surface Containers]] más oscuros en light mode son los más claros en dark mode. La jerarquía se mantiene: `highest` siempre es el más destacado, solo cambia si eso significa \"más claro\" o \"más oscuro\".\n\n## Relacionado\n\n- [[Roles semánticos de color]] — Los roles que se invierten en dark mode\n- [[Tokens primitivos de color]] — Los valores que no cambian\n- [[Surface Containers]] — Cómo cambian los niveles de superficie en dark mode\n- [[ECO Design System]] — El sistema general de diseño",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

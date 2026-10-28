@@ -1,0 +1,7 @@
+{
+  "same_text_documents_and_sha256": true,
+  "documents": 80,
+  "snapshot_revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524",
+  "index_revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "note": "Snapshot hashea path/hash/inclusión de todos los archivos incluidos y excluidos. Índice hashea sólo path/hash textual. Distinto algoritmo de revisión; mismos 80 textos y hashes."
+}

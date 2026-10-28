@@ -1,0 +1,273 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 65, "returned": 5, "next_offset": 70}
+
+=== COELSA.Intelligent/Seguridad/Dependencias vulnerables.md sha256=fb77822db5b0d36dc74f9ee8b5ef34203345e2a1c17df7aef598591f62e10bc8 ===
+1: ---
+2: title: "Dependencias vulnerables"
+3: type: referencia
+4: tags: [coelsa-intelligent, seguridad, dependencias, cve, npm, overrides]
+5: aliases: [Vulnerable dependencies, CVEs COELSA, Package overrides]
+6: description: "Usar cuando necesitás saber qué dependencias de COELSA.Intelligent tienen CVEs activos, qué versiones son seguras y cómo están manejadas en package.json."
+7: estado: vigente
+8: ---
+9: 
+10: # Dependencias vulnerables
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent gestiona las dependencias vulnerables mediante el campo `overrides` en `package.json`, que fuerza a npm a usar versiones seguras de paquetes transitivos aunque los paquetes padre no hayan actualizado sus dependencias.
+15: 
+16: ## Estado actual de CVEs
+17: 
+18: | Paquete | Versión anterior | Versión segura | Severidad | Estado |
+19: |---------|-----------------|----------------|-----------|--------|
+20: | `jspdf` | ^4.0.0 | ^4.2.1 | HIGH | ✅ Actualizado via override |
+21: | `tar` | 7.5.6 | 7.6.0+ | HIGH | ✅ Actualizado via override |
+22: | `markdown-it` | 14.1.0 | — | — | ⚠️ Falso positivo — ver [[CVE-2025-7969 markdown-it]] |
+23: 
+24: ## Cómo funciona el override
+25: 
+26: ```json
+27: // package.json
+28: {
+29:   "overrides": {
+30:     "jspdf": "^4.2.1",
+31:     "tar": "^7.6.0"
+32:   }
+33: }
+34: ```
+35: 
+36: Cuando npm resuelve el árbol de dependencias, usa la versión del `overrides` en lugar de la que pide el paquete padre. Esto es equivalente a un "force resolution" en otros gestores de paquetes.
+37: 
+38: ## Cuándo revisar
+39: 
+40: - Al ejecutar `npm audit` — si aparecen nuevas HIGH/CRITICAL, evaluar si requieren override o actualización directa
+41: - Al hacer upgrade de dependencias principales — verificar que los overrides siguen siendo necesarios
+42: 
+43: ## Relacionado
+44: 
+45: - [[CVE-2025-7969 markdown-it]] — El CVE que resultó ser un falso positivo
+46: - [[MOC - Seguridad]] — Índice del cluster de seguridad
+
+=== COELSA.Intelligent/Seguridad/Hardening ReDoS.md sha256=8e618ab4f37fe4e0d1583701b6d58910e98758cc0e3a6d5b95a6ba18a4fe6c25 ===
+1: ---
+2: title: "Hardening ReDoS"
+3: type: concepto
+4: tags: [coelsa-intelligent, seguridad, redos, regex, owasp]
+5: aliases: [ReDoS protection, Bounded quantifiers, Regex hardening]
+6: description: "Usar cuando necesitás entender qué expresiones regulares fueron remediadas contra ReDoS en COELSA.Intelligent o cuando agregás una nueva regex al código."
+7: estado: vigente
+8: ---
+9: 
+10: # Hardening ReDoS
+11: 
+12: ## Qué es
+13: 
+14: **ReDoS** (Regular Expression Denial of Service) es una vulnerabilidad donde una regex maliciosa o un input especialmente crafteado hace que el motor de regex tarde tiempo exponencial en evaluar. COELSA.Intelligent aplicó **bounded quantifiers** a 11 expresiones regulares que no tenían límites de longitud.
+15: 
+16: ## El fix: bounded quantifiers
+17: 
+18: ```python
+19: # ANTES (vulnerable):
+20: re.compile(r'[a-z]+')          # Sin límite
+21: re.compile(r'\s*')             # Sin límite
+22: re.compile(r'.+?')             # Sin límite
+23: 
+24: # DESPUÉS (con bounds):
+25: re.compile(r'[a-z]{1,50}')     # Máximo 50 caracteres
+26: re.compile(r'[ \t]{0,10}')     # Máximo 10 espacios
+27: re.compile(r'.{1,500}?')       # Máximo 500 caracteres
+28: ```
+29: 
+30: La regla es: **ningún quantifier sin límite superior** en código que procesa input de usuario.
+31: 
+32: ## Archivos afectados
+33: 
+34: - `backend/server/utils/middleware.py`
+35: - `backend/server/utils/misc.py`
+36: - `backend/server/utils/plugin.py`
+37: - Archivos TypeScript del frontend (varios)
+38: 
+39: **Total**: 11 expresiones regulares en backend (Python) y frontend (TypeScript).
+40: 
+41: ## Cuándo verificar
+42: 
+43: Cada vez que se agrega una nueva regex que procesa input de usuario, verificar:
+44: 1. ¿Tiene cuantificadores sin límite (`+`, `*`, `{n,}`)?
+45: 2. ¿El input puede ser controlado por un usuario no confiable?
+46: 3. Si ambas respuestas son sí → agregar bounds explícitos
+47: 
+48: ## Relacionado
+49: 
+50: - [[Protección SSRF]] — Otra remediación OWASP del mismo ciclo de hardening
+51: - [[Path Traversal]] — Otra remediación del mismo ciclo
+52: - [[MOC - Seguridad]] — Índice del cluster de seguridad
+
+=== COELSA.Intelligent/Seguridad/Path Traversal.md sha256=1861c722febbbc8130bfb56b97b52204032c855053bde3f5ba027254e7a9b32d ===
+1: ---
+2: title: "Path Traversal"
+3: type: concepto
+4: tags: [coelsa-intelligent, seguridad, path-traversal, owasp, archivos]
+5: aliases: [Path traversal protection, Directory traversal, Sanitización de paths]
+6: description: "Usar cuando agregás un endpoint que opera sobre rutas de archivos o nombres de archivo provistos por el usuario — para asegurarte de sanitizar el input."
+7: estado: vigente
+8: ---
+9: 
+10: # Path Traversal
+11: 
+12: ## Qué es
+13: 
+14: **Path Traversal** (también llamado Directory Traversal) es una vulnerabilidad donde un atacante usa secuencias como `../../../etc/passwd` en nombres de archivo o paths para acceder a archivos fuera del directorio esperado.
+15: 
+16: COELSA.Intelligent aplicó sanitización de paths de entrada en **8 endpoints**.
+17: 
+18: ## El fix en StorageProvider
+19: 
+20: ```python
+21: # backend/server/storage/provider.py — LocalStorageProvider.upload_file()
+22: # Security: Path Injection Prevention
+23: # 'filename' puede contener '../../../etc/passwd'
+24: 
+25: # Extraer solo el nombre base (sin directorios)
+26: safe_filename = os.path.basename(filename)
+27: 
+28: # Resolver la ruta final y verificar que esté dentro de UPLOAD_DIR
+29: file_path = os.path.realpath(os.path.join(UPLOAD_DIR, safe_filename))
+30: if not file_path.startswith(os.path.realpath(UPLOAD_DIR)):
+31:     raise ValueError("Path traversal detectado")
+32: ```
+33: 
+34: ## Patrón de sanitización
+35: 
+36: 1. **`os.path.basename()`**: elimina cualquier componente de directorio del nombre
+37: 2. **`os.path.realpath()`**: resuelve symlinks y `..`
+38: 3. **Verificar prefijo**: confirmar que la ruta final esté dentro del directorio permitido
+39: 
+40: Este patrón debe aplicarse en **cualquier endpoint nuevo** que:
+41: - Acepte un nombre de archivo del usuario
+42: - Use ese nombre para operar sobre el sistema de archivos
+43: 
+44: ## Relacionado
+45: 
+46: - [[Hardening ReDoS]] — Otra remediación OWASP del mismo ciclo de hardening
+47: - [[Protección SSRF]] — Otra remediación del mismo ciclo
+48: - [[Flujo de subida de archivos]] — El flujo donde aplica esta sanitización
+49: - [[MOC - Seguridad]] — Índice del cluster de seguridad
+
+=== COELSA.Intelligent/Seguridad/Protección SSRF.md sha256=fcf02a1318dd799b7b198d8c4f67ad2b18bcfcde49e964bced55184fdf106778 ===
+1: ---
+2: title: "Protección SSRF"
+3: type: concepto
+4: tags: [coelsa-intelligent, seguridad, ssrf, owasp, validacion]
+5: aliases: [SSRF protection, Server-Side Request Forgery, Validación de URLs]
+6: description: "Usar cuando necesitás agregar un endpoint que hace requests outbound a URLs de usuario, o cuando diagnosticás si un endpoint es vulnerable a SSRF."
+7: estado: vigente
+8: ---
+9: 
+10: # Protección SSRF
+11: 
+12: ## Qué es
+13: 
+14: **SSRF** (Server-Side Request Forgery) ocurre cuando un atacante puede hacer que el servidor haga requests a URLs arbitrarias, incluyendo servicios internos de la red (como metadata de cloud, servicios sin autenticación en la red interna, etc.).
+15: 
+16: COELSA.Intelligent aplicó validación de URLs outbound a **9 endpoints** que aceptan URLs de usuario.
+17: 
+18: ## El fix
+19: 
+20: Antes de hacer cualquier request a una URL de input de usuario, se valida:
+21: 
+22: ```python
+23: from urllib.parse import urlparse
+24: import ipaddress
+25: 
+26: def validate_url(url: str) -> bool:
+27:     """
+28:     Rechaza IPs privadas y loopback para prevenir SSRF.
+29:     """
+30:     parsed = urlparse(url)
+31:     hostname = parsed.hostname
+32:     
+33:     if not hostname:
+34:         return False
+35:     
+36:     try:
+37:         ip = ipaddress.ip_address(hostname)
+38:         # Rechazar IPs privadas, loopback, link-local
+39:         if ip.is_private or ip.is_loopback or ip.is_link_local:
+40:             return False
+41:     except ValueError:
+42:         # Es un hostname, no IP; permitir (puede haber restricciones adicionales)
+43:         pass
+44:     
+45:     return True
+46: ```
+47: 
+48: ## Qué se rechaza
+49: 
+50: - Loopback: `127.0.0.1`, `::1`, `localhost`
+51: - Redes privadas: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`
+52: - Link-local: `169.254.0.0/16` (metadata de cloud en AWS/GCP/Azure)
+53: - Otros: `0.0.0.0`, rangos reservados
+54: 
+55: ## Endpoints protegidos (9)
+56: 
+57: Los endpoints de importación de URLs (RAG de web), integración de herramientas externas, y cualquier endpoint que acepte una URL como input de usuario.
+58: 
+59: ## Relacionado
+60: 
+61: - [[Hardening ReDoS]] — Otra remediación OWASP del mismo ciclo
+62: - [[Path Traversal]] — Otra remediación del mismo ciclo
+63: - [[MOC - Seguridad]] — Índice del cluster de seguridad
+
+=== COELSA.Intelligent/Seguridad/Riesgos de seguridad aceptados.md sha256=d2b3f701348b9a7dc639a978663dd4b180026a452e94879784279d6d8269ffc9 ===
+1: ---
+2: title: "Riesgos de seguridad aceptados"
+3: type: referencia
+4: tags: [coelsa-intelligent, seguridad, riesgos, aceptados, csp]
+5: aliases: [Accepted risks, Riesgos aceptados COELSA, Security risks]
+6: description: "Usar cuando necesitás conocer qué vulnerabilidades de seguridad están conscientemente aceptadas en COELSA.Intelligent y por qué no se resuelven."
+7: estado: vigente
+8: ---
+9: 
+10: # Riesgos de seguridad aceptados
+11: 
+12: ## Qué es
+13: 
+14: No todos los riesgos de seguridad son solucionables sin un costo de ingeniería desproporcionado o sin romper funcionalidades críticas. COELSA.Intelligent tiene **3 riesgos aceptados documentados** con su justificación.
+15: 
+16: ## Riesgos aceptados
+17: 
+18: ### 1. `CSP: style-src unsafe-inline` (MEDIUM)
+19: 
+20: **Descripción**: Los atributos `style=""` inline no pueden recibir nonces. El header CSP incluye `style-src 'unsafe-inline'`.
+21: 
+22: **Por qué se acepta**: Eliminar todos los atributos `style=""` inline requeriría refactorizar toda la capa de componentes del upstream (miles de líneas). El riesgo de estilo es considerablemente menor que el de script.
+23: 
+24: **Condición de reapertura**: si se encuentra un vector de ataque CSS injection específico en la app.
+25: 
+26: ---
+27: 
+28: ### 2. `CSP: script-src unsafe-eval` (MEDIUM)
+29: 
+30: **Descripción**: `unsafe-eval` está en `script-src`. El header lo incluye.
+31: 
+32: **Por qué se acepta**: Mermaid (diagramas) y el sistema de artifacts requieren `eval()`. Desactivar `unsafe-eval` rompe estas funcionalidades sin un workaround disponible actualmente.
+33: 
+34: **Condición de reapertura**: si se encuentra una versión de Mermaid que no requiere `eval()`.
+35: 
+36: ---
+37: 
+38: ### 3. SSL deshabilitado en build Docker
+39: 
+40: **Descripción**: El Dockerfile tiene `NODE_TLS_REJECT_UNAUTHORIZED=0` y `PIP_TRUSTED_HOST`.
+41: 
+42: **Por qué se acepta**: Necesario en el entorno de CI/CD de COELSA donde el proxy corporativo intercepta HTTPS con certificados no instalados en la imagen base. La solución correcta es instalar los CAs corporativos en la imagen, lo que requiere coordinación con infraestructura.
+43: 
+44: **Ver**: [[SSL corporativo en build]]
+45: 
+46: ---
+47: 
+48: ## Relacionado
+49: 
+50: - [[CSP con nonces]] — Los riesgos 1 y 2 son parte del estado CSP
+51: - [[SSL corporativo en build]] — El detalle del riesgo 3
+52: - [[MOC - Seguridad]] — Índice del cluster de seguridad

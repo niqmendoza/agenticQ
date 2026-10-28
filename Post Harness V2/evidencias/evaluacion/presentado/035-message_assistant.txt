@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"El verificador confirmó referencias entregadas válidas, cobertura de P1–P7 y A–G, y ausencia de duplicados exactos. Quedan ocho casos marcados como pendientes de decisiones abiertas; estoy cerrando la revisión semántica y el registro de comportamiento antes de congelar los archivos.","annotations":[],"logprobs":[]}]

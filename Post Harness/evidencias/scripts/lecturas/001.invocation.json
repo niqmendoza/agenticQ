@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/scripts/brain.py",
+    "--db",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/indice.sqlite",
+    "--log-dir",
+    "/Users/nmendoza/Desktop/Code/QA agentizada/Post Harness/evidencias/scripts/lecturas",
+    "query",
+    "archivo renovar lectura permisos access_control propietario admin grupos usuario pending",
+    "--limit",
+    "3",
+    "--max-chars",
+    "9000"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-10-27T22:16:08.730094+00:00",
+  "finished_utc": "2026-10-27T22:16:08.778157+00:00",
+  "local_seconds": 0.047901540994644165
+}

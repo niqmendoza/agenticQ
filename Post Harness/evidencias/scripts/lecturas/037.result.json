@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Arquitectura/Headers de usuario COELSA.md",
+  "sha256": "e55a93237b5781aace21c113e9fc71906c2e056ce44d8b649ca78f812934966b",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Headers de usuario COELSA\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, http-headers]\naliases: [Encabezados HTTP COELSA, X-COELSA headers]\ndescription: \"Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent.\"\nestado: vigente\n---",
+    "title": "Headers de usuario COELSA",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, arquitectura, http-headers]",
+    "aliases": "[Encabezados HTTP COELSA, X-COELSA headers]",
+    "description": "Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 35,
+  "total_lines": 35,
+  "text": "---\ntitle: \"Headers de usuario COELSA\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, http-headers]\naliases: [Encabezados HTTP COELSA, X-COELSA headers]\ndescription: \"Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent.\"\nestado: vigente\n---\n\n# Headers de usuario COELSA\n\n## Qué es\n\nCOELSA.Intelligent renombró los encabezados HTTP que propagan la identidad del usuario autenticado entre componentes. La convención es:\n\n```\nX-COELSA.Intelligent-User-*\n```\n\nEstos headers viajan en las requests del proxy y del middleware de autenticación hacia los servicios internos.\n\n## Por qué el renombre\n\nEl upstream Open WebUI usaba nombres de header genéricos. El renombre hace que el origen de los headers sea inequívoco en logs y en reglas de seguridad de red, y evita colisiones con otros sistemas que puedan pasar headers similares.\n\n## Uso\n\nLos headers se inyectan automáticamente por el middleware de autenticación al validar el token JWT. Los routers que necesitan la identidad del usuario usan el sistema estándar de dependencias de FastAPI (`get_current_user`) en lugar de leer los headers directamente.\n\n## Relacionado\n\n- [[JWT y sesiones]] — El token JWT que valida la sesión antes de inyectar estos headers\n- [[FastAPI y uvicorn]] — El servidor donde el middleware de auth corre\n- [[Azure AD login exclusivo]] — La fuente de identidad que genera estos headers\n- [[MOC - Arquitectura]] — Contexto de la convención en el sistema",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

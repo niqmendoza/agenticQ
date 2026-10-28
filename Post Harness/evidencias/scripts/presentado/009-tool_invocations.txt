@@ -1,0 +1,1 @@
+text(await tools.exec_command({cmd:"cat 'Post Harness/evidencias/consigna-comun.md' 'Post Harness/evidencias/modalidad-scripts.md'","workdir":"/Users/nmendoza/Desktop/Code/QA agentizada","max_output_tokens":15000}));

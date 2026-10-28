@@ -1,0 +1,383 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 25, "returned": 5, "next_offset": 30}
+
+=== COELSA.Intelligent/Desarrollo/Agregar proveedor de almacenamiento.md sha256=cd1aefbdb2327f1bf5ffb436760b22afe277fdd692c635d6cf8dd949c9fd1f4b ===
+1: ---
+2: title: "Agregar proveedor de almacenamiento"
+3: type: referencia
+4: tags: [coelsa-intelligent, desarrollo, backend, almacenamiento, storage-provider]
+5: aliases: [Nuevo storage provider, StorageProvider interface, Agregar backend storage]
+6: description: "Usar cuando necesitás implementar un nuevo proveedor de almacenamiento (ej: Azure Blob, GCS) para COELSA.Intelligent siguiendo la interfaz StorageProvider."
+7: estado: vigente
+8: ---
+9: 
+10: # Agregar proveedor de almacenamiento
+11: 
+12: ## Qué es
+13: 
+14: Guía para implementar un nuevo backend de almacenamiento en COELSA.Intelligent. El sistema usa una interfaz abstracta `StorageProvider` que permite agregar nuevos providers sin modificar el código de negocio.
+15: 
+16: ## La interfaz abstracta
+17: 
+18: ```python
+19: # backend/server/storage/provider.py
+20: class StorageProvider(ABC):
+21:     
+22:     @abstractmethod
+23:     def get_file(self, file_path: str) -> str:
+24:         """Retorna la ruta local o URL al archivo."""
+25:         pass
+26:     
+27:     @abstractmethod
+28:     def upload_file(self, file: BinaryIO, filename: str) -> Tuple[bytes, str]:
+29:         """Sube el archivo y retorna (contenido, path)."""
+30:         pass
+31:     
+32:     @abstractmethod
+33:     def get_presigned_url(self, file_path: str, expiration: int = 3600) -> str:
+34:         """Genera una URL firmada de acceso temporal."""
+35:         pass
+36:     
+37:     @abstractmethod
+38:     def get_storage_stats(self) -> dict:
+39:         """Retorna estadísticas de uso del almacenamiento."""
+40:         pass
+41:     
+42:     @abstractmethod
+43:     def delete_all_files(self) -> None:
+44:         pass
+45:     
+46:     @abstractmethod
+47:     def delete_file(self, file_path: str) -> None:
+48:         pass
+49: ```
+50: 
+51: ## Pasos para agregar un nuevo provider
+52: 
+53: ### 1. Crear la clase del provider
+54: 
+55: ```python
+56: # backend/server/storage/provider.py — agregar junto a las clases existentes
+57: class MiNuevoProvider(StorageProvider):
+58:     
+59:     def get_file(self, file_path: str) -> str:
+60:         # implementación
+61:         ...
+62:     
+63:     def upload_file(self, file, filename):
+64:         # implementación con sanitización de path (ver Path Traversal)
+65:         ...
+66:     
+67:     # ... implementar todos los métodos abstractos
+68: ```
+69: 
+70: ### 2. Registrar en la factory
+71: 
+72: En `provider.py`, agregar el nuevo provider a la selección por variable de entorno:
+73: 
+74: ```python
+75: STORAGE_PROVIDER = os.getenv("STORAGE_PROVIDER", "local")
+76: 
+77: if STORAGE_PROVIDER == "s3":
+78:     Storage = S3StorageProvider(...)
+79: elif STORAGE_PROVIDER == "mi-nuevo":
+80:     Storage = MiNuevoProvider(...)
+81: else:
+82:     Storage = LocalStorageProvider()
+83: ```
+84: 
+85: ## Notas de seguridad
+86: 
+87: Siempre incluir sanitización de path traversal en `upload_file`. Ver [[Path Traversal]].
+88: 
+89: ## Relacionado
+90: 
+91: - [[Sistema híbrido de almacenamiento]] — El contexto donde opera el provider
+92: - [[MinIO S3]] — El provider S3 como referencia de implementación
+93: - [[Path Traversal]] — La sanitización de paths obligatoria en upload_file
+94: - [[MOC - Desarrollo]] — Índice del cluster de desarrollo
+
+=== COELSA.Intelligent/Desarrollo/Agregar router REST.md sha256=9a7abc07850e4d29afdd6160b59e0e3c21cf59c533132b5db466f2f78c6c6878 ===
+1: ---
+2: title: "Agregar router REST"
+3: type: referencia
+4: tags: [coelsa-intelligent, desarrollo, backend, fastapi, routers, api]
+5: aliases: [Agregar endpoint, Nuevo router FastAPI, New REST endpoint]
+6: description: "Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router."
+7: estado: vigente
+8: ---
+9: 
+10: # Agregar router REST
+11: 
+12: ## Qué es
+13: 
+14: Guía paso a paso para agregar un nuevo conjunto de endpoints REST al backend de COELSA.Intelligent usando el patrón de routers de FastAPI.
+15: 
+16: ## Pasos
+17: 
+18: ### 1. Crear el módulo del router
+19: 
+20: ```python
+21: # backend/server/routers/mi_nuevo_router.py
+22: from fastapi import APIRouter, Depends, HTTPException
+23: from server.models.users import UserModel
+24: from server.utils.auth import get_current_user
+25: 
+26: router = APIRouter()
+27: 
+28: @router.get("/")
+29: async def get_items(user: UserModel = Depends(get_current_user)):
+30:     """Endpoint de ejemplo."""
+31:     return {"items": []}
+32: 
+33: @router.post("/")
+34: async def create_item(
+35:     data: dict,
+36:     user: UserModel = Depends(get_current_user)
+37: ):
+38:     return {"created": True}
+39: ```
+40: 
+41: ### 2. Importar el router en `main.py`
+42: 
+43: ```python
+44: # backend/server/main.py
+45: from server.routers import (
+46:     # ... routers existentes ...
+47:     mi_nuevo_router,  # Agregar aquí
+48: )
+49: ```
+50: 
+51: ### 3. Registrar el router en la app
+52: 
+53: ```python
+54: # backend/server/main.py — en la función que monta los routers
+55: app.include_router(
+56:     mi_nuevo_router.router,
+57:     prefix="/api/v1/mi-recurso",
+58:     tags=["mi-recurso"]
+59: )
+60: ```
+61: 
+62: ## Convenciones
+63: 
+64: - Los routers usan el prefijo `/api/v1/`
+65: - Todos los endpoints que requieren autenticación usan `Depends(get_current_user)`
+66: - Los errores usan la jerarquía del [[Sistema de errores centralizado]]
+67: - La lógica de acceso a BD va en `backend/server/models/`; el router solo orquesta
+68: 
+69: ## Relacionado
+70: 
+71: - [[FastAPI y uvicorn]] — El servidor donde se montan los routers
+72: - [[Sistema de errores centralizado]] — Las excepciones que deben usarse en los endpoints
+73: - [[Control de acceso a recursos]] — Cómo agregar control de acceso a nivel de endpoint
+74: - [[MOC - Desarrollo]] — Índice del cluster de desarrollo
+
+=== COELSA.Intelligent/Desarrollo/Ejecución local.md sha256=8f3772674f4f529fe3d9214119e773b1cbb3fae7c79c9fc61fc66cd506f15c45 ===
+1: ---
+2: title: "Ejecución local"
+3: type: referencia
+4: tags: [coelsa-intelligent, desarrollo, local, dev, comandos]
+5: aliases: [Dev local COELSA, Correr localmente, Local setup]
+6: description: "Usar cuando necesitás levantar COELSA.Intelligent en tu máquina local para desarrollo — comandos exactos para frontend y backend."
+7: estado: vigente
+8: ---
+9: 
+10: # Ejecución local
+11: 
+12: ## Qué es
+13: 
+14: Guía de referencia para levantar COELSA.Intelligent en modo desarrollo local.
+15: 
+16: ## Prerrequisitos
+17: 
+18: Tener corriendo localmente (o con Docker):
+19: - [[PostgreSQL]] 14+ en `localhost:5432`
+20: - [[Redis]] 7+ en `localhost:6379`
+21: - [[Milvus]] 2.4+ en `localhost:19530`
+22: - [[MinIO S3]] en `localhost:9000` (opcional; puede usarse storage local)
+23: - [[Ollama]] o [[LiteLLM proxy]] para los modelos IA
+24: 
+25: ## Configuración inicial
+26: 
+27: ```bash
+28: # 1. Copiar y editar variables de entorno
+29: cp .env.example .env
+30: 
+31: # 2. Editar .env con las conexiones locales y credenciales de Azure AD
+32: ```
+33: 
+34: Variables mínimas requeridas: ver `docs/setup.md`.
+35: 
+36: ## Levantar el backend
+37: 
+38: ```bash
+39: cd backend
+40: pip install -r requirements.txt  # Primera vez
+41: 
+42: # Linux / macOS
+43: ./dev.sh
+44: 
+45: # Windows
+46: start_windows.bat
+47: ```
+48: 
+49: El backend queda disponible en `http://localhost:8080` con **hot-reload** activado.
+50: 
+51: ## Levantar el frontend
+52: 
+53: ```bash
+54: # Primera vez
+55: npm install
+56: 
+57: npm run dev
+58: ```
+59: 
+60: El frontend queda disponible en `http://localhost:5173`. Apunta automáticamente al backend en `localhost:8080`.
+61: 
+62: ## Notas de desarrollo
+63: 
+64: - Los [[CSP con nonces|nonces CSP]] deben estar deshabilitados en local (`ENABLE_CSP_NONCES=false`)
+65: - Los logs del backend usan loguru — ver [[Loguru y logging]]
+66: - Para probar el storage S3, configurar `STORAGE_PROVIDER=s3` con las vars de [[MinIO S3]]
+67: - Las migraciones se aplican automáticamente al arrancar el backend — ver [[Migraciones Alembic]]
+68: 
+69: ## Relacionado
+70: 
+71: - [[FastAPI y uvicorn]] — El backend que se levanta con dev.sh
+72: - [[SvelteKit 2]] — El frontend que se levanta con npm run dev
+73: - [[CSP con nonces]] — Por qué ENABLE_CSP_NONCES debe ser false en local
+74: - [[MOC - Desarrollo]] — Índice del cluster de desarrollo
+
+=== COELSA.Intelligent/Desarrollo/Loguru y logging.md sha256=b2dfb002d577ae3e074ca5df16a1851f77699b42bac85fd54aa83be3dec46d77 ===
+1: ---
+2: title: "Loguru y logging"
+3: type: referencia
+4: tags: [coelsa-intelligent, desarrollo, logging, loguru, debug]
+5: aliases: [Logging COELSA, loguru COELSA, LOG_LEVEL]
+6: description: "Usar cuando necesitás configurar el nivel de logging de COELSA.Intelligent, agregar logs a un módulo nuevo o entender la estructura de niveles de log por módulo."
+7: estado: vigente
+8: ---
+9: 
+10: # Loguru y logging
+11: 
+12: ## Qué es
+13: 
+14: El backend de COELSA.Intelligent usa **loguru** como librería de logging. El nivel de log se controla por variable de entorno y se puede ajustar por módulo.
+15: 
+16: ## Configuración
+17: 
+18: ```env
+19: LOG_LEVEL=INFO
+20: ```
+21: 
+22: Niveles disponibles: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`.
+23: 
+24: ## Uso en módulos
+25: 
+26: ```python
+27: from server.env import SRC_LOG_LEVELS
+28: import logging
+29: 
+30: log = logging.getLogger(__name__)
+31: log.setLevel(SRC_LOG_LEVELS["MAIN"])  # o "MODELS", "OAUTH", etc.
+32: 
+33: log.info("Mensaje informativo")
+34: log.error(f"Error: {e}")
+35: log.exception(f"Error con traceback: {e}")
+36: ```
+37: 
+38: ## Niveles por módulo (`SRC_LOG_LEVELS`)
+39: 
+40: La variable `SRC_LOG_LEVELS` en `server/env.py` mapea áreas del sistema a sus niveles:
+41: 
+42: | Clave | Módulos afectados |
+43: |-------|------------------|
+44: | `MAIN` | Arranque, config, main.py |
+45: | `MODELS` | ORM, modelos SQLAlchemy |
+46: | `OAUTH` | Autenticación, JWT |
+47: | `RAG` | Retrieval, embeddings |
+48: | `DB` | Consultas a base de datos |
+49: 
+50: ## Filtrado de endpoints frecuentes
+51: 
+52: El log de acceso de uvicorn filtra las requests a `/health` para evitar spam en los logs:
+53: 
+54: ```python
+55: class EndpointFilter(logging.Filter):
+56:     def filter(self, record):
+57:         return record.getMessage().find("/health") == -1
+58: ```
+59: 
+60: ## Relacionado
+61: 
+62: - [[FastAPI y uvicorn]] — El servidor donde se configura el logging de acceso
+63: - [[Ejecución local]] — Cómo ver los logs en modo desarrollo
+64: - [[MOC - Desarrollo]] — Índice del cluster de desarrollo
+
+=== COELSA.Intelligent/Desarrollo/Migraciones Alembic.md sha256=ef88dc20c13e15a1025cd823c2deb39da868be063addb992c09ab6167471339c ===
+1: ---
+2: title: "Migraciones Alembic"
+3: type: referencia
+4: tags: [coelsa-intelligent, desarrollo, alembic, migraciones, postgresql]
+5: aliases: [Alembic migrations, Database migrations COELSA]
+6: description: "Usar cuando necesitás agregar una migración de base de datos, aplicar migraciones pendientes o entender el flujo de gestión de esquema en COELSA.Intelligent."
+7: estado: vigente
+8: ---
+9: 
+10: # Migraciones Alembic
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent usa **Alembic** para gestionar los cambios de esquema de [[PostgreSQL]]. Las migraciones están en `backend/server/migrations/`.
+15: 
+16: ## Arranque automático
+17: 
+18: Al iniciar el servidor, `run_migrations()` en `config.py` aplica automáticamente las migraciones pendientes:
+19: 
+20: ```python
+21: # backend/server/config.py
+22: def run_migrations():
+23:     from alembic import command
+24:     from alembic.config import Config
+25:     alembic_cfg = Config(SERVER_DIR / "alembic.ini")
+26:     command.upgrade(alembic_cfg, "head")
+27: ```
+28: 
+29: ## Comandos manuales
+30: 
+31: ```bash
+32: # Aplicar todas las migraciones pendientes
+33: cd backend
+34: alembic upgrade head
+35: 
+36: # Ver el estado actual
+37: alembic current
+38: 
+39: # Ver el historial de migraciones
+40: alembic history
+41: 
+42: # Crear una nueva migración (autogenerada)
+43: alembic revision --autogenerate -m "descripcion_del_cambio"
+44: 
+45: # Crear una migración manual vacía
+46: alembic revision -m "descripcion_del_cambio"
+47: ```
+48: 
+49: ## Convención de nombres
+50: 
+51: Los archivos de migración siguen el patrón: `<revision_id>_<descripcion>.py`
+52: 
+53: Ejemplo: `add_minio_file_fields.sql` (también hay migraciones SQL directas en `backend/migrations/`).
+54: 
+55: ## Cuándo ejecutar
+56: 
+57: - Antes del primer arranque en un entorno nuevo
+58: - Después de cada deploy que incluya cambios de esquema
+59: - Los pipelines de CI/CD deben ejecutar `alembic upgrade head` como parte del proceso de deploy
+60: 
+61: ## Relacionado
+62: 
+63: - [[PostgreSQL]] — La base de datos que gestionan las migraciones
+64: - [[PostgreSQL como base de datos]] — Por qué se usa PostgreSQL (y Alembic)
+65: - [[Despliegue en OpenShift]] — Las migraciones como parte del flujo de deploy
+66: - [[MOC - Desarrollo]] — Índice del cluster de desarrollo

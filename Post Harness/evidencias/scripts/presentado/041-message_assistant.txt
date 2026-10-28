@@ -1,0 +1,1 @@
+[{"type":"output_text","text":"La recuperación ya cubre las dependencias principales. Estoy redactando casos parametrizados para permisos y límites de TTL, y separando los resultados exigidos por P1–P7 de las decisiones todavía abiertas, especialmente carreras con revocación y limpieza.\n","annotations":[],"logprobs":[]}]

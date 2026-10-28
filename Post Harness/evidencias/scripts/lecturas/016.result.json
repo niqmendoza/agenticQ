@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Diseño Frontend/Manejo de errores frontend.md",
+  "sha256": "f4d0cc88113e86e38a36230d26cab8f3303f32d6ae1a4beca0625589aff0b231",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Manejo de errores frontend\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, errores, svelte]\naliases: [Error handling frontend, Componentes de error Svelte, ErrorBoundary COELSA]\ndescription: \"Usar cuando necesitás implementar manejo de errores en el frontend de COELSA.Intelligent o entender cómo se renderizan los errores HTTP al usuario.\"\nestado: vigente\n---",
+    "title": "Manejo de errores frontend",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, diseño, frontend, errores, svelte]",
+    "aliases": "[Error handling frontend, Componentes de error Svelte, ErrorBoundary COELSA]",
+    "description": "Usar cuando necesitás implementar manejo de errores en el frontend de COELSA.Intelligent o entender cómo se renderizan los errores HTTP al usuario.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 57,
+  "total_lines": 57,
+  "text": "---\ntitle: \"Manejo de errores frontend\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, errores, svelte]\naliases: [Error handling frontend, Componentes de error Svelte, ErrorBoundary COELSA]\ndescription: \"Usar cuando necesitás implementar manejo de errores en el frontend de COELSA.Intelligent o entender cómo se renderizan los errores HTTP al usuario.\"\nestado: vigente\n---\n\n# Manejo de errores frontend\n\n## Qué es\n\nCOELSA.Intelligent tiene un sistema de componentes específicos para cada categoría de error HTTP, más un `ErrorBoundary` para capturar errores de renderizado en componentes Svelte.\n\n## Componentes de error\n\n| Componente | Archivo | Cuándo se muestra |\n|-----------|---------|-------------------|\n| `NetworkError` | `src/lib/components/error/NetworkError.svelte` | Sin conexión o error de red (0, ECONNREFUSED) |\n| `TimeoutError` | `src/lib/components/error/TimeoutError.svelte` | La request excedió el timeout |\n| `GenericError` | `src/lib/components/error/GenericError.svelte` | Cualquier error HTTP no categorizado |\n| `ErrorBoundary` | `src/lib/components/error/ErrorBoundary.svelte` | Error durante el renderizado de un componente hijo |\n\n## Routing de errores HTTP\n\n`src/routes/+error.svelte` recibe todos los errores HTTP de SvelteKit y los rutea:\n- `0` o sin respuesta → `NetworkError`\n- Timeout detectado → `TimeoutError`\n- Cualquier otro → `GenericError` (con el código y mensaje del backend)\n\n## ErrorBoundary (para errores de render)\n\nEnvuelve secciones de UI que podrían fallar durante el renderizado:\n\n```svelte\n<ErrorBoundary>\n  <ComponenteQuePodriaFallar />\n</ErrorBoundary>\n```\n\nSi el componente hijo lanza un error durante el render, `ErrorBoundary` lo captura y muestra un fallback en lugar de romper toda la página.\n\n## Relación con el backend\n\nLos errores del backend llegan con la estructura estándar del [[Sistema de errores centralizado]]:\n```json\n{ \"message\": \"...\", \"status_code\": 400, \"details\": \"...\" }\n```\n\nLos componentes de error extraen el `message` para mostrarlo al usuario.\n\n## Relacionado\n\n- [[Sistema de errores centralizado]] — Los errores del backend que estos componentes consumen\n- [[SvelteKit 2]] — El framework donde viven estos componentes y el router de errores\n- [[MOC - Diseño y Frontend]] — Índice del cluster de diseño",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}

@@ -1,0 +1,162 @@
+{
+  "tokenizer": {
+    "package": "tiktoken",
+    "version": "0.14.0",
+    "encoding": "o200k_base",
+    "fingerprint_sha256": "8e2ba5c21a82b46f512310fc0a49a87ab340cebf4eed2ddf108b78576ca49481"
+  },
+  "iterations": [
+    {
+      "id": "full",
+      "title": "Lectura completa",
+      "usage": {
+        "input_tokens": 1367118,
+        "cached_input_tokens": 1289728,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 16037,
+        "reasoning_output_tokens": 1881,
+        "total_tokens": 1383155
+      },
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "model_responses": 21,
+      "local_calls": 16,
+      "documents_presented": 80,
+      "document_tokens": 57652,
+      "cases": 38,
+      "seconds": 376.21,
+      "quality_note": "Referencia histórica: núcleo cubierto, contraste 4,5:1/3:1 explícito y riesgos adicionales; contratos de concurrencia/ACL aún abiertos."
+    },
+    {
+      "id": "v1",
+      "title": "Scripts V1",
+      "usage": {
+        "input_tokens": 1239741,
+        "cached_input_tokens": 1161984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 18510,
+        "reasoning_output_tokens": 2650,
+        "total_tokens": 1258251
+      },
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "model_responses": 21,
+      "local_calls": 52,
+      "documents_presented": 27,
+      "document_tokens": 42496,
+      "cases": 29,
+      "seconds": 406.583,
+      "quality_note": "Núcleo cubierto; faltó recuperar la fuente AA y parte de la matriz de efectos bajo error. La cantidad de casos no permite medir calidad."
+    },
+    {
+      "id": "v2",
+      "title": "Scripts V2",
+      "usage": {
+        "input_tokens": 988434,
+        "cached_input_tokens": 941440,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 16242,
+        "reasoning_output_tokens": 1950,
+        "total_tokens": 1004676
+      },
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "model_responses": 16,
+      "local_calls": 23,
+      "documents_presented": 28,
+      "document_tokens": 32195,
+      "cases": 38,
+      "seconds": 440.334,
+      "quality_note": "Núcleo cubierto; recuperó la fuente AA, verificó 193 citas y marcó nueve decisiones pendientes. Conviene explicitar los umbrales AA en el esperado y vincular la duda 403/404 a cada caso afectado."
+    }
+  ],
+  "changes": [
+    {
+      "title": "Paquete multiconsulta",
+      "before": "El agente ejecutaba consultas separadas y elegía qué ampliar.",
+      "after": "Una operación combina preguntas y equilibra candidatos por consulta."
+    },
+    {
+      "title": "Memoria por intervalos",
+      "before": "Las relecturas no distinguían evidencia ya entregada.",
+      "after": "La sesión devuelve sólo líneas faltantes; replay permite releer explícitamente."
+    },
+    {
+      "title": "Fuentes compactas",
+      "before": "Se repetían rutas, metadatos crudos y campos derivados.",
+      "after": "Una tabla de fuentes por paquete y texto numerado con límites claros."
+    },
+    {
+      "title": "Relaciones acotadas",
+      "before": "Seguir enlaces dependía de cada decisión del agente.",
+      "after": "Un salto automático y candidatos pendientes visibles, sin reglas específicas de OWUI."
+    },
+    {
+      "title": "Verificador en lote",
+      "before": "El agente organizó 21 relecturas para revisar encabezados.",
+      "after": "Rangos, entrega, requisitos y pendientes se verifican en lote; el significado sigue requiriendo revisión."
+    },
+    {
+      "title": "Índice con derivados persistidos",
+      "before": "Cada query recalculaba estadísticas y resolvía enlaces por resultado.",
+      "after": "SQLite conserva ranking, encabezados y grafo; SHA256 sigue validando cambios."
+    }
+  ],
+  "coverage": [
+    {
+      "criterion": "Identidad y permisos",
+      "full": "Núcleo + duda write/read",
+      "v1": "Núcleo + duda write/read",
+      "v2": "Núcleo + pendiente explícito"
+    },
+    {
+      "criterion": "TTL y validación",
+      "full": "Bordes y ambiguos separados",
+      "v1": "Bordes; null/60.0 en dudas",
+      "v2": "Bordes; null/60.0 pendientes"
+    },
+    {
+      "criterion": "S3, local y carreras",
+      "full": "Cubierto; consistencia abierta",
+      "v1": "Cubierto; consistencia abierta",
+      "v2": "Cubierto; consistencia abierta"
+    },
+    {
+      "criterion": "Efectos laterales",
+      "full": "Éxito/error + P4 abierto",
+      "v1": "Matriz de error incompleta",
+      "v2": "Éxito/error + P4 abierto"
+    },
+    {
+      "criterion": "Accesibilidad UI",
+      "full": "AA 4,5:1/3:1 explícito",
+      "v1": "Faltó fuente AA",
+      "v2": "Fuente AA; explicitar umbral"
+    },
+    {
+      "criterion": "Fuentes y oráculos",
+      "full": "Citas válidas; dudas en texto",
+      "v1": "Citas válidas; dudas en texto",
+      "v2": "193 citas; 9 pendientes marcados"
+    },
+    {
+      "criterion": "Duplicados exactos",
+      "full": "0",
+      "v1": "0",
+      "v2": "0"
+    }
+  ],
+  "limitations": [
+    "Dos ejecuciones históricas y una nueva, mismo mock conocido: regresión exploratoria sin conclusión causal, estadística ni porcentaje universal.",
+    "Mismo modelo/esfuerzo observado; la modalidad, el formato y la navegación cambian. Semilla, snapshot interno, carga y temperatura no están controlados.",
+    "V2 redujo tokens y llamadas, pero el turno duró 440 s frente a 407 s de V1; no se demostró una mejora de velocidad.",
+    "Menos tokens nativos no se traduce aquí a dinero: no se consultaron precios y caché/razonamiento son subconjuntos, sin doble conteo.",
+    "La fuente AA se recuperó; aún conviene explicitar sus umbrales en el esperado. El validador no prueba apoyo semántico ni detecta toda contradicción entre dudas y casos.",
+    "El primer paquete tuvo una elisión reportada y reparada con replay. Los tokens documentales son proxy de payloads registrados; el contador nativo es la medida acumulada principal.",
+    "La calidad se revisó sin ciego. La consigna ya explicitaba varias excepciones; no es una prueba de descubrimiento espontáneo de todas las reglas ni una validación sobre otras aplicaciones."
+  ],
+  "v1_report_sha256": "69062ba62e54fae4c6128b73b61b32be88eeb9bdc95dc9a0156e8e1f1a1ccc68",
+  "integrity_ok": true,
+  "content_scope": "Payload documental CLI registrado, contado una vez con tiktoken 0.14.0 / o200k_base proxy. V1 corrige transformaciones conocidas. V2 tuvo una elisión reportada y reparada con replay, no cuantificable exactamente desde el rollout. Distinto de usage nativo acumulado.",
+  "comparison_kind": "Regresión exploratoria histórica de un mock conocido; sin equivalencia causal/estadística."
+}

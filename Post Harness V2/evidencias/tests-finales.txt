@@ -1,0 +1,23 @@
+test_empty (test_brain_v2.V2Tests.test_empty) ... ok
+test_graph_expansion_generic_other_stack (test_brain_v2.V2Tests.test_graph_expansion_generic_other_stack) ... ok
+test_headings_ignore_code_and_verify_coverage (test_brain_v2.V2Tests.test_headings_ignore_code_and_verify_coverage) ... ok
+test_incremental_hash_invalidation_and_stats (test_brain_v2.V2Tests.test_incremental_hash_invalidation_and_stats) ... ok
+test_literal_numbered_lines (test_brain_v2.V2Tests.test_literal_numbered_lines) ... ok
+test_logs_not_inside_corpus_even_index (test_brain_v2.V2Tests.test_logs_not_inside_corpus_even_index) ... ok
+test_no_ontology_and_sources_stable (test_brain_v2.V2Tests.test_no_ontology_and_sources_stable) ... ok
+test_partial_budget_can_advance (test_brain_v2.V2Tests.test_partial_budget_can_advance) ... ok
+test_range_complete_distinct_document_complete (test_brain_v2.V2Tests.test_range_complete_distinct_document_complete) ... ok
+test_requirements_and_open_decisions (test_brain_v2.V2Tests.test_requirements_and_open_decisions) ... ok
+test_session_dedupe_replay (test_brain_v2.V2Tests.test_session_dedupe_replay) ... ok
+test_strict_char_budget_and_pending (test_brain_v2.V2Tests.test_strict_char_budget_and_pending) ... ok
+test_token_budget_optional (test_brain_v2.V2Tests.test_token_budget_optional) ... ok
+test_unresolved_links_visible_and_same_title (test_brain_v2.V2Tests.test_unresolved_links_visible_and_same_title) ... ok
+test_native_categories_not_double_counted (test_report.ReportTests.test_native_categories_not_double_counted) ... ok
+test_reject_impossible_usage (test_report.ReportTests.test_reject_impossible_usage) ... ok
+test_unknown_is_not_zero (test_report.ReportTests.test_unknown_is_not_zero) ... ok
+test_deduplicate_deltas_not_cumulative (test_usage.UsageTests.test_deduplicate_deltas_not_cumulative) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.195s
+
+OK

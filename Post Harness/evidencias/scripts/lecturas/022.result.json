@@ -1,0 +1,285 @@
+{
+  "query": "SPA ssr false SvelteKit",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "false",
+    "spa",
+    "ssr",
+    "sveltekit"
+  ],
+  "missing_terms": [],
+  "total_matches": 49,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md",
+      "sha256": "d1e6f8db848e014164e9ac2d81784da71d700c2a6e00349a84d3466491a15c52",
+      "section": "Documento",
+      "start": 1,
+      "end": 9,
+      "score": 22.8996,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"SPA con SSR deshabilitado\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]\naliases: [SSR deshabilitado, SPA mode, ssr false]\ndescription: \"Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.\"\nestado: vigente\n---",
+        "title": "SPA con SSR deshabilitado",
+        "type": "decision",
+        "tags": "[coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]",
+        "aliases": "[SSR deshabilitado, SPA mode, ssr false]",
+        "description": "Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.",
+        "estado": "vigente"
+      },
+      "excerpt": "---\ntitle: \"SPA con SSR deshabilitado\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]\naliases: [SSR deshabilitado, SPA mode, ssr false]\ndescription: \"Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.\"\nestado: vigente\n---\n",
+      "relations": [
+        {
+          "target": "SvelteKit 2",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/SvelteKit 2.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "OpenShift",
+          "fragment": "",
+          "line": 27,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/OpenShift.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "CVE-2025-7969 markdown-it",
+          "fragment": "",
+          "line": 29,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/CVE-2025-7969 markdown-it.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "CSP con nonces",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/CSP con nonces.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SvelteKit 2",
+          "fragment": "",
+          "line": 39,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/SvelteKit 2.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "CSP con nonces",
+          "fragment": "",
+          "line": 40,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Seguridad/CSP con nonces.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 9,
+      "relations_truncated": true
+    },
+    {
+      "path": "COELSA.Intelligent/Stack/SvelteKit 2.md",
+      "sha256": "0eddcfe12eeae361ed35cdbd08358f12af27a9ee22f805e294d64276550c0fd5",
+      "section": "Estructura de carpetas relevante",
+      "start": 16,
+      "end": 33,
+      "score": 16.4227,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"SvelteKit 2\"\ntype: stack\ntags: [coelsa-intelligent, stack, frontend, sveltekit, spa]\naliases: [Frontend SvelteKit, SvelteKit COELSA]\ndescription: \"Usar cuando trabajás con el frontend de COELSA.Intelligent: rutas, stores, componentes, build o modo de desarrollo.\"\nestado: vigente\n---",
+        "title": "SvelteKit 2",
+        "type": "stack",
+        "tags": "[coelsa-intelligent, stack, frontend, sveltekit, spa]",
+        "aliases": "[Frontend SvelteKit, SvelteKit COELSA]",
+        "description": "Usar cuando trabajás con el frontend de COELSA.Intelligent: rutas, stores, componentes, build o modo de desarrollo.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Estructura de carpetas relevante\n\n```\nsrc/\n  routes/\n    +layout.js        ← ssr = false; trailingSlash = 'ignore'\n    +layout.svelte    ← layout raíz con providers de estado\n    (app)/            ← rutas autenticadas (chat, admin, workspace)\n    auth/             ← login via Azure AD\n    +error.svelte     ← manejo de errores HTTP\n  lib/\n    components/       ← componentes Svelte reutilizables\n    stores/           ← estado global reactivo\n    i18n/             ← traducciones (es-AR, en-GB, pt-BR)\n    utils/            ← helpers y funciones utilitarias\n    apis/             ← cliente HTTP para cada dominio del backend\n```\n",
+      "relations": [
+        {
+          "target": "SPA con SSR deshabilitado",
+          "fragment": "",
+          "line": 14,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Build frontend",
+          "fragment": "",
+          "line": 42,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/CI-CD/Build frontend.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "ECO Design System",
+          "fragment": "",
+          "line": 46,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/ECO Design System.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Internacionalización i18n",
+          "fragment": "",
+          "line": 47,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Diseño Frontend/Internacionalización i18n.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SPA con SSR deshabilitado",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Build frontend",
+          "fragment": "",
+          "line": 52,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/CI-CD/Build frontend.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 9,
+      "relations_truncated": true
+    },
+    {
+      "path": "COELSA.Intelligent/MOCs/MOC - Arquitectura.md",
+      "sha256": "9114673a7b48db07ed2db34f3861bf6e55fb4e58475ac0fe40d6e08d699b07db",
+      "section": "Notas de este cluster",
+      "start": 14,
+      "end": 23,
+      "score": 10.2173,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"MOC — Arquitectura\"\ntype: moc\ntags: [coelsa-intelligent, arquitectura, moc]\naliases: [Arquitectura COELSA, MOC Arquitectura]\ndescription: \"Usar cuando necesitás entender las decisiones de diseño estructural de COELSA.Intelligent — qué componentes existen y por qué se tomó cada decisión.\"\nestado: vigente\n---",
+        "title": "MOC — Arquitectura",
+        "type": "moc",
+        "tags": "[coelsa-intelligent, arquitectura, moc]",
+        "aliases": "[Arquitectura COELSA, MOC Arquitectura]",
+        "description": "Usar cuando necesitás entender las decisiones de diseño estructural de COELSA.Intelligent — qué componentes existen y por qué se tomó cada decisión.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Notas de este cluster\n\n- [[Fork de Open WebUI]] — Qué es el fork, qué cambia y por qué no se sigue el upstream directamente\n- [[SPA con SSR deshabilitado]] — Por qué `ssr = false` y sus implicaciones de seguridad y compatibilidad\n- [[PostgreSQL como base de datos]] — Migración de SQLite a PostgreSQL para escalar en producción\n- [[Redis para WebSockets]] — Backend de canal que permite múltiples workers sin pérdida de eventos\n- [[Sistema de errores centralizado]] — Jerarquía estándar de 10 tipos de excepción con respuestas JSON consistentes\n- [[Headers de usuario COELSA]] — Convención de encabezados HTTP `X-COELSA.Intelligent-User-*`\n- [[Idioma por defecto es-AR]] — Castellano Rioplatense como único español; idiomas eliminados del fork\n",
+      "relations": [
+        {
+          "target": "Fork de Open WebUI",
+          "fragment": "",
+          "line": 12,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Fork de Open WebUI.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Fork de Open WebUI",
+          "fragment": "",
+          "line": 16,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Fork de Open WebUI.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "SPA con SSR deshabilitado",
+          "fragment": "",
+          "line": 17,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "PostgreSQL como base de datos",
+          "fragment": "",
+          "line": 18,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/PostgreSQL como base de datos.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Redis para WebSockets",
+          "fragment": "",
+          "line": 19,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Redis para WebSockets.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Sistema de errores centralizado",
+          "fragment": "",
+          "line": 20,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 12,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 3,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ]
+}

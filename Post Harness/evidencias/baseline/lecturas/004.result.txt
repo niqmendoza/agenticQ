@@ -1,0 +1,257 @@
+{"revision": "fb584d5587c65fc1464ae445f9053db95ff6ca3c1310a0734a5af1ca25853524", "total_documents": 80, "offset": 15, "returned": 5, "next_offset": 20}
+
+=== COELSA.Intelligent/Auth y Permisos/Grupos y permisos.md sha256=2d2d8bbec28f33cb389bf605b71b21a8a914a2b323a62d5f78344811fe3ac84e ===
+1: ---
+2: title: "Grupos y permisos"
+3: type: concepto
+4: tags: [coelsa-intelligent, auth, grupos, permisos]
+5: aliases: [Groups COELSA, Permisos de grupo]
+6: description: "Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios."
+7: estado: vigente
+8: ---
+9: 
+10: # Grupos y permisos
+11: 
+12: ## Qué es
+13: 
+14: Además del sistema de [[Roles de usuario|roles]], COELSA.Intelligent implementa **grupos** con permisos granulares en formato JSON. Los grupos permiten dar acceso diferenciado a conjuntos de funcionalidades a subconjuntos de usuarios.
+15: 
+16: ## Modelo de datos (Group)
+17: 
+18: ```python
+19: class Group(Base):
+20:     id: Text           # UUID
+21:     user_id: Text      # Creador del grupo
+22:     name: Text
+23:     description: Text
+24:     data: JSON         # Datos adicionales
+25:     meta: JSON         # Metadatos internos
+26:     permissions: JSON  # Permisos del grupo
+27:     user_ids: JSON     # Lista de IDs de usuarios en el grupo
+28:     created_at: BigInteger
+29:     updated_at: BigInteger
+30: ```
+31: 
+32: ## Estructura del JSON de permisos
+33: 
+34: Los permisos se definen como un objeto JSON con capacidades específicas. Ejemplo:
+35: 
+36: ```json
+37: {
+38:   "chat": {
+39:     "file_upload": true,
+40:     "web_search": false
+41:   },
+42:   "workspace": {
+43:     "models": false,
+44:     "knowledge": true
+45:   }
+46: }
+47: ```
+48: 
+49: ## Permisos por defecto
+50: 
+51: La configuración de permisos iniciales para nuevos usuarios y grupos se ajustó en v1.3.0 a las necesidades corporativas de COELSA (ver CHANGELOG). Los defaults del upstream no aplicaban al contexto corporativo.
+52: 
+53: ## Relacionado
+54: 
+55: - [[Roles de usuario]] — El rol es la primera capa; los grupos son la segunda capa granular
+56: - [[Control de acceso a recursos]] — Cómo los grupos interactúan con el access_control de Knowledge y Files
+57: - [[MOC - Autenticación y Permisos]] — Índice del cluster de auth
+
+=== COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md sha256=1de1408046f7e94fde09b8c6e366b80176643850b5f4bfa8caed57b1286de56f ===
+1: ---
+2: title: "JWT y sesiones"
+3: type: concepto
+4: tags: [coelsa-intelligent, auth, jwt, sesiones, tokens]
+5: aliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]
+6: description: "Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD."
+7: estado: vigente
+8: ---
+9: 
+10: # JWT y sesiones
+11: 
+12: ## Qué es
+13: 
+14: Después de un login OAuth exitoso con [[Azure AD OAuth|Azure AD]], COELSA.Intelligent genera un **JWT interno** (JSON Web Token) que el frontend usa en todas las requests subsiguientes. Este token es independiente del token de Azure AD.
+15: 
+16: ## Especificaciones del token
+17: 
+18: - **Algoritmo**: HS256 (HMAC con SHA-256)
+19: - **Clave secreta**: `WEBUI_SECRET_KEY` (variable de entorno)
+20: - **Módulo**: `backend/server/utils/auth.py`
+21: 
+22: ## Generación
+23: 
+24: ```python
+25: # Pseudocódigo del flujo
+26: token = jwt.encode(
+27:     {
+28:         "id": user.id,
+29:         "email": user.email,
+30:         "role": user.role,
+31:         "exp": datetime.utcnow() + timedelta(hours=SESSION_HOURS)
+32:     },
+33:     SESSION_SECRET,  # WEBUI_SECRET_KEY
+34:     algorithm=ALGORITHM  # HS256
+35: )
+36: ```
+37: 
+38: ## Validación
+39: 
+40: Cada endpoint protegido valida el token usando el `HTTPBearer` security scheme de FastAPI. El decorador `get_current_user` extrae el usuario del token y verifica que exista en la base de datos.
+41: 
+42: ## Firma HMAC
+43: 
+44: Para verificación de webhooks entre servicios internos, existe una firma HMAC separada (`verify_signature()`) usando `TRUSTED_SIGNATURE_KEY`. Usa `hmac.compare_digest` para prevenir timing attacks.
+45: 
+46: ## Relacionado
+47: 
+48: - [[Azure AD login exclusivo]] — El flujo OAuth que termina en la generación del JWT
+49: - [[bcrypt para contraseñas]] — La otra pieza de auth; para contraseñas locales (deshabilitadas en COELSA)
+50: - [[FastAPI y uvicorn]] — El servidor donde se registran las dependencias de validación
+51: - [[MOC - Autenticación y Permisos]] — Índice del cluster de auth
+
+=== COELSA.Intelligent/Auth y Permisos/Roles de usuario.md sha256=d07b8455c519b053c6a243d3e79b181f42196e4ff2bfc709eec4bdd8cbf8974d ===
+1: ---
+2: title: "Roles de usuario"
+3: type: concepto
+4: tags: [coelsa-intelligent, auth, roles, permisos]
+5: aliases: [User roles, Roles COELSA, admin user pending]
+6: description: "Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad."
+7: estado: vigente
+8: ---
+9: 
+10: # Roles de usuario
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent define tres roles de usuario, almacenados en el campo `role` del modelo `User`:
+15: 
+16: | Rol | Descripción | Capacidades principales |
+17: |-----|-------------|------------------------|
+18: | `admin` | Administrador del sistema | Acceso total; gestión de usuarios, grupos, modelos, configuración |
+19: | `user` | Usuario activo | Chat, upload de archivos, uso de bases de conocimiento según permisos |
+20: | `pending` | En espera de aprobación | Solo puede ver la pantalla de espera; no puede usar el chat |
+21: 
+22: ## Estado `pending`
+23: 
+24: Un usuario recién logeado por primera vez via Azure AD puede quedar en estado `pending` si la configuración requiere aprobación manual. Un admin debe cambiar el rol a `user` para habilitar el acceso.
+25: 
+26: ## Restricciones por rol en la UI
+27: 
+28: En la vista de **Settings**, las siguientes tabs están restringidas a `admin`:
+29: - **Personalization** — configuración visual de la app
+30: - **Audio** — configuración de síntesis y transcripción de voz
+31: 
+32: Los usuarios `user` ven estas tabs pero no pueden acceder a su contenido.
+33: 
+34: ## Funcionalidades deshabilitadas para todos los roles
+35: 
+36: Independientemente del rol, estas funcionalidades están desactivadas en el fork:
+37: - Sugerencias de chat automáticas
+38: - Ejecución de Python en CodeBlocks
+39: - Webhooks en la sección Account
+40: 
+41: ## Relacionado
+42: 
+43: - [[Grupos y permisos]] — Permisos granulares dentro del rol `user`
+44: - [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos
+45: - [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login
+46: - [[MOC - Autenticación y Permisos]] — Índice del cluster de auth
+
+=== COELSA.Intelligent/Auth y Permisos/bcrypt para contraseñas.md sha256=e9ecc87d258d46762363a3ba5e3e0f3180c8733c5b9b827576a75f5f60c6e588 ===
+1: ---
+2: title: "bcrypt para contraseñas"
+3: type: decision
+4: tags: [coelsa-intelligent, auth, bcrypt, seguridad, contraseñas]
+5: aliases: [bcrypt COELSA, Migración de passlib, Hashing de contraseñas]
+6: description: "Usar cuando necesitás entender por qué se usa bcrypt directamente en lugar de passlib y cuál era el bug que motivó el cambio."
+7: estado: vigente
+8: ---
+9: 
+10: # bcrypt para contraseñas
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent usa la librería **`bcrypt`** nativa de Python para el hashing de contraseñas, en lugar de `passlib.CryptContext` que usaba el upstream.
+15: 
+16: ```python
+17: # backend/server/utils/auth.py
+18: import bcrypt
+19: 
+20: def verify_password(plain_password, hashed_password):
+21:     return bcrypt.checkpw(
+22:         plain_password.encode('utf-8'),
+23:         hashed_password.encode('utf-8')
+24:     )
+25: ```
+26: 
+27: ## Por qué se migró de passlib
+28: 
+29: `passlib.CryptContext` no manejaba correctamente el **límite de 72 bytes de bcrypt** en la codificación UTF-8 interna. El problema se manifestaba al crear usuarios incluso con contraseñas cortas — el error aparecía por cómo `passlib` gestionaba internamente la codificación, no por la longitud de la contraseña.
+30: 
+31: El reemplazo por `bcrypt` nativo resuelve esto porque:
+32: 1. Maneja explícitamente la codificación `utf-8` al llamar a `encode()`
+33: 2. No tiene la capa de abstracción de `passlib` que introducía el bug
+34: 
+35: ## Contexto
+36: 
+37: Aunque COELSA.Intelligent tiene el login local deshabilitado (ver [[Azure AD login exclusivo]]), el código de autenticación por contraseña sigue existente en el backend para usos internos (API keys, etc.) y como fallback en caso de que el login local se rehabilite en el futuro.
+38: 
+39: ## Relacionado
+40: 
+41: - [[Azure AD login exclusivo]] — El login local está deshabilitado; este código existe como fallback
+42: - [[JWT y sesiones]] — El token que se genera después de una autenticación exitosa
+43: - [[MOC - Autenticación y Permisos]] — Índice del cluster de auth
+44: - [[MOC - Decisiones]] — D-07 en el índice de decisiones
+
+=== COELSA.Intelligent/CI-CD/Build frontend.md sha256=7f3da8815563d3fa7651c99d5b1346e78a4ce40bb8b331972bcc7446bd1cb9ee ===
+1: ---
+2: title: "Build frontend"
+3: type: referencia
+4: tags: [coelsa-intelligent, cicd, frontend, build, pyodide]
+5: aliases: [npm build COELSA, Build SvelteKit, build:docker]
+6: description: "Usar cuando necesitás elegir el comando de build correcto para el contexto (local vs CI/CD) o entender por qué el build puede quedarse sin memoria."
+7: estado: vigente
+8: ---
+9: 
+10: # Build frontend
+11: 
+12: ## Qué es
+13: 
+14: COELSA.Intelligent tiene **dos comandos de build del frontend** con diferencias significativas en cuándo y dónde se usan.
+15: 
+16: ## Los dos comandos
+17: 
+18: | Comando | Uso | Incluye Pyodide | RAM necesaria |
+19: |---------|-----|-----------------|--------------|
+20: | `npm run build` | Solo local | ✅ Sí (~500MB adicionales) | 8GB+ sin optimizaciones |
+21: | `npm run build:docker` | CI/CD y Docker | ❌ No | ~4GB con optimizaciones |
+22: 
+23: **Regla**: en el [[Dockerfile]] y los [[Pipelines Azure DevOps]] siempre usar `npm run build:docker`.
+24: 
+25: ## Por qué la diferencia
+26: 
+27: **Pyodide** es el runtime WASM de Python que permite ejecutar Python en el navegador. Su descarga requiere ~500MB de red y puede fallar en entornos con acceso a red restringido (como los agents de CI/CD de COELSA). `build:docker` omite este paso.
+28: 
+29: ## Optimizaciones automáticas en CI
+30: 
+31: `vite.config.ts` detecta entornos CI mediante `CI=true`, `TF_BUILD=True` o `DOCKER=true` y aplica automáticamente:
+32: 
+33: | Optimización | Impacto |
+34: |-------------|---------|
+35: | Sourcemaps deshabilitados | ~50% menos memoria y tiempo |
+36: | Minificación con esbuild (no terser) | ~40% menos memoria |
+37: | `max-old-space-size=4096MB` | Límite de heap Node.js |
+38: 
+39: ## Volumen del build
+40: 
+41: El build maneja **más de 4.500 módulos**. Sin las optimizaciones de CI, puede superar **8GB de RAM** y fallar en entornos con límites de memoria.
+42: 
+43: ## Relacionado
+44: 
+45: - [[Dockerfile]] — El Dockerfile que usa `build:docker`
+46: - [[Pipelines Azure DevOps]] — Los pipelines que ejecutan el build
+47: - [[SvelteKit 2]] — El framework que se compila
+48: - [[MOC - CI-CD y Despliegue]] — Índice del cluster de CI/CD

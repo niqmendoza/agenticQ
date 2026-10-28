@@ -1,0 +1,186 @@
+{
+  "query": "routing urlIdx owned_by",
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "terms": [
+    "owned_by",
+    "routing",
+    "urlidx"
+  ],
+  "missing_terms": [],
+  "total_matches": 44,
+  "offset": 0,
+  "results": [
+    {
+      "path": "COELSA.Intelligent/Modelos IA/Validación de urlIdx.md",
+      "sha256": "ed3a277d46b7d43133716efc276291296f49141bd5f38f12dd8a23e96abd99c7",
+      "section": "El problema (upstream bug)",
+      "start": 12,
+      "end": 19,
+      "score": 16.9735,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Validación de urlIdx\"\ntype: decision\ntags: [coelsa-intelligent, modelos-ia, litellm, routing, bug-fix]\naliases: [urlIdx fix, LiteLLM routing fix, Respuestas vacías LiteLLM]\ndescription: \"Usar cuando diagnosticás respuestas vacías con modelos LiteLLM de prefijo ollama/ o cuando necesitás entender el fix de routing del CHANGELOG v1.3.0.\"\nestado: vigente\n---",
+        "title": "Validación de urlIdx",
+        "type": "decision",
+        "tags": "[coelsa-intelligent, modelos-ia, litellm, routing, bug-fix]",
+        "aliases": "[urlIdx fix, LiteLLM routing fix, Respuestas vacías LiteLLM]",
+        "description": "Usar cuando diagnosticás respuestas vacías con modelos LiteLLM de prefijo ollama/ o cuando necesitás entender el fix de routing del CHANGELOG v1.3.0.",
+        "estado": "vigente"
+      },
+      "excerpt": "## El problema (upstream bug)\n\nEl upstream Open WebUI determinaba el endpoint de un modelo basándose **únicamente** en el campo `owned_by`:\n- `owned_by == \"ollama\"` → endpoint nativo de Ollama\n- Cualquier otro → endpoint OpenAI\n\n**El mismatch**: modelos configurados en LiteLLM con prefijo `ollama/` (ej: `ollama/llama3:70b`) tienen `owned_by=ollama`. El upstream los enviaba al endpoint nativo de Ollama, pero LiteLLM **siempre responde en formato OpenAI**, no en el formato nativo de Ollama. El mismatch de formato generaba **respuestas vacías en la UI**.\n",
+      "relations": [
+        {
+          "target": "Routing de modelos IA",
+          "fragment": "",
+          "line": 49,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Modelos IA/Routing de modelos IA.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "LiteLLM proxy",
+          "fragment": "",
+          "line": 50,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/LiteLLM proxy.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Ollama",
+          "fragment": "",
+          "line": 51,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Ollama.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Decisiones",
+          "fragment": "",
+          "line": 52,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Decisiones.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "MOC - Modelos IA y Routing",
+          "fragment": "",
+          "line": 53,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/MOCs/MOC - Modelos IA y Routing.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 5,
+      "relations_truncated": false
+    },
+    {
+      "path": "COELSA.Intelligent/Modelos IA/Routing de modelos IA.md",
+      "sha256": "bbd9b3b28b48a137fb275e50e8aaebf70fdf6b7e8cbd93578616dba775a2f6fb",
+      "section": "Por qué `urlIdx` tiene prioridad",
+      "start": 30,
+      "end": 35,
+      "score": 16.0868,
+      "metadata": {
+        "frontmatter_raw": "---\ntitle: \"Routing de modelos IA\"\ntype: concepto\ntags: [coelsa-intelligent, modelos-ia, routing, ollama, litellm]\naliases: [Model routing, Selección de endpoint de modelos]\ndescription: \"Usar cuando necesitás entender cómo COELSA.Intelligent decide si una request de chat va al endpoint nativo de Ollama o al proxy LiteLLM.\"\nestado: vigente\n---",
+        "title": "Routing de modelos IA",
+        "type": "concepto",
+        "tags": "[coelsa-intelligent, modelos-ia, routing, ollama, litellm]",
+        "aliases": "[Model routing, Selección de endpoint de modelos]",
+        "description": "Usar cuando necesitás entender cómo COELSA.Intelligent decide si una request de chat va al endpoint nativo de Ollama o al proxy LiteLLM.",
+        "estado": "vigente"
+      },
+      "excerpt": "## Por qué `urlIdx` tiene prioridad\n\nEl campo `owned_by` no es suficiente para determinar el endpoint correcto. Los modelos con prefijo `ollama/` en LiteLLM tienen `owned_by=ollama` pero **deben** ir al proxy, no al endpoint nativo de Ollama. Si van al endpoint nativo, LiteLLM no puede procesar la respuesta y la UI muestra respuestas vacías.\n\nVer [[Validación de urlIdx]] para el detalle del bug y la corrección.\n",
+      "relations": [
+        {
+          "target": "Ollama",
+          "fragment": "",
+          "line": 15,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Ollama.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "LiteLLM proxy",
+          "fragment": "",
+          "line": 16,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/LiteLLM proxy.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Validación de urlIdx",
+          "fragment": "",
+          "line": 34,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Modelos IA/Validación de urlIdx.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Validación de urlIdx",
+          "fragment": "",
+          "line": 45,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Modelos IA/Validación de urlIdx.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "Ollama",
+          "fragment": "",
+          "line": 46,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/Ollama.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        },
+        {
+          "target": "LiteLLM proxy",
+          "fragment": "",
+          "line": 47,
+          "kind": "wiki",
+          "resolved": [
+            "COELSA.Intelligent/Stack/LiteLLM proxy.md"
+          ],
+          "ambiguous": false,
+          "missing": false
+        }
+      ],
+      "relations_total": 8,
+      "relations_truncated": true
+    }
+  ],
+  "next_offset": 2,
+  "truncated": true,
+  "notices": [
+    "Ranking léxico OR, no prueba de exhaustividad. Ausencia de términos no demuestra ausencia funcional.",
+    "Metadatos crudos y enlaces no verifican vigencia ni resuelven contradicciones. Amplíe reglas, excepciones y dependencias."
+  ],
+  "notice_budget": "El próximo extracto no cabe completo. Aumente max-chars o use show por líneas."
+}

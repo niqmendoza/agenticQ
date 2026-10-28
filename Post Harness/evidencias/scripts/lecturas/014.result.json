@@ -1,0 +1,22 @@
+{
+  "revision": "c738d86cba0e9fc395c3c8dc5aecf429fffdada4bf4572b0a0210d05343445e3",
+  "path": "COELSA.Intelligent/Arquitectura/Sistema de errores centralizado.md",
+  "sha256": "655215e135866d2da32f0499e408087c34000875b9efe3d8f2e804333c8d7185",
+  "metadata": {
+    "frontmatter_raw": "---\ntitle: \"Sistema de errores centralizado\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, errores, backend, frontend]\naliases: [Jerarquía de excepciones, Error handling centralizado]\ndescription: \"Usar cuando necesitás entender cómo el backend devuelve errores de forma consistente o cómo el frontend los captura y muestra al usuario.\"\nestado: vigente\n---",
+    "title": "Sistema de errores centralizado",
+    "type": "concepto",
+    "tags": "[coelsa-intelligent, arquitectura, errores, backend, frontend]",
+    "aliases": "[Jerarquía de excepciones, Error handling centralizado]",
+    "description": "Usar cuando necesitás entender cómo el backend devuelve errores de forma consistente o cómo el frontend los captura y muestra al usuario.",
+    "estado": "vigente"
+  },
+  "start": 1,
+  "end": 59,
+  "total_lines": 59,
+  "text": "---\ntitle: \"Sistema de errores centralizado\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, errores, backend, frontend]\naliases: [Jerarquía de excepciones, Error handling centralizado]\ndescription: \"Usar cuando necesitás entender cómo el backend devuelve errores de forma consistente o cómo el frontend los captura y muestra al usuario.\"\nestado: vigente\n---\n\n# Sistema de errores centralizado\n\n## Qué es\n\nCOELSA.Intelligent centraliza el manejo de excepciones en el backend con una jerarquía estándar de 10 tipos, y tiene componentes específicos en el frontend para cada categoría.\n\n## Backend: tipos de excepción\n\nTodos los errores devuelven un JSON consistente:\n\n```json\n{\n  \"message\": \"Mensaje legible para el usuario\",\n  \"status_code\": 400,\n  \"details\": \"Detalle técnico (omitido en producción)\"\n}\n```\n\n| Tipo | Código HTTP | Uso |\n|------|-------------|-----|\n| `BadRequest` | 400 | Input inválido |\n| `Unauthorized` | 401 | Token ausente o inválido |\n| `Forbidden` | 403 | Sin permiso para el recurso |\n| `NotFound` | 404 | Recurso inexistente |\n| `Conflict` | 409 | Estado incompatible (ej: email duplicado) |\n| `Validation` | 422 | Fallo de validación de esquema |\n| `RateLimit` | 429 | Rate limit excedido |\n| `InternalServer` | 500 | Error interno inesperado |\n| `ServiceUnavailable` | 503 | Servicio externo no disponible |\n| `GatewayTimeout` | 504 | Timeout en llamada a servicio externo |\n\nLos detalles técnicos se omiten en producción para no exponer información interna.\n\n## Frontend: componentes de error\n\n| Componente | Cuándo se muestra |\n|------------|-------------------|\n| `NetworkError.svelte` | Sin conexión o error de red |\n| `TimeoutError.svelte` | La request tomó demasiado tiempo |\n| `GenericError.svelte` | Cualquier error no categorizado |\n| `ErrorBoundary.svelte` | Envuelve secciones para capturar errores en render |\n\nEl archivo `src/routes/+error.svelte` recibe todos los códigos HTTP y rutea al componente correspondiente, incluyendo un fallback genérico.\n\n## Relacionado\n\n- [[Manejo de errores frontend]] — Detalle de los componentes Svelte de error\n- [[FastAPI y uvicorn]] — El servidor donde se registran los handlers de excepción\n- [[MOC - Arquitectura]] — Contexto del diseño de errores en el sistema\n- [[Roles de usuario]] — Los errores 403 se disparan cuando el rol no alcanza",
+  "truncated": false,
+  "next_line": null,
+  "requested_end": 80,
+  "beyond_eof": true
+}
