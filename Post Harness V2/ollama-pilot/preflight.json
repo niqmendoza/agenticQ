@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-29",
+  "status": "preflight_only_not_installed_or_benchmarked",
+  "machine": {
+    "model": "MacBook Air",
+    "chip": "Apple M4",
+    "unified_memory_bytes": 17179869184,
+    "architecture": "arm64"
+  },
+  "runtime_observed": {
+    "ollama_server": "0.35.1",
+    "ollama_cli": "0.31.1"
+  },
+  "candidate": {
+    "repository": "ConwayResearch/Underdog-Saluki-27B-1.0",
+    "revision": "5acfd9218fa54731f237eea8b3243d430dd85a69",
+    "file": "Underdog-Saluki-27B-1.0-IQ2-mix.gguf",
+    "file_bytes": 7898369152,
+    "license": "apache-2.0",
+    "publisher_tested_ollama": "0.40.4"
+  },
+  "decision": "Candidate for a short-context text-only trial; simultaneous RAGFlow and model memory not validated. Do not equate file size with runtime memory.",
+  "sources": [
+    "https://huggingface.co/ConwayResearch/Underdog-Saluki-27B-1.0",
+    "https://docs.ollama.com/gpu",
+    "https://docs.ollama.com/context-length",
+    "https://github.com/ollama/ollama/releases"
+  ]
+}

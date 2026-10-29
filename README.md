@@ -30,6 +30,7 @@ open "Post Harness V2/reporte-v2.html"
 
 - [Post Harness V1](Post%20Harness/README.md): navegador documental inicial, pruebas y ensayo congelado.
 - [Post Harness V2](Post%20Harness%20V2/README.md): consultas agrupadas, recuperación por relaciones, sesiones con deduplicación, presupuestos y validación de citas. Incluye el adaptador de RAGFlow y su [guía de contexto](Post%20Harness%20V2/GUIA-CONTEXTO-RAGFLOW.md).
+- [Próximo ensayo con Saluki/Ollama](Post%20Harness%20V2/ollama-pilot/README.md): evaluación de la Mac, perfil de ejecución y plantilla experimental; modelo todavía sin instalar ni ejecutar.
 - Cada carpeta conserva sus scripts, pruebas, instrucciones para el agente, evidencias y manifiesto de integridad.
 - Los snapshots documentales del primer ensayo se incluyen porque respaldan sus citas y permiten revisar la comparación.
 
