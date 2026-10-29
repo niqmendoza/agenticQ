@@ -1,0 +1,37 @@
+{
+  "es01": {
+    "image": "elasticsearch:8.11.3",
+    "architecture": "arm64",
+    "digests": [
+      "elasticsearch@sha256:58a3a280935d830215802322e9a0373faaacdfd646477aa7e718939c2f29292a"
+    ]
+  },
+  "mysql": {
+    "image": "mysql:8.0.40",
+    "architecture": "arm64",
+    "digests": [
+      "mysql@sha256:d58ac93387f644e4e040c636b8f50494e78e5afc27ca0a87348b2f577da2b7ff"
+    ]
+  },
+  "minio": {
+    "image": "pgsty/silo:RELEASE.2026-08-06T00-00-00Z",
+    "architecture": "arm64",
+    "digests": [
+      "pgsty/silo@sha256:29a498b24669cae1fed11c1a2fb2b3d73c68829a0a9c0b14e71b386671d38fac"
+    ]
+  },
+  "redis": {
+    "image": "valkey/valkey:8-alpine",
+    "architecture": "arm64",
+    "digests": [
+      "valkey/valkey@sha256:2602ace2be6569bc2bbb06f873776516ab9089821525be34f4305c67eb9db02a"
+    ]
+  },
+  "ragflow": {
+    "image": "infiniflow/ragflow:v0.27.3",
+    "architecture": "amd64",
+    "digests": [
+      "infiniflow/ragflow@sha256:4ab74ec388e2d897419e01518a516e9386e5ff812587a1025e6f6a407b2ad067"
+    ]
+  }
+}

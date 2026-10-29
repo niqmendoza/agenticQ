@@ -1,0 +1,203 @@
+{
+  "version": 1,
+  "scope": "Regresión exploratoria del mock conocido; comprueba señales documentales, no cobertura completa ni calidad de casos generados.",
+  "cases": [
+    {
+      "id": "permisos",
+      "title": "Identidad y permisos",
+      "question": "archivo renovar lectura permisos access_control propietario admin grupos usuario pending",
+      "checks": [
+        {
+          "id": "acl",
+          "title": "Diferenciar acceso público y privado",
+          "document": "Control de acceso a recursos.md",
+          "contains": [
+            "None",
+            "Acceso público",
+            "Acceso privado"
+          ],
+          "literal": [
+            "{}"
+          ],
+          "followup": "Control de acceso a recursos modos de acceso None objeto vacío propietario admin group_ids user_ids"
+        },
+        {
+          "id": "pending",
+          "title": "Restricción del usuario pendiente",
+          "document": "Roles de usuario.md",
+          "contains": [
+            "pending",
+            "no puede usar el chat"
+          ],
+          "followup": "Roles de usuario pending pantalla de espera no puede usar el chat"
+        },
+        {
+          "id": "jwt",
+          "title": "Validación de sesión en endpoints protegidos",
+          "document": "JWT y sesiones.md",
+          "contains": [
+            "HTTPBearer",
+            "get_current_user"
+          ],
+          "followup": "JWT y sesiones validación HTTPBearer get_current_user endpoint protegido"
+        }
+      ]
+    },
+    {
+      "id": "almacenamiento",
+      "title": "Acceso temporal y almacenamiento",
+      "question": "archivo URL firmada expiración local MinIO storage",
+      "checks": [
+        {
+          "id": "expires",
+          "title": "Expiración y objeto de la URL firmada",
+          "document": "URLs firmadas MinIO.md",
+          "contains": [
+            "ExpiresIn",
+            "3600",
+            "objeto específico"
+          ],
+          "followup": "URLs firmadas MinIO ExpiresIn 3600 objeto específico"
+        },
+        {
+          "id": "old-urls",
+          "title": "Las URLs previas pueden seguir vigentes",
+          "document": "URLs firmadas MinIO.md",
+          "contains": [
+            "URLs viejas siguen siendo válidas hasta su expiración"
+          ],
+          "followup": "URLs firmadas MinIO access_control URLs viejas siguen válidas hasta expiración"
+        },
+        {
+          "id": "providers",
+          "title": "Distinguir almacenamiento local y S3",
+          "document": "Sistema híbrido de almacenamiento.md",
+          "contains": [
+            "LocalStorageProvider",
+            "S3StorageProvider"
+          ],
+          "followup": "Sistema híbrido de almacenamiento proveedores LocalStorageProvider S3StorageProvider"
+        }
+      ]
+    },
+    {
+      "id": "efectos",
+      "title": "Limpieza y efectos laterales",
+      "question": "archivo último acceso limpieza borrado chat",
+      "checks": [
+        {
+          "id": "cleanup",
+          "title": "Último acceso y umbral de limpieza",
+          "document": "Scheduler de limpieza.md",
+          "contains": [
+            "last_accessed_at",
+            "FILE_STORAGE_CLEANUP_DAYS"
+          ],
+          "followup": "Scheduler de limpieza last_accessed_at FILE_STORAGE_CLEANUP_DAYS"
+        },
+        {
+          "id": "cascade",
+          "title": "Borrado de archivos al eliminar un chat",
+          "document": "Borrado en cascada de archivos.md",
+          "contains": [
+            "chat_id",
+            "StorageProvider.delete_file"
+          ],
+          "followup": "Borrado en cascada de archivos chat_id StorageProvider.delete_file"
+        }
+      ]
+    },
+    {
+      "id": "backend",
+      "title": "Endpoints y errores",
+      "question": "agregar endpoint router REST autenticación errores",
+      "checks": [
+        {
+          "id": "router",
+          "title": "Registrar y proteger el endpoint",
+          "document": "Agregar router REST.md",
+          "contains": [
+            "get_current_user",
+            "include_router"
+          ],
+          "followup": "Agregar router REST registrar include_router Depends get_current_user"
+        },
+        {
+          "id": "errors",
+          "title": "Omitir detalles internos en producción",
+          "document": "Sistema de errores centralizado.md",
+          "contains": [
+            "detalles técnicos se omiten en producción"
+          ],
+          "followup": "Sistema de errores centralizado detalles técnicos se omiten en producción"
+        }
+      ]
+    },
+    {
+      "id": "frontend",
+      "title": "Interfaz y accesibilidad",
+      "question": "frontend chat solicitudes cancelación i18n tokens semánticos",
+      "checks": [
+        {
+          "id": "languages",
+          "title": "Idiomas soportados",
+          "document": "Internacionalización i18n.md",
+          "contains": [
+            "es-AR",
+            "en-GB",
+            "pt-BR"
+          ],
+          "followup": "Internacionalización i18n idiomas soportados es-AR en-GB pt-BR"
+        },
+        {
+          "id": "colors",
+          "title": "Colores semánticos en ambos temas",
+          "document": "Roles semánticos de color.md",
+          "contains": [
+            "on-primary",
+            "light",
+            "dark"
+          ],
+          "followup": "Roles semánticos de color on-primary light dark"
+        },
+        {
+          "id": "abort",
+          "title": "Cancelar solicitudes anteriores del chat",
+          "document": "Patrones frontend críticos.md",
+          "contains": [
+            "AbortController",
+            "se cancela la request anterior"
+          ],
+          "followup": "Patrones frontend críticos AbortController loadChat cancela request anterior"
+        },
+        {
+          "id": "contrast",
+          "title": "Umbrales de contraste AA",
+          "document": "ECO Design System.md",
+          "contains": [
+            "WCAG AA",
+            "4.5:1",
+            "3:1"
+          ],
+          "followup": "ECO Design System accesibilidad WCAG AA 4.5:1 3:1"
+        }
+      ]
+    }
+  ],
+  "negative_question": "¿Cuál es el itinerario de la expedición submarina del planeta ficticio Nébula X?",
+  "profiles": [
+    {
+      "name": "ragflow-5",
+      "page_size": 5
+    },
+    {
+      "name": "ragflow-10",
+      "page_size": 10
+    }
+  ],
+  "followups": {
+    "page_size": 3,
+    "max_calls": 14,
+    "mode": "Sólo comprobaciones faltantes en ragflow-5; consultas dirigidas prefijadas, no decisiones autónomas de un agente."
+  }
+}

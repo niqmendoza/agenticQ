@@ -1,0 +1,434 @@
+{
+  "request": {
+    "question": "Sistema de errores centralizado detalles técnicos se omiten en producción",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 3,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"Sistema de errores centralizado\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, errores, backend, frontend]\naliases: [Jerarquía de excepciones, Error handling centralizado]\ndescription: \"Usar cuando necesitás entender cómo el backend devuelve errores de forma consistente o cómo el frontend los captura y muestra al usuario.\"\nestado: vigente\n---\n# Sistema de errores centralizado\n## Qué es\nCOELSA.Intelligent centraliza el manejo de excepciones en el backend con una jerarquía estándar de 10 tipos, y tiene componentes específicos en el frontend para cada categoría.\n## Backend: tipos de excepción\nTodos los errores devuelven un JSON consistente:\n```json\n{\n  \"message\": \"Mensaje legible para el usuario\",\n  \"status_code\": 400,\n  \"details\": \"Detalle técnico (omitido en producción)\"\n}\n```\n| Tipo | Código HTTP | Uso |\n|------|-------------|-----|\n| `BadRequest` | 400 | Input inválido |\n| `Unauthorized` | 401 | Token ausente o inválido |\n| `Forbidden` | 403 | Sin permiso para el recurso |\n| `NotFound` | 404 | Recurso inexistente |\n| `Conflict` | 409 | Estado incompatible (ej: email duplicado) |\n| `Validation` | 422 | Fallo de validación de esquema |\n| `RateLimit` | 429 | Rate limit excedido |\n| `InternalServer` | 500 | Error interno inesperado |\n| `ServiceUnavailable` | 503 | Servicio externo no disponible |\n| `GatewayTimeout` | 504 | Timeout en llamada a servicio externo |\nLos detalles técnicos se omiten en producción para no exponer información interna.\n## Frontend: componentes de error\n| Componente | Cuándo se muestra |\n|------------|-------------------|\n| `NetworkError.svelte` | Sin conexión o error de red |\n| `TimeoutError.svelte` | La request tomó demasiado tiempo |\n| `GenericError.svelte` | Cualquier error no categorizado |\n| `ErrorBoundary.svelte` | Envuelve secciones para capturar errores en render |",
+          "content_ltks": "titl sistem de error centraliz type concept tags coels intelligent arquitectur error backend frontend ali jerarqu í a de excepcion error handling centraliz description usar cuand necesit á s entend c ó mo el backend devuelv error de form consistent o c ó mo el frontend los captur y muestr al usuari estad vigent sistem de error centraliz qu é es coels intelligent centraliz el manej de excepcion en el backend con una jerarqu í a est á ndar de 10 tip y tien component espec í fic en el frontend par cad categor í a backend tip de excepci ón tod los error devuelv un json consistent json messag mensaj legibl par el usuari status _ cod 400 details detall t é cnic omit en producci ón tip c ó dig http uso badrequest 400 input inv á lid unauthoriz 401 tok ausent o inv á lid forbidd 403 sin permis par el recurs notfound 404 recurs inexistent conflict 409 estad incompat ej email duplic validation 422 fall de validaci ón de esquem ratelimit 429 rat limit exced internalserv 500 error intern inesper serviceunavail 503 servici extern no dispon gatewaytimeout 504 timeout en llam a servici extern los detall t é cnic se omit en producci ón par no expon informaci ón intern frontend component de error component cu á ndo se muestr networkerror svelt sin conexi ón o error de red timeouterror svelt la request tom ó demasi tiemp genericerror svelt cualqui error no categoriz errorboundary svelt envuelv seccion par captur error en rend",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "document_keyword": "Sistema de errores centralizado.md",
+          "id": "c487f08962ebd098",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.37103620287277816,
+          "tag_kwd": [],
+          "term_similarity": 0.14629435838968313,
+          "vector_similarity": 0.89543384
+        },
+        {
+          "content": "<table>\n<thead>\n<tr>\n<th>ID</th>\n<th>Decisión</th>\n<th>Nota</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>D-18</td>\n<td>es-AR como idioma principal</td>\n<td>[[Idioma por defecto es-AR]]</td>\n</tr>\n<tr>\n<td>D-19</td>\n<td>Sistema de errores centralizado</td>\n<td>[[Sistema de errores centralizado]]</td>\n</tr>\n<tr>\n<td>D-20</td>\n<td>AbortController en loadChat (fix requests duplicados)</td>\n<td>[[Patrones frontend críticos]]</td>\n</tr>\n</tbody>\n</table>\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Contexto técnico de las decisiones de diseño estructural\n- [[MOC - Seguridad]] — Detalle de las decisiones de hardening\n- [[MOC - Modelos IA y Routing]] — Contexto de las decisiones de routing e IA",
+          "content_ltks": "the id decisi ón not the tbody d 18 es ar com idiom principal idiom por defect es ar d 19 sistem de error centraliz sistem de error centraliz d 20 abortcontroll en loadchat fix requests duplic patron frontend cr í tic tbody mocs vecin moc arquitectur context t é cnic de las decision de dis ñ o estructural moc segur detall de las decision de hardening moc model ia y routing context de las decision de routing e ia",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "document_keyword": "MOC - Decisiones.md",
+          "id": "5bfb84d9e8ff49e3",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              3,
+              2,
+              2,
+              2,
+              2
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.33791469983529354,
+          "tag_kwd": [],
+          "term_similarity": 0.12491335405041941,
+          "vector_similarity": 0.83491784
+        },
+        {
+          "content": "El archivo `src/routes/+error.svelte` recibe todos los códigos HTTP y rutea al componente correspondiente, incluyendo un fallback genérico.\n## Relacionado\n- [[Manejo de errores frontend]] — Detalle de los componentes Svelte de error\n- [[FastAPI y uvicorn]] — El servidor donde se registran los handlers de excepción\n- [[MOC - Arquitectura]] — Contexto del diseño de errores en el sistema\n- [[Roles de usuario]] — Los errores 403 se disparan cuando el rol no alcanza",
+          "content_ltks": "el archiv src rout error svelt recib tod los c ó dig http y rute al component correspondient inclu un fallback gen é ric relacion manej de error frontend detall de los component svelt de error fastapi y uvicorn el servidor dond se registr los handlers de excepci ón moc arquitectur context del dis ñ o de error en el sistem rol de usuari los error 403 se disp cuand el rol no alcanz",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "document_keyword": "Sistema de errores centralizado.md",
+          "id": "275b4e9b6194af49",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.32202640170063634,
+          "tag_kwd": [],
+          "term_similarity": 0.09926945957233767,
+          "vector_similarity": 0.8417926
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 3,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema de errores centralizado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16b74492d33011f1a8c8134f9287b83e",
+          "doc_name": "Manejo de errores frontend.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17006c80d33011f1a8c8134f9287b83e",
+          "doc_name": "CSP con nonces.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "169092d4d33011f1a8c8134f9287b83e",
+          "doc_name": "Despliegue en OpenShift.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones de componentes Svelte.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16d61796d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Diseño y Frontend.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16b1000ad33011f1a8c8134f9287b83e",
+          "doc_name": "ECO Design System.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17057dd8d33011f1a8c8134f9287b83e",
+          "doc_name": "Dependencias vulnerables.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1695c72cd33011f1a8c8134f9287b83e",
+          "doc_name": "Pipelines Azure DevOps.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1698681ad33011f1a8c8134f9287b83e",
+          "doc_name": "SSL corporativo en build.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1662c016d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema híbrido de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168b48f6d33011f1a8c8134f9287b83e",
+          "doc_name": "bcrypt para contraseñas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171f52b2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ollama.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1674dba2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis para WebSockets.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ce7d92d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - CI-CD y Despliegue.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1726c2c2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169dbf04d33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar proveedor de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17030102d33011f1a8c8134f9287b83e",
+          "doc_name": "CVE-2025-7969 markdown-it.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171cb944d33011f1a8c8134f9287b83e",
+          "doc_name": "MinIO S3.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b467e0d33011f1a8c8134f9287b83e",
+          "doc_name": "Internacionalización i18n.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170fee94d33011f1a8c8134f9287b83e",
+          "doc_name": "Riesgos de seguridad aceptados.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e7761cd33011f1a8c8134f9287b83e",
+          "doc_name": "PyTorch CPU-only.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16bc528ed33011f1a8c8134f9287b83e",
+          "doc_name": "Roles semánticos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168def2ad33011f1a8c8134f9287b83e",
+          "doc_name": "Build frontend.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c3d20cd33011f1a8c8134f9287b83e",
+          "doc_name": "Tokens primitivos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16933d68d33011f1a8c8134f9287b83e",
+          "doc_name": "Dockerfile.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ae2042d33011f1a8c8134f9287b83e",
+          "doc_name": "Dark mode reglas.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 11619,
+  "seconds": 0.15395866602193564,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"Sistema de errores centralizado\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, errores, backend, frontend]\naliases: [Jerarquía de excepciones, Error handling centralizado]\ndescription: \"Usar cuando necesitás entender cómo el backend devuelve errores de forma consistente o cómo el frontend los captura y muestra al usuario.\"\nestado: vigente\n---\n# Sistema de errores centralizado\n## Qué es\nCOELSA.Intelligent centraliza el manejo de excepciones en el backend con una jerarquía estándar de 10 tipos, y tiene componentes específicos en el frontend para cada categoría.\n## Backend: tipos de excepción\nTodos los errores devuelven un JSON consistente:\n```json\n{\n  \"message\": \"Mensaje legible para el usuario\",\n  \"status_code\": 400,\n  \"details\": \"Detalle técnico (omitido en producción)\"\n}\n```\n| Tipo | Código HTTP | Uso |\n|------|-------------|-----|\n| `BadRequest` | 400 | Input inválido |\n| `Unauthorized` | 401 | Token ausente o inválido |\n| `Forbidden` | 403 | Sin permiso para el recurso |\n| `NotFound` | 404 | Recurso inexistente |\n| `Conflict` | 409 | Estado incompatible (ej: email duplicado) |\n| `Validation` | 422 | Fallo de validación de esquema |\n| `RateLimit` | 429 | Rate limit excedido |\n| `InternalServer` | 500 | Error interno inesperado |\n| `ServiceUnavailable` | 503 | Servicio externo no disponible |\n| `GatewayTimeout` | 504 | Timeout en llamada a servicio externo |\nLos detalles técnicos se omiten en producción para no exponer información interna.\n## Frontend: componentes de error\n| Componente | Cuándo se muestra |\n|------------|-------------------|\n| `NetworkError.svelte` | Sin conexión o error de red |\n| `TimeoutError.svelte` | La request tomó demasiado tiempo |\n| `GenericError.svelte` | Cualquier error no categorizado |\n| `ErrorBoundary.svelte` | Envuelve secciones para capturar errores en render |",
+        "content_ltks": "titl sistem de error centraliz type concept tags coels intelligent arquitectur error backend frontend ali jerarqu í a de excepcion error handling centraliz description usar cuand necesit á s entend c ó mo el backend devuelv error de form consistent o c ó mo el frontend los captur y muestr al usuari estad vigent sistem de error centraliz qu é es coels intelligent centraliz el manej de excepcion en el backend con una jerarqu í a est á ndar de 10 tip y tien component espec í fic en el frontend par cad categor í a backend tip de excepci ón tod los error devuelv un json consistent json messag mensaj legibl par el usuari status _ cod 400 details detall t é cnic omit en producci ón tip c ó dig http uso badrequest 400 input inv á lid unauthoriz 401 tok ausent o inv á lid forbidd 403 sin permis par el recurs notfound 404 recurs inexistent conflict 409 estad incompat ej email duplic validation 422 fall de validaci ón de esquem ratelimit 429 rat limit exced internalserv 500 error intern inesper serviceunavail 503 servici extern no dispon gatewaytimeout 504 timeout en llam a servici extern los detall t é cnic se omit en producci ón par no expon informaci ón intern frontend component de error component cu á ndo se muestr networkerror svelt sin conexi ón o error de red timeouterror svelt la request tom ó demasi tiemp genericerror svelt cualqui error no categoriz errorboundary svelt envuelv seccion par captur error en rend",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "167adbe2d33011f1a8c8134f9287b83e",
+        "document_keyword": "Sistema de errores centralizado.md",
+        "id": "c487f08962ebd098",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.37103620287277816,
+        "tag_kwd": [],
+        "term_similarity": 0.14629435838968313,
+        "vector_similarity": 0.89543384
+      },
+      {
+        "content": "<table>\n<thead>\n<tr>\n<th>ID</th>\n<th>Decisión</th>\n<th>Nota</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>D-18</td>\n<td>es-AR como idioma principal</td>\n<td>[[Idioma por defecto es-AR]]</td>\n</tr>\n<tr>\n<td>D-19</td>\n<td>Sistema de errores centralizado</td>\n<td>[[Sistema de errores centralizado]]</td>\n</tr>\n<tr>\n<td>D-20</td>\n<td>AbortController en loadChat (fix requests duplicados)</td>\n<td>[[Patrones frontend críticos]]</td>\n</tr>\n</tbody>\n</table>\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Contexto técnico de las decisiones de diseño estructural\n- [[MOC - Seguridad]] — Detalle de las decisiones de hardening\n- [[MOC - Modelos IA y Routing]] — Contexto de las decisiones de routing e IA",
+        "content_ltks": "the id decisi ón not the tbody d 18 es ar com idiom principal idiom por defect es ar d 19 sistem de error centraliz sistem de error centraliz d 20 abortcontroll en loadchat fix requests duplic patron frontend cr í tic tbody mocs vecin moc arquitectur context t é cnic de las decision de dis ñ o estructural moc segur detall de las decision de hardening moc model ia y routing context de las decision de routing e ia",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16d0f284d33011f1a8c8134f9287b83e",
+        "document_keyword": "MOC - Decisiones.md",
+        "id": "5bfb84d9e8ff49e3",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            3,
+            2,
+            2,
+            2,
+            2
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.33791469983529354,
+        "tag_kwd": [],
+        "term_similarity": 0.12491335405041941,
+        "vector_similarity": 0.83491784
+      },
+      {
+        "content": "El archivo `src/routes/+error.svelte` recibe todos los códigos HTTP y rutea al componente correspondiente, incluyendo un fallback genérico.\n## Relacionado\n- [[Manejo de errores frontend]] — Detalle de los componentes Svelte de error\n- [[FastAPI y uvicorn]] — El servidor donde se registran los handlers de excepción\n- [[MOC - Arquitectura]] — Contexto del diseño de errores en el sistema\n- [[Roles de usuario]] — Los errores 403 se disparan cuando el rol no alcanza",
+        "content_ltks": "el archiv src rout error svelt recib tod los c ó dig http y rute al component correspondient inclu un fallback gen é ric relacion manej de error frontend detall de los component svelt de error fastapi y uvicorn el servidor dond se registr los handlers de excepci ón moc arquitectur context del dis ñ o de error en el sistem rol de usuari los error 403 se disp cuand el rol no alcanz",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "167adbe2d33011f1a8c8134f9287b83e",
+        "document_keyword": "Sistema de errores centralizado.md",
+        "id": "275b4e9b6194af49",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.32202640170063634,
+        "tag_kwd": [],
+        "term_similarity": 0.09926945957233767,
+        "vector_similarity": 0.8417926
+      }
+    ],
+    "total": 64
+  }
+}

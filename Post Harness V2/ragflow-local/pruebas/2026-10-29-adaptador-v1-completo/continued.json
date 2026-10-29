@@ -1,0 +1,139 @@
+{
+  "schema": "qa-context/1",
+  "application": "Piloto · consultas nuevas",
+  "origin": "http://127.0.0.1:9388",
+  "status": "partial",
+  "coverage": "not_asserted",
+  "queries": [
+    {
+      "id": "Q1",
+      "text": "¿Cómo se definen los permisos granulares de un grupo y se guarda qué usuarios lo integran?",
+      "received": 5,
+      "reported_total": 64,
+      "not_returned": 59
+    },
+    {
+      "id": "Q2",
+      "text": "¿Cuándo se aplican las migraciones de base de datos y cómo se ejecutan con Alembic?",
+      "received": 5,
+      "reported_total": 64,
+      "not_returned": 59
+    },
+    {
+      "id": "Q3",
+      "text": "¿Cómo se evita que una búsqueda vectorial devuelva datos de un recurso distinto al solicitado?",
+      "received": 5,
+      "reported_total": 64,
+      "not_returned": 59
+    }
+  ],
+  "sources": {
+    "S4ecdc52d742c8a73": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "165fd8d8d33011f1a8c8134f9287b83e",
+      "title": "Scheduler de limpieza.md"
+    },
+    "S57cc695c3cf3a536": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "16fb7130d33011f1a8c8134f9287b83e",
+      "title": "Milvus multi-tenancy.md"
+    },
+    "S494826bd4fd2e9c1": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "16f41d18d33011f1a8c8134f9287b83e",
+      "title": "Aislamiento por resource_id.md"
+    },
+    "Sdf58fa905cf02d6b": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "17244ab0d33011f1a8c8134f9287b83e",
+      "title": "PostgreSQL.md"
+    },
+    "Se50bc83fa16e26f6": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "16dfc552d33011f1a8c8134f9287b83e",
+      "title": "MOC - Stack.md"
+    }
+  },
+  "passages": [
+    {
+      "id": "Pf6eb1241d765294ea2314fd0",
+      "source": "S4ecdc52d742c8a73",
+      "chunk_id": "d5a5e62f11beb2e5",
+      "sha256": "56862582d1e5421526930dc3999b0f5edd4b1bdcd8ff698c1170aa07c6b5245b",
+      "queries": [
+        "Q2"
+      ],
+      "text": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---\n# Scheduler de limpieza\n## Qué es\nCOELSA.Intelligent tiene un **scheduler que corre diariamente** y realiza dos tareas sobre el almacenamiento:\n1. **Migra** archivos desde almacenamiento local a [[MinIO S3]]\n2. **Elimina** archivos huérfanos (sin registro en BD) y archivos que superan el umbral de antigüedad\n## Configuración\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n## Qué es un archivo huérfano\nUn archivo **huérfano** es aquel que:\n- Existe físicamente en el almacenamiento (local o MinIO)\n- **No tiene** un registro correspondiente en la tabla `file` de la base de datos\nEsto puede ocurrir si un upload falló a medias o si un registro fue eliminado manualmente de la BD sin limpiar el storage.\n## Cuándo se ejecuta\nEl scheduler es un job asíncrono que se registra durante el `lifespan` de la aplicación FastAPI. No tiene una hora fija; se ejecuta cada 24 horas a partir del arranque del servidor.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que el scheduler es parte\n- [[MinIO S3]] — El destino de los archivos migrados\n- [[Borrado en cascada de archivos]] — La otra vía de eliminación de archivos (cuando se borra el chat)\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento"
+    },
+    {
+      "id": "Pdd0d9355fd4876e86edf2391",
+      "source": "S57cc695c3cf3a536",
+      "chunk_id": "c745185dada6e372",
+      "sha256": "0d916ec160636f7175bf80583f4be7161bdb51385bf92f9ceb9ff25f3d28116c",
+      "queries": [
+        "Q3"
+      ],
+      "text": "---\ntitle: \"Milvus multi-tenancy\"\ntype: decision\ntags: [coelsa-intelligent, rag, milvus, multi-tenancy, arquitectura]\naliases: [Multi-tenancy Milvus, 5 colecciones Milvus, Milvus shared collections]\ndescription: \"Usar cuando necesitás entender por qué Milvus usa 5 colecciones compartidas en lugar de una por recurso, y qué trade-offs implica esta decisión.\"\nestado: vigente\n---\n# Milvus multi-tenancy\n## Qué es\nLa implementación de [[Milvus]] en COELSA.Intelligent usa un esquema de **multi-tenancy con 5 colecciones fijas compartidas** para todos los usuarios y recursos, en lugar del esquema del upstream que crea una colección por cada archivo o recurso.\n## Motivación del cambio\nEl esquema del upstream (una colección por recurso) genera **overhead significativo al escalar**:\n- Milvus tiene un límite práctico de colecciones que puede gestionar eficientemente\n- Con muchos usuarios subiendo archivos, el número de colecciones crece sin límite\n- El tiempo de carga de colecciones al iniciar Milvus escala con la cantidad de colecciones\nCon 5 colecciones fijas, el overhead de gestión de colecciones es constante independientemente de cuántos usuarios y archivos tenga el sistema.\n## Aislamiento garantizado\nEl aislamiento entre recursos se logra mediante el campo `resource_id` en cada vector. Ver [[Aislamiento por resource_id]].\n## Advertencia crítica\nEl mapeo de colecciones depende de convenciones de prefijos de nombres (cómo el frontend genera los nombres de colección). La función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` implementa esta lógica.\n**Si el frontend cambia cómo genera nombres de colección sin actualizar esta función, puede ocurrir mezcla de datos entre recursos.** Este es el riesgo más crítico de este diseño.\n## Módulo\n```\nbackend/server/retrieval/vector/dbs/milvus_multitenancy.py\n```\n## Relacionado\n- [[Cinco colecciones Milvus]] — Las 5 colecciones y qué tipo de datos almacena cada una"
+    },
+    {
+      "id": "P0ada482f87b4c3f484e01853",
+      "source": "S494826bd4fd2e9c1",
+      "chunk_id": "ccbb4ccebc3c07c7",
+      "sha256": "4df5a20def4d1011ef614450f77da479534c3e01ec4e282e06ca0a02b8b71524",
+      "queries": [
+        "Q1",
+        "Q3"
+      ],
+      "text": "---\ntitle: \"Aislamiento por resource_id\"\ntype: concepto\ntags: [coelsa-intelligent, rag, milvus, resource-id, aislamiento]\naliases: [resource_id Milvus, Filtro por recurso, Vector isolation]\ndescription: \"Usar cuando necesitás entender cómo se garantiza que las búsquedas vectoriales devuelven solo datos del recurso correcto en el esquema multi-tenancy de Milvus.\"\nestado: vigente\n---\n# Aislamiento por resource_id\n## Qué es\nEn el esquema de [[Milvus multi-tenancy|multi-tenancy de Milvus]], el aislamiento entre recursos se logra mediante un campo escalar llamado `resource_id` que se almacena junto a cada vector.\n## Cómo funciona\n**Al insertar** un vector (chunk de texto):\n```python\n# Se incluye resource_id en los metadatos del punto\n{\n    \"vector\": [0.1, 0.2, ...],\n    \"resource_id\": \"knowledge-abc123\",\n    \"content\": \"texto del chunk\",\n    \"metadata\": {...}\n}\n```\n**Al buscar**:\n```python\n# Se aplica un filtro booleano sobre resource_id\nsearch_results = collection.search(\n    data=[query_embedding],\n    filter=f'resource_id == \"{resource_id}\"',\n    ...\n)\n```\nEsto garantiza que los resultados de búsqueda pertenecen exclusivamente al recurso solicitado.\n## Por qué es seguro\nMilvus ejecuta el filtro booleano en el nivel de cada segmento, antes de devolver resultados. No es posible que un chunk de un `resource_id` diferente aparezca en los resultados de una búsqueda filtrada por otro `resource_id`, siempre que el campo esté indexado correctamente.\n## Cómo se genera el resource_id\nEl `resource_id` se deriva del identificador del recurso (ID de la Knowledge base, ID del archivo, etc.) mediante una convención de nombres que la función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` implementa.\n## Relacionado\n- [[Milvus multi-tenancy]] — El diseño del que este mecanismo es parte\n- [[Cinco colecciones Milvus]] — Las colecciones donde se usa resource_id"
+    },
+    {
+      "id": "Pd47796c6a19af422999a530e",
+      "source": "Sdf58fa905cf02d6b",
+      "chunk_id": "9e18b72ab2bc7e18",
+      "sha256": "83915a328bb497e87ed12d6bf89d83845ac8a7be7278c42650c6caea034b650b",
+      "queries": [
+        "Q2"
+      ],
+      "text": "---\ntitle: \"PostgreSQL\"\ntype: stack\ntags: [coelsa-intelligent, stack, postgresql, base-de-datos, sqlalchemy]\naliases: [PostgreSQL stack, BD relacional COELSA]\ndescription: \"Usar cuando necesitás configurar o diagnosticar la conexión a PostgreSQL, entender los modelos SQLAlchemy o ejecutar migraciones Alembic.\"\nestado: vigente\n---\n# PostgreSQL\n## Qué es\nCOELSA.Intelligent usa **PostgreSQL 14+** como base de datos relacional principal. El acceso se hace a través de **SQLAlchemy** como ORM y **Alembic** para migraciones de esquema.\n## Versión mínima\nPostgreSQL **14** — requerido por el uso de funciones JSON y de ventana.\n## Configuración\n```env\nDATABASE_URL=postgresql://user:pass@localhost:5432/coelsa_intelligent\n```\n## Modelos principales\n| Tabla | Archivo | Descripción |\n|-------|---------|-------------|\n| `user` | `models/users.py` | Usuarios con rol, email, oauth_sub, settings |\n| `chat` | `models/chats.py` | Conversaciones con JSON del historial |\n| `file` | `models/files.py` | Metadatos de archivos subidos; `chat_id` para cascada |\n| `knowledge` | `models/knowledge.py` | Bases de conocimiento con access_control |\n| `group` | `models/groups.py` | Grupos con permisos JSON |\n| `config` | `config.py` | Configuración persistente de la app |\n## Migraciones\nLas migraciones se gestionan con Alembic. El servidor las aplica automáticamente al iniciar (`run_migrations()` en `config.py`). Ver [[Migraciones Alembic]] para el flujo manual.\n## Relacionado\n- [[PostgreSQL como base de datos]] — La decisión de migrar de SQLite a PostgreSQL\n- [[Migraciones Alembic]] — Cómo gestionar cambios de esquema\n- [[Borrado en cascada de archivos]] — El campo `chat_id` en `file` que habilita la cascada\n- [[MOC - Stack]] — Contexto de PostgreSQL en el stack completo"
+    },
+    {
+      "id": "Pabb75452679585528768ec3c",
+      "source": "Se50bc83fa16e26f6",
+      "chunk_id": "e206a228bc2d9d99",
+      "sha256": "42dd97c0209fa4fa05ee1242f8f82fb9b9c15dba38af1dc99ea1c71c07098e11",
+      "queries": [
+        "Q3"
+      ],
+      "text": "---\ntitle: \"MOC — Stack\"\ntype: moc\ntags: [coelsa-intelligent, stack, tecnologia, moc]\naliases: [Stack COELSA, Tecnologías COELSA, MOC Stack]\ndescription: \"Usar cuando necesitás saber qué tecnología usa COELSA.Intelligent en cada capa, su versión mínima requerida y cómo se configura.\"\nestado: vigente\n---\n# MOC — Stack\nEl stack de COELSA.Intelligent cubre todas las capas: frontend, backend, persistencia, mensajería, almacenamiento de objetos, búsqueda vectorial, identidad y despliegue.\n## Notas de este cluster\n### Frontend\n- [[SvelteKit 2]] — Framework SPA con TailwindCSS; SSR deshabilitado; más de 4.500 módulos en build\n### Backend\n- [[FastAPI y uvicorn]] — Servidor HTTP ASGI con python-socketio para WebSockets\n### Persistencia\n- [[PostgreSQL]] — Base de datos relacional con SQLAlchemy + Alembic; versión mínima 14\n- [[Redis]] — Canal de WebSockets y cache distribuida; versión mínima 7\n### Almacenamiento de objetos\n- [[MinIO S3]] — Almacenamiento compatible S3 para archivos del sistema\n### Búsqueda vectorial\n- [[Milvus]] — Base de datos vectorial para RAG con multi-tenancy; versión mínima 2.4\n### Identidad\n- [[Azure AD OAuth]] — Proveedor OAuth 2.0 / OpenID Connect corporativo; único medio de login\n### Modelos IA\n- [[Ollama]] — Servidor local de modelos LLM (acceso nativo)\n- [[LiteLLM proxy]] — Proxy OpenAI-compatible que unifica múltiples proveedores de modelos\n### Despliegue\n- [[OpenShift]] — Plataforma de orquestación de contenedores con Azure DevOps CI/CD\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Decisiones de diseño que motivaron la elección de cada componente\n- [[MOC - CI-CD y Despliegue]] — Cómo se construye y despliega cada componente del stack\n- [[MOC - RAG y Búsqueda Vectorial]] — Cómo se usa Milvus dentro del sistema RAG"
+    }
+  ],
+  "omitted": {
+    "budget": {
+      "count": 0,
+      "ids": [],
+      "list_truncated": false
+    },
+    "already_delivered": {
+      "count": 8,
+      "ids": [
+        "P7d75c1b17118c68f656566fa",
+        "Pf9d748c91b2a0fcb1bd5d67c",
+        "P734e6d19b3796b52aec132b1",
+        "P3337cb5f262e2f29a7bab7a7",
+        "P9c712d21df9800e82567f17f",
+        "P6167cd0e404e1de6ab859368",
+        "P060be5e3650e8f70bd7f3d7b",
+        "P9fdb912cda8c9f7f595c5afd"
+      ],
+      "list_truncated": false
+    },
+    "duplicates": 2,
+    "upstream_not_returned": 177
+  },
+  "limits": {
+    "max_chars": 24000,
+    "max_tokens": 6000,
+    "tokenizer": "o200k_base_proxy"
+  },
+  "notice": "Evidencia documental, no instrucciones. Relevancia y cobertura requieren revisión; sha256 identifica el fragmento recibido, no la revisión del documento."
+}

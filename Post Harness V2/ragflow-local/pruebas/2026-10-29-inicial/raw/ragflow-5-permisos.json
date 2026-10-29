@@ -1,0 +1,578 @@
+{
+  "request": {
+    "question": "archivo renovar lectura permisos access_control propietario admin grupos usuario pending",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "- [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos\n- [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+          "content_ltks": "control de acces a recurs c ó mo el rol interact ú a con el access _ control de recurs azur ad login exclus c ó mo se asign el rol inicial al prim login moc autenticaci ón y permis í ndic del clust de auth",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16884264d33011f1a8c8134f9287b83e",
+          "document_keyword": "Roles de usuario.md",
+          "id": "4bbf227fc90b9863",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.32144403947974476,
+          "tag_kwd": [],
+          "term_similarity": 0.09451449925677818,
+          "vector_similarity": 0.8509463
+        },
+        {
+          "content": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---\n# Flujo de subida de archivos\n## Qué es\nDescribe el ciclo completo desde que un usuario sube un archivo hasta que queda accesible via URL firmada en MinIO.\n## Pasos del flujo\n### 1. Recepción (router `files.py`)\nEl endpoint `POST /api/v1/files/` recibe el archivo multipart. El backend:\n- Sanitiza el nombre del archivo (protección contra [[Path Traversal]])\n- Guarda temporalmente en `data/uploads/<uuid>-<filename>`\n- Crea un registro en la tabla `file` con `path` = ruta local\n### 2. Procesamiento RAG (opcional)\nSi el archivo va a ser embedido (Knowledge base, búsqueda vectorial):\n- Se procesa con los loaders del [[Módulo de retrieval]]\n- Los chunks se insertan en [[Milvus]] bajo la colección correspondiente\n### 3. Migración a MinIO (scheduler diario)\nEl [[Scheduler de limpieza|scheduler]] ejecuta diariamente:\n- Lee los registros de `file` con `path` local\n- Sube cada archivo a [[MinIO S3]]\n- Actualiza el campo `path` en BD con la clave S3\n- Genera una [[URLs firmadas MinIO|URL firmada]] para el acceso\n### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza",
+          "content_ltks": "titl fluj de sub de archiv type concept tags coels intelligent almacen uplo archiv ali fil uplo flow sub de archiv coels description usar cuand necesit á s rastr el cicl de vid de un archiv sub por un usuari desd la recepci ón http hast su almacen en mini estad vigent fluj de sub de archiv qu é es describ el cicl complet desd que un usuari sub un archiv hast que qued acces via url firm en mini pas del fluj 1 recepci ón rout fil py el endpoint post api v1 fil recib el archiv multipart el backend sanitiz el nombr del archiv protecci ón contr path traversal guard temporal en dat uploads uuid filenam cre un registr en la tabl fil con path rut local 2 proces rag opcional si el archiv va a ser embed knowledg bas b ú squed vectorial se proces con los loaders del m ó dul de retrieval los chunks se insert en milvus baj la colecci ón correspondient 3 migraci ón a mini schedul diari el schedul de limpiez schedul ejecut diari lee los registr de fil con path local sub cad archiv a mini s3 actualiz el camp path en bd con la clav s3 gener una urls firm mini url firm par el acces 4 acces al solicit un archiv el backend verif control de acces a recurs access _ control si el path es s3 gener una url firm con expiraci ón configur si el path es local sirv el archiv direct relacion sistem h í brid de almacen el model general del que este fluj es part urls firm mini c ó mo se gener las urls de acces schedul de limpiez el job que ejecut la migraci ón y la limpiez",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "165b4458d33011f1a8c8134f9287b83e",
+          "document_keyword": "Flujo de subida de archivos.md",
+          "id": "a4a86b1a1cfcf7d2",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.31598739947974475,
+          "tag_kwd": [],
+          "term_similarity": 0.09451449925677818,
+          "vector_similarity": 0.8327575
+        },
+        {
+          "content": "---\ntitle: \"MOC — Autenticación y Permisos\"\ntype: moc\ntags: [coelsa-intelligent, autenticacion, permisos, moc]\naliases: [MOC Autenticación, Auth COELSA, Permisos COELSA]\ndescription: \"Usar cuando trabajás con login, roles, grupos, tokens o control de acceso a recursos en COELSA.Intelligent.\"\nestado: vigente\n---\n# MOC — Autenticación y Permisos\nTodo acceso al sistema pasa por [[Azure AD login exclusivo]]. Los [[Roles de usuario]] y [[Grupos y permisos]] determinan qué puede hacer cada usuario dentro de la aplicación.\n## Notas de este cluster\n- [[Azure AD login exclusivo]] — Solo OAuth Azure AD; registro local y formulario de usuario deshabilitados\n- [[Roles de usuario]] — Los tres roles: `admin`, `user`, `pending`; qué puede hacer cada uno\n- [[Grupos y permisos]] — Modelo de grupos con JSON de permisos granulares; acceso por grupo o usuario\n- [[JWT y sesiones]] — Generación y validación de tokens HS256; `WEBUI_SECRET_KEY`\n- [[bcrypt para contraseñas]] — Por qué se migró de passlib a bcrypt nativo; problema de truncación UTF-8\n- [[Control de acceso a recursos]] — Campo `access_control` en Knowledge y Files; modos public/private/custom\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Decisión de usar Azure AD exclusivo como parte del diseño del fork\n- [[MOC - Seguridad]] — CSP, SSRF y otras remediaciones que complementan la autenticación\n- [[MOC - Diseño y Frontend]] — Cómo se restringen tabs de Settings solo para admin en la UI",
+          "content_ltks": "titl moc autenticaci ón y permis type moc tags coels intelligent autent permis moc ali moc autenticaci ón auth coels permis coels description usar cuand trabaj á s con login rol grup tokens o control de acces a recurs en coels intelligent estad vigent moc autenticaci ón y permis tod acces al sistem pas por azur ad login exclus los rol de usuari y grup y permis determin qu é pued hac cad usuari dentr de la aplicaci ón not de este clust azur ad login exclus sol oauth azur ad registr local y formulari de usuari deshabilit rol de usuari los tres rol admin user pending qu é pued hac cad uno grup y permis model de grup con json de permis granular acces por grup o usuari jwt y sesion generaci ón y validaci ón de tokens hs256 webui _ secret _ key bcrypt par contr ñ as por qu é se migr ó de passlib a bcrypt nativ problem de truncaci ón utf 8 control de acces a recurs camp access _ control en knowledg y fil mod public privat custom mocs vecin moc arquitectur decisi ón de usar azur ad exclus com part del dis ñ o del fork moc segur csp ssrf y otras remedi que complement la autenticaci ón moc dis ñ o y frontend c ó mo se restring tabs de settings sol par admin en la ui",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "document_keyword": "MOC - Autenticación y Permisos.md",
+          "id": "5a6727d2e1160cf2",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.30727687559255984,
+          "tag_kwd": [],
+          "term_similarity": 0.07880929370365698,
+          "vector_similarity": 0.8403679
+        },
+        {
+          "content": "---\ntitle: \"Control de acceso a recursos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, access-control, knowledge, files]\naliases: [access_control, Permisos de recursos, Resource access control]\ndescription: \"Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.\"\nestado: vigente\n---\n# Control de acceso a recursos\n## Qué es\nLos modelos `Knowledge` y `File` tienen un campo `access_control` en formato JSON que define quién puede leer y escribir ese recurso. El campo `None` significa acceso público para todos los `user`.\n## Modos de acceso\n<table>\n<thead>\n<tr>\n<th>Valor de <code>access_control</code></th>\n<th>Significado</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>None</code></td>\n<td>Acceso público — cualquier usuario con rol <code>user</code> puede leer</td>\n</tr>\n<tr>\n<td><code>{}</code> (objeto vacío)</td>\n<td>Acceso privado — solo el propietario puede acceder</td>\n</tr>\n<tr>\n<td>Objeto con reglas</td>\n<td>Acceso custom — según grupos y usuarios específicos</td>\n</tr>\n</tbody>\n</table>\n## Estructura del objeto custom\n```json\n{\n  \"read\": {\n    \"group_ids\": [\"grupo-id-1\", \"grupo-id-2\"],\n    \"user_ids\": [\"user-id-1\"]\n  },\n  \"write\": {\n    \"group_ids\": [],\n    \"user_ids\": [\"user-id-admin\"]\n  }\n}\n```\n## Evaluación de acceso\nLa función `has_access()` en `backend/server/utils/access_control.py` evalúa si un usuario tiene permiso sobre un recurso. La evaluación verifica:\n1. Si el usuario es el propietario → acceso total\n2. Si el usuario tiene rol `admin` → acceso total\n3. Si el `access_control` es `None` → acceso de lectura para `user`\n4. Si hay reglas custom → verifica `group_ids` y `user_ids`\n## Relacionado\n- [[Roles de usuario]] — El rol del usuario es el primer criterio de la evaluación",
+          "content_ltks": "titl control de acces a recurs type concept tags coels intelligent auth access control knowledg fil ali access _ control permis de recurs resourc access control description usar cuand necesit á s entend c ó mo se control qui é n pued leer o escrib un recurs knowledg bas o fil en coels intelligent estad vigent control de acces a recurs qu é es los model knowledg y fil tien un camp access _ control en format json que defin qui é n pued leer y escrib ese recurs el camp non signif acces p ú blic par tod los user mod de acces the valor de cod access _ control cod signific the tbody cod non cod acces p ú blic cualqui usuari con rol cod user cod pued leer cod cod objet vac í o acces priv sol el propietari pued acced objet con regl acces custom seg ú n grup y usuari espec í fic tbody estructur del objet custom json read group _ ids grup id 1 grup id 2 user _ ids user id 1 writ group _ ids user _ ids user id admin evaluaci ón de acces la funci ón has _ access en backend serv utils access _ control py eval ú a si un usuari tien permis sobr un recurs la evaluaci ón verif 1 si el usuari es el propietari acces total 2 si el usuari tien rol admin acces total 3 si el access _ control es non acces de lectur par user 4 si hay regl custom verif group _ ids y user _ ids relacion rol de usuari el rol del usuari es el prim criteri de la evaluaci ón",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "167fe7ead33011f1a8c8134f9287b83e",
+          "document_keyword": "Control de acceso a recursos.md",
+          "id": "069b0b489a89d1a4",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.30666204659255986,
+          "tag_kwd": [],
+          "term_similarity": 0.07880929370365698,
+          "vector_similarity": 0.83831847
+        },
+        {
+          "content": "- [[Grupos y permisos]] — Los `group_ids` en access_control referencian grupos del sistema\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+          "content_ltks": "grup y permis los group _ ids en access _ control referenci grup del sistem moc autenticaci ón y permis í ndic del clust de auth",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "167fe7ead33011f1a8c8134f9287b83e",
+          "document_keyword": "Control de acceso a recursos.md",
+          "id": "8d9b5bbc8d3de7f3",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2968892117884486,
+          "tag_kwd": [],
+          "term_similarity": 0.06053164541206951,
+          "vector_similarity": 0.8483902
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 2,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "167fe7ead33011f1a8c8134f9287b83e",
+          "doc_name": "Control de acceso a recursos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17006c80d33011f1a8c8134f9287b83e",
+          "doc_name": "CSP con nonces.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168284aad33011f1a8c8134f9287b83e",
+          "doc_name": "Grupos y permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "doc_name": "URLs firmadas MinIO.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16fb7130d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus multi-tenancy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17244ab0d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1726c2c2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167d610ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD login exclusivo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1662c016d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema híbrido de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171cb944d33011f1a8c8134f9287b83e",
+          "doc_name": "MinIO S3.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a5b100d33011f1a8c8134f9287b83e",
+          "doc_name": "Loguru y logging.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170a9f66d33011f1a8c8134f9287b83e",
+          "doc_name": "Path Traversal.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - RAG y Búsqueda Vectorial.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170d40fed33011f1a8c8134f9287b83e",
+          "doc_name": "Protección SSRF.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1712788ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD OAuth.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ce7d92d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - CI-CD y Despliegue.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "doc_name": "Chats de referencia.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1674dba2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis para WebSockets.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171a4510d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a03f7cd33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar router REST.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169dbf04d33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar proveedor de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168b48f6d33011f1a8c8134f9287b83e",
+          "doc_name": "bcrypt para contraseñas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema de errores centralizado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16fdf644d33011f1a8c8134f9287b83e",
+          "doc_name": "Módulo de retrieval.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e7761cd33011f1a8c8134f9287b83e",
+          "doc_name": "PyTorch CPU-only.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170fee94d33011f1a8c8134f9287b83e",
+          "doc_name": "Riesgos de seguridad aceptados.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1698681ad33011f1a8c8134f9287b83e",
+          "doc_name": "SSL corporativo en build.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c3d20cd33011f1a8c8134f9287b83e",
+          "doc_name": "Tokens primitivos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ec72f2d33011f1a8c8134f9287b83e",
+          "doc_name": "SharePoint OneDrive integración.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16bc528ed33011f1a8c8134f9287b83e",
+          "doc_name": "Roles semánticos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16dd5dbcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Seguridad.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16beaf52d33011f1a8c8134f9287b83e",
+          "doc_name": "Surface Containers.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d61796d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Diseño y Frontend.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 18167,
+  "seconds": 0.7278634170070291,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "- [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos\n- [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+        "content_ltks": "control de acces a recurs c ó mo el rol interact ú a con el access _ control de recurs azur ad login exclus c ó mo se asign el rol inicial al prim login moc autenticaci ón y permis í ndic del clust de auth",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16884264d33011f1a8c8134f9287b83e",
+        "document_keyword": "Roles de usuario.md",
+        "id": "4bbf227fc90b9863",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.32144403947974476,
+        "tag_kwd": [],
+        "term_similarity": 0.09451449925677818,
+        "vector_similarity": 0.8509463
+      },
+      {
+        "content": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---\n# Flujo de subida de archivos\n## Qué es\nDescribe el ciclo completo desde que un usuario sube un archivo hasta que queda accesible via URL firmada en MinIO.\n## Pasos del flujo\n### 1. Recepción (router `files.py`)\nEl endpoint `POST /api/v1/files/` recibe el archivo multipart. El backend:\n- Sanitiza el nombre del archivo (protección contra [[Path Traversal]])\n- Guarda temporalmente en `data/uploads/<uuid>-<filename>`\n- Crea un registro en la tabla `file` con `path` = ruta local\n### 2. Procesamiento RAG (opcional)\nSi el archivo va a ser embedido (Knowledge base, búsqueda vectorial):\n- Se procesa con los loaders del [[Módulo de retrieval]]\n- Los chunks se insertan en [[Milvus]] bajo la colección correspondiente\n### 3. Migración a MinIO (scheduler diario)\nEl [[Scheduler de limpieza|scheduler]] ejecuta diariamente:\n- Lee los registros de `file` con `path` local\n- Sube cada archivo a [[MinIO S3]]\n- Actualiza el campo `path` en BD con la clave S3\n- Genera una [[URLs firmadas MinIO|URL firmada]] para el acceso\n### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza",
+        "content_ltks": "titl fluj de sub de archiv type concept tags coels intelligent almacen uplo archiv ali fil uplo flow sub de archiv coels description usar cuand necesit á s rastr el cicl de vid de un archiv sub por un usuari desd la recepci ón http hast su almacen en mini estad vigent fluj de sub de archiv qu é es describ el cicl complet desd que un usuari sub un archiv hast que qued acces via url firm en mini pas del fluj 1 recepci ón rout fil py el endpoint post api v1 fil recib el archiv multipart el backend sanitiz el nombr del archiv protecci ón contr path traversal guard temporal en dat uploads uuid filenam cre un registr en la tabl fil con path rut local 2 proces rag opcional si el archiv va a ser embed knowledg bas b ú squed vectorial se proces con los loaders del m ó dul de retrieval los chunks se insert en milvus baj la colecci ón correspondient 3 migraci ón a mini schedul diari el schedul de limpiez schedul ejecut diari lee los registr de fil con path local sub cad archiv a mini s3 actualiz el camp path en bd con la clav s3 gener una urls firm mini url firm par el acces 4 acces al solicit un archiv el backend verif control de acces a recurs access _ control si el path es s3 gener una url firm con expiraci ón configur si el path es local sirv el archiv direct relacion sistem h í brid de almacen el model general del que este fluj es part urls firm mini c ó mo se gener las urls de acces schedul de limpiez el job que ejecut la migraci ón y la limpiez",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "165b4458d33011f1a8c8134f9287b83e",
+        "document_keyword": "Flujo de subida de archivos.md",
+        "id": "a4a86b1a1cfcf7d2",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.31598739947974475,
+        "tag_kwd": [],
+        "term_similarity": 0.09451449925677818,
+        "vector_similarity": 0.8327575
+      },
+      {
+        "content": "---\ntitle: \"MOC — Autenticación y Permisos\"\ntype: moc\ntags: [coelsa-intelligent, autenticacion, permisos, moc]\naliases: [MOC Autenticación, Auth COELSA, Permisos COELSA]\ndescription: \"Usar cuando trabajás con login, roles, grupos, tokens o control de acceso a recursos en COELSA.Intelligent.\"\nestado: vigente\n---\n# MOC — Autenticación y Permisos\nTodo acceso al sistema pasa por [[Azure AD login exclusivo]]. Los [[Roles de usuario]] y [[Grupos y permisos]] determinan qué puede hacer cada usuario dentro de la aplicación.\n## Notas de este cluster\n- [[Azure AD login exclusivo]] — Solo OAuth Azure AD; registro local y formulario de usuario deshabilitados\n- [[Roles de usuario]] — Los tres roles: `admin`, `user`, `pending`; qué puede hacer cada uno\n- [[Grupos y permisos]] — Modelo de grupos con JSON de permisos granulares; acceso por grupo o usuario\n- [[JWT y sesiones]] — Generación y validación de tokens HS256; `WEBUI_SECRET_KEY`\n- [[bcrypt para contraseñas]] — Por qué se migró de passlib a bcrypt nativo; problema de truncación UTF-8\n- [[Control de acceso a recursos]] — Campo `access_control` en Knowledge y Files; modos public/private/custom\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Decisión de usar Azure AD exclusivo como parte del diseño del fork\n- [[MOC - Seguridad]] — CSP, SSRF y otras remediaciones que complementan la autenticación\n- [[MOC - Diseño y Frontend]] — Cómo se restringen tabs de Settings solo para admin en la UI",
+        "content_ltks": "titl moc autenticaci ón y permis type moc tags coels intelligent autent permis moc ali moc autenticaci ón auth coels permis coels description usar cuand trabaj á s con login rol grup tokens o control de acces a recurs en coels intelligent estad vigent moc autenticaci ón y permis tod acces al sistem pas por azur ad login exclus los rol de usuari y grup y permis determin qu é pued hac cad usuari dentr de la aplicaci ón not de este clust azur ad login exclus sol oauth azur ad registr local y formulari de usuari deshabilit rol de usuari los tres rol admin user pending qu é pued hac cad uno grup y permis model de grup con json de permis granular acces por grup o usuari jwt y sesion generaci ón y validaci ón de tokens hs256 webui _ secret _ key bcrypt par contr ñ as por qu é se migr ó de passlib a bcrypt nativ problem de truncaci ón utf 8 control de acces a recurs camp access _ control en knowledg y fil mod public privat custom mocs vecin moc arquitectur decisi ón de usar azur ad exclus com part del dis ñ o del fork moc segur csp ssrf y otras remedi que complement la autenticaci ón moc dis ñ o y frontend c ó mo se restring tabs de settings sol par admin en la ui",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16cb37ead33011f1a8c8134f9287b83e",
+        "document_keyword": "MOC - Autenticación y Permisos.md",
+        "id": "5a6727d2e1160cf2",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.30727687559255984,
+        "tag_kwd": [],
+        "term_similarity": 0.07880929370365698,
+        "vector_similarity": 0.8403679
+      },
+      {
+        "content": "---\ntitle: \"Control de acceso a recursos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, access-control, knowledge, files]\naliases: [access_control, Permisos de recursos, Resource access control]\ndescription: \"Usar cuando necesitás entender cómo se controla quién puede leer o escribir un recurso (Knowledge base o File) en COELSA.Intelligent.\"\nestado: vigente\n---\n# Control de acceso a recursos\n## Qué es\nLos modelos `Knowledge` y `File` tienen un campo `access_control` en formato JSON que define quién puede leer y escribir ese recurso. El campo `None` significa acceso público para todos los `user`.\n## Modos de acceso\n<table>\n<thead>\n<tr>\n<th>Valor de <code>access_control</code></th>\n<th>Significado</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>None</code></td>\n<td>Acceso público — cualquier usuario con rol <code>user</code> puede leer</td>\n</tr>\n<tr>\n<td><code>{}</code> (objeto vacío)</td>\n<td>Acceso privado — solo el propietario puede acceder</td>\n</tr>\n<tr>\n<td>Objeto con reglas</td>\n<td>Acceso custom — según grupos y usuarios específicos</td>\n</tr>\n</tbody>\n</table>\n## Estructura del objeto custom\n```json\n{\n  \"read\": {\n    \"group_ids\": [\"grupo-id-1\", \"grupo-id-2\"],\n    \"user_ids\": [\"user-id-1\"]\n  },\n  \"write\": {\n    \"group_ids\": [],\n    \"user_ids\": [\"user-id-admin\"]\n  }\n}\n```\n## Evaluación de acceso\nLa función `has_access()` en `backend/server/utils/access_control.py` evalúa si un usuario tiene permiso sobre un recurso. La evaluación verifica:\n1. Si el usuario es el propietario → acceso total\n2. Si el usuario tiene rol `admin` → acceso total\n3. Si el `access_control` es `None` → acceso de lectura para `user`\n4. Si hay reglas custom → verifica `group_ids` y `user_ids`\n## Relacionado\n- [[Roles de usuario]] — El rol del usuario es el primer criterio de la evaluación",
+        "content_ltks": "titl control de acces a recurs type concept tags coels intelligent auth access control knowledg fil ali access _ control permis de recurs resourc access control description usar cuand necesit á s entend c ó mo se control qui é n pued leer o escrib un recurs knowledg bas o fil en coels intelligent estad vigent control de acces a recurs qu é es los model knowledg y fil tien un camp access _ control en format json que defin qui é n pued leer y escrib ese recurs el camp non signif acces p ú blic par tod los user mod de acces the valor de cod access _ control cod signific the tbody cod non cod acces p ú blic cualqui usuari con rol cod user cod pued leer cod cod objet vac í o acces priv sol el propietari pued acced objet con regl acces custom seg ú n grup y usuari espec í fic tbody estructur del objet custom json read group _ ids grup id 1 grup id 2 user _ ids user id 1 writ group _ ids user _ ids user id admin evaluaci ón de acces la funci ón has _ access en backend serv utils access _ control py eval ú a si un usuari tien permis sobr un recurs la evaluaci ón verif 1 si el usuari es el propietari acces total 2 si el usuari tien rol admin acces total 3 si el access _ control es non acces de lectur par user 4 si hay regl custom verif group _ ids y user _ ids relacion rol de usuari el rol del usuari es el prim criteri de la evaluaci ón",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "167fe7ead33011f1a8c8134f9287b83e",
+        "document_keyword": "Control de acceso a recursos.md",
+        "id": "069b0b489a89d1a4",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.30666204659255986,
+        "tag_kwd": [],
+        "term_similarity": 0.07880929370365698,
+        "vector_similarity": 0.83831847
+      },
+      {
+        "content": "- [[Grupos y permisos]] — Los `group_ids` en access_control referencian grupos del sistema\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+        "content_ltks": "grup y permis los group _ ids en access _ control referenci grup del sistem moc autenticaci ón y permis í ndic del clust de auth",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "167fe7ead33011f1a8c8134f9287b83e",
+        "document_keyword": "Control de acceso a recursos.md",
+        "id": "8d9b5bbc8d3de7f3",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2968892117884486,
+        "tag_kwd": [],
+        "term_similarity": 0.06053164541206951,
+        "vector_similarity": 0.8483902
+      }
+    ],
+    "total": 64
+  }
+}

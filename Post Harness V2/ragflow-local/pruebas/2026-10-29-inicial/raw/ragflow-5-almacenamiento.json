@@ -1,0 +1,548 @@
+{
+  "request": {
+    "question": "archivo URL firmada expiración local MinIO storage",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"URLs firmadas MinIO\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, presigned-url, seguridad]\naliases: [Presigned URLs, URLs firmadas S3, Signed URLs MinIO]\ndescription: \"Usar cuando necesitás entender cómo los clientes acceden a archivos en MinIO de forma segura y temporaria sin exponer credenciales.\"\nestado: vigente\n---\n# URLs firmadas MinIO\n## Qué es\nLas **URLs firmadas** (presigned URLs) son URLs de acceso temporal a objetos en [[MinIO S3]] que no requieren que el cliente tenga credenciales del bucket. El servidor firma la URL con las credenciales S3 y establece un tiempo de expiración.\n## Cómo funciona\n```python\n# Pseudocódigo de generación (StorageProvider.get_presigned_url)\nurl = s3_client.generate_presigned_url(\n    'get_object',\n    Params={'Bucket': S3_BUCKET_NAME, 'Key': file_path},\n    ExpiresIn=3600  # 1 hora por defecto\n)\n```\nLa URL resultante incluye la firma criptográfica y la fecha de expiración en los query params. Solo es válida hasta esa fecha y solo para el objeto específico.\n## Por qué URLs firmadas\n- **Seguridad**: el cliente nunca recibe credenciales del bucket; solo puede acceder al archivo específico por el tiempo configurado\n- **Control de acceso**: si el [[Control de acceso a recursos|access_control]] del archivo cambia, las URLs viejas siguen siendo válidas hasta su expiración pero no se generan nuevas\n- **Descarga directa**: el cliente descarga directo de MinIO sin pasar por el backend, reduciendo la carga del servidor\n## Configuración de expiración\nLa expiración por defecto es **3600 segundos (1 hora)**. El parámetro `ExpiresIn` es configurable en la llamada a `get_presigned_url()`.\n## Timeouts boto3 (Windows)\nPara evitar timeouts en entornos Windows con latencia de red:\n- Connect timeout: 30s\n- Read timeout: 120s\n- 10 reintentos con backoff exponencial\n- TCP keepalive habilitado\n## Relacionado\n- [[MinIO S3]] — El proveedor que genera estas URLs",
+          "content_ltks": "titl urls firm mini type concept tags coels intelligent almacen mini presign url segur ali presign urls urls firm s3 sign urls mini description usar cuand necesit á s entend c ó mo los client acced a archiv en mini de form segur y temporari sin expon credencial estad vigent urls firm mini qu é es las urls firm presign urls son urls de acces temporal a objet en mini s3 que no requier que el client teng credencial del bucket el servidor firm la url con las credencial s3 y establec un tiemp de expiraci ón c ó mo funcion python pseudoc ó dig de generaci ón storageprovid get _ presign _ url url s3 _ client generat _ presign _ url get _ object params bucket s3 _ bucket _ nam key fil _ path expiresin 3600 1 hor por defect la url result inclu la firm criptogr á fic y la fech de expiraci ón en los query params sol es v á lid hast esa fech y sol par el objet espec í fic por qu é urls firm segur el client nunc recib credencial del bucket sol pued acced al archiv espec í fic por el tiemp configur control de acces si el control de acces a recurs access _ control del archiv cambi las urls viej sig siend v á lid hast su expiraci ón per no se gener nuev descarg direct el client descarg direct de mini sin pas por el backend reduc la carg del servidor configuraci ón de expiraci ón la expiraci ón por defect es 3600 segund 1 hor el par á metr expiresin es configur en la llam a get _ presign _ url timeouts boto3 windows par evit timeouts en entorn windows con latenci de red connect timeout 30s read timeout 120s 10 reintent con backoff exponencial tcp keepaliv habilit relacion mini s3 el proveedor que gener estas urls",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "document_keyword": "URLs firmadas MinIO.md",
+          "id": "01f3c6b2180c9050",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.40984879209255326,
+          "tag_kwd": [],
+          "term_similarity": 0.21096783870364758,
+          "vector_similarity": 0.87390435
+        },
+        {
+          "content": "---\ntitle: \"Ejecución local\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, local, dev, comandos]\naliases: [Dev local COELSA, Correr localmente, Local setup]\ndescription: \"Usar cuando necesitás levantar COELSA.Intelligent en tu máquina local para desarrollo — comandos exactos para frontend y backend.\"\nestado: vigente\n---\n# Ejecución local\n## Qué es\nGuía de referencia para levantar COELSA.Intelligent en modo desarrollo local.\n## Prerrequisitos\nTener corriendo localmente (o con Docker):\n- [[PostgreSQL]] 14+ en `localhost:5432`\n- [[Redis]] 7+ en `localhost:6379`\n- [[Milvus]] 2.4+ en `localhost:19530`\n- [[MinIO S3]] en `localhost:9000` (opcional; puede usarse storage local)\n- [[Ollama]] o [[LiteLLM proxy]] para los modelos IA\n## Configuración inicial\n```bash\n# 1. Copiar y editar variables de entorno\ncp .env.example .env\n\n# 2. Editar .env con las conexiones locales y credenciales de Azure AD\n```\nVariables mínimas requeridas: ver `docs/setup.md`.\n## Levantar el backend\n```bash\ncd backend\npip install -r requirements.txt  # Primera vez\n\n# Linux / macOS\n./dev.sh\n\n# Windows\nstart_windows.bat\n```\nEl backend queda disponible en `http://localhost:8080` con **hot-reload** activado.\n## Levantar el frontend\n```bash\n# Primera vez\nnpm install\n\nnpm run dev\n```\nEl frontend queda disponible en `http://localhost:5173`. Apunta automáticamente al backend en `localhost:8080`.\n## Notas de desarrollo\n- Los [[CSP con nonces|nonces CSP]] deben estar deshabilitados en local (`ENABLE_CSP_NONCES=false`)\n- Los logs del backend usan loguru — ver [[Loguru y logging]]\n- Para probar el storage S3, configurar `STORAGE_PROVIDER=s3` con las vars de [[MinIO S3]]\n- Las migraciones se aplican automáticamente al arrancar el backend — ver [[Migraciones Alembic]]\n## Relacionado",
+          "content_ltks": "titl ejecuci ón local type referent tags coels intelligent desarroll local dev comand ali dev local coels corr local local setup description usar cuand necesit á s levant coels intelligent en tu m á quin local par desarroll comand exact par frontend y backend estad vigent ejecuci ón local qu é es gu í a de referent par levant coels intelligent en mod desarroll local prerrequisit ten corr local o con dock postgresql 14 en localhost 5432 redis 7 en localhost 6379 milvus 24 en localhost 19530 mini s3 en localhost 9000 opcional pued usars storag local ollam o litellm proxy par los model ia configuraci ón inicial bash 1 copi y edit variabl de entorn cp env exampl env 2 edit env con las conexion local y credencial de azur ad variabl m í nim requer ver docs setup md levant el backend bash cd backend pip install r requirements txt primer vez linux mac dev sh windows start _ windows bat el backend qued dispon en http localhost 8080 con hot rel activ levant el frontend bash primer vez npm install npm run dev el frontend qued dispon en http localhost 5173 apunt autom á tic al backend en localhost 8080 not de desarroll los csp con nonc nonc csp deb estar deshabilit en local enabl _ csp _ nonc fals los logs del backend usan loguru ver loguru y logging par prob el storag s3 configur storag _ provid s3 con las vars de mini s3 las migracion se aplic autom á tic al arranc el backend ver migracion alembic relacion",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "document_keyword": "Ejecución local.md",
+          "id": "a9ef9729b99e9190",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.39153453425586865,
+          "tag_kwd": [],
+          "term_similarity": 0.20756263465124095,
+          "vector_similarity": 0.8208023
+        },
+        {
+          "content": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---\n# Flujo de subida de archivos\n## Qué es\nDescribe el ciclo completo desde que un usuario sube un archivo hasta que queda accesible via URL firmada en MinIO.\n## Pasos del flujo\n### 1. Recepción (router `files.py`)\nEl endpoint `POST /api/v1/files/` recibe el archivo multipart. El backend:\n- Sanitiza el nombre del archivo (protección contra [[Path Traversal]])\n- Guarda temporalmente en `data/uploads/<uuid>-<filename>`\n- Crea un registro en la tabla `file` con `path` = ruta local\n### 2. Procesamiento RAG (opcional)\nSi el archivo va a ser embedido (Knowledge base, búsqueda vectorial):\n- Se procesa con los loaders del [[Módulo de retrieval]]\n- Los chunks se insertan en [[Milvus]] bajo la colección correspondiente\n### 3. Migración a MinIO (scheduler diario)\nEl [[Scheduler de limpieza|scheduler]] ejecuta diariamente:\n- Lee los registros de `file` con `path` local\n- Sube cada archivo a [[MinIO S3]]\n- Actualiza el campo `path` en BD con la clave S3\n- Genera una [[URLs firmadas MinIO|URL firmada]] para el acceso\n### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza",
+          "content_ltks": "titl fluj de sub de archiv type concept tags coels intelligent almacen uplo archiv ali fil uplo flow sub de archiv coels description usar cuand necesit á s rastr el cicl de vid de un archiv sub por un usuari desd la recepci ón http hast su almacen en mini estad vigent fluj de sub de archiv qu é es describ el cicl complet desd que un usuari sub un archiv hast que qued acces via url firm en mini pas del fluj 1 recepci ón rout fil py el endpoint post api v1 fil recib el archiv multipart el backend sanitiz el nombr del archiv protecci ón contr path traversal guard temporal en dat uploads uuid filenam cre un registr en la tabl fil con path rut local 2 proces rag opcional si el archiv va a ser embed knowledg bas b ú squed vectorial se proces con los loaders del m ó dul de retrieval los chunks se insert en milvus baj la colecci ón correspondient 3 migraci ón a mini schedul diari el schedul de limpiez schedul ejecut diari lee los registr de fil con path local sub cad archiv a mini s3 actualiz el camp path en bd con la clav s3 gener una urls firm mini url firm par el acces 4 acces al solicit un archiv el backend verif control de acces a recurs access _ control si el path es s3 gener una url firm con expiraci ón configur si el path es local sirv el archiv direct relacion sistem h í brid de almacen el model general del que este fluj es part urls firm mini c ó mo se gener las urls de acces schedul de limpiez el job que ejecut la migraci ón y la limpiez",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "165b4458d33011f1a8c8134f9287b83e",
+          "document_keyword": "Flujo de subida de archivos.md",
+          "id": "a4a86b1a1cfcf7d2",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3878674981577578,
+          "tag_kwd": [],
+          "term_similarity": 0.18339534022536833,
+          "vector_similarity": 0.8649692
+        },
+        {
+          "content": "---\ntitle: \"Sistema híbrido de almacenamiento\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, s3, hibrido]\naliases: [Almacenamiento híbrido, Local+S3, Hybrid storage]\ndescription: \"Usar cuando necesitás entender el flujo completo de archivos en COELSA.Intelligent: cómo pasan de local a MinIO y cómo coexisten los dos providers.\"\nestado: vigente\n---\n# Sistema híbrido de almacenamiento\n## Qué es\nEl almacenamiento de archivos en COELSA.Intelligent opera en modo **híbrido**: los archivos se reciben localmente y luego se migran a [[MinIO S3]]. Los archivos viejos y los nuevos coexisten hasta que el scheduler los migra.\n## Flujo completo\n```\nUsuario sube archivo\n       ↓\nBackend guarda en data/uploads/ (local temporal)\n       ↓\n[Scheduler diario] detecta archivos locales\n       ↓\nMigra a MinIO → genera presigned URL\n       ↓\nActualiza metadatos en BD (path = s3://bucket/key)\n       ↓\n[Acceso futuro] devuelve URL firmada de MinIO\n```\n## Proveedores disponibles\nLa interfaz `StorageProvider` (en `backend/server/storage/provider.py`) es abstracta. Las implementaciones concretas son:\n- `LocalStorageProvider` — guarda en `data/uploads/`\n- `S3StorageProvider` (MinIO / AWS S3)\n- `GCSStorageProvider` (Google Cloud Storage)\n- `AzureBlobStorageProvider` (Azure Blob Storage)\nLa variable `STORAGE_PROVIDER` en `.env` selecciona el provider activo.\n## Fallback local\nSi MinIO no está disponible, el sistema usa el almacenamiento local. Esto permite desarrollo local sin configurar MinIO, aunque los archivos no persisten en caso de recreación del contenedor.\n## Script de migración\nPara migrar archivos existentes a MinIO en un entorno ya en producción:\n```bash\npython scripts/migrate_to_minio.py\n```\n## Relacionado\n- [[Flujo de subida de archivos]] — El ciclo completo de recepción y migración de un archivo\n- [[MinIO S3]] — El provider S3 que recibe los archivos migrados",
+          "content_ltks": "titl sistem h í brid de almacen type concept tags coels intelligent almacen mini s3 hibr ali almacen h í brid local s3 hybrid storag description usar cuand necesit á s entend el fluj complet de archiv en coels intelligent c ó mo pas de local a mini y c ó mo coexist los dos providers estad vigent sistem h í brid de almacen qu é es el almacen de archiv en coels intelligent oper en mod h í brid los archiv se recib local y lueg se migr a mini s3 los archiv viej y los nuev coexist hast que el schedul los migr fluj complet usuari sub archiv backend guard en dat uploads local temporal schedul diari detect archiv local migr a mini gener presign url actualiz metadat en bd path s3 bucket key acces futur devuelv url firm de mini proveedor dispon la interfaz storageprovid en backend serv storag provid py es abstract las implement concret son localstorageprovid guard en dat uploads s3storageprovider mini aws s3 gcsstorageprovid googl cloud storag azureblobstorageprovid azur blob storag la variabl storag _ provid en env seleccion el provid activ fallback local si mini no est á dispon el sistem usa el almacen local esto permit desarroll local sin configur mini aunqu los archiv no persist en cas de recreaci ón del contenedor script de migraci ón par migr archiv existent a mini en un entorn ya en producci ón bash python scripts migrat _ to _ mini py relacion fluj de sub de archiv el cicl complet de recepci ón y migraci ón de un archiv mini s3 el provid s3 que recib los archiv migr",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "1662c016d33011f1a8c8134f9287b83e",
+          "document_keyword": "Sistema híbrido de almacenamiento.md",
+          "id": "f599299ed184a6ea",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3812057731491728,
+          "tag_kwd": [],
+          "term_similarity": 0.1812172973559613,
+          "vector_similarity": 0.84784555
+        },
+        {
+          "content": "---\ntitle: \"MinIO S3\"\ntype: stack\ntags: [coelsa-intelligent, stack, minio, s3, almacenamiento]\naliases: [MinIO, S3 COELSA, Object storage COELSA]\ndescription: \"Usar cuando necesitás configurar MinIO, entender cómo se suben archivos a S3 o diagnosticar problemas de conectividad con el bucket.\"\nestado: vigente\n---\n# MinIO S3\n## Qué es\nCOELSA.Intelligent usa **MinIO** (o cualquier endpoint S3-compatible) para el almacenamiento persistente de archivos subidos por usuarios. El acceso a los archivos se hace siempre mediante [[URLs firmadas MinIO|URLs firmadas (presigned URLs)]].\n## Variables de entorno\n```env\nS3_ACCESS_KEY_ID=minioadmin\nS3_SECRET_ACCESS_KEY=minioadmin\nS3_BUCKET_NAME=coelsa-intelligent\nS3_ENDPOINT_URL=http://minio:9000\nFILE_STORAGE_CLEANUP_DAYS=30\n```\n## Configuración de boto3 (timeouts)\nLa configuración de `boto3` está ajustada para entornos Windows y redes corporativas:\n- Connect timeout: **30 segundos**\n- Read timeout: **120 segundos**\n- Reintentos: **10** con backoff exponencial\n- TCP keepalive: habilitado\nEsto resolvió el problema de timeouts en uploads desde Windows documentado en el CHANGELOG v1.3.0.\n## Creación del bucket\nPara crear el bucket en un entorno nuevo:\n```bash\npython scripts/create_minio_bucket.py\n```\nEl script lee la configuración desde `backend/server/config.py`, que auto-carga `.env`. Ejecutar desde la raíz del proyecto.\n## Proveedores soportados\nEl sistema soporta múltiples providers a través de la interfaz `StorageProvider`. Ver [[Agregar proveedor de almacenamiento]] para cómo agregar nuevos backends (GCS, Azure Blob Storage, etc.).\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El flujo completo local → MinIO\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que elimina archivos vencidos del bucket\n- [[Agregar proveedor de almacenamiento]] — Cómo implementar un provider alternativo",
+          "content_ltks": "titl mini s3 type stack tags coels intelligent stack mini s3 almacen ali mini s3 coels object storag coels description usar cuand necesit á s configur mini entend c ó mo se sub archiv a s3 o diagnostic problem de conect con el bucket estad vigent mini s3 qu é es coels intelligent usa mini o cualqui endpoint s3 compat par el almacen persistent de archiv sub por usuari el acces a los archiv se hac siempr mediant urls firm mini urls firm presign urls variabl de entorn env s3 _ access _ key _ id minioadmin s3 _ secret _ access _ key minioadmin s3 _ bucket _ nam coels intelligent s3 _ endpoint _ url http mini 9000 fil _ storag _ cleanup _ days 30 configuraci ón de boto3 timeouts la configuraci ón de boto3 est á ajust par entorn windows y red corpor connect timeout 30 segund read timeout 120 segund reintent 10 con backoff exponencial tcp keepaliv habilit esto resolvi ó el problem de timeouts en uploads desd windows document en el changelog v1 3 0 creaci ón del bucket par cre el bucket en un entorn nuev bash python scripts creat _ mini _ bucket py el script lee la configuraci ón desd backend serv config py que aut carg env ejecut desd la ra í z del proyect proveedor soport el sistem soport m ú ltipl providers a trav és de la interfaz storageprovid ver agreg proveedor de almacen par c ó mo agreg nuev backends gcs azur blob storag etc relacion sistem h í brid de almacen el fluj complet local mini urls firm mini c ó mo se gener las urls de acces schedul de limpiez el job que elimin archiv venc del bucket agreg proveedor de almacen c ó mo implement un provid altern",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "171cb944d33011f1a8c8134f9287b83e",
+          "document_keyword": "MinIO S3.md",
+          "id": "28dfb6bdc8238d74",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.38022741314917285,
+          "tag_kwd": [],
+          "term_similarity": 0.1812172973559613,
+          "vector_similarity": 0.84458435
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 3,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "doc_name": "URLs firmadas MinIO.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "169dbf04d33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar proveedor de almacenamiento.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "168def2ad33011f1a8c8134f9287b83e",
+          "doc_name": "Build frontend.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1662c016d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema híbrido de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171cb944d33011f1a8c8134f9287b83e",
+          "doc_name": "MinIO S3.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170d40fed33011f1a8c8134f9287b83e",
+          "doc_name": "Protección SSRF.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171f52b2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ollama.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167d610ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD login exclusivo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170a9f66d33011f1a8c8134f9287b83e",
+          "doc_name": "Path Traversal.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a5b100d33011f1a8c8134f9287b83e",
+          "doc_name": "Loguru y logging.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16933d68d33011f1a8c8134f9287b83e",
+          "doc_name": "Dockerfile.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1674dba2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis para WebSockets.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16dfc552d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Stack.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17244ab0d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1726c2c2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16fdf644d33011f1a8c8134f9287b83e",
+          "doc_name": "Módulo de retrieval.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1698681ad33011f1a8c8134f9287b83e",
+          "doc_name": "SSL corporativo en build.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - RAG y Búsqueda Vectorial.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c8d7acd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Arquitectura.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ec72f2d33011f1a8c8134f9287b83e",
+          "doc_name": "SharePoint OneDrive integración.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171a4510d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema de errores centralizado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e7761cd33011f1a8c8134f9287b83e",
+          "doc_name": "PyTorch CPU-only.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ce7d92d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - CI-CD y Despliegue.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 24886,
+  "seconds": 0.2076849170261994,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"URLs firmadas MinIO\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, presigned-url, seguridad]\naliases: [Presigned URLs, URLs firmadas S3, Signed URLs MinIO]\ndescription: \"Usar cuando necesitás entender cómo los clientes acceden a archivos en MinIO de forma segura y temporaria sin exponer credenciales.\"\nestado: vigente\n---\n# URLs firmadas MinIO\n## Qué es\nLas **URLs firmadas** (presigned URLs) son URLs de acceso temporal a objetos en [[MinIO S3]] que no requieren que el cliente tenga credenciales del bucket. El servidor firma la URL con las credenciales S3 y establece un tiempo de expiración.\n## Cómo funciona\n```python\n# Pseudocódigo de generación (StorageProvider.get_presigned_url)\nurl = s3_client.generate_presigned_url(\n    'get_object',\n    Params={'Bucket': S3_BUCKET_NAME, 'Key': file_path},\n    ExpiresIn=3600  # 1 hora por defecto\n)\n```\nLa URL resultante incluye la firma criptográfica y la fecha de expiración en los query params. Solo es válida hasta esa fecha y solo para el objeto específico.\n## Por qué URLs firmadas\n- **Seguridad**: el cliente nunca recibe credenciales del bucket; solo puede acceder al archivo específico por el tiempo configurado\n- **Control de acceso**: si el [[Control de acceso a recursos|access_control]] del archivo cambia, las URLs viejas siguen siendo válidas hasta su expiración pero no se generan nuevas\n- **Descarga directa**: el cliente descarga directo de MinIO sin pasar por el backend, reduciendo la carga del servidor\n## Configuración de expiración\nLa expiración por defecto es **3600 segundos (1 hora)**. El parámetro `ExpiresIn` es configurable en la llamada a `get_presigned_url()`.\n## Timeouts boto3 (Windows)\nPara evitar timeouts en entornos Windows con latencia de red:\n- Connect timeout: 30s\n- Read timeout: 120s\n- 10 reintentos con backoff exponencial\n- TCP keepalive habilitado\n## Relacionado\n- [[MinIO S3]] — El proveedor que genera estas URLs",
+        "content_ltks": "titl urls firm mini type concept tags coels intelligent almacen mini presign url segur ali presign urls urls firm s3 sign urls mini description usar cuand necesit á s entend c ó mo los client acced a archiv en mini de form segur y temporari sin expon credencial estad vigent urls firm mini qu é es las urls firm presign urls son urls de acces temporal a objet en mini s3 que no requier que el client teng credencial del bucket el servidor firm la url con las credencial s3 y establec un tiemp de expiraci ón c ó mo funcion python pseudoc ó dig de generaci ón storageprovid get _ presign _ url url s3 _ client generat _ presign _ url get _ object params bucket s3 _ bucket _ nam key fil _ path expiresin 3600 1 hor por defect la url result inclu la firm criptogr á fic y la fech de expiraci ón en los query params sol es v á lid hast esa fech y sol par el objet espec í fic por qu é urls firm segur el client nunc recib credencial del bucket sol pued acced al archiv espec í fic por el tiemp configur control de acces si el control de acces a recurs access _ control del archiv cambi las urls viej sig siend v á lid hast su expiraci ón per no se gener nuev descarg direct el client descarg direct de mini sin pas por el backend reduc la carg del servidor configuraci ón de expiraci ón la expiraci ón por defect es 3600 segund 1 hor el par á metr expiresin es configur en la llam a get _ presign _ url timeouts boto3 windows par evit timeouts en entorn windows con latenci de red connect timeout 30s read timeout 120s 10 reintent con backoff exponencial tcp keepaliv habilit relacion mini s3 el proveedor que gener estas urls",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "1667b35ad33011f1a8c8134f9287b83e",
+        "document_keyword": "URLs firmadas MinIO.md",
+        "id": "01f3c6b2180c9050",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.40984879209255326,
+        "tag_kwd": [],
+        "term_similarity": 0.21096783870364758,
+        "vector_similarity": 0.87390435
+      },
+      {
+        "content": "---\ntitle: \"Ejecución local\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, local, dev, comandos]\naliases: [Dev local COELSA, Correr localmente, Local setup]\ndescription: \"Usar cuando necesitás levantar COELSA.Intelligent en tu máquina local para desarrollo — comandos exactos para frontend y backend.\"\nestado: vigente\n---\n# Ejecución local\n## Qué es\nGuía de referencia para levantar COELSA.Intelligent en modo desarrollo local.\n## Prerrequisitos\nTener corriendo localmente (o con Docker):\n- [[PostgreSQL]] 14+ en `localhost:5432`\n- [[Redis]] 7+ en `localhost:6379`\n- [[Milvus]] 2.4+ en `localhost:19530`\n- [[MinIO S3]] en `localhost:9000` (opcional; puede usarse storage local)\n- [[Ollama]] o [[LiteLLM proxy]] para los modelos IA\n## Configuración inicial\n```bash\n# 1. Copiar y editar variables de entorno\ncp .env.example .env\n\n# 2. Editar .env con las conexiones locales y credenciales de Azure AD\n```\nVariables mínimas requeridas: ver `docs/setup.md`.\n## Levantar el backend\n```bash\ncd backend\npip install -r requirements.txt  # Primera vez\n\n# Linux / macOS\n./dev.sh\n\n# Windows\nstart_windows.bat\n```\nEl backend queda disponible en `http://localhost:8080` con **hot-reload** activado.\n## Levantar el frontend\n```bash\n# Primera vez\nnpm install\n\nnpm run dev\n```\nEl frontend queda disponible en `http://localhost:5173`. Apunta automáticamente al backend en `localhost:8080`.\n## Notas de desarrollo\n- Los [[CSP con nonces|nonces CSP]] deben estar deshabilitados en local (`ENABLE_CSP_NONCES=false`)\n- Los logs del backend usan loguru — ver [[Loguru y logging]]\n- Para probar el storage S3, configurar `STORAGE_PROVIDER=s3` con las vars de [[MinIO S3]]\n- Las migraciones se aplican automáticamente al arrancar el backend — ver [[Migraciones Alembic]]\n## Relacionado",
+        "content_ltks": "titl ejecuci ón local type referent tags coels intelligent desarroll local dev comand ali dev local coels corr local local setup description usar cuand necesit á s levant coels intelligent en tu m á quin local par desarroll comand exact par frontend y backend estad vigent ejecuci ón local qu é es gu í a de referent par levant coels intelligent en mod desarroll local prerrequisit ten corr local o con dock postgresql 14 en localhost 5432 redis 7 en localhost 6379 milvus 24 en localhost 19530 mini s3 en localhost 9000 opcional pued usars storag local ollam o litellm proxy par los model ia configuraci ón inicial bash 1 copi y edit variabl de entorn cp env exampl env 2 edit env con las conexion local y credencial de azur ad variabl m í nim requer ver docs setup md levant el backend bash cd backend pip install r requirements txt primer vez linux mac dev sh windows start _ windows bat el backend qued dispon en http localhost 8080 con hot rel activ levant el frontend bash primer vez npm install npm run dev el frontend qued dispon en http localhost 5173 apunt autom á tic al backend en localhost 8080 not de desarroll los csp con nonc nonc csp deb estar deshabilit en local enabl _ csp _ nonc fals los logs del backend usan loguru ver loguru y logging par prob el storag s3 configur storag _ provid s3 con las vars de mini s3 las migracion se aplic autom á tic al arranc el backend ver migracion alembic relacion",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16a339f2d33011f1a8c8134f9287b83e",
+        "document_keyword": "Ejecución local.md",
+        "id": "a9ef9729b99e9190",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.39153453425586865,
+        "tag_kwd": [],
+        "term_similarity": 0.20756263465124095,
+        "vector_similarity": 0.8208023
+      },
+      {
+        "content": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---\n# Flujo de subida de archivos\n## Qué es\nDescribe el ciclo completo desde que un usuario sube un archivo hasta que queda accesible via URL firmada en MinIO.\n## Pasos del flujo\n### 1. Recepción (router `files.py`)\nEl endpoint `POST /api/v1/files/` recibe el archivo multipart. El backend:\n- Sanitiza el nombre del archivo (protección contra [[Path Traversal]])\n- Guarda temporalmente en `data/uploads/<uuid>-<filename>`\n- Crea un registro en la tabla `file` con `path` = ruta local\n### 2. Procesamiento RAG (opcional)\nSi el archivo va a ser embedido (Knowledge base, búsqueda vectorial):\n- Se procesa con los loaders del [[Módulo de retrieval]]\n- Los chunks se insertan en [[Milvus]] bajo la colección correspondiente\n### 3. Migración a MinIO (scheduler diario)\nEl [[Scheduler de limpieza|scheduler]] ejecuta diariamente:\n- Lee los registros de `file` con `path` local\n- Sube cada archivo a [[MinIO S3]]\n- Actualiza el campo `path` en BD con la clave S3\n- Genera una [[URLs firmadas MinIO|URL firmada]] para el acceso\n### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza",
+        "content_ltks": "titl fluj de sub de archiv type concept tags coels intelligent almacen uplo archiv ali fil uplo flow sub de archiv coels description usar cuand necesit á s rastr el cicl de vid de un archiv sub por un usuari desd la recepci ón http hast su almacen en mini estad vigent fluj de sub de archiv qu é es describ el cicl complet desd que un usuari sub un archiv hast que qued acces via url firm en mini pas del fluj 1 recepci ón rout fil py el endpoint post api v1 fil recib el archiv multipart el backend sanitiz el nombr del archiv protecci ón contr path traversal guard temporal en dat uploads uuid filenam cre un registr en la tabl fil con path rut local 2 proces rag opcional si el archiv va a ser embed knowledg bas b ú squed vectorial se proces con los loaders del m ó dul de retrieval los chunks se insert en milvus baj la colecci ón correspondient 3 migraci ón a mini schedul diari el schedul de limpiez schedul ejecut diari lee los registr de fil con path local sub cad archiv a mini s3 actualiz el camp path en bd con la clav s3 gener una urls firm mini url firm par el acces 4 acces al solicit un archiv el backend verif control de acces a recurs access _ control si el path es s3 gener una url firm con expiraci ón configur si el path es local sirv el archiv direct relacion sistem h í brid de almacen el model general del que este fluj es part urls firm mini c ó mo se gener las urls de acces schedul de limpiez el job que ejecut la migraci ón y la limpiez",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "165b4458d33011f1a8c8134f9287b83e",
+        "document_keyword": "Flujo de subida de archivos.md",
+        "id": "a4a86b1a1cfcf7d2",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3878674981577578,
+        "tag_kwd": [],
+        "term_similarity": 0.18339534022536833,
+        "vector_similarity": 0.8649692
+      },
+      {
+        "content": "---\ntitle: \"Sistema híbrido de almacenamiento\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, minio, s3, hibrido]\naliases: [Almacenamiento híbrido, Local+S3, Hybrid storage]\ndescription: \"Usar cuando necesitás entender el flujo completo de archivos en COELSA.Intelligent: cómo pasan de local a MinIO y cómo coexisten los dos providers.\"\nestado: vigente\n---\n# Sistema híbrido de almacenamiento\n## Qué es\nEl almacenamiento de archivos en COELSA.Intelligent opera en modo **híbrido**: los archivos se reciben localmente y luego se migran a [[MinIO S3]]. Los archivos viejos y los nuevos coexisten hasta que el scheduler los migra.\n## Flujo completo\n```\nUsuario sube archivo\n       ↓\nBackend guarda en data/uploads/ (local temporal)\n       ↓\n[Scheduler diario] detecta archivos locales\n       ↓\nMigra a MinIO → genera presigned URL\n       ↓\nActualiza metadatos en BD (path = s3://bucket/key)\n       ↓\n[Acceso futuro] devuelve URL firmada de MinIO\n```\n## Proveedores disponibles\nLa interfaz `StorageProvider` (en `backend/server/storage/provider.py`) es abstracta. Las implementaciones concretas son:\n- `LocalStorageProvider` — guarda en `data/uploads/`\n- `S3StorageProvider` (MinIO / AWS S3)\n- `GCSStorageProvider` (Google Cloud Storage)\n- `AzureBlobStorageProvider` (Azure Blob Storage)\nLa variable `STORAGE_PROVIDER` en `.env` selecciona el provider activo.\n## Fallback local\nSi MinIO no está disponible, el sistema usa el almacenamiento local. Esto permite desarrollo local sin configurar MinIO, aunque los archivos no persisten en caso de recreación del contenedor.\n## Script de migración\nPara migrar archivos existentes a MinIO en un entorno ya en producción:\n```bash\npython scripts/migrate_to_minio.py\n```\n## Relacionado\n- [[Flujo de subida de archivos]] — El ciclo completo de recepción y migración de un archivo\n- [[MinIO S3]] — El provider S3 que recibe los archivos migrados",
+        "content_ltks": "titl sistem h í brid de almacen type concept tags coels intelligent almacen mini s3 hibr ali almacen h í brid local s3 hybrid storag description usar cuand necesit á s entend el fluj complet de archiv en coels intelligent c ó mo pas de local a mini y c ó mo coexist los dos providers estad vigent sistem h í brid de almacen qu é es el almacen de archiv en coels intelligent oper en mod h í brid los archiv se recib local y lueg se migr a mini s3 los archiv viej y los nuev coexist hast que el schedul los migr fluj complet usuari sub archiv backend guard en dat uploads local temporal schedul diari detect archiv local migr a mini gener presign url actualiz metadat en bd path s3 bucket key acces futur devuelv url firm de mini proveedor dispon la interfaz storageprovid en backend serv storag provid py es abstract las implement concret son localstorageprovid guard en dat uploads s3storageprovider mini aws s3 gcsstorageprovid googl cloud storag azureblobstorageprovid azur blob storag la variabl storag _ provid en env seleccion el provid activ fallback local si mini no est á dispon el sistem usa el almacen local esto permit desarroll local sin configur mini aunqu los archiv no persist en cas de recreaci ón del contenedor script de migraci ón par migr archiv existent a mini en un entorn ya en producci ón bash python scripts migrat _ to _ mini py relacion fluj de sub de archiv el cicl complet de recepci ón y migraci ón de un archiv mini s3 el provid s3 que recib los archiv migr",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "1662c016d33011f1a8c8134f9287b83e",
+        "document_keyword": "Sistema híbrido de almacenamiento.md",
+        "id": "f599299ed184a6ea",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3812057731491728,
+        "tag_kwd": [],
+        "term_similarity": 0.1812172973559613,
+        "vector_similarity": 0.84784555
+      },
+      {
+        "content": "---\ntitle: \"MinIO S3\"\ntype: stack\ntags: [coelsa-intelligent, stack, minio, s3, almacenamiento]\naliases: [MinIO, S3 COELSA, Object storage COELSA]\ndescription: \"Usar cuando necesitás configurar MinIO, entender cómo se suben archivos a S3 o diagnosticar problemas de conectividad con el bucket.\"\nestado: vigente\n---\n# MinIO S3\n## Qué es\nCOELSA.Intelligent usa **MinIO** (o cualquier endpoint S3-compatible) para el almacenamiento persistente de archivos subidos por usuarios. El acceso a los archivos se hace siempre mediante [[URLs firmadas MinIO|URLs firmadas (presigned URLs)]].\n## Variables de entorno\n```env\nS3_ACCESS_KEY_ID=minioadmin\nS3_SECRET_ACCESS_KEY=minioadmin\nS3_BUCKET_NAME=coelsa-intelligent\nS3_ENDPOINT_URL=http://minio:9000\nFILE_STORAGE_CLEANUP_DAYS=30\n```\n## Configuración de boto3 (timeouts)\nLa configuración de `boto3` está ajustada para entornos Windows y redes corporativas:\n- Connect timeout: **30 segundos**\n- Read timeout: **120 segundos**\n- Reintentos: **10** con backoff exponencial\n- TCP keepalive: habilitado\nEsto resolvió el problema de timeouts en uploads desde Windows documentado en el CHANGELOG v1.3.0.\n## Creación del bucket\nPara crear el bucket en un entorno nuevo:\n```bash\npython scripts/create_minio_bucket.py\n```\nEl script lee la configuración desde `backend/server/config.py`, que auto-carga `.env`. Ejecutar desde la raíz del proyecto.\n## Proveedores soportados\nEl sistema soporta múltiples providers a través de la interfaz `StorageProvider`. Ver [[Agregar proveedor de almacenamiento]] para cómo agregar nuevos backends (GCS, Azure Blob Storage, etc.).\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El flujo completo local → MinIO\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que elimina archivos vencidos del bucket\n- [[Agregar proveedor de almacenamiento]] — Cómo implementar un provider alternativo",
+        "content_ltks": "titl mini s3 type stack tags coels intelligent stack mini s3 almacen ali mini s3 coels object storag coels description usar cuand necesit á s configur mini entend c ó mo se sub archiv a s3 o diagnostic problem de conect con el bucket estad vigent mini s3 qu é es coels intelligent usa mini o cualqui endpoint s3 compat par el almacen persistent de archiv sub por usuari el acces a los archiv se hac siempr mediant urls firm mini urls firm presign urls variabl de entorn env s3 _ access _ key _ id minioadmin s3 _ secret _ access _ key minioadmin s3 _ bucket _ nam coels intelligent s3 _ endpoint _ url http mini 9000 fil _ storag _ cleanup _ days 30 configuraci ón de boto3 timeouts la configuraci ón de boto3 est á ajust par entorn windows y red corpor connect timeout 30 segund read timeout 120 segund reintent 10 con backoff exponencial tcp keepaliv habilit esto resolvi ó el problem de timeouts en uploads desd windows document en el changelog v1 3 0 creaci ón del bucket par cre el bucket en un entorn nuev bash python scripts creat _ mini _ bucket py el script lee la configuraci ón desd backend serv config py que aut carg env ejecut desd la ra í z del proyect proveedor soport el sistem soport m ú ltipl providers a trav és de la interfaz storageprovid ver agreg proveedor de almacen par c ó mo agreg nuev backends gcs azur blob storag etc relacion sistem h í brid de almacen el fluj complet local mini urls firm mini c ó mo se gener las urls de acces schedul de limpiez el job que elimin archiv venc del bucket agreg proveedor de almacen c ó mo implement un provid altern",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "171cb944d33011f1a8c8134f9287b83e",
+        "document_keyword": "MinIO S3.md",
+        "id": "28dfb6bdc8238d74",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.38022741314917285,
+        "tag_kwd": [],
+        "term_similarity": 0.1812172973559613,
+        "vector_similarity": 0.84458435
+      }
+    ],
+    "total": 64
+  }
+}

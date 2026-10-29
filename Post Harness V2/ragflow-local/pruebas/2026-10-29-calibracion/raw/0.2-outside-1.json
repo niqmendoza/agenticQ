@@ -1,0 +1,432 @@
+{
+  "request": {
+    "question": "¿Cómo preparo masa madre de harina de centeno?",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---\n# Scheduler de limpieza\n## Qué es\nCOELSA.Intelligent tiene un **scheduler que corre diariamente** y realiza dos tareas sobre el almacenamiento:\n1. **Migra** archivos desde almacenamiento local a [[MinIO S3]]\n2. **Elimina** archivos huérfanos (sin registro en BD) y archivos que superan el umbral de antigüedad\n## Configuración\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n## Qué es un archivo huérfano\nUn archivo **huérfano** es aquel que:\n- Existe físicamente en el almacenamiento (local o MinIO)\n- **No tiene** un registro correspondiente en la tabla `file` de la base de datos\nEsto puede ocurrir si un upload falló a medias o si un registro fue eliminado manualmente de la BD sin limpiar el storage.\n## Cuándo se ejecuta\nEl scheduler es un job asíncrono que se registra durante el `lifespan` de la aplicación FastAPI. No tiene una hora fija; se ejecuta cada 24 horas a partir del arranque del servidor.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que el scheduler es parte\n- [[MinIO S3]] — El destino de los archivos migrados\n- [[Borrado en cascada de archivos]] — La otra vía de eliminación de archivos (cuando se borra el chat)\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento",
+          "content_ltks": "titl schedul de limpiez type concept tags coels intelligent almacen schedul limpiez archiv ali cleanup schedul job de limpiez fil _ storag _ cleanup _ days description usar cuand necesit á s entend qu é archiv elimin el schedul diari c ó mo se configur el umbral de antig ü edad y c ó mo funcion la migraci ón autom á tic a mini estad vigent schedul de limpiez qu é es coels intelligent tien un schedul que corr diari y realiz dos tar sobr el almacen 1 migr archiv desd almacen local a mini s3 2 elimin archiv hu é rfan sin registr en bd y archiv que super el umbral de antig ü edad configuraci ón env fil _ storag _ cleanup _ days 30 con este valor los archiv que no han sid acced en m á s de 30 d í as son candidat par eliminaci ón el camp last _ access _ at del model fil registr el ú ltim acces qu é es un archiv hu é rfan un archiv hu é rfan es aquel que exist f í sic en el almacen local o mini no tien un registr correspondient en la tabl fil de la bas de dat esto pued ocurr si un uplo fall ó a medi o si un registr fue elimin manual de la bd sin limpi el storag cu á ndo se ejecut el schedul es un job as í ncron que se registr durant el lifesp de la aplicaci ón fastapi no tien una hor fij se ejecut cad 24 hor a part del arranqu del servidor relacion sistem h í brid de almacen el sistem del que el schedul es part mini s3 el destin de los archiv migr borr en casc de archiv la otra v í a de eliminaci ón de archiv cuand se borr el chat moc almacen í ndic del clust de almacen",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "document_keyword": "Scheduler de limpieza.md",
+          "id": "d5a5e62f11beb2e5",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.28914918411948454,
+          "tag_kwd": [],
+          "term_similarity": 0.07018564874212083,
+          "vector_similarity": 0.8000641
+        },
+        {
+          "content": "---\ntitle: \"Cinco colecciones Milvus\"\ntype: referencia\ntags: [coelsa-intelligent, rag, milvus, colecciones]\naliases: [Colecciones Milvus, Milvus collections COELSA]\ndescription: \"Usar cuando necesitás saber a qué colección de Milvus va un tipo específico de contenido (archivos, knowledge, memorias, web, URLs).\"\nestado: vigente\n---\n# Cinco colecciones Milvus\n## Qué es\nEn el esquema de [[Milvus multi-tenancy]], hay exactamente **5 colecciones fijas** en [[Milvus]]. Cada tipo de contenido tiene su colección designada.\n## Las colecciones\n<table>\n<thead>\n<tr>\n<th>Colección</th>\n<th>Contenido</th>\n<th>Cuándo se usa</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>_knowledge</code></td>\n<td>Chunks de bases de conocimiento</td>\n<td>Al embedir una Knowledge base</td>\n</tr>\n<tr>\n<td><code>_files</code></td>\n<td>Chunks de archivos subidos por usuarios</td>\n<td>Al embedir un archivo de chat</td>\n</tr>\n<tr>\n<td><code>_memories</code></td>\n<td>Memorias de usuario</td>\n<td>Al guardar o recuperar memorias personalizadas</td>\n</tr>\n<tr>\n<td><code>_web_search</code></td>\n<td>Resultados de búsqueda web embebidos</td>\n<td>Al indexar resultados de búsqueda para RAG</td>\n</tr>\n<tr>\n<td><code>_hash_based</code></td>\n<td>URLs: páginas web, videos YouTube</td>\n<td>Al indexar contenido de URLs</td>\n</tr>\n</tbody>\n</table>\n## Cómo se determina la colección\nLa función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` analiza el nombre o el tipo del recurso para determinar a qué colección pertenece. Usa **convenciones de prefijos** en los nombres generados por el frontend.\n**Regla crítica**: El frontend y esta función deben estar en sincronía. Si el frontend cambia cómo nombra los recursos, esta función debe actualizarse.",
+          "content_ltks": "titl cinc coleccion milvus type referent tags coels intelligent rag milvus coleccion ali coleccion milvus milvus collections coels description usar cuand necesit á s sab a qu é colecci ón de milvus va un tip espec í fic de conten archiv knowledg memori web urls estad vigent cinc coleccion milvus qu é es en el esquem de milvus multi tenancy hay exact 5 coleccion fij en milvus cad tip de conten tien su colecci ón design las coleccion the colecci ón conten cu á ndo se usa the tbody cod _ knowledg cod chunks de bas de conoc al embed una knowledg bas cod _ fil cod chunks de archiv sub por usuari al embed un archiv de chat cod _ memori cod memori de usuari al guard o recuper memori personaliz cod _ web _ search cod result de b ú squed web embeb al index result de b ú squed par rag cod _ hash _ bas cod urls p á gin web vide youtub al index conten de urls tbody c ó mo se determin la colecci ón la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py analiz el nombr o el tip del recurs par determin a qu é colecci ón pertenec usa convencion de prefij en los nombr gener por el frontend regl cr í tic el frontend y esta funci ón deb estar en sincron í a si el frontend cambi c ó mo nombr los recurs esta funci ón deb actualiz",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16f90544d33011f1a8c8134f9287b83e",
+          "document_keyword": "Cinco colecciones Milvus.md",
+          "id": "16b21425566fd2f9",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.28907775411948455,
+          "tag_kwd": [],
+          "term_similarity": 0.07018564874212083,
+          "vector_similarity": 0.799826
+        },
+        {
+          "content": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---\n# JWT y sesiones\n## Qué es\nDespués de un login OAuth exitoso con [[Azure AD OAuth|Azure AD]], COELSA.Intelligent genera un **JWT interno** (JSON Web Token) que el frontend usa en todas las requests subsiguientes. Este token es independiente del token de Azure AD.\n## Especificaciones del token\n- **Algoritmo**: HS256 (HMAC con SHA-256)\n- **Clave secreta**: `WEBUI_SECRET_KEY` (variable de entorno)\n- **Módulo**: `backend/server/utils/auth.py`\n## Generación\n```python\n# Pseudocódigo del flujo\ntoken = jwt.encode(\n    {\n        \"id\": user.id,\n        \"email\": user.email,\n        \"role\": user.role,\n        \"exp\": datetime.utcnow() + timedelta(hours=SESSION_HOURS)\n    },\n    SESSION_SECRET,  # WEBUI_SECRET_KEY\n    algorithm=ALGORITHM  # HS256\n)\n```\n## Validación\nCada endpoint protegido valida el token usando el `HTTPBearer` security scheme de FastAPI. El decorador `get_current_user` extrae el usuario del token y verifica que exista en la base de datos.\n## Firma HMAC\nPara verificación de webhooks entre servicios internos, existe una firma HMAC separada (`verify_signature()`) usando `TRUSTED_SIGNATURE_KEY`. Usa `hmac.compare_digest` para prevenir timing attacks.\n## Relacionado\n- [[Azure AD login exclusivo]] — El flujo OAuth que termina en la generación del JWT\n- [[bcrypt para contraseñas]] — La otra pieza de auth; para contraseñas locales (deshabilitadas en COELSA)\n- [[FastAPI y uvicorn]] — El servidor donde se registran las dependencias de validación\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+          "content_ltks": "titl jwt y sesion type concept tags coels intelligent auth jwt sesion tokens ali jwt coels tokens de sesi ón hs256 coels description usar cuand necesit á s entend c ó mo se gener y valid los tokens de sesi ón intern de coels intelligent despu és del login con azur ad estad vigent jwt y sesion qu é es despu és de un login oauth exit con azur ad oauth azur ad coels intelligent gener un jwt intern json web tok que el frontend usa en tod las requests subsiguient este tok es independient del tok de azur ad especif del tok algoritm hs256 hmac con sha 256 clav secret webui _ secret _ key variabl de entorn m ó dul backend serv utils auth py generaci ón python pseudoc ó dig del fluj tok jwt encod id user id email user email rol user rol exp datetim utcnow timedelt hours session _ hours session _ secret webui _ secret _ key algorithm algorithm hs256 validaci ón cad endpoint proteg val el tok usand el httpbear security schem de fastapi el decor get _ current _ user extra el usuari del tok y verif que exist en la bas de dat firm hmac par verificaci ón de webhooks entre servici intern exist una firm hmac separ verify _ signatur usand trust _ signatur _ key usa hmac compar _ digest par preven timing attacks relacion azur ad login exclus el fluj oauth que termin en la generaci ón del jwt bcrypt par contr ñ as la otra piez de auth par contr ñ as local deshabilit en coels fastapi y uvicorn el servidor dond se registr las dependent de validaci ón moc autenticaci ón y permis í ndic del clust de auth",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16851378d33011f1a8c8134f9287b83e",
+          "document_keyword": "JWT y sesiones.md",
+          "id": "ce8d5e9a4048aab6",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.28815264411948455,
+          "tag_kwd": [],
+          "term_similarity": 0.07018564874212083,
+          "vector_similarity": 0.7967423
+        },
+        {
+          "content": "---\ntitle: \"Chats de referencia\"\ntype: concepto\ntags: [coelsa-intelligent, rag, chat, referencia, contexto]\naliases: [Reference chats, Chats adjuntos, Chat como contexto]\ndescription: \"Usar cuando necesitás entender cómo un usuario puede adjuntar una conversación previa como contexto en un nuevo mensaje en COELSA.Intelligent.\"\nestado: vigente\n---\n# Chats de referencia\n## Qué es\nLos **chats de referencia** permiten a los usuarios adjuntar conversaciones previas como contexto extendido al enviar un nuevo mensaje. El chat adjunto se recupera, se formatea y se inyecta en el prompt del modelo junto con el mensaje actual.\n## Cómo se adjunta en el cliente\nEl chat referenciado viaja como un elemento de tipo `\"chat\"` dentro del array `files` del payload del socket:\n```json\n{\n  \"files\": [\n    {\n      \"type\": \"chat\",\n      \"id\": \"chat-uuid-del-chat-referenciado\"\n    }\n  ],\n  \"content\": \"Basándote en la conversación adjunta...\"\n}\n```\n## Procesamiento en el backend\nEn `backend/server/retrieval/utils.py`:\n1. Se detecta el elemento `type == \"chat\"` en `files`\n2. Se recupera el chat por ID desde la BD (tabla `chat`)\n3. El historial del chat se formatea como bloque Markdown:\n```\n   ## Conversación de referencia\n   **Usuario**: ...\n   **Asistente**: ...\n   ```\n4. El bloque se inyecta al contexto del prompt antes del mensaje del usuario\n## Visibilidad en la UI\nLa opción de adjuntar chats de referencia aparece en el `InputMenu` y depende del permiso `chat.file_upload` (no del historial local del sidebar). El componente `InputMenu/Chats.svelte` hace su propia llamada a `getChatList` al abrirse, independientemente del estado del sidebar.\n## Relacionado\n- [[Módulo de retrieval]] — El módulo donde se procesa el chat referenciado\n- [[Grupos y permisos]] — El permiso `chat.file_upload` que controla la visibilidad\n- [[MOC - RAG y Búsqueda Vectorial]] — Índice del cluster de RAG",
+          "content_ltks": "titl chats de referent type concept tags coels intelligent rag chat referent context ali referenc chats chats adjunt chat com context description usar cuand necesit á s entend c ó mo un usuari pued adjunt una conversaci ón previ com context en un nuev mensaj en coels intelligent estad vigent chats de referent qu é es los chats de referent permit a los usuari adjunt convers previ com context extend al envi un nuev mensaj el chat adjunt se recuper se formate y se inyect en el prompt del model junt con el mensaj actual c ó mo se adjunt en el client el chat referenci viaj com un element de tip chat dentr del array fil del payl del socket json fil type chat id chat uuid del chat referenci content bas á ndot en la conversaci ón adjunt proces en el backend en backend serv retrieval utils py 1 se detect el element type chat en fil 2 se recuper el chat por id desd la bd tabl chat 3 el historial del chat se formate com bloqu markdown conversaci ón de referent usuari asistent 4 el bloqu se inyect al context del prompt antes del mensaj del usuari visibil en la ui la opci ón de adjunt chats de referent aparec en el inputmenu y depend del permis chat fil _ uplo no del historial local del sideb el component inputmenu chats svelt hac su propi llam a getchatlist al abrirs independient del estad del sideb relacion m ó dul de retrieval el m ó dul dond se proces el chat referenci grup y permis el permis chat fil _ uplo que control la visibil moc rag y b ú squed vectorial í ndic del clust de rag",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "document_keyword": "Chats de referencia.md",
+          "id": "7b5391d81f91906d",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2881130441194846,
+          "tag_kwd": [],
+          "term_similarity": 0.07018564874212083,
+          "vector_similarity": 0.7966103
+        },
+        {
+          "content": "---\ntitle: \"MOC — RAG y Búsqueda Vectorial\"\ntype: moc\ntags: [coelsa-intelligent, rag, milvus, vectores, moc]\naliases: [MOC RAG, Búsqueda Vectorial COELSA, RAG COELSA]\ndescription: \"Usar cuando trabajás con embeddings, retrieval, colecciones Milvus o chats de referencia en COELSA.Intelligent.\"\nestado: vigente\n---\n# MOC — RAG y Búsqueda Vectorial\nEl sistema RAG usa [[Milvus]] con un esquema de [[Milvus multi-tenancy|multi-tenancy]] de 5 colecciones compartidas. El aislamiento entre recursos se logra con filtros por [[Aislamiento por resource_id|resource_id]].\n## Notas de este cluster\n- [[Milvus multi-tenancy]] — Esquema de 5 colecciones compartidas vs una por recurso; decisión de diseño y trade-offs\n- [[Cinco colecciones Milvus]] — Las cinco colecciones fijas: `_knowledge`, `_files`, `_memories`, `_web_search`, `_hash_based`\n- [[Aislamiento por resource_id]] — Cómo el campo `resource_id` filtra chunks en búsquedas para garantizar aislamiento\n- [[Módulo de retrieval]] — Estructura de `backend/server/retrieval/`; cargadores, embeddings, función de búsqueda\n- [[Chats de referencia]] — Adjuntar conversaciones previas como contexto en el input de mensajes\n## MOCs vecinos\n- [[MOC - Stack]] — Milvus como componente del stack; dependencia de versión 2.4+\n- [[MOC - Modelos IA y Routing]] — Cómo los modelos consumen el contexto generado por RAG\n- [[MOC - Almacenamiento]] — Los archivos que se embedden también viven en MinIO\n- [[MOC - Decisiones]] — Decisión de multi-tenancy con justificación de overhead de escalado",
+          "content_ltks": "titl moc rag y b ú squed vectorial type moc tags coels intelligent rag milvus vector moc ali moc rag b ú squed vectorial coels rag coels description usar cuand trabaj á s con embeddings retrieval coleccion milvus o chats de referent en coels intelligent estad vigent moc rag y b ú squed vectorial el sistem rag usa milvus con un esquem de milvus multi tenancy multi tenancy de 5 coleccion compart el aislamient entre recurs se logr con filtr por aislamient por resourc _ id resourc _ id not de este clust milvus multi tenancy esquem de 5 coleccion compart vs una por recurs decisi ón de dis ñ o y trad offs cinc coleccion milvus las cinc coleccion fij _ knowledg _ fil _ memori _ web _ search _ hash _ bas aislamient por resourc _ id c ó mo el camp resourc _ id filtr chunks en b ú squed par garantiz aislamient m ó dul de retrieval estructur de backend serv retrieval cargador embeddings funci ón de b ú squed chats de referent adjunt convers previ com context en el input de mensaj mocs vecin moc stack milvus com component del stack dependent de versi ón 24 moc model ia y routing c ó mo los model consum el context gener por rag moc almacen los archiv que se embedd tambi é n viv en mini moc decision decisi ón de multi tenancy con justificaci ón de overh de escal",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "document_keyword": "MOC - RAG y Búsqueda Vectorial.md",
+          "id": "7f3e1cdb3978a25d",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2878116161194846,
+          "tag_kwd": [],
+          "term_similarity": 0.07018564874212083,
+          "vector_similarity": 0.79560554
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 2,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "171cb944d33011f1a8c8134f9287b83e",
+          "doc_name": "MinIO S3.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16fb7130d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus multi-tenancy.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16fdf644d33011f1a8c8134f9287b83e",
+          "doc_name": "Módulo de retrieval.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "171a4510d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "doc_name": "Chats de referencia.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - RAG y Búsqueda Vectorial.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168284aad33011f1a8c8134f9287b83e",
+          "doc_name": "Grupos y permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema de errores centralizado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ae2042d33011f1a8c8134f9287b83e",
+          "doc_name": "Dark mode reglas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16dfc552d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Stack.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1662c016d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema híbrido de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17006c80d33011f1a8c8134f9287b83e",
+          "doc_name": "CSP con nonces.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16dd5dbcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Seguridad.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e24f02d33011f1a8c8134f9287b83e",
+          "doc_name": "Cadena SearXNG Context Forge.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169dbf04d33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar proveedor de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1695c72cd33011f1a8c8134f9287b83e",
+          "doc_name": "Pipelines Azure DevOps.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e7761cd33011f1a8c8134f9287b83e",
+          "doc_name": "PyTorch CPU-only.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c8d7acd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Arquitectura.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16933d68d33011f1a8c8134f9287b83e",
+          "doc_name": "Dockerfile.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ce7d92d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - CI-CD y Despliegue.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a03f7cd33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar router REST.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169092d4d33011f1a8c8134f9287b83e",
+          "doc_name": "Despliegue en OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1712788ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD OAuth.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170fee94d33011f1a8c8134f9287b83e",
+          "doc_name": "Riesgos de seguridad aceptados.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1698681ad33011f1a8c8134f9287b83e",
+          "doc_name": "SSL corporativo en build.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c3d20cd33011f1a8c8134f9287b83e",
+          "doc_name": "Tokens primitivos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170d40fed33011f1a8c8134f9287b83e",
+          "doc_name": "Protección SSRF.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16bc528ed33011f1a8c8134f9287b83e",
+          "doc_name": "Roles semánticos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1707eac8d33011f1a8c8134f9287b83e",
+          "doc_name": "Hardening ReDoS.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 24430
+}

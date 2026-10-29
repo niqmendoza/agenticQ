@@ -1,0 +1,9 @@
+.env
+state/
+logs/
+*.local.json
+
+# Bloqueos temporales y fuentes públicas oficiales necesarias para reproducir
+*.lock
+!upstream/public.pem
+!upstream/.env

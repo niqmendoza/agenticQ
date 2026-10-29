@@ -1,0 +1,802 @@
+{
+  "protocol": {
+    "started_at": "2026-10-29T21:43:41.017169+00:00",
+    "thresholds": [
+      0.2,
+      0.28,
+      0.3
+    ],
+    "page_size": 5,
+    "cases": [
+      {
+        "id": "permisos",
+        "title": "Identidad y permisos",
+        "question": "archivo renovar lectura permisos access_control propietario admin grupos usuario pending",
+        "checks": [
+          {
+            "id": "acl",
+            "title": "Diferenciar acceso público y privado",
+            "document": "Control de acceso a recursos.md",
+            "contains": [
+              "None",
+              "Acceso público",
+              "Acceso privado"
+            ],
+            "literal": [
+              "{}"
+            ],
+            "followup": "Control de acceso a recursos modos de acceso None objeto vacío propietario admin group_ids user_ids"
+          },
+          {
+            "id": "pending",
+            "title": "Restricción del usuario pendiente",
+            "document": "Roles de usuario.md",
+            "contains": [
+              "pending",
+              "no puede usar el chat"
+            ],
+            "followup": "Roles de usuario pending pantalla de espera no puede usar el chat"
+          },
+          {
+            "id": "jwt",
+            "title": "Validación de sesión en endpoints protegidos",
+            "document": "JWT y sesiones.md",
+            "contains": [
+              "HTTPBearer",
+              "get_current_user"
+            ],
+            "followup": "JWT y sesiones validación HTTPBearer get_current_user endpoint protegido"
+          }
+        ]
+      },
+      {
+        "id": "almacenamiento",
+        "title": "Acceso temporal y almacenamiento",
+        "question": "archivo URL firmada expiración local MinIO storage",
+        "checks": [
+          {
+            "id": "expires",
+            "title": "Expiración y objeto de la URL firmada",
+            "document": "URLs firmadas MinIO.md",
+            "contains": [
+              "ExpiresIn",
+              "3600",
+              "objeto específico"
+            ],
+            "followup": "URLs firmadas MinIO ExpiresIn 3600 objeto específico"
+          },
+          {
+            "id": "old-urls",
+            "title": "Las URLs previas pueden seguir vigentes",
+            "document": "URLs firmadas MinIO.md",
+            "contains": [
+              "URLs viejas siguen siendo válidas hasta su expiración"
+            ],
+            "followup": "URLs firmadas MinIO access_control URLs viejas siguen válidas hasta expiración"
+          },
+          {
+            "id": "providers",
+            "title": "Distinguir almacenamiento local y S3",
+            "document": "Sistema híbrido de almacenamiento.md",
+            "contains": [
+              "LocalStorageProvider",
+              "S3StorageProvider"
+            ],
+            "followup": "Sistema híbrido de almacenamiento proveedores LocalStorageProvider S3StorageProvider"
+          }
+        ]
+      },
+      {
+        "id": "efectos",
+        "title": "Limpieza y efectos laterales",
+        "question": "archivo último acceso limpieza borrado chat",
+        "checks": [
+          {
+            "id": "cleanup",
+            "title": "Último acceso y umbral de limpieza",
+            "document": "Scheduler de limpieza.md",
+            "contains": [
+              "last_accessed_at",
+              "FILE_STORAGE_CLEANUP_DAYS"
+            ],
+            "followup": "Scheduler de limpieza last_accessed_at FILE_STORAGE_CLEANUP_DAYS"
+          },
+          {
+            "id": "cascade",
+            "title": "Borrado de archivos al eliminar un chat",
+            "document": "Borrado en cascada de archivos.md",
+            "contains": [
+              "chat_id",
+              "StorageProvider.delete_file"
+            ],
+            "followup": "Borrado en cascada de archivos chat_id StorageProvider.delete_file"
+          }
+        ]
+      },
+      {
+        "id": "backend",
+        "title": "Endpoints y errores",
+        "question": "agregar endpoint router REST autenticación errores",
+        "checks": [
+          {
+            "id": "router",
+            "title": "Registrar y proteger el endpoint",
+            "document": "Agregar router REST.md",
+            "contains": [
+              "get_current_user",
+              "include_router"
+            ],
+            "followup": "Agregar router REST registrar include_router Depends get_current_user"
+          },
+          {
+            "id": "errors",
+            "title": "Omitir detalles internos en producción",
+            "document": "Sistema de errores centralizado.md",
+            "contains": [
+              "detalles técnicos se omiten en producción"
+            ],
+            "followup": "Sistema de errores centralizado detalles técnicos se omiten en producción"
+          }
+        ]
+      },
+      {
+        "id": "frontend",
+        "title": "Interfaz y accesibilidad",
+        "question": "frontend chat solicitudes cancelación i18n tokens semánticos",
+        "checks": [
+          {
+            "id": "languages",
+            "title": "Idiomas soportados",
+            "document": "Internacionalización i18n.md",
+            "contains": [
+              "es-AR",
+              "en-GB",
+              "pt-BR"
+            ],
+            "followup": "Internacionalización i18n idiomas soportados es-AR en-GB pt-BR"
+          },
+          {
+            "id": "colors",
+            "title": "Colores semánticos en ambos temas",
+            "document": "Roles semánticos de color.md",
+            "contains": [
+              "on-primary",
+              "light",
+              "dark"
+            ],
+            "followup": "Roles semánticos de color on-primary light dark"
+          },
+          {
+            "id": "abort",
+            "title": "Cancelar solicitudes anteriores del chat",
+            "document": "Patrones frontend críticos.md",
+            "contains": [
+              "AbortController",
+              "se cancela la request anterior"
+            ],
+            "followup": "Patrones frontend críticos AbortController loadChat cancela request anterior"
+          },
+          {
+            "id": "contrast",
+            "title": "Umbrales de contraste AA",
+            "document": "ECO Design System.md",
+            "contains": [
+              "WCAG AA",
+              "4.5:1",
+              "3:1"
+            ],
+            "followup": "ECO Design System accesibilidad WCAG AA 4.5:1 3:1"
+          }
+        ]
+      }
+    ],
+    "negative_questions": [
+      "¿Cuál es el itinerario de la expedición submarina del planeta ficticio Nébula X?",
+      "¿Cómo preparo masa madre de harina de centeno?",
+      "¿Qué fecha tiene la coronación de la reina del reino imaginario Brumalia?",
+      "¿Qué receta de pan usa el chat para fermentar masa madre?"
+    ],
+    "scope": "Calibración posterior al ensayo inicial. Controles ficticios seleccionados manualmente; no demuestra abstención general."
+  },
+  "profiles": [
+    {
+      "threshold": 0.2,
+      "checks_matched": 8,
+      "checks_total": 14,
+      "checks": [
+        {
+          "id": "acl",
+          "title": "Diferenciar acceso público y privado",
+          "document": "Control de acceso a recursos.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "pending",
+          "title": "Restricción del usuario pendiente",
+          "document": "Roles de usuario.md",
+          "source_present": true,
+          "matched": false,
+          "missing_markers": [
+            "pending",
+            "no puede usar el chat"
+          ]
+        },
+        {
+          "id": "jwt",
+          "title": "Validación de sesión en endpoints protegidos",
+          "document": "JWT y sesiones.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "HTTPBearer",
+            "get_current_user"
+          ]
+        },
+        {
+          "id": "expires",
+          "title": "Expiración y objeto de la URL firmada",
+          "document": "URLs firmadas MinIO.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "old-urls",
+          "title": "Las URLs previas pueden seguir vigentes",
+          "document": "URLs firmadas MinIO.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "providers",
+          "title": "Distinguir almacenamiento local y S3",
+          "document": "Sistema híbrido de almacenamiento.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "cleanup",
+          "title": "Último acceso y umbral de limpieza",
+          "document": "Scheduler de limpieza.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "cascade",
+          "title": "Borrado de archivos al eliminar un chat",
+          "document": "Borrado en cascada de archivos.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "router",
+          "title": "Registrar y proteger el endpoint",
+          "document": "Agregar router REST.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "errors",
+          "title": "Omitir detalles internos en producción",
+          "document": "Sistema de errores centralizado.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "detalles técnicos se omiten en producción"
+          ]
+        },
+        {
+          "id": "languages",
+          "title": "Idiomas soportados",
+          "document": "Internacionalización i18n.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "colors",
+          "title": "Colores semánticos en ambos temas",
+          "document": "Roles semánticos de color.md",
+          "source_present": true,
+          "matched": false,
+          "missing_markers": [
+            "light"
+          ]
+        },
+        {
+          "id": "abort",
+          "title": "Cancelar solicitudes anteriores del chat",
+          "document": "Patrones frontend críticos.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "AbortController",
+            "se cancela la request anterior"
+          ]
+        },
+        {
+          "id": "contrast",
+          "title": "Umbrales de contraste AA",
+          "document": "ECO Design System.md",
+          "source_present": true,
+          "matched": false,
+          "missing_markers": [
+            "WCAG AA",
+            "4.5:1",
+            "3:1"
+          ]
+        }
+      ],
+      "client_tokens": 21753,
+      "controls_empty": 0,
+      "controls_total": 4,
+      "controls": [
+        {
+          "question": "¿Cuál es el itinerario de la expedición submarina del planeta ficticio Nébula X?",
+          "chunks": 5,
+          "scores": [
+            0.2663283216958819,
+            0.2661270493974651,
+            0.26549847250289776,
+            0.26547984259044927,
+            0.26393565550289777
+          ],
+          "sources": [
+            "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+            "COELSA.Intelligent/Modelos IA/SharePoint OneDrive integración.md",
+            "COELSA.Intelligent/CI-CD/Despliegue en OpenShift.md",
+            "COELSA.Intelligent/Desarrollo/Ejecución local.md",
+            "COELSA.Intelligent/Seguridad/Path Traversal.md"
+          ]
+        },
+        {
+          "question": "¿Cómo preparo masa madre de harina de centeno?",
+          "chunks": 5,
+          "scores": [
+            0.28914918411948454,
+            0.28907775411948455,
+            0.28815264411948455,
+            0.2881130441194846,
+            0.2878116161194846
+          ],
+          "sources": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+            "COELSA.Intelligent/RAG/Cinco colecciones Milvus.md",
+            "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+            "COELSA.Intelligent/RAG/Chats de referencia.md",
+            "COELSA.Intelligent/MOCs/MOC - RAG y Búsqueda Vectorial.md"
+          ]
+        },
+        {
+          "question": "¿Qué fecha tiene la coronación de la reina del reino imaginario Brumalia?",
+          "chunks": 5,
+          "scores": [
+            0.34241810017236773,
+            0.33938339017236774,
+            0.32435212572292554,
+            0.3236847615178481,
+            0.321690005069928
+          ],
+          "sources": [
+            "COELSA.Intelligent/RAG/Cinco colecciones Milvus.md",
+            "COELSA.Intelligent/Auth y Permisos/bcrypt para contraseñas.md",
+            "COELSA.Intelligent/Arquitectura/Fork de Open WebUI.md",
+            "COELSA.Intelligent/Modelos IA/Cadena SearXNG Context Forge.md",
+            "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md"
+          ]
+        },
+        {
+          "question": "¿Qué receta de pan usa el chat para fermentar masa madre?",
+          "chunks": 5,
+          "scores": [
+            0.30936632624648225,
+            0.29328163720477296,
+            0.2901541943165572,
+            0.2894287553165572,
+            0.2892143153165572
+          ],
+          "sources": [
+            "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+            "COELSA.Intelligent/RAG/Chats de referencia.md",
+            "COELSA.Intelligent/Arquitectura/PostgreSQL como base de datos.md",
+            "COELSA.Intelligent/RAG/Cinco colecciones Milvus.md",
+            "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md"
+          ]
+        }
+      ]
+    },
+    {
+      "threshold": 0.28,
+      "checks_matched": 8,
+      "checks_total": 14,
+      "checks": [
+        {
+          "id": "acl",
+          "title": "Diferenciar acceso público y privado",
+          "document": "Control de acceso a recursos.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "pending",
+          "title": "Restricción del usuario pendiente",
+          "document": "Roles de usuario.md",
+          "source_present": true,
+          "matched": false,
+          "missing_markers": [
+            "pending",
+            "no puede usar el chat"
+          ]
+        },
+        {
+          "id": "jwt",
+          "title": "Validación de sesión en endpoints protegidos",
+          "document": "JWT y sesiones.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "HTTPBearer",
+            "get_current_user"
+          ]
+        },
+        {
+          "id": "expires",
+          "title": "Expiración y objeto de la URL firmada",
+          "document": "URLs firmadas MinIO.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "old-urls",
+          "title": "Las URLs previas pueden seguir vigentes",
+          "document": "URLs firmadas MinIO.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "providers",
+          "title": "Distinguir almacenamiento local y S3",
+          "document": "Sistema híbrido de almacenamiento.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "cleanup",
+          "title": "Último acceso y umbral de limpieza",
+          "document": "Scheduler de limpieza.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "cascade",
+          "title": "Borrado de archivos al eliminar un chat",
+          "document": "Borrado en cascada de archivos.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "router",
+          "title": "Registrar y proteger el endpoint",
+          "document": "Agregar router REST.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "errors",
+          "title": "Omitir detalles internos en producción",
+          "document": "Sistema de errores centralizado.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "detalles técnicos se omiten en producción"
+          ]
+        },
+        {
+          "id": "languages",
+          "title": "Idiomas soportados",
+          "document": "Internacionalización i18n.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "colors",
+          "title": "Colores semánticos en ambos temas",
+          "document": "Roles semánticos de color.md",
+          "source_present": true,
+          "matched": false,
+          "missing_markers": [
+            "light"
+          ]
+        },
+        {
+          "id": "abort",
+          "title": "Cancelar solicitudes anteriores del chat",
+          "document": "Patrones frontend críticos.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "AbortController",
+            "se cancela la request anterior"
+          ]
+        },
+        {
+          "id": "contrast",
+          "title": "Umbrales de contraste AA",
+          "document": "ECO Design System.md",
+          "source_present": true,
+          "matched": false,
+          "missing_markers": [
+            "WCAG AA",
+            "4.5:1",
+            "3:1"
+          ]
+        }
+      ],
+      "client_tokens": 21753,
+      "controls_empty": 1,
+      "controls_total": 4,
+      "controls": [
+        {
+          "question": "¿Cuál es el itinerario de la expedición submarina del planeta ficticio Nébula X?",
+          "chunks": 0,
+          "scores": [],
+          "sources": []
+        },
+        {
+          "question": "¿Cómo preparo masa madre de harina de centeno?",
+          "chunks": 5,
+          "scores": [
+            0.28914918411948454,
+            0.28907775411948455,
+            0.28815264411948455,
+            0.2881130441194846,
+            0.2878116161194846
+          ],
+          "sources": [
+            "COELSA.Intelligent/Almacenamiento/Scheduler de limpieza.md",
+            "COELSA.Intelligent/RAG/Cinco colecciones Milvus.md",
+            "COELSA.Intelligent/Auth y Permisos/JWT y sesiones.md",
+            "COELSA.Intelligent/RAG/Chats de referencia.md",
+            "COELSA.Intelligent/MOCs/MOC - RAG y Búsqueda Vectorial.md"
+          ]
+        },
+        {
+          "question": "¿Qué fecha tiene la coronación de la reina del reino imaginario Brumalia?",
+          "chunks": 5,
+          "scores": [
+            0.34241810017236773,
+            0.33938339017236774,
+            0.32435212572292554,
+            0.3236847615178481,
+            0.321690005069928
+          ],
+          "sources": [
+            "COELSA.Intelligent/RAG/Cinco colecciones Milvus.md",
+            "COELSA.Intelligent/Auth y Permisos/bcrypt para contraseñas.md",
+            "COELSA.Intelligent/Arquitectura/Fork de Open WebUI.md",
+            "COELSA.Intelligent/Modelos IA/Cadena SearXNG Context Forge.md",
+            "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md"
+          ]
+        },
+        {
+          "question": "¿Qué receta de pan usa el chat para fermentar masa madre?",
+          "chunks": 5,
+          "scores": [
+            0.30936632624648225,
+            0.29328163720477296,
+            0.2901541943165572,
+            0.2894287553165572,
+            0.2892143153165572
+          ],
+          "sources": [
+            "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md",
+            "COELSA.Intelligent/RAG/Chats de referencia.md",
+            "COELSA.Intelligent/Arquitectura/PostgreSQL como base de datos.md",
+            "COELSA.Intelligent/RAG/Cinco colecciones Milvus.md",
+            "COELSA.Intelligent/Arquitectura/SPA con SSR deshabilitado.md"
+          ]
+        }
+      ]
+    },
+    {
+      "threshold": 0.3,
+      "checks_matched": 7,
+      "checks_total": 14,
+      "checks": [
+        {
+          "id": "acl",
+          "title": "Diferenciar acceso público y privado",
+          "document": "Control de acceso a recursos.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "pending",
+          "title": "Restricción del usuario pendiente",
+          "document": "Roles de usuario.md",
+          "source_present": true,
+          "matched": false,
+          "missing_markers": [
+            "pending",
+            "no puede usar el chat"
+          ]
+        },
+        {
+          "id": "jwt",
+          "title": "Validación de sesión en endpoints protegidos",
+          "document": "JWT y sesiones.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "HTTPBearer",
+            "get_current_user"
+          ]
+        },
+        {
+          "id": "expires",
+          "title": "Expiración y objeto de la URL firmada",
+          "document": "URLs firmadas MinIO.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "old-urls",
+          "title": "Las URLs previas pueden seguir vigentes",
+          "document": "URLs firmadas MinIO.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "providers",
+          "title": "Distinguir almacenamiento local y S3",
+          "document": "Sistema híbrido de almacenamiento.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "cleanup",
+          "title": "Último acceso y umbral de limpieza",
+          "document": "Scheduler de limpieza.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "last_accessed_at",
+            "FILE_STORAGE_CLEANUP_DAYS"
+          ]
+        },
+        {
+          "id": "cascade",
+          "title": "Borrado de archivos al eliminar un chat",
+          "document": "Borrado en cascada de archivos.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "router",
+          "title": "Registrar y proteger el endpoint",
+          "document": "Agregar router REST.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "errors",
+          "title": "Omitir detalles internos en producción",
+          "document": "Sistema de errores centralizado.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "detalles técnicos se omiten en producción"
+          ]
+        },
+        {
+          "id": "languages",
+          "title": "Idiomas soportados",
+          "document": "Internacionalización i18n.md",
+          "source_present": true,
+          "matched": true,
+          "missing_markers": []
+        },
+        {
+          "id": "colors",
+          "title": "Colores semánticos en ambos temas",
+          "document": "Roles semánticos de color.md",
+          "source_present": true,
+          "matched": false,
+          "missing_markers": [
+            "light"
+          ]
+        },
+        {
+          "id": "abort",
+          "title": "Cancelar solicitudes anteriores del chat",
+          "document": "Patrones frontend críticos.md",
+          "source_present": false,
+          "matched": false,
+          "missing_markers": [
+            "AbortController",
+            "se cancela la request anterior"
+          ]
+        },
+        {
+          "id": "contrast",
+          "title": "Umbrales de contraste AA",
+          "document": "ECO Design System.md",
+          "source_present": true,
+          "matched": false,
+          "missing_markers": [
+            "WCAG AA",
+            "4.5:1",
+            "3:1"
+          ]
+        }
+      ],
+      "client_tokens": 15747,
+      "controls_empty": 2,
+      "controls_total": 4,
+      "controls": [
+        {
+          "question": "¿Cuál es el itinerario de la expedición submarina del planeta ficticio Nébula X?",
+          "chunks": 0,
+          "scores": [],
+          "sources": []
+        },
+        {
+          "question": "¿Cómo preparo masa madre de harina de centeno?",
+          "chunks": 0,
+          "scores": [],
+          "sources": []
+        },
+        {
+          "question": "¿Qué fecha tiene la coronación de la reina del reino imaginario Brumalia?",
+          "chunks": 5,
+          "scores": [
+            0.34241810017236773,
+            0.33938339017236774,
+            0.32435212572292554,
+            0.3236847615178481,
+            0.321690005069928
+          ],
+          "sources": [
+            "COELSA.Intelligent/RAG/Cinco colecciones Milvus.md",
+            "COELSA.Intelligent/Auth y Permisos/bcrypt para contraseñas.md",
+            "COELSA.Intelligent/Arquitectura/Fork de Open WebUI.md",
+            "COELSA.Intelligent/Modelos IA/Cadena SearXNG Context Forge.md",
+            "COELSA.Intelligent/Almacenamiento/Borrado en cascada de archivos.md"
+          ]
+        },
+        {
+          "question": "¿Qué receta de pan usa el chat para fermentar masa madre?",
+          "chunks": 1,
+          "scores": [
+            0.30936632624648225
+          ],
+          "sources": [
+            "COELSA.Intelligent/Almacenamiento/Flujo de subida de archivos.md"
+          ]
+        }
+      ]
+    }
+  ],
+  "configuration_changed": false
+}

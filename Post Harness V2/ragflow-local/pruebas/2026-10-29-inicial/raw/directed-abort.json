@@ -1,0 +1,424 @@
+{
+  "request": {
+    "question": "Patrones frontend críticos AbortController loadChat cancela request anterior",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 3,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"Patrones frontend críticos\"\ntype: concepto\ntags: [coelsa-intelligent, desarrollo, frontend, svelte, patrones, bugs]\naliases: [Critical frontend patterns, Patrones obligatorios frontend]\ndescription: \"Usar como checklist antes de mergear cambios en Chat.svelte o componentes de chat — los 4 patrones que no deben revertirse bajo ninguna circunstancia.\"\nestado: vigente\n---\n# Patrones frontend críticos\n## Qué es\nCuatro patrones de código en el frontend de COELSA.Intelligent que resuelven bugs concretos documentados. Su omisión o reversión reproduce los bugs originales. Son **invariantes del codebase**.\n> **Referencia completa**: ver [[Patrones de componentes Svelte]] para el código y explicación detallada de cada patrón.\n## Checklist rápido\nAntes de mergear cambios en `Chat.svelte` o componentes relacionados:\n- [ ] **Guarda de `chatId`**: el setter del store solo se llama si `$chatId !== chatIdProp`\n- [ ] **AbortController en `loadChat`**: se cancela la request anterior antes de iniciar la nueva\n- [ ] **Unsubscribers en `onDestroy`**: todo store suscrito en `onMount` se desuscribe en `onDestroy`\n- [ ] **Bloques reactivos unificados**: los bloques `$:` que dependen del mismo state están en un solo bloque\n## Consecuencias de revertirlos\n<table>\n<thead>\n<tr>\n<th>Patrón omitido</th>\n<th>Consecuencia</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Guarda de chatId</td>\n<td>Loop de renderizado infinito al cambiar de chat</td>\n</tr>\n<tr>\n<td>AbortController ausente</td>\n<td>~80% más de requests duplicados y errores 404 de chunks</td>\n</tr>\n<tr>\n<td>Unsubscribers ausentes</td>\n<td>Memory leaks; listeners fantasma; requests adicionales</td>\n</tr>\n<tr>\n<td>Bloques reactivos separados</td>\n<td>Doble ejecución por cambio de estado</td>\n</tr>\n</tbody>\n</table>\n## Relacionado\n- [[Patrones de componentes Svelte]] — El código completo con explicaciones detalladas",
+          "content_ltks": "titl patron frontend cr í tic type concept tags coels intelligent desarroll frontend svelt patron bugs ali critical frontend patterns patron obligatori frontend description usar com checklist antes de merg cambi en chat svelt o component de chat los 4 patron que no deb revert baj ningun circunst estad vigent patron frontend cr í tic qu é es cuatr patron de c ó dig en el frontend de coels intelligent que resuelv bugs concret document su omisi ón o reversi ón reproduc los bugs original son invari del codeb referent complet ver patron de component svelt par el c ó dig y explicaci ón detall de cad patr ón checklist r á pid antes de merg cambi en chat svelt o component relacion guard de chat el sett del stor sol se llam si chat chatidprop abortcontroll en loadchat se cancel la request anterior antes de inici la nuev unsubscribers en ondestroy tod stor suscrit en onmount se desuscrib en ondestroy bloqu reactiv unific los bloqu que depend del mism stat est á n en un sol bloqu consecuent de revert the patr ón omit consecuent the tbody guard de chat loop de renderiz infinit al cambi de chat abortcontroll ausent 80 m á s de requests duplic y error 404 de chunks unsubscribers ausent memory leaks listeners fantasm requests adicional bloqu reactiv separ dobl ejecuci ón por cambi de estad tbody relacion patron de component svelt el c ó dig complet con explic detall",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "document_keyword": "Patrones frontend críticos.md",
+          "id": "15988af66c5cad93",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.5566135677610566,
+          "tag_kwd": [],
+          "term_similarity": 0.426399368230081,
+          "vector_similarity": 0.8604467
+        },
+        {
+          "content": "<table>\n<thead>\n<tr>\n<th>ID</th>\n<th>Decisión</th>\n<th>Nota</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>D-18</td>\n<td>es-AR como idioma principal</td>\n<td>[[Idioma por defecto es-AR]]</td>\n</tr>\n<tr>\n<td>D-19</td>\n<td>Sistema de errores centralizado</td>\n<td>[[Sistema de errores centralizado]]</td>\n</tr>\n<tr>\n<td>D-20</td>\n<td>AbortController en loadChat (fix requests duplicados)</td>\n<td>[[Patrones frontend críticos]]</td>\n</tr>\n</tbody>\n</table>\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Contexto técnico de las decisiones de diseño estructural\n- [[MOC - Seguridad]] — Detalle de las decisiones de hardening\n- [[MOC - Modelos IA y Routing]] — Contexto de las decisiones de routing e IA",
+          "content_ltks": "the id decisi ón not the tbody d 18 es ar com idiom principal idiom por defect es ar d 19 sistem de error centraliz sistem de error centraliz d 20 abortcontroll en loadchat fix requests duplic patron frontend cr í tic tbody mocs vecin moc arquitectur context t é cnic de las decision de dis ñ o estructural moc segur detall de las decision de hardening moc model ia y routing context de las decision de routing e ia",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "document_keyword": "MOC - Decisiones.md",
+          "id": "5bfb84d9e8ff49e3",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              3,
+              2,
+              2,
+              2,
+              2
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.46287272340550634,
+          "tag_kwd": [],
+          "term_similarity": 0.29923511915072337,
+          "vector_similarity": 0.8446938
+        },
+        {
+          "content": "- [[SvelteKit 2]] — El framework donde aplican estos patrones\n- [[MOC - Desarrollo]] — Índice del cluster de desarrollo\n- [[MOC - Decisiones]] — D-20 en el índice de decisiones",
+          "content_ltks": "sveltekit 2 el framework dond aplic estos patron moc desarroll í ndic del clust de desarroll moc decision d 20 en el í ndic de decision",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "document_keyword": "Patrones frontend críticos.md",
+          "id": "1dbc1a49f23d42b2",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.4238901823771445,
+          "tag_kwd": [],
+          "term_similarity": 0.2626682205387779,
+          "vector_similarity": 0.80007476
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 2,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones de componentes Svelte.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16d61796d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Diseño y Frontend.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16b74492d33011f1a8c8134f9287b83e",
+          "doc_name": "Manejo de errores frontend.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema de errores centralizado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "168def2ad33011f1a8c8134f9287b83e",
+          "doc_name": "Build frontend.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e7761cd33011f1a8c8134f9287b83e",
+          "doc_name": "PyTorch CPU-only.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17006c80d33011f1a8c8134f9287b83e",
+          "doc_name": "CSP con nonces.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b467e0d33011f1a8c8134f9287b83e",
+          "doc_name": "Internacionalización i18n.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ce7d92d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - CI-CD y Despliegue.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1695c72cd33011f1a8c8134f9287b83e",
+          "doc_name": "Pipelines Azure DevOps.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c8d7acd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Arquitectura.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169092d4d33011f1a8c8134f9287b83e",
+          "doc_name": "Despliegue en OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1674dba2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis para WebSockets.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "doc_name": "Chats de referencia.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16fb7130d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus multi-tenancy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16fdf644d33011f1a8c8134f9287b83e",
+          "doc_name": "Módulo de retrieval.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "doc_name": "URLs firmadas MinIO.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17057dd8d33011f1a8c8134f9287b83e",
+          "doc_name": "Dependencias vulnerables.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168b48f6d33011f1a8c8134f9287b83e",
+          "doc_name": "bcrypt para contraseñas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1698681ad33011f1a8c8134f9287b83e",
+          "doc_name": "SSL corporativo en build.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ae2042d33011f1a8c8134f9287b83e",
+          "doc_name": "Dark mode reglas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167d610ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD login exclusivo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16933d68d33011f1a8c8134f9287b83e",
+          "doc_name": "Dockerfile.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1662c016d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema híbrido de almacenamiento.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 10771,
+  "seconds": 0.14623249997384846,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"Patrones frontend críticos\"\ntype: concepto\ntags: [coelsa-intelligent, desarrollo, frontend, svelte, patrones, bugs]\naliases: [Critical frontend patterns, Patrones obligatorios frontend]\ndescription: \"Usar como checklist antes de mergear cambios en Chat.svelte o componentes de chat — los 4 patrones que no deben revertirse bajo ninguna circunstancia.\"\nestado: vigente\n---\n# Patrones frontend críticos\n## Qué es\nCuatro patrones de código en el frontend de COELSA.Intelligent que resuelven bugs concretos documentados. Su omisión o reversión reproduce los bugs originales. Son **invariantes del codebase**.\n> **Referencia completa**: ver [[Patrones de componentes Svelte]] para el código y explicación detallada de cada patrón.\n## Checklist rápido\nAntes de mergear cambios en `Chat.svelte` o componentes relacionados:\n- [ ] **Guarda de `chatId`**: el setter del store solo se llama si `$chatId !== chatIdProp`\n- [ ] **AbortController en `loadChat`**: se cancela la request anterior antes de iniciar la nueva\n- [ ] **Unsubscribers en `onDestroy`**: todo store suscrito en `onMount` se desuscribe en `onDestroy`\n- [ ] **Bloques reactivos unificados**: los bloques `$:` que dependen del mismo state están en un solo bloque\n## Consecuencias de revertirlos\n<table>\n<thead>\n<tr>\n<th>Patrón omitido</th>\n<th>Consecuencia</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Guarda de chatId</td>\n<td>Loop de renderizado infinito al cambiar de chat</td>\n</tr>\n<tr>\n<td>AbortController ausente</td>\n<td>~80% más de requests duplicados y errores 404 de chunks</td>\n</tr>\n<tr>\n<td>Unsubscribers ausentes</td>\n<td>Memory leaks; listeners fantasma; requests adicionales</td>\n</tr>\n<tr>\n<td>Bloques reactivos separados</td>\n<td>Doble ejecución por cambio de estado</td>\n</tr>\n</tbody>\n</table>\n## Relacionado\n- [[Patrones de componentes Svelte]] — El código completo con explicaciones detalladas",
+        "content_ltks": "titl patron frontend cr í tic type concept tags coels intelligent desarroll frontend svelt patron bugs ali critical frontend patterns patron obligatori frontend description usar com checklist antes de merg cambi en chat svelt o component de chat los 4 patron que no deb revert baj ningun circunst estad vigent patron frontend cr í tic qu é es cuatr patron de c ó dig en el frontend de coels intelligent que resuelv bugs concret document su omisi ón o reversi ón reproduc los bugs original son invari del codeb referent complet ver patron de component svelt par el c ó dig y explicaci ón detall de cad patr ón checklist r á pid antes de merg cambi en chat svelt o component relacion guard de chat el sett del stor sol se llam si chat chatidprop abortcontroll en loadchat se cancel la request anterior antes de inici la nuev unsubscribers en ondestroy tod stor suscrit en onmount se desuscrib en ondestroy bloqu reactiv unific los bloqu que depend del mism stat est á n en un sol bloqu consecuent de revert the patr ón omit consecuent the tbody guard de chat loop de renderiz infinit al cambi de chat abortcontroll ausent 80 m á s de requests duplic y error 404 de chunks unsubscribers ausent memory leaks listeners fantasm requests adicional bloqu reactiv separ dobl ejecuci ón por cambi de estad tbody relacion patron de component svelt el c ó dig complet con explic detall",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16aafb1ad33011f1a8c8134f9287b83e",
+        "document_keyword": "Patrones frontend críticos.md",
+        "id": "15988af66c5cad93",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.5566135677610566,
+        "tag_kwd": [],
+        "term_similarity": 0.426399368230081,
+        "vector_similarity": 0.8604467
+      },
+      {
+        "content": "<table>\n<thead>\n<tr>\n<th>ID</th>\n<th>Decisión</th>\n<th>Nota</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>D-18</td>\n<td>es-AR como idioma principal</td>\n<td>[[Idioma por defecto es-AR]]</td>\n</tr>\n<tr>\n<td>D-19</td>\n<td>Sistema de errores centralizado</td>\n<td>[[Sistema de errores centralizado]]</td>\n</tr>\n<tr>\n<td>D-20</td>\n<td>AbortController en loadChat (fix requests duplicados)</td>\n<td>[[Patrones frontend críticos]]</td>\n</tr>\n</tbody>\n</table>\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Contexto técnico de las decisiones de diseño estructural\n- [[MOC - Seguridad]] — Detalle de las decisiones de hardening\n- [[MOC - Modelos IA y Routing]] — Contexto de las decisiones de routing e IA",
+        "content_ltks": "the id decisi ón not the tbody d 18 es ar com idiom principal idiom por defect es ar d 19 sistem de error centraliz sistem de error centraliz d 20 abortcontroll en loadchat fix requests duplic patron frontend cr í tic tbody mocs vecin moc arquitectur context t é cnic de las decision de dis ñ o estructural moc segur detall de las decision de hardening moc model ia y routing context de las decision de routing e ia",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16d0f284d33011f1a8c8134f9287b83e",
+        "document_keyword": "MOC - Decisiones.md",
+        "id": "5bfb84d9e8ff49e3",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            3,
+            2,
+            2,
+            2,
+            2
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.46287272340550634,
+        "tag_kwd": [],
+        "term_similarity": 0.29923511915072337,
+        "vector_similarity": 0.8446938
+      },
+      {
+        "content": "- [[SvelteKit 2]] — El framework donde aplican estos patrones\n- [[MOC - Desarrollo]] — Índice del cluster de desarrollo\n- [[MOC - Decisiones]] — D-20 en el índice de decisiones",
+        "content_ltks": "sveltekit 2 el framework dond aplic estos patron moc desarroll í ndic del clust de desarroll moc decision d 20 en el í ndic de decision",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16aafb1ad33011f1a8c8134f9287b83e",
+        "document_keyword": "Patrones frontend críticos.md",
+        "id": "1dbc1a49f23d42b2",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.4238901823771445,
+        "tag_kwd": [],
+        "term_similarity": 0.2626682205387779,
+        "vector_similarity": 0.80007476
+      }
+    ],
+    "total": 64
+  }
+}

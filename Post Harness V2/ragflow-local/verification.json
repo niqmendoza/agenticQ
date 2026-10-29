@@ -1,0 +1,40 @@
+{
+  "checked_at": "2026-10-29T00:33:11.240292+00:00",
+  "ragflow_version": "v0.27.3",
+  "services": [
+    {
+      "Service": "es01",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "minio",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "mysql",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "ragflow",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "redis",
+      "State": "running",
+      "Health": "healthy"
+    }
+  ],
+  "documents": 80,
+  "done": 80,
+  "chunks": 143,
+  "retrieved_passages": 5,
+  "all_retrieved_documents_in_uploaded_snapshot": true,
+  "ui_http_status": 200,
+  "tests_passed": 22,
+  "output_format": "deferred",
+  "copilot_token_savings": "not_measured"
+}

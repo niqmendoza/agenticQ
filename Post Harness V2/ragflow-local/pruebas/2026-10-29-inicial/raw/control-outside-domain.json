@@ -1,0 +1,533 @@
+{
+  "request": {
+    "question": "¿Cuál es el itinerario de la expedición submarina del planeta ficticio Nébula X?",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---\n# Flujo de subida de archivos\n## Qué es\nDescribe el ciclo completo desde que un usuario sube un archivo hasta que queda accesible via URL firmada en MinIO.\n## Pasos del flujo\n### 1. Recepción (router `files.py`)\nEl endpoint `POST /api/v1/files/` recibe el archivo multipart. El backend:\n- Sanitiza el nombre del archivo (protección contra [[Path Traversal]])\n- Guarda temporalmente en `data/uploads/<uuid>-<filename>`\n- Crea un registro en la tabla `file` con `path` = ruta local\n### 2. Procesamiento RAG (opcional)\nSi el archivo va a ser embedido (Knowledge base, búsqueda vectorial):\n- Se procesa con los loaders del [[Módulo de retrieval]]\n- Los chunks se insertan en [[Milvus]] bajo la colección correspondiente\n### 3. Migración a MinIO (scheduler diario)\nEl [[Scheduler de limpieza|scheduler]] ejecuta diariamente:\n- Lee los registros de `file` con `path` local\n- Sube cada archivo a [[MinIO S3]]\n- Actualiza el campo `path` en BD con la clave S3\n- Genera una [[URLs firmadas MinIO|URL firmada]] para el acceso\n### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza",
+          "content_ltks": "titl fluj de sub de archiv type concept tags coels intelligent almacen uplo archiv ali fil uplo flow sub de archiv coels description usar cuand necesit á s rastr el cicl de vid de un archiv sub por un usuari desd la recepci ón http hast su almacen en mini estad vigent fluj de sub de archiv qu é es describ el cicl complet desd que un usuari sub un archiv hast que qued acces via url firm en mini pas del fluj 1 recepci ón rout fil py el endpoint post api v1 fil recib el archiv multipart el backend sanitiz el nombr del archiv protecci ón contr path traversal guard temporal en dat uploads uuid filenam cre un registr en la tabl fil con path rut local 2 proces rag opcional si el archiv va a ser embed knowledg bas b ú squed vectorial se proces con los loaders del m ó dul de retrieval los chunks se insert en milvus baj la colecci ón correspondient 3 migraci ón a mini schedul diari el schedul de limpiez schedul ejecut diari lee los registr de fil con path local sub cad archiv a mini s3 actualiz el camp path en bd con la clav s3 gener una urls firm mini url firm par el acces 4 acces al solicit un archiv el backend verif control de acces a recurs access _ control si el path es s3 gener una url firm con expiraci ón configur si el path es local sirv el archiv direct relacion sistem h í brid de almacen el model general del que este fluj es part urls firm mini c ó mo se gener las urls de acces schedul de limpiez el job que ejecut la migraci ón y la limpiez",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "165b4458d33011f1a8c8134f9287b83e",
+          "document_keyword": "Flujo de subida de archivos.md",
+          "id": "a4a86b1a1cfcf7d2",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2663283216958819,
+          "tag_kwd": [],
+          "term_similarity": 0.04909697242268848,
+          "vector_similarity": 0.77320147
+        },
+        {
+          "content": "---\ntitle: \"SharePoint OneDrive integración\"\ntype: concepto\ntags: [coelsa-intelligent, modelos-ia, sharepoint, onedrive, microsoft, file-picker]\naliases: [SharePoint integration, OneDrive COELSA, Microsoft File Picker]\ndescription: \"Usar cuando trabajás con la integración de SharePoint/OneDrive en el input de chat, o cuando necesitás configurar los permisos de Azure AD para el File Picker.\"\nestado: vigente\n---\n# SharePoint OneDrive integración\n## Qué es\nCOELSA.Intelligent permite a los usuarios seleccionar archivos corporativos directamente desde **SharePoint** o **OneDrive** usando el **Microsoft File Picker v8**, sin necesidad de descargar y volver a subir el archivo.\n## Cómo funciona\n1. El usuario hace clic en el ícono de SharePoint en el input de chat\n2. Se abre el File Picker en un popup/iframe usando la identidad del usuario (OAuth delegado)\n3. El usuario selecciona el archivo\n4. El backend descarga el archivo usando el token de acceso del usuario con permisos `Files.Read.All`\n5. El archivo se procesa como cualquier otro archivo subido (ver [[Flujo de subida de archivos]])\n## Requisitos de configuración\n### Azure AD\nLa App Registration debe tener el permiso **`Files.Read.All`** (delegado). Este permiso permite leer cualquier archivo del tenant al que el usuario tenga acceso.\n```env\nSHAREPOINT_CLIENT_ID=<azure-client-id>\n# Usar el mismo tenant de OAUTH_CLIENT_ID o uno separado\n```\n### CSP\nEl Route de OpenShift debe incluir en `connect-src`:\n- `login.microsoftonline.com` — para el flujo OAuth del File Picker\n- `graph.microsoft.com` — para descargar el contenido del archivo\nVer `docs/OPENSHIFT-CONFIGMAP.yaml` para el ejemplo completo.\n## Relacionado\n- [[Azure AD OAuth]] — La App Registration que necesita el permiso Files.Read.All\n- [[Flujo de subida de archivos]] — Lo que ocurre una vez seleccionado el archivo\n- [[CSP con nonces]] — La CSP donde deben estar los dominios de Microsoft\n- [[Despliegue en OpenShift]] — La configuración del Route donde vive la CSP\n- [[MOC - Modelos IA y Routing]] — Índice del cluster de modelos",
+          "content_ltks": "titl sharepoint onedriv integraci ón type concept tags coels intelligent model ia sharepoint onedriv microsoft fil pick ali sharepoint integration onedriv coels microsoft fil pick description usar cuand trabaj á s con la integraci ón de sharepoint onedriv en el input de chat o cuand necesit á s configur los permis de azur ad par el fil pick estad vigent sharepoint onedriv integraci ón qu é es coels intelligent permit a los usuari seleccion archiv corpor direct desd sharepoint o onedriv usand el microsoft fil pick v8 sin neces de descarg y volv a sub el archiv c ó mo funcion 1 el usuari hac clic en el í con de sharepoint en el input de chat 2 se abre el fil pick en un popup ifram usand la ident del usuari oauth deleg 3 el usuari seleccion el archiv 4 el backend descarg el archiv usand el tok de acces del usuari con permis fil read all 5 el archiv se proces com cualqui otro archiv sub ver fluj de sub de archiv requisit de configuraci ón azur ad la app registration deb ten el permis fil read all deleg este permis permit leer cualqui archiv del tenant al que el usuari teng acces env sharepoint _ client _ id azur client id usar el mism tenant de oauth _ client _ id o uno separ csp el rout de openshift deb inclu en connect src login microsoftonlin com par el fluj oauth del fil pick graph microsoft com par descarg el conten del archiv ver docs openshift configmap yaml par el ejempl complet relacion azur ad oauth la app registration que necesit el permis fil read all fluj de sub de archiv lo que ocurr una vez seleccion el archiv csp con nonc la csp dond deb estar los domini de microsoft desplieg en openshift la configuraci ón del rout dond viv la csp moc model ia y routing í ndic del clust de model",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16ec72f2d33011f1a8c8134f9287b83e",
+          "document_keyword": "SharePoint OneDrive integración.md",
+          "id": "5b544dcb48064526",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2661270493974651,
+          "tag_kwd": [],
+          "term_similarity": 0.06106080199637869,
+          "vector_similarity": 0.74461496
+        },
+        {
+          "content": "---\ntitle: \"Despliegue en OpenShift\"\ntype: referencia\ntags: [coelsa-intelligent, cicd, openshift, despliegue, configmap]\naliases: [OpenShift deployment, Deploy COELSA, Despliegue COELSA]\ndescription: \"Usar cuando necesitás desplegar COELSA.Intelligent en OpenShift por primera vez o actualizar un entorno existente — pasos ordenados y requisitos previos.\"\nestado: vigente\n---\n# Despliegue en OpenShift\n## Pasos de despliegue\n### Prerequisitos (primera vez)\n1. **Crear el bucket MinIO**:\n```bash\n   python scripts/create_minio_bucket.py\n   ```\nRequiere que las variables `S3_*` estén en `.env`.\n2. **Aplicar ConfigMap** con variables de entorno:\n```bash\n   oc apply -f docs/OPENSHIFT-CONFIGMAP.yaml\n   ```\n3. **Aplicar configuración de Routes** (incluye CSP):\n```bash\n   oc apply -f docs/OPENSHIFT-ROUTE-CONFIG.yaml\n   ```\n### Deploy de una nueva versión\nEjecutar el pipeline correspondiente:\n- **DEV**: `azure-pipeline-DEV.yml`\n- **VALIDACION**: `azure-pipeline-VALIDACION.yml`\n- **PRODUCCIÓN**: `azure-pipeline-PROD.yml`\n### Migraciones de base de datos\n```bash\ncd backend\nalembic upgrade head\n```\nEl servidor aplica migraciones automáticamente al arrancar. Si hay migraciones pendientes críticas, ejecutarlas manualmente antes del deploy.\n## Configuración crítica del Route\n### Timeout de HAProxy\nEl timeout de HAProxy en el Route **debe ser mayor a 300 segundos**. El procesamiento de archivos con RAG (embedding + inserción en Milvus) puede superar 5 minutos en documentos grandes.\n```yaml\n# En la anotación del Route de OpenShift\nhaproxy.router.openshift.io/timeout: 600s\n```\n### CSP para SharePoint\nSi [[SharePoint OneDrive integración]] está activo, incluir en la CSP:\n```\nconnect-src: login.microsoftonline.com graph.microsoft.com\n```\n## Relacionado\n- [[Pipelines Azure DevOps]] — Los pipelines que automatizan el despliegue",
+          "content_ltks": "titl desplieg en openshift type referent tags coels intelligent cicd openshift desplieg configmap ali openshift deployment deploy coels desplieg coels description usar cuand necesit á s despleg coels intelligent en openshift por primer vez o actualiz un entorn existent pas orden y requisit previ estad vigent desplieg en openshift pas de desplieg prerequisit primer vez 1 cre el bucket mini bash python scripts creat _ mini _ bucket py requier que las variabl s3 _ est é n en env 2 aplic configmap con variabl de entorn bash oc apply f docs openshift configmap yaml 3 aplic configuraci ón de rout inclu csp bash oc apply f docs openshift rout config yaml deploy de una nuev versi ón ejecut el pipelin correspondient dev azur pipelin dev yml valid azur pipelin valid yml producci ón azur pipelin prod yml migracion de bas de dat bash cd backend alembic upgrad head el servidor aplic migracion autom á tic al arranc si hay migracion pendient cr í tic ejecut manual antes del deploy configuraci ón cr í tic del rout timeout de haproxy el timeout de haproxy en el rout deb ser mayor a 300 segund el proces de archiv con rag embedding inserci ón en milvus pued super 5 minut en document grand yaml en la anotaci ón del rout de openshift haproxy rout openshift io timeout 600s csp par sharepoint si sharepoint onedriv integraci ón est á activ inclu en la csp connect src login microsoftonlin com graph microsoft com relacion pipelin azur devops los pipelin que automatiz el desplieg",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "169092d4d33011f1a8c8134f9287b83e",
+          "document_keyword": "Despliegue en OpenShift.md",
+          "id": "3fd6c39ff3e6c09e",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.26549847250289776,
+          "tag_kwd": [],
+          "term_similarity": 0.04921661071842538,
+          "vector_similarity": 0.77015615
+        },
+        {
+          "content": "---\ntitle: \"Ejecución local\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, local, dev, comandos]\naliases: [Dev local COELSA, Correr localmente, Local setup]\ndescription: \"Usar cuando necesitás levantar COELSA.Intelligent en tu máquina local para desarrollo — comandos exactos para frontend y backend.\"\nestado: vigente\n---\n# Ejecución local\n## Qué es\nGuía de referencia para levantar COELSA.Intelligent en modo desarrollo local.\n## Prerrequisitos\nTener corriendo localmente (o con Docker):\n- [[PostgreSQL]] 14+ en `localhost:5432`\n- [[Redis]] 7+ en `localhost:6379`\n- [[Milvus]] 2.4+ en `localhost:19530`\n- [[MinIO S3]] en `localhost:9000` (opcional; puede usarse storage local)\n- [[Ollama]] o [[LiteLLM proxy]] para los modelos IA\n## Configuración inicial\n```bash\n# 1. Copiar y editar variables de entorno\ncp .env.example .env\n\n# 2. Editar .env con las conexiones locales y credenciales de Azure AD\n```\nVariables mínimas requeridas: ver `docs/setup.md`.\n## Levantar el backend\n```bash\ncd backend\npip install -r requirements.txt  # Primera vez\n\n# Linux / macOS\n./dev.sh\n\n# Windows\nstart_windows.bat\n```\nEl backend queda disponible en `http://localhost:8080` con **hot-reload** activado.\n## Levantar el frontend\n```bash\n# Primera vez\nnpm install\n\nnpm run dev\n```\nEl frontend queda disponible en `http://localhost:5173`. Apunta automáticamente al backend en `localhost:8080`.\n## Notas de desarrollo\n- Los [[CSP con nonces|nonces CSP]] deben estar deshabilitados en local (`ENABLE_CSP_NONCES=false`)\n- Los logs del backend usan loguru — ver [[Loguru y logging]]\n- Para probar el storage S3, configurar `STORAGE_PROVIDER=s3` con las vars de [[MinIO S3]]\n- Las migraciones se aplican automáticamente al arrancar el backend — ver [[Migraciones Alembic]]\n## Relacionado",
+          "content_ltks": "titl ejecuci ón local type referent tags coels intelligent desarroll local dev comand ali dev local coels corr local local setup description usar cuand necesit á s levant coels intelligent en tu m á quin local par desarroll comand exact par frontend y backend estad vigent ejecuci ón local qu é es gu í a de referent par levant coels intelligent en mod desarroll local prerrequisit ten corr local o con dock postgresql 14 en localhost 5432 redis 7 en localhost 6379 milvus 24 en localhost 19530 mini s3 en localhost 9000 opcional pued usars storag local ollam o litellm proxy par los model ia configuraci ón inicial bash 1 copi y edit variabl de entorn cp env exampl env 2 edit env con las conexion local y credencial de azur ad variabl m í nim requer ver docs setup md levant el backend bash cd backend pip install r requirements txt primer vez linux mac dev sh windows start _ windows bat el backend qued dispon en http localhost 8080 con hot rel activ levant el frontend bash primer vez npm install npm run dev el frontend qued dispon en http localhost 5173 apunt autom á tic al backend en localhost 8080 not de desarroll los csp con nonc nonc csp deb estar deshabilit en local enabl _ csp _ nonc fals los logs del backend usan loguru ver loguru y logging par prob el storag s3 configur storag _ provid s3 con las vars de mini s3 las migracion se aplic autom á tic al arranc el backend ver migracion alembic relacion",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "document_keyword": "Ejecución local.md",
+          "id": "a9ef9729b99e9190",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.26547984259044927,
+          "tag_kwd": [],
+          "term_similarity": 0.06094116370064179,
+          "vector_similarity": 0.74273676
+        },
+        {
+          "content": "---\ntitle: \"Path Traversal\"\ntype: concepto\ntags: [coelsa-intelligent, seguridad, path-traversal, owasp, archivos]\naliases: [Path traversal protection, Directory traversal, Sanitización de paths]\ndescription: \"Usar cuando agregás un endpoint que opera sobre rutas de archivos o nombres de archivo provistos por el usuario — para asegurarte de sanitizar el input.\"\nestado: vigente\n---\n# Path Traversal\n## Qué es\n**Path Traversal** (también llamado Directory Traversal) es una vulnerabilidad donde un atacante usa secuencias como `../../../etc/passwd` en nombres de archivo o paths para acceder a archivos fuera del directorio esperado.\nCOELSA.Intelligent aplicó sanitización de paths de entrada en **8 endpoints**.\n## El fix en StorageProvider\n```python\n# backend/server/storage/provider.py — LocalStorageProvider.upload_file()\n# Security: Path Injection Prevention\n# 'filename' puede contener '../../../etc/passwd'\n\n# Extraer solo el nombre base (sin directorios)\nsafe_filename = os.path.basename(filename)\n\n# Resolver la ruta final y verificar que esté dentro de UPLOAD_DIR\nfile_path = os.path.realpath(os.path.join(UPLOAD_DIR, safe_filename))\nif not file_path.startswith(os.path.realpath(UPLOAD_DIR)):\n    raise ValueError(\"Path traversal detectado\")\n```\n## Patrón de sanitización\n1. **`os.path.basename()`**: elimina cualquier componente de directorio del nombre\n2. **`os.path.realpath()`**: resuelve symlinks y `..`\n3. **Verificar prefijo**: confirmar que la ruta final esté dentro del directorio permitido\nEste patrón debe aplicarse en **cualquier endpoint nuevo** que:\n- Acepte un nombre de archivo del usuario\n- Use ese nombre para operar sobre el sistema de archivos\n## Relacionado\n- [[Hardening ReDoS]] — Otra remediación OWASP del mismo ciclo de hardening\n- [[Protección SSRF]] — Otra remediación del mismo ciclo\n- [[Flujo de subida de archivos]] — El flujo donde aplica esta sanitización\n- [[MOC - Seguridad]] — Índice del cluster de seguridad",
+          "content_ltks": "titl path traversal type concept tags coels intelligent segur path traversal owasp archiv ali path traversal protection directory traversal sanitizaci ón de paths description usar cuand agreg á s un endpoint que oper sobr rut de archiv o nombr de archiv provist por el usuari par asegurart de sanitiz el input estad vigent path traversal qu é es path traversal tambi é n llam directory traversal es una vulner dond un atac usa secuenci com etc passwd en nombr de archiv o paths par acced a archiv fuer del directori esper coels intelligent aplic ó sanitizaci ón de paths de entrad en 8 endpoints el fix en storageprovid python backend serv storag provid py localstorageprovid uplo _ fil security path injection prevention filenam pued conten etc passwd extra sol el nombr bas sin directori saf _ filenam os path basenam filenam resolv la rut final y verific que est é dentr de uplo _ dir fil _ path os path realpath os path join uplo _ dir saf _ filenam if not fil _ path startswith os path realpath uplo _ dir rais valueerror path traversal detect patr ón de sanitizaci ón 1 os path basenam elimin cualqui component de directori del nombr 2 os path realpath resuelv symlinks y3 verific prefij confirm que la rut final est é dentr del directori permit este patr ón deb aplic en cualqui endpoint nuev que acept un nombr de archiv del usuari use ese nombr par oper sobr el sistem de archiv relacion hardening red otra remediaci ón owasp del mism cicl de hardening protecci ón ssrf otra remediaci ón del mism cicl fluj de sub de archiv el fluj dond aplic esta sanitizaci ón moc segur í ndic del clust de segur",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "170a9f66d33011f1a8c8134f9287b83e",
+          "document_keyword": "Path Traversal.md",
+          "id": "42eabcac3b3aa72c",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.26393565550289777,
+          "tag_kwd": [],
+          "term_similarity": 0.04921661071842538,
+          "vector_similarity": 0.76494676
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 3,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "169092d4d33011f1a8c8134f9287b83e",
+          "doc_name": "Despliegue en OpenShift.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16a829f8d33011f1a8c8134f9287b83e",
+          "doc_name": "Migraciones Alembic.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1695c72cd33011f1a8c8134f9287b83e",
+          "doc_name": "Pipelines Azure DevOps.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "169dbf04d33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar proveedor de almacenamiento.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1662c016d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema híbrido de almacenamiento.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e7761cd33011f1a8c8134f9287b83e",
+          "doc_name": "PyTorch CPU-only.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ec72f2d33011f1a8c8134f9287b83e",
+          "doc_name": "SharePoint OneDrive integración.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170a9f66d33011f1a8c8134f9287b83e",
+          "doc_name": "Path Traversal.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - RAG y Búsqueda Vectorial.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c8d7acd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Arquitectura.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168b48f6d33011f1a8c8134f9287b83e",
+          "doc_name": "bcrypt para contraseñas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "doc_name": "URLs firmadas MinIO.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17006c80d33011f1a8c8134f9287b83e",
+          "doc_name": "CSP con nonces.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16beaf52d33011f1a8c8134f9287b83e",
+          "doc_name": "Surface Containers.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170d40fed33011f1a8c8134f9287b83e",
+          "doc_name": "Protección SSRF.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e24f02d33011f1a8c8134f9287b83e",
+          "doc_name": "Cadena SearXNG Context Forge.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ae2042d33011f1a8c8134f9287b83e",
+          "doc_name": "Dark mode reglas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a03f7cd33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar router REST.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17030102d33011f1a8c8134f9287b83e",
+          "doc_name": "CVE-2025-7969 markdown-it.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170fee94d33011f1a8c8134f9287b83e",
+          "doc_name": "Riesgos de seguridad aceptados.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1707eac8d33011f1a8c8134f9287b83e",
+          "doc_name": "Hardening ReDoS.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16933d68d33011f1a8c8134f9287b83e",
+          "doc_name": "Dockerfile.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16dfc552d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Stack.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 24802,
+  "seconds": 0.17683987505733967,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"Flujo de subida de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, upload, archivos]\naliases: [File upload flow, Subida de archivos COELSA]\ndescription: \"Usar cuando necesitás rastrear el ciclo de vida de un archivo subido por un usuario, desde la recepción HTTP hasta su almacenamiento en MinIO.\"\nestado: vigente\n---\n# Flujo de subida de archivos\n## Qué es\nDescribe el ciclo completo desde que un usuario sube un archivo hasta que queda accesible via URL firmada en MinIO.\n## Pasos del flujo\n### 1. Recepción (router `files.py`)\nEl endpoint `POST /api/v1/files/` recibe el archivo multipart. El backend:\n- Sanitiza el nombre del archivo (protección contra [[Path Traversal]])\n- Guarda temporalmente en `data/uploads/<uuid>-<filename>`\n- Crea un registro en la tabla `file` con `path` = ruta local\n### 2. Procesamiento RAG (opcional)\nSi el archivo va a ser embedido (Knowledge base, búsqueda vectorial):\n- Se procesa con los loaders del [[Módulo de retrieval]]\n- Los chunks se insertan en [[Milvus]] bajo la colección correspondiente\n### 3. Migración a MinIO (scheduler diario)\nEl [[Scheduler de limpieza|scheduler]] ejecuta diariamente:\n- Lee los registros de `file` con `path` local\n- Sube cada archivo a [[MinIO S3]]\n- Actualiza el campo `path` en BD con la clave S3\n- Genera una [[URLs firmadas MinIO|URL firmada]] para el acceso\n### 4. Acceso\nAl solicitar un archivo, el backend:\n- Verifica [[Control de acceso a recursos|access_control]]\n- Si el path es S3: genera una URL firmada con expiración configurable\n- Si el path es local: sirve el archivo directamente\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El modelo general del que este flujo es parte\n- [[URLs firmadas MinIO]] — Cómo se generan las URLs de acceso\n- [[Scheduler de limpieza]] — El job que ejecuta la migración y la limpieza",
+        "content_ltks": "titl fluj de sub de archiv type concept tags coels intelligent almacen uplo archiv ali fil uplo flow sub de archiv coels description usar cuand necesit á s rastr el cicl de vid de un archiv sub por un usuari desd la recepci ón http hast su almacen en mini estad vigent fluj de sub de archiv qu é es describ el cicl complet desd que un usuari sub un archiv hast que qued acces via url firm en mini pas del fluj 1 recepci ón rout fil py el endpoint post api v1 fil recib el archiv multipart el backend sanitiz el nombr del archiv protecci ón contr path traversal guard temporal en dat uploads uuid filenam cre un registr en la tabl fil con path rut local 2 proces rag opcional si el archiv va a ser embed knowledg bas b ú squed vectorial se proces con los loaders del m ó dul de retrieval los chunks se insert en milvus baj la colecci ón correspondient 3 migraci ón a mini schedul diari el schedul de limpiez schedul ejecut diari lee los registr de fil con path local sub cad archiv a mini s3 actualiz el camp path en bd con la clav s3 gener una urls firm mini url firm par el acces 4 acces al solicit un archiv el backend verif control de acces a recurs access _ control si el path es s3 gener una url firm con expiraci ón configur si el path es local sirv el archiv direct relacion sistem h í brid de almacen el model general del que este fluj es part urls firm mini c ó mo se gener las urls de acces schedul de limpiez el job que ejecut la migraci ón y la limpiez",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "165b4458d33011f1a8c8134f9287b83e",
+        "document_keyword": "Flujo de subida de archivos.md",
+        "id": "a4a86b1a1cfcf7d2",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2663283216958819,
+        "tag_kwd": [],
+        "term_similarity": 0.04909697242268848,
+        "vector_similarity": 0.77320147
+      },
+      {
+        "content": "---\ntitle: \"SharePoint OneDrive integración\"\ntype: concepto\ntags: [coelsa-intelligent, modelos-ia, sharepoint, onedrive, microsoft, file-picker]\naliases: [SharePoint integration, OneDrive COELSA, Microsoft File Picker]\ndescription: \"Usar cuando trabajás con la integración de SharePoint/OneDrive en el input de chat, o cuando necesitás configurar los permisos de Azure AD para el File Picker.\"\nestado: vigente\n---\n# SharePoint OneDrive integración\n## Qué es\nCOELSA.Intelligent permite a los usuarios seleccionar archivos corporativos directamente desde **SharePoint** o **OneDrive** usando el **Microsoft File Picker v8**, sin necesidad de descargar y volver a subir el archivo.\n## Cómo funciona\n1. El usuario hace clic en el ícono de SharePoint en el input de chat\n2. Se abre el File Picker en un popup/iframe usando la identidad del usuario (OAuth delegado)\n3. El usuario selecciona el archivo\n4. El backend descarga el archivo usando el token de acceso del usuario con permisos `Files.Read.All`\n5. El archivo se procesa como cualquier otro archivo subido (ver [[Flujo de subida de archivos]])\n## Requisitos de configuración\n### Azure AD\nLa App Registration debe tener el permiso **`Files.Read.All`** (delegado). Este permiso permite leer cualquier archivo del tenant al que el usuario tenga acceso.\n```env\nSHAREPOINT_CLIENT_ID=<azure-client-id>\n# Usar el mismo tenant de OAUTH_CLIENT_ID o uno separado\n```\n### CSP\nEl Route de OpenShift debe incluir en `connect-src`:\n- `login.microsoftonline.com` — para el flujo OAuth del File Picker\n- `graph.microsoft.com` — para descargar el contenido del archivo\nVer `docs/OPENSHIFT-CONFIGMAP.yaml` para el ejemplo completo.\n## Relacionado\n- [[Azure AD OAuth]] — La App Registration que necesita el permiso Files.Read.All\n- [[Flujo de subida de archivos]] — Lo que ocurre una vez seleccionado el archivo\n- [[CSP con nonces]] — La CSP donde deben estar los dominios de Microsoft\n- [[Despliegue en OpenShift]] — La configuración del Route donde vive la CSP\n- [[MOC - Modelos IA y Routing]] — Índice del cluster de modelos",
+        "content_ltks": "titl sharepoint onedriv integraci ón type concept tags coels intelligent model ia sharepoint onedriv microsoft fil pick ali sharepoint integration onedriv coels microsoft fil pick description usar cuand trabaj á s con la integraci ón de sharepoint onedriv en el input de chat o cuand necesit á s configur los permis de azur ad par el fil pick estad vigent sharepoint onedriv integraci ón qu é es coels intelligent permit a los usuari seleccion archiv corpor direct desd sharepoint o onedriv usand el microsoft fil pick v8 sin neces de descarg y volv a sub el archiv c ó mo funcion 1 el usuari hac clic en el í con de sharepoint en el input de chat 2 se abre el fil pick en un popup ifram usand la ident del usuari oauth deleg 3 el usuari seleccion el archiv 4 el backend descarg el archiv usand el tok de acces del usuari con permis fil read all 5 el archiv se proces com cualqui otro archiv sub ver fluj de sub de archiv requisit de configuraci ón azur ad la app registration deb ten el permis fil read all deleg este permis permit leer cualqui archiv del tenant al que el usuari teng acces env sharepoint _ client _ id azur client id usar el mism tenant de oauth _ client _ id o uno separ csp el rout de openshift deb inclu en connect src login microsoftonlin com par el fluj oauth del fil pick graph microsoft com par descarg el conten del archiv ver docs openshift configmap yaml par el ejempl complet relacion azur ad oauth la app registration que necesit el permis fil read all fluj de sub de archiv lo que ocurr una vez seleccion el archiv csp con nonc la csp dond deb estar los domini de microsoft desplieg en openshift la configuraci ón del rout dond viv la csp moc model ia y routing í ndic del clust de model",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16ec72f2d33011f1a8c8134f9287b83e",
+        "document_keyword": "SharePoint OneDrive integración.md",
+        "id": "5b544dcb48064526",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2661270493974651,
+        "tag_kwd": [],
+        "term_similarity": 0.06106080199637869,
+        "vector_similarity": 0.74461496
+      },
+      {
+        "content": "---\ntitle: \"Despliegue en OpenShift\"\ntype: referencia\ntags: [coelsa-intelligent, cicd, openshift, despliegue, configmap]\naliases: [OpenShift deployment, Deploy COELSA, Despliegue COELSA]\ndescription: \"Usar cuando necesitás desplegar COELSA.Intelligent en OpenShift por primera vez o actualizar un entorno existente — pasos ordenados y requisitos previos.\"\nestado: vigente\n---\n# Despliegue en OpenShift\n## Pasos de despliegue\n### Prerequisitos (primera vez)\n1. **Crear el bucket MinIO**:\n```bash\n   python scripts/create_minio_bucket.py\n   ```\nRequiere que las variables `S3_*` estén en `.env`.\n2. **Aplicar ConfigMap** con variables de entorno:\n```bash\n   oc apply -f docs/OPENSHIFT-CONFIGMAP.yaml\n   ```\n3. **Aplicar configuración de Routes** (incluye CSP):\n```bash\n   oc apply -f docs/OPENSHIFT-ROUTE-CONFIG.yaml\n   ```\n### Deploy de una nueva versión\nEjecutar el pipeline correspondiente:\n- **DEV**: `azure-pipeline-DEV.yml`\n- **VALIDACION**: `azure-pipeline-VALIDACION.yml`\n- **PRODUCCIÓN**: `azure-pipeline-PROD.yml`\n### Migraciones de base de datos\n```bash\ncd backend\nalembic upgrade head\n```\nEl servidor aplica migraciones automáticamente al arrancar. Si hay migraciones pendientes críticas, ejecutarlas manualmente antes del deploy.\n## Configuración crítica del Route\n### Timeout de HAProxy\nEl timeout de HAProxy en el Route **debe ser mayor a 300 segundos**. El procesamiento de archivos con RAG (embedding + inserción en Milvus) puede superar 5 minutos en documentos grandes.\n```yaml\n# En la anotación del Route de OpenShift\nhaproxy.router.openshift.io/timeout: 600s\n```\n### CSP para SharePoint\nSi [[SharePoint OneDrive integración]] está activo, incluir en la CSP:\n```\nconnect-src: login.microsoftonline.com graph.microsoft.com\n```\n## Relacionado\n- [[Pipelines Azure DevOps]] — Los pipelines que automatizan el despliegue",
+        "content_ltks": "titl desplieg en openshift type referent tags coels intelligent cicd openshift desplieg configmap ali openshift deployment deploy coels desplieg coels description usar cuand necesit á s despleg coels intelligent en openshift por primer vez o actualiz un entorn existent pas orden y requisit previ estad vigent desplieg en openshift pas de desplieg prerequisit primer vez 1 cre el bucket mini bash python scripts creat _ mini _ bucket py requier que las variabl s3 _ est é n en env 2 aplic configmap con variabl de entorn bash oc apply f docs openshift configmap yaml 3 aplic configuraci ón de rout inclu csp bash oc apply f docs openshift rout config yaml deploy de una nuev versi ón ejecut el pipelin correspondient dev azur pipelin dev yml valid azur pipelin valid yml producci ón azur pipelin prod yml migracion de bas de dat bash cd backend alembic upgrad head el servidor aplic migracion autom á tic al arranc si hay migracion pendient cr í tic ejecut manual antes del deploy configuraci ón cr í tic del rout timeout de haproxy el timeout de haproxy en el rout deb ser mayor a 300 segund el proces de archiv con rag embedding inserci ón en milvus pued super 5 minut en document grand yaml en la anotaci ón del rout de openshift haproxy rout openshift io timeout 600s csp par sharepoint si sharepoint onedriv integraci ón est á activ inclu en la csp connect src login microsoftonlin com graph microsoft com relacion pipelin azur devops los pipelin que automatiz el desplieg",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "169092d4d33011f1a8c8134f9287b83e",
+        "document_keyword": "Despliegue en OpenShift.md",
+        "id": "3fd6c39ff3e6c09e",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.26549847250289776,
+        "tag_kwd": [],
+        "term_similarity": 0.04921661071842538,
+        "vector_similarity": 0.77015615
+      },
+      {
+        "content": "---\ntitle: \"Ejecución local\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, local, dev, comandos]\naliases: [Dev local COELSA, Correr localmente, Local setup]\ndescription: \"Usar cuando necesitás levantar COELSA.Intelligent en tu máquina local para desarrollo — comandos exactos para frontend y backend.\"\nestado: vigente\n---\n# Ejecución local\n## Qué es\nGuía de referencia para levantar COELSA.Intelligent en modo desarrollo local.\n## Prerrequisitos\nTener corriendo localmente (o con Docker):\n- [[PostgreSQL]] 14+ en `localhost:5432`\n- [[Redis]] 7+ en `localhost:6379`\n- [[Milvus]] 2.4+ en `localhost:19530`\n- [[MinIO S3]] en `localhost:9000` (opcional; puede usarse storage local)\n- [[Ollama]] o [[LiteLLM proxy]] para los modelos IA\n## Configuración inicial\n```bash\n# 1. Copiar y editar variables de entorno\ncp .env.example .env\n\n# 2. Editar .env con las conexiones locales y credenciales de Azure AD\n```\nVariables mínimas requeridas: ver `docs/setup.md`.\n## Levantar el backend\n```bash\ncd backend\npip install -r requirements.txt  # Primera vez\n\n# Linux / macOS\n./dev.sh\n\n# Windows\nstart_windows.bat\n```\nEl backend queda disponible en `http://localhost:8080` con **hot-reload** activado.\n## Levantar el frontend\n```bash\n# Primera vez\nnpm install\n\nnpm run dev\n```\nEl frontend queda disponible en `http://localhost:5173`. Apunta automáticamente al backend en `localhost:8080`.\n## Notas de desarrollo\n- Los [[CSP con nonces|nonces CSP]] deben estar deshabilitados en local (`ENABLE_CSP_NONCES=false`)\n- Los logs del backend usan loguru — ver [[Loguru y logging]]\n- Para probar el storage S3, configurar `STORAGE_PROVIDER=s3` con las vars de [[MinIO S3]]\n- Las migraciones se aplican automáticamente al arrancar el backend — ver [[Migraciones Alembic]]\n## Relacionado",
+        "content_ltks": "titl ejecuci ón local type referent tags coels intelligent desarroll local dev comand ali dev local coels corr local local setup description usar cuand necesit á s levant coels intelligent en tu m á quin local par desarroll comand exact par frontend y backend estad vigent ejecuci ón local qu é es gu í a de referent par levant coels intelligent en mod desarroll local prerrequisit ten corr local o con dock postgresql 14 en localhost 5432 redis 7 en localhost 6379 milvus 24 en localhost 19530 mini s3 en localhost 9000 opcional pued usars storag local ollam o litellm proxy par los model ia configuraci ón inicial bash 1 copi y edit variabl de entorn cp env exampl env 2 edit env con las conexion local y credencial de azur ad variabl m í nim requer ver docs setup md levant el backend bash cd backend pip install r requirements txt primer vez linux mac dev sh windows start _ windows bat el backend qued dispon en http localhost 8080 con hot rel activ levant el frontend bash primer vez npm install npm run dev el frontend qued dispon en http localhost 5173 apunt autom á tic al backend en localhost 8080 not de desarroll los csp con nonc nonc csp deb estar deshabilit en local enabl _ csp _ nonc fals los logs del backend usan loguru ver loguru y logging par prob el storag s3 configur storag _ provid s3 con las vars de mini s3 las migracion se aplic autom á tic al arranc el backend ver migracion alembic relacion",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16a339f2d33011f1a8c8134f9287b83e",
+        "document_keyword": "Ejecución local.md",
+        "id": "a9ef9729b99e9190",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.26547984259044927,
+        "tag_kwd": [],
+        "term_similarity": 0.06094116370064179,
+        "vector_similarity": 0.74273676
+      },
+      {
+        "content": "---\ntitle: \"Path Traversal\"\ntype: concepto\ntags: [coelsa-intelligent, seguridad, path-traversal, owasp, archivos]\naliases: [Path traversal protection, Directory traversal, Sanitización de paths]\ndescription: \"Usar cuando agregás un endpoint que opera sobre rutas de archivos o nombres de archivo provistos por el usuario — para asegurarte de sanitizar el input.\"\nestado: vigente\n---\n# Path Traversal\n## Qué es\n**Path Traversal** (también llamado Directory Traversal) es una vulnerabilidad donde un atacante usa secuencias como `../../../etc/passwd` en nombres de archivo o paths para acceder a archivos fuera del directorio esperado.\nCOELSA.Intelligent aplicó sanitización de paths de entrada en **8 endpoints**.\n## El fix en StorageProvider\n```python\n# backend/server/storage/provider.py — LocalStorageProvider.upload_file()\n# Security: Path Injection Prevention\n# 'filename' puede contener '../../../etc/passwd'\n\n# Extraer solo el nombre base (sin directorios)\nsafe_filename = os.path.basename(filename)\n\n# Resolver la ruta final y verificar que esté dentro de UPLOAD_DIR\nfile_path = os.path.realpath(os.path.join(UPLOAD_DIR, safe_filename))\nif not file_path.startswith(os.path.realpath(UPLOAD_DIR)):\n    raise ValueError(\"Path traversal detectado\")\n```\n## Patrón de sanitización\n1. **`os.path.basename()`**: elimina cualquier componente de directorio del nombre\n2. **`os.path.realpath()`**: resuelve symlinks y `..`\n3. **Verificar prefijo**: confirmar que la ruta final esté dentro del directorio permitido\nEste patrón debe aplicarse en **cualquier endpoint nuevo** que:\n- Acepte un nombre de archivo del usuario\n- Use ese nombre para operar sobre el sistema de archivos\n## Relacionado\n- [[Hardening ReDoS]] — Otra remediación OWASP del mismo ciclo de hardening\n- [[Protección SSRF]] — Otra remediación del mismo ciclo\n- [[Flujo de subida de archivos]] — El flujo donde aplica esta sanitización\n- [[MOC - Seguridad]] — Índice del cluster de seguridad",
+        "content_ltks": "titl path traversal type concept tags coels intelligent segur path traversal owasp archiv ali path traversal protection directory traversal sanitizaci ón de paths description usar cuand agreg á s un endpoint que oper sobr rut de archiv o nombr de archiv provist por el usuari par asegurart de sanitiz el input estad vigent path traversal qu é es path traversal tambi é n llam directory traversal es una vulner dond un atac usa secuenci com etc passwd en nombr de archiv o paths par acced a archiv fuer del directori esper coels intelligent aplic ó sanitizaci ón de paths de entrad en 8 endpoints el fix en storageprovid python backend serv storag provid py localstorageprovid uplo _ fil security path injection prevention filenam pued conten etc passwd extra sol el nombr bas sin directori saf _ filenam os path basenam filenam resolv la rut final y verific que est é dentr de uplo _ dir fil _ path os path realpath os path join uplo _ dir saf _ filenam if not fil _ path startswith os path realpath uplo _ dir rais valueerror path traversal detect patr ón de sanitizaci ón 1 os path basenam elimin cualqui component de directori del nombr 2 os path realpath resuelv symlinks y3 verific prefij confirm que la rut final est é dentr del directori permit este patr ón deb aplic en cualqui endpoint nuev que acept un nombr de archiv del usuari use ese nombr par oper sobr el sistem de archiv relacion hardening red otra remediaci ón owasp del mism cicl de hardening protecci ón ssrf otra remediaci ón del mism cicl fluj de sub de archiv el fluj dond aplic esta sanitizaci ón moc segur í ndic del clust de segur",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "170a9f66d33011f1a8c8134f9287b83e",
+        "document_keyword": "Path Traversal.md",
+        "id": "42eabcac3b3aa72c",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.26393565550289777,
+        "tag_kwd": [],
+        "term_similarity": 0.04921661071842538,
+        "vector_similarity": 0.76494676
+      }
+    ],
+    "total": 64
+  }
+}

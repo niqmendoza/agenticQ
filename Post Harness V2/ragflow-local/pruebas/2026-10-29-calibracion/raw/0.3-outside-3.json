@@ -1,0 +1,58 @@
+{
+  "request": {
+    "question": "¿Qué receta de pan usa el chat para fermentar masa madre?",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.3,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "- [[Borrado en cascada de archivos]] — Qué pasa cuando se elimina el chat asociado\n- [[Protección SSRF]] — La sanitización de paths en el paso de recepción",
+          "content_ltks": "borr en casc de archiv qu é pas cuand se elimin el chat asoci protecci ón ssrf la sanitizaci ón de paths en el pas de recepci ón",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "165b4458d33011f1a8c8134f9287b83e",
+          "document_keyword": "Flujo de subida de archivos.md",
+          "id": "1cf19796519d8431",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.30936632624648225,
+          "tag_kwd": [],
+          "term_similarity": 0.08658265178068894,
+          "vector_similarity": 0.8291949
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 1,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        }
+      ],
+      "total": 1
+    }
+  },
+  "response_bytes": 916
+}

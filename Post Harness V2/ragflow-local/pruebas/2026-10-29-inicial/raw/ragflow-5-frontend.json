@@ -1,0 +1,538 @@
+{
+  "request": {
+    "question": "frontend chat solicitudes cancelación i18n tokens semánticos",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "- [ECO Design System](Diseño%20Frontend/ECO%20Design%20System.md)\n- [Internacionalización i18n](Diseño%20Frontend/Internacionalización%20i18n.md)\n- [Manejo de errores frontend](Diseño%20Frontend/Manejo%20de%20errores%20frontend.md)\n- [Patrones de componentes Svelte](Diseño%20Frontend/Patrones%20de%20componentes%20Svelte.md)\n- [Roles semánticos de color](Diseño%20Frontend/Roles%20semánticos%20de%20color.md)\n- [Surface Containers](Diseño%20Frontend/Surface%20Containers.md)\n- [Tipografía Saira](Diseño%20Frontend/Tipografía%20Saira.md)\n- [Tokens primitivos de color](Diseño%20Frontend/Tokens%20primitivos%20de%20color.md)\n### Seguridad\n- [CSP con nonces](Seguridad/CSP%20con%20nonces.md)\n- [CVE-2025-7969 markdown-it](Seguridad/CVE-2025-7969%20markdown-it.md)\n- [Dependencias vulnerables](Seguridad/Dependencias%20vulnerables.md)\n- [Hardening ReDoS](Seguridad/Hardening%20ReDoS.md)\n- [Path Traversal](Seguridad/Path%20Traversal.md)\n- [Protección SSRF](Seguridad/Protección%20SSRF.md)\n- [Riesgos de seguridad aceptados](Seguridad/Riesgos%20de%20seguridad%20aceptados.md)\n### CI-CD\n- [Build frontend](CI-CD/Build%20frontend.md)\n- [Despliegue en OpenShift](CI-CD/Despliegue%20en%20OpenShift.md)\n- [Dockerfile](CI-CD/Dockerfile.md)\n- [Pipelines Azure DevOps](CI-CD/Pipelines%20Azure%20DevOps.md)\n- [SSL corporativo en build](CI-CD/SSL%20corporativo%20en%20build.md)\n### Desarrollo",
+          "content_ltks": "eco design system dis ñ o 20frontend eco 20design 20system md internacionalizaci ón i18n dis ñ o 20frontend internacionalizaci ón 20i18n md manej de error frontend dis ñ o 20frontend manej 20de 20errores 20frontend md patron de component svelt dis ñ o 20frontend patron 20de 20componentes 20svelte md rol sem á ntic de color dis ñ o 20frontend rol 20sem á ntic 20de 20color md surfac containers dis ñ o 20frontend surfac 20containers md tipograf í a sair dis ñ o 20frontend tipograf í a 20saira md tokens primit de color dis ñ o 20frontend tokens 20primitivos 20de 20color md segur csp con nonc segur csp 20con 20nonces md cve 2025 7969 markdown it segur cve 2025 7969 20markdown it md dependent vulner segur dependent 20vulnerables md hardening red segur hardening 20redos md path traversal segur path 20traversal md protecci ón ssrf segur protecci ón 20ssrf md riesg de segur acept segur riesg 20de 20seguridad 20aceptados md ci cd build frontend ci cd build 20frontend md desplieg en openshift ci cd desplieg 20en 20openshift md dockerfil ci cd dockerfil md pipelin azur devops ci cd pipelin 20azure 20devops md ssl corpor en build ci cd ssl 20corporativo 20en 20build md desarroll",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "document_keyword": "OKF-INDEX.md",
+          "id": "26d1171a6535bce4",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              5,
+              4,
+              4,
+              4,
+              4
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.4124030225977231,
+          "tag_kwd": [],
+          "term_similarity": 0.25440531942531874,
+          "vector_similarity": 0.78106433
+        },
+        {
+          "content": "---\ntitle: \"MOC — Diseño y Frontend\"\ntype: moc\ntags: [coelsa-intelligent, diseño, frontend, eco-design-system, moc]\naliases: [MOC Diseño, Frontend COELSA, ECO Design System MOC]\ndescription: \"Usar cuando trabajás con la UI, el sistema de diseño ECO, colores, tipografía, dark mode o componentes de error en COELSA.Intelligent.\"\nestado: vigente\n---\n# MOC — Diseño y Frontend\nEl diseño visual está gobernado por el [[ECO Design System]], basado en Material Design 3. Teal (`#06ABB9`) es el color primario COELSA; Pink es solo acento decorativo. El frontend es una [[SvelteKit 2|SPA en SvelteKit 2]] con SSR deshabilitado.\n## Notas de este cluster\n### Sistema de diseño\n- [[ECO Design System]] — Overview del sistema basado en Material Design 3; principios y archivos canónicos\n- [[Tokens primitivos de color]] — Escalas inmutables Teal, Pink, Neutral (0→100) usadas para definir roles\n- [[Roles semánticos de color]] — `primary`, `secondary`, `tertiary`, `surface` y sus pares `on-*`; cambian entre temas\n- [[Surface Containers]] — Los 5 niveles de jerarquía visual (lowest → highest) para profundidad sin opacidad\n- [[Tipografía Saira]] — Fuente corporativa Saira; clases tipográficas de `app.css`\n- [[Dark mode reglas]] — Cómo se invierten roles (no escalas primitivas) al cambiar de tema\n### Componentes y patrones\n- [[Patrones de componentes Svelte]] — Guarda chatId; AbortController; unsubscribers en onDestroy; bloques reactivos unificados\n- [[Manejo de errores frontend]] — `NetworkError`, `TimeoutError`, `GenericError`, `ErrorBoundary`; routing en `+error.svelte`\n- [[Internacionalización i18n]] — es-AR principal; en-GB y pt-BR disponibles; idiomas eliminados\n## MOCs vecinos\n- [[MOC - Arquitectura]] — SSR deshabilitado como decisión de diseño con implicaciones de seguridad",
+          "content_ltks": "titl moc dis ñ o y frontend type moc tags coels intelligent dis ñ o frontend eco design system moc ali moc dis ñ o frontend coels eco design system moc description usar cuand trabaj á s con la ui el sistem de dis ñ o eco color tipograf í a dark mod o component de error en coels intelligent estad vigent moc dis ñ o y frontend el dis ñ o visual est á gobern por el eco design system bas en material design 3 teal 06abb9 es el color primari coels pink es sol acent decor el frontend es una sveltekit 2 spa en sveltekit 2 con ssr deshabilit not de este clust sistem de dis ñ o eco design system overview del sistem bas en material design 3 principi y archiv can ó nic tokens primit de color escal inmut teal pink neutral 0 100 usad par defin rol rol sem á ntic de color primary secondary tertiary surfac y sus par on cambi entre tem surfac containers los 5 nivel de jerarqu í a visual lowest highest par profund sin opac tipograf í a sair fuent corpor sair clas tipogr á fic de app css dark mod regl c ó mo se inviert rol no escal primit al cambi de tem component y patron patron de component svelt guard chat abortcontroll unsubscribers en ondestroy bloqu reactiv unific manej de error frontend networkerror timeouterror genericerror errorboundary routing en error svelt internacionalizaci ón i18n es ar principal en gb y pt br dispon idiom elimin mocs vecin moc arquitectur ssr deshabilit com decisi ón de dis ñ o con implic de segur",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16d61796d33011f1a8c8134f9287b83e",
+          "document_keyword": "MOC - Diseño y Frontend.md",
+          "id": "3ae67d78f7cced47",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3874709092428946,
+          "tag_kwd": [],
+          "term_similarity": 0.21067127034699226,
+          "vector_similarity": 0.8000034
+        },
+        {
+          "content": "---\ntitle: \"Internacionalización i18n\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, i18n, traducciones, es-ar]\naliases: [i18n COELSA, Traducciones COELSA, i18next COELSA]\ndescription: \"Usar cuando necesitás agregar o modificar traducciones en COELSA.Intelligent, o cuando querés entender qué idiomas están soportados y cómo configurarlos.\"\nestado: vigente\n---\n# Internacionalización i18n\n## Qué es\nCOELSA.Intelligent usa **i18next** como sistema de internacionalización. Los archivos de traducción están en `src/lib/i18n/` organizados por código de idioma.\n## Idiomas soportados\n<table>\n<thead>\n<tr>\n<th>Código</th>\n<th>Idioma</th>\n<th>Estado</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>es-AR</code></td>\n<td>Castellano Rioplatense</td>\n<td><strong>Default</strong> — ver [[Idioma por defecto es-AR]]</td>\n</tr>\n<tr>\n<td><code>en-GB</code></td>\n<td>English (British)</td>\n<td>Activo</td>\n</tr>\n<tr>\n<td><code>pt-BR</code></td>\n<td>Português (Brasil)</td>\n<td>Activo</td>\n</tr>\n</tbody>\n</table>\n## Idiomas eliminados del fork\nRemovidos en v1.3.0: `es-ES`, `pt-PT`, `en-US`. Ver [[Idioma por defecto es-AR]].\n## Configuración\n```env\nDEFAULT_LOCALE=es-AR\n```\nEn el frontend, el idioma también puede seleccionarse por usuario en Settings (acceso restringido según [[Roles de usuario]]).\n## Uso en componentes Svelte\n```svelte\n<script>\n  import { t } from '$lib/i18n';\n</script>\n\n<button>{$t('common.send')}</button>\n<p>{$t('chat.placeholder', { name: userName })}</p>\n```\n## Agregar una traducción\n1. Localizar la clave en `src/lib/i18n/es-AR.json` (o crear si no existe)",
+          "content_ltks": "titl internacionalizaci ón i18n type concept tags coels intelligent dis ñ o i18n traduccion es ar ali i18n coels traduccion coels i18next coels description usar cuand necesit á s agreg o modific traduccion en coels intelligent o cuand quer és entend qu é idiom est á n soport y c ó mo configur estad vigent internacionalizaci ón i18n qu é es coels intelligent usa i18next com sistem de internacionalizaci ón los archiv de traducci ón est á n en src lib i18n organiz por c ó dig de idiom idiom soport the c ó dig idiom estad the tbody cod es ar cod castellan rioplatens strong default strong ver idiom por defect es ar cod en gb cod english british activ cod pt br cod portugu ê s brasil activ tbody idiom elimin del fork remov en v1 3 0 es es pt pt en us ver idiom por defect es ar configuraci ón env default _ local es ar en el frontend el idiom tambi é n pued seleccion por usuari en settings acces restring seg ú n rol de usuari uso en component svelt svelt script import t from lib i18n script button t common send button p t chat placehold nam usernam p agreg una traducci ón 1 localiz la clav en src lib i18n es ar json o cre si no exist",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16b467e0d33011f1a8c8134f9287b83e",
+          "document_keyword": "Internacionalización i18n.md",
+          "id": "817b28bdcb20c884",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3581908773480762,
+          "tag_kwd": [],
+          "term_similarity": 0.16631851335439457,
+          "vector_similarity": 0.80589306
+        },
+        {
+          "content": "## Clases Tailwind disponibles\n```html\n<!-- Botón principal -->\n<button class=\"bg-primary text-on-primary hover:opacity-90\">\n  Acción Principal\n</button>\n\n<!-- Botón secundario -->\n<button class=\"border-2 border-secondary text-secondary hover:bg-secondary/10\">\n  Acción Secundaria\n</button>\n\n<!-- Badge de acento -->\n<span class=\"bg-tertiary text-on-tertiary px-3 py-1 rounded-full\">\n  Badge\n</span>\n```\n## Regla de uso de on-* colors\n**Siempre** usar el color `on-*` para texto/iconos sobre un fondo de rol:\n- Fondo `bg-primary` → texto `text-on-primary`\n- Fondo `bg-secondary` → texto `text-on-secondary`\n- Fondo `bg-surface` → texto `text-on-surface`\nNo asumir que \"el texto siempre es blanco\" o \"siempre es negro\"; los roles invierten en dark mode.\n## Relacionado\n- [[Tokens primitivos de color]] — Los valores hex que definen estos roles\n- [[Surface Containers]] — Los 5 roles de superficie para jerarquía visual\n- [[Dark mode reglas]] — Cómo se invierten los roles en dark mode\n- [[ECO Design System]] — El sistema del que estos roles son parte",
+          "content_ltks": "clas tailwind dispon html bot ón principal button class bg primary text on primary hov opacity 90 acci ón principal button bot ón secundari button class bord 2 bord secondary text secondary hov bg secondary 10 acci ón secundari button badg de acent span class bg tertiary text on tertiary px 3 py 1 round full badg span regl de uso de on colors siempr usar el color on par text icon sobr un fond de rol fond bg primary text text on primary fond bg secondary text text on secondary fond bg surfac text text on surfac no asum que el text siempr es blanc o siempr es negr los rol inviert en dark mod relacion tokens primit de color los valor hex que defin estos rol surfac containers los 5 rol de superfici par jerarqu í a visual dark mod regl c ó mo se inviert los rol en dark mod eco design system el sistem del que estos rol son part",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16bc528ed33011f1a8c8134f9287b83e",
+          "document_keyword": "Roles semánticos de color.md",
+          "id": "76ff3055d2df8000",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              3,
+              2,
+              2,
+              2,
+              2
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3562167535525717,
+          "tag_kwd": [],
+          "term_similarity": 0.15698261936081678,
+          "vector_similarity": 0.8210964
+        },
+        {
+          "content": "```\nNivel 1: Tokens Primitivos (escalas Teal, Pink, Neutral 0→100)\n         src/lib/styles/colors.css\n              ↓ referenciados por\nNivel 2: Roles Semánticos (primary, on-primary, surface, etc.)\n         src/lib/styles/colors.css + tailwind.config.js\n              ↓ consumidos por\nNivel 3: Componentes / Clases Utility\n         src/app.css, src/lib/utils/theme.ts, componentes Svelte\n```\n## Archivos canónicos\n| Archivo | Responsabilidad |\n|---------|-----------------|\n| `src/lib/styles/colors.css` | Definición de todos los tokens CSS |\n| `tailwind.config.js` | Expone tokens como clases Tailwind |\n| `src/app.css` | Clases tipográficas; imports base |\n| `src/tailwind.css` | @font-face Saira; config Tailwind v4 |\n| `src/lib/utils/theme.ts` | Helpers para botones interactivos |\n## Documentación completa\n`docs/ECO-DESIGN-SYSTEM.md` — Single source of truth del sistema.\n## Relacionado\n- [[Tokens primitivos de color]] — Las escalas inmutables de la Capa 1\n- [[Roles semánticos de color]] — Los roles de la Capa 2 que cambian entre temas\n- [[Surface Containers]] — Los 5 niveles de jerarquía visual\n- [[Tipografía Saira]] — La fuente corporativa del sistema\n- [[Dark mode reglas]] — Cómo se comportan los roles en modo oscuro",
+          "content_ltks": "nivel 1 tokens primit escal teal pink neutral 0 100 src lib styles colors css referenci por nivel 2 rol sem á ntic primary on primary surfac etc src lib styles colors css tailwind config js consum por nivel 3 component clas utility src app css src lib utils them ts component svelt archiv can ó nic archiv respons src lib styles colors css definici ón de tod los tokens css tailwind config js expon tokens com clas tailwind src app css clas tipogr á fic imports bas src tailwind css font fac sair config tailwind v4 src lib utils them ts helpers par boton interact documentaci ón complet docs eco design system md singl sourc of truth del sistem relacion tokens primit de color las escal inmut de la cap 1 rol sem á ntic de color los rol de la cap 2 que cambi entre tem surfac containers los 5 nivel de jerarqu í a visual tipograf í a sair la fuent corpor del sistem dark mod regl c ó mo se comport los rol en mod oscur",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16b1000ad33011f1a8c8134f9287b83e",
+          "document_keyword": "ECO Design System.md",
+          "id": "2545c8d0c1f21b53",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3516342955525717,
+          "tag_kwd": [],
+          "term_similarity": 0.15698261936081678,
+          "vector_similarity": 0.80582154
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 3,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16d61796d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Diseño y Frontend.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16b467e0d33011f1a8c8134f9287b83e",
+          "doc_name": "Internacionalización i18n.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16bc528ed33011f1a8c8134f9287b83e",
+          "doc_name": "Roles semánticos de color.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16beaf52d33011f1a8c8134f9287b83e",
+          "doc_name": "Surface Containers.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones de componentes Svelte.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16c3d20cd33011f1a8c8134f9287b83e",
+          "doc_name": "Tokens primitivos de color.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1695c72cd33011f1a8c8134f9287b83e",
+          "doc_name": "Pipelines Azure DevOps.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b1000ad33011f1a8c8134f9287b83e",
+          "doc_name": "ECO Design System.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c11eaed33011f1a8c8134f9287b83e",
+          "doc_name": "Tipografía Saira.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "doc_name": "Chats de referencia.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b74492d33011f1a8c8134f9287b83e",
+          "doc_name": "Manejo de errores frontend.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema de errores centralizado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ae2042d33011f1a8c8134f9287b83e",
+          "doc_name": "Dark mode reglas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16dfc552d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Stack.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ce7d92d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - CI-CD y Despliegue.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168def2ad33011f1a8c8134f9287b83e",
+          "doc_name": "Build frontend.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c8d7acd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Arquitectura.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - RAG y Búsqueda Vectorial.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1674dba2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis para WebSockets.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16dd5dbcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Seguridad.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1726c2c2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17030102d33011f1a8c8134f9287b83e",
+          "doc_name": "CVE-2025-7969 markdown-it.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "doc_name": "URLs firmadas MinIO.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 20329,
+  "seconds": 0.2131209159269929,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "- [ECO Design System](Diseño%20Frontend/ECO%20Design%20System.md)\n- [Internacionalización i18n](Diseño%20Frontend/Internacionalización%20i18n.md)\n- [Manejo de errores frontend](Diseño%20Frontend/Manejo%20de%20errores%20frontend.md)\n- [Patrones de componentes Svelte](Diseño%20Frontend/Patrones%20de%20componentes%20Svelte.md)\n- [Roles semánticos de color](Diseño%20Frontend/Roles%20semánticos%20de%20color.md)\n- [Surface Containers](Diseño%20Frontend/Surface%20Containers.md)\n- [Tipografía Saira](Diseño%20Frontend/Tipografía%20Saira.md)\n- [Tokens primitivos de color](Diseño%20Frontend/Tokens%20primitivos%20de%20color.md)\n### Seguridad\n- [CSP con nonces](Seguridad/CSP%20con%20nonces.md)\n- [CVE-2025-7969 markdown-it](Seguridad/CVE-2025-7969%20markdown-it.md)\n- [Dependencias vulnerables](Seguridad/Dependencias%20vulnerables.md)\n- [Hardening ReDoS](Seguridad/Hardening%20ReDoS.md)\n- [Path Traversal](Seguridad/Path%20Traversal.md)\n- [Protección SSRF](Seguridad/Protección%20SSRF.md)\n- [Riesgos de seguridad aceptados](Seguridad/Riesgos%20de%20seguridad%20aceptados.md)\n### CI-CD\n- [Build frontend](CI-CD/Build%20frontend.md)\n- [Despliegue en OpenShift](CI-CD/Despliegue%20en%20OpenShift.md)\n- [Dockerfile](CI-CD/Dockerfile.md)\n- [Pipelines Azure DevOps](CI-CD/Pipelines%20Azure%20DevOps.md)\n- [SSL corporativo en build](CI-CD/SSL%20corporativo%20en%20build.md)\n### Desarrollo",
+        "content_ltks": "eco design system dis ñ o 20frontend eco 20design 20system md internacionalizaci ón i18n dis ñ o 20frontend internacionalizaci ón 20i18n md manej de error frontend dis ñ o 20frontend manej 20de 20errores 20frontend md patron de component svelt dis ñ o 20frontend patron 20de 20componentes 20svelte md rol sem á ntic de color dis ñ o 20frontend rol 20sem á ntic 20de 20color md surfac containers dis ñ o 20frontend surfac 20containers md tipograf í a sair dis ñ o 20frontend tipograf í a 20saira md tokens primit de color dis ñ o 20frontend tokens 20primitivos 20de 20color md segur csp con nonc segur csp 20con 20nonces md cve 2025 7969 markdown it segur cve 2025 7969 20markdown it md dependent vulner segur dependent 20vulnerables md hardening red segur hardening 20redos md path traversal segur path 20traversal md protecci ón ssrf segur protecci ón 20ssrf md riesg de segur acept segur riesg 20de 20seguridad 20aceptados md ci cd build frontend ci cd build 20frontend md desplieg en openshift ci cd desplieg 20en 20openshift md dockerfil ci cd dockerfil md pipelin azur devops ci cd pipelin 20azure 20devops md ssl corpor en build ci cd ssl 20corporativo 20en 20build md desarroll",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16f1a272d33011f1a8c8134f9287b83e",
+        "document_keyword": "OKF-INDEX.md",
+        "id": "26d1171a6535bce4",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            5,
+            4,
+            4,
+            4,
+            4
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.4124030225977231,
+        "tag_kwd": [],
+        "term_similarity": 0.25440531942531874,
+        "vector_similarity": 0.78106433
+      },
+      {
+        "content": "---\ntitle: \"MOC — Diseño y Frontend\"\ntype: moc\ntags: [coelsa-intelligent, diseño, frontend, eco-design-system, moc]\naliases: [MOC Diseño, Frontend COELSA, ECO Design System MOC]\ndescription: \"Usar cuando trabajás con la UI, el sistema de diseño ECO, colores, tipografía, dark mode o componentes de error en COELSA.Intelligent.\"\nestado: vigente\n---\n# MOC — Diseño y Frontend\nEl diseño visual está gobernado por el [[ECO Design System]], basado en Material Design 3. Teal (`#06ABB9`) es el color primario COELSA; Pink es solo acento decorativo. El frontend es una [[SvelteKit 2|SPA en SvelteKit 2]] con SSR deshabilitado.\n## Notas de este cluster\n### Sistema de diseño\n- [[ECO Design System]] — Overview del sistema basado en Material Design 3; principios y archivos canónicos\n- [[Tokens primitivos de color]] — Escalas inmutables Teal, Pink, Neutral (0→100) usadas para definir roles\n- [[Roles semánticos de color]] — `primary`, `secondary`, `tertiary`, `surface` y sus pares `on-*`; cambian entre temas\n- [[Surface Containers]] — Los 5 niveles de jerarquía visual (lowest → highest) para profundidad sin opacidad\n- [[Tipografía Saira]] — Fuente corporativa Saira; clases tipográficas de `app.css`\n- [[Dark mode reglas]] — Cómo se invierten roles (no escalas primitivas) al cambiar de tema\n### Componentes y patrones\n- [[Patrones de componentes Svelte]] — Guarda chatId; AbortController; unsubscribers en onDestroy; bloques reactivos unificados\n- [[Manejo de errores frontend]] — `NetworkError`, `TimeoutError`, `GenericError`, `ErrorBoundary`; routing en `+error.svelte`\n- [[Internacionalización i18n]] — es-AR principal; en-GB y pt-BR disponibles; idiomas eliminados\n## MOCs vecinos\n- [[MOC - Arquitectura]] — SSR deshabilitado como decisión de diseño con implicaciones de seguridad",
+        "content_ltks": "titl moc dis ñ o y frontend type moc tags coels intelligent dis ñ o frontend eco design system moc ali moc dis ñ o frontend coels eco design system moc description usar cuand trabaj á s con la ui el sistem de dis ñ o eco color tipograf í a dark mod o component de error en coels intelligent estad vigent moc dis ñ o y frontend el dis ñ o visual est á gobern por el eco design system bas en material design 3 teal 06abb9 es el color primari coels pink es sol acent decor el frontend es una sveltekit 2 spa en sveltekit 2 con ssr deshabilit not de este clust sistem de dis ñ o eco design system overview del sistem bas en material design 3 principi y archiv can ó nic tokens primit de color escal inmut teal pink neutral 0 100 usad par defin rol rol sem á ntic de color primary secondary tertiary surfac y sus par on cambi entre tem surfac containers los 5 nivel de jerarqu í a visual lowest highest par profund sin opac tipograf í a sair fuent corpor sair clas tipogr á fic de app css dark mod regl c ó mo se inviert rol no escal primit al cambi de tem component y patron patron de component svelt guard chat abortcontroll unsubscribers en ondestroy bloqu reactiv unific manej de error frontend networkerror timeouterror genericerror errorboundary routing en error svelt internacionalizaci ón i18n es ar principal en gb y pt br dispon idiom elimin mocs vecin moc arquitectur ssr deshabilit com decisi ón de dis ñ o con implic de segur",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16d61796d33011f1a8c8134f9287b83e",
+        "document_keyword": "MOC - Diseño y Frontend.md",
+        "id": "3ae67d78f7cced47",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3874709092428946,
+        "tag_kwd": [],
+        "term_similarity": 0.21067127034699226,
+        "vector_similarity": 0.8000034
+      },
+      {
+        "content": "---\ntitle: \"Internacionalización i18n\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, i18n, traducciones, es-ar]\naliases: [i18n COELSA, Traducciones COELSA, i18next COELSA]\ndescription: \"Usar cuando necesitás agregar o modificar traducciones en COELSA.Intelligent, o cuando querés entender qué idiomas están soportados y cómo configurarlos.\"\nestado: vigente\n---\n# Internacionalización i18n\n## Qué es\nCOELSA.Intelligent usa **i18next** como sistema de internacionalización. Los archivos de traducción están en `src/lib/i18n/` organizados por código de idioma.\n## Idiomas soportados\n<table>\n<thead>\n<tr>\n<th>Código</th>\n<th>Idioma</th>\n<th>Estado</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>es-AR</code></td>\n<td>Castellano Rioplatense</td>\n<td><strong>Default</strong> — ver [[Idioma por defecto es-AR]]</td>\n</tr>\n<tr>\n<td><code>en-GB</code></td>\n<td>English (British)</td>\n<td>Activo</td>\n</tr>\n<tr>\n<td><code>pt-BR</code></td>\n<td>Português (Brasil)</td>\n<td>Activo</td>\n</tr>\n</tbody>\n</table>\n## Idiomas eliminados del fork\nRemovidos en v1.3.0: `es-ES`, `pt-PT`, `en-US`. Ver [[Idioma por defecto es-AR]].\n## Configuración\n```env\nDEFAULT_LOCALE=es-AR\n```\nEn el frontend, el idioma también puede seleccionarse por usuario en Settings (acceso restringido según [[Roles de usuario]]).\n## Uso en componentes Svelte\n```svelte\n<script>\n  import { t } from '$lib/i18n';\n</script>\n\n<button>{$t('common.send')}</button>\n<p>{$t('chat.placeholder', { name: userName })}</p>\n```\n## Agregar una traducción\n1. Localizar la clave en `src/lib/i18n/es-AR.json` (o crear si no existe)",
+        "content_ltks": "titl internacionalizaci ón i18n type concept tags coels intelligent dis ñ o i18n traduccion es ar ali i18n coels traduccion coels i18next coels description usar cuand necesit á s agreg o modific traduccion en coels intelligent o cuand quer és entend qu é idiom est á n soport y c ó mo configur estad vigent internacionalizaci ón i18n qu é es coels intelligent usa i18next com sistem de internacionalizaci ón los archiv de traducci ón est á n en src lib i18n organiz por c ó dig de idiom idiom soport the c ó dig idiom estad the tbody cod es ar cod castellan rioplatens strong default strong ver idiom por defect es ar cod en gb cod english british activ cod pt br cod portugu ê s brasil activ tbody idiom elimin del fork remov en v1 3 0 es es pt pt en us ver idiom por defect es ar configuraci ón env default _ local es ar en el frontend el idiom tambi é n pued seleccion por usuari en settings acces restring seg ú n rol de usuari uso en component svelt svelt script import t from lib i18n script button t common send button p t chat placehold nam usernam p agreg una traducci ón 1 localiz la clav en src lib i18n es ar json o cre si no exist",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16b467e0d33011f1a8c8134f9287b83e",
+        "document_keyword": "Internacionalización i18n.md",
+        "id": "817b28bdcb20c884",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3581908773480762,
+        "tag_kwd": [],
+        "term_similarity": 0.16631851335439457,
+        "vector_similarity": 0.80589306
+      },
+      {
+        "content": "## Clases Tailwind disponibles\n```html\n<!-- Botón principal -->\n<button class=\"bg-primary text-on-primary hover:opacity-90\">\n  Acción Principal\n</button>\n\n<!-- Botón secundario -->\n<button class=\"border-2 border-secondary text-secondary hover:bg-secondary/10\">\n  Acción Secundaria\n</button>\n\n<!-- Badge de acento -->\n<span class=\"bg-tertiary text-on-tertiary px-3 py-1 rounded-full\">\n  Badge\n</span>\n```\n## Regla de uso de on-* colors\n**Siempre** usar el color `on-*` para texto/iconos sobre un fondo de rol:\n- Fondo `bg-primary` → texto `text-on-primary`\n- Fondo `bg-secondary` → texto `text-on-secondary`\n- Fondo `bg-surface` → texto `text-on-surface`\nNo asumir que \"el texto siempre es blanco\" o \"siempre es negro\"; los roles invierten en dark mode.\n## Relacionado\n- [[Tokens primitivos de color]] — Los valores hex que definen estos roles\n- [[Surface Containers]] — Los 5 roles de superficie para jerarquía visual\n- [[Dark mode reglas]] — Cómo se invierten los roles en dark mode\n- [[ECO Design System]] — El sistema del que estos roles son parte",
+        "content_ltks": "clas tailwind dispon html bot ón principal button class bg primary text on primary hov opacity 90 acci ón principal button bot ón secundari button class bord 2 bord secondary text secondary hov bg secondary 10 acci ón secundari button badg de acent span class bg tertiary text on tertiary px 3 py 1 round full badg span regl de uso de on colors siempr usar el color on par text icon sobr un fond de rol fond bg primary text text on primary fond bg secondary text text on secondary fond bg surfac text text on surfac no asum que el text siempr es blanc o siempr es negr los rol inviert en dark mod relacion tokens primit de color los valor hex que defin estos rol surfac containers los 5 rol de superfici par jerarqu í a visual dark mod regl c ó mo se inviert los rol en dark mod eco design system el sistem del que estos rol son part",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16bc528ed33011f1a8c8134f9287b83e",
+        "document_keyword": "Roles semánticos de color.md",
+        "id": "76ff3055d2df8000",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            3,
+            2,
+            2,
+            2,
+            2
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3562167535525717,
+        "tag_kwd": [],
+        "term_similarity": 0.15698261936081678,
+        "vector_similarity": 0.8210964
+      },
+      {
+        "content": "```\nNivel 1: Tokens Primitivos (escalas Teal, Pink, Neutral 0→100)\n         src/lib/styles/colors.css\n              ↓ referenciados por\nNivel 2: Roles Semánticos (primary, on-primary, surface, etc.)\n         src/lib/styles/colors.css + tailwind.config.js\n              ↓ consumidos por\nNivel 3: Componentes / Clases Utility\n         src/app.css, src/lib/utils/theme.ts, componentes Svelte\n```\n## Archivos canónicos\n| Archivo | Responsabilidad |\n|---------|-----------------|\n| `src/lib/styles/colors.css` | Definición de todos los tokens CSS |\n| `tailwind.config.js` | Expone tokens como clases Tailwind |\n| `src/app.css` | Clases tipográficas; imports base |\n| `src/tailwind.css` | @font-face Saira; config Tailwind v4 |\n| `src/lib/utils/theme.ts` | Helpers para botones interactivos |\n## Documentación completa\n`docs/ECO-DESIGN-SYSTEM.md` — Single source of truth del sistema.\n## Relacionado\n- [[Tokens primitivos de color]] — Las escalas inmutables de la Capa 1\n- [[Roles semánticos de color]] — Los roles de la Capa 2 que cambian entre temas\n- [[Surface Containers]] — Los 5 niveles de jerarquía visual\n- [[Tipografía Saira]] — La fuente corporativa del sistema\n- [[Dark mode reglas]] — Cómo se comportan los roles en modo oscuro",
+        "content_ltks": "nivel 1 tokens primit escal teal pink neutral 0 100 src lib styles colors css referenci por nivel 2 rol sem á ntic primary on primary surfac etc src lib styles colors css tailwind config js consum por nivel 3 component clas utility src app css src lib utils them ts component svelt archiv can ó nic archiv respons src lib styles colors css definici ón de tod los tokens css tailwind config js expon tokens com clas tailwind src app css clas tipogr á fic imports bas src tailwind css font fac sair config tailwind v4 src lib utils them ts helpers par boton interact documentaci ón complet docs eco design system md singl sourc of truth del sistem relacion tokens primit de color las escal inmut de la cap 1 rol sem á ntic de color los rol de la cap 2 que cambi entre tem surfac containers los 5 nivel de jerarqu í a visual tipograf í a sair la fuent corpor del sistem dark mod regl c ó mo se comport los rol en mod oscur",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16b1000ad33011f1a8c8134f9287b83e",
+        "document_keyword": "ECO Design System.md",
+        "id": "2545c8d0c1f21b53",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3516342955525717,
+        "tag_kwd": [],
+        "term_similarity": 0.15698261936081678,
+        "vector_similarity": 0.80582154
+      }
+    ],
+    "total": 64
+  }
+}

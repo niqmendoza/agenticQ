@@ -1,0 +1,449 @@
+{
+  "request": {
+    "question": "JWT y sesiones validación HTTPBearer get_current_user endpoint protegido",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 3,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---\n# JWT y sesiones\n## Qué es\nDespués de un login OAuth exitoso con [[Azure AD OAuth|Azure AD]], COELSA.Intelligent genera un **JWT interno** (JSON Web Token) que el frontend usa en todas las requests subsiguientes. Este token es independiente del token de Azure AD.\n## Especificaciones del token\n- **Algoritmo**: HS256 (HMAC con SHA-256)\n- **Clave secreta**: `WEBUI_SECRET_KEY` (variable de entorno)\n- **Módulo**: `backend/server/utils/auth.py`\n## Generación\n```python\n# Pseudocódigo del flujo\ntoken = jwt.encode(\n    {\n        \"id\": user.id,\n        \"email\": user.email,\n        \"role\": user.role,\n        \"exp\": datetime.utcnow() + timedelta(hours=SESSION_HOURS)\n    },\n    SESSION_SECRET,  # WEBUI_SECRET_KEY\n    algorithm=ALGORITHM  # HS256\n)\n```\n## Validación\nCada endpoint protegido valida el token usando el `HTTPBearer` security scheme de FastAPI. El decorador `get_current_user` extrae el usuario del token y verifica que exista en la base de datos.\n## Firma HMAC\nPara verificación de webhooks entre servicios internos, existe una firma HMAC separada (`verify_signature()`) usando `TRUSTED_SIGNATURE_KEY`. Usa `hmac.compare_digest` para prevenir timing attacks.\n## Relacionado\n- [[Azure AD login exclusivo]] — El flujo OAuth que termina en la generación del JWT\n- [[bcrypt para contraseñas]] — La otra pieza de auth; para contraseñas locales (deshabilitadas en COELSA)\n- [[FastAPI y uvicorn]] — El servidor donde se registran las dependencias de validación\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+          "content_ltks": "titl jwt y sesion type concept tags coels intelligent auth jwt sesion tokens ali jwt coels tokens de sesi ón hs256 coels description usar cuand necesit á s entend c ó mo se gener y valid los tokens de sesi ón intern de coels intelligent despu és del login con azur ad estad vigent jwt y sesion qu é es despu és de un login oauth exit con azur ad oauth azur ad coels intelligent gener un jwt intern json web tok que el frontend usa en tod las requests subsiguient este tok es independient del tok de azur ad especif del tok algoritm hs256 hmac con sha 256 clav secret webui _ secret _ key variabl de entorn m ó dul backend serv utils auth py generaci ón python pseudoc ó dig del fluj tok jwt encod id user id email user email rol user rol exp datetim utcnow timedelt hours session _ hours session _ secret webui _ secret _ key algorithm algorithm hs256 validaci ón cad endpoint proteg val el tok usand el httpbear security schem de fastapi el decor get _ current _ user extra el usuari del tok y verif que exist en la bas de dat firm hmac par verificaci ón de webhooks entre servici intern exist una firm hmac separ verify _ signatur usand trust _ signatur _ key usa hmac compar _ digest par preven timing attacks relacion azur ad login exclus el fluj oauth que termin en la generaci ón del jwt bcrypt par contr ñ as la otra piez de auth par contr ñ as local deshabilit en coels fastapi y uvicorn el servidor dond se registr las dependent de validaci ón moc autenticaci ón y permis í ndic del clust de auth",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16851378d33011f1a8c8134f9287b83e",
+          "document_keyword": "JWT y sesiones.md",
+          "id": "ce8d5e9a4048aab6",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3885580240724454,
+          "tag_kwd": [],
+          "term_similarity": 0.20371560581777917,
+          "vector_similarity": 0.819857
+        },
+        {
+          "content": "---\ntitle: \"Headers de usuario COELSA\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, http-headers]\naliases: [Encabezados HTTP COELSA, X-COELSA headers]\ndescription: \"Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent.\"\nestado: vigente\n---\n# Headers de usuario COELSA\n## Qué es\nCOELSA.Intelligent renombró los encabezados HTTP que propagan la identidad del usuario autenticado entre componentes. La convención es:\n```\nX-COELSA.Intelligent-User-*\n```\nEstos headers viajan en las requests del proxy y del middleware de autenticación hacia los servicios internos.\n## Por qué el renombre\nEl upstream Open WebUI usaba nombres de header genéricos. El renombre hace que el origen de los headers sea inequívoco en logs y en reglas de seguridad de red, y evita colisiones con otros sistemas que puedan pasar headers similares.\n## Uso\nLos headers se inyectan automáticamente por el middleware de autenticación al validar el token JWT. Los routers que necesitan la identidad del usuario usan el sistema estándar de dependencias de FastAPI (`get_current_user`) en lugar de leer los headers directamente.\n## Relacionado\n- [[JWT y sesiones]] — El token JWT que valida la sesión antes de inyectar estos headers\n- [[FastAPI y uvicorn]] — El servidor donde el middleware de auth corre\n- [[Azure AD login exclusivo]] — La fuente de identidad que genera estos headers\n- [[MOC - Arquitectura]] — Contexto de la convención en el sistema",
+          "content_ltks": "titl headers de usuari coels type concept tags coels intelligent arquitectur http headers ali encabez http coels x coels headers description usar cuand necesit á s sab c ó mo se identif al usuari actual en las requests http entre component intern de coels intelligent estad vigent headers de usuari coels qu é es coels intelligent renombr ó los encabez http que propag la ident del usuari autentic entre component la convenci ón es x coels intelligent user estos headers viaj en las requests del proxy y del middlewar de autenticaci ón haci los servici intern por qu é el renombr el upstream open webui usab nombr de head gen é ric el renombr hac que el orig de los headers sea inequ í voc en logs y en regl de segur de red y evit colision con otros sistem que pued pas headers similar uso los headers se inyect autom á tic por el middlewar de autenticaci ón al valid el tok jwt los routers que necesit la ident del usuari usan el sistem est á ndar de dependent de fastapi get _ current _ user en lug de leer los headers direct relacion jwt y sesion el tok jwt que val la sesi ón antes de inyect estos headers fastapi y uvicorn el servidor dond el middlewar de auth corr azur ad login exclus la fuent de ident que gener estos headers moc arquitectur context de la convenci ón en el sistem",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "document_keyword": "Headers de usuario COELSA.md",
+          "id": "884e165933238d18",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3683837963444213,
+          "tag_kwd": [],
+          "term_similarity": 0.1828541519206019,
+          "vector_similarity": 0.8012863
+        },
+        {
+          "content": "---\ntitle: \"Validación de urlIdx\"\ntype: decision\ntags: [coelsa-intelligent, modelos-ia, litellm, routing, bug-fix]\naliases: [urlIdx fix, LiteLLM routing fix, Respuestas vacías LiteLLM]\ndescription: \"Usar cuando diagnosticás respuestas vacías con modelos LiteLLM de prefijo ollama/ o cuando necesitás entender el fix de routing del CHANGELOG v1.3.0.\"\nestado: vigente\n---\n# Validación de urlIdx\n## El problema (upstream bug)\nEl upstream Open WebUI determinaba el endpoint de un modelo basándose **únicamente** en el campo `owned_by`:\n- `owned_by == \"ollama\"` → endpoint nativo de Ollama\n- Cualquier otro → endpoint OpenAI\n**El mismatch**: modelos configurados en LiteLLM con prefijo `ollama/` (ej: `ollama/llama3:70b`) tienen `owned_by=ollama`. El upstream los enviaba al endpoint nativo de Ollama, pero LiteLLM **siempre responde en formato OpenAI**, no en el formato nativo de Ollama. El mismatch de formato generaba **respuestas vacías en la UI**.\n## La corrección\n```python\n# backend/server/utils/chat.py (líneas ~263–293)\n# ANTES (upstream):\nif model.owned_by == \"ollama\":\n    endpoint = OLLAMA_BASE_URL\n\n# DESPUÉS (fix COELSA):\nif model.urlIdx is not None:\n    # El modelo es proxied (vía LiteLLM o similar) → siempre OpenAI\n    endpoint = OPENAI_API_BASE_URL\nelif model.owned_by == \"ollama\":\n    # Modelo nativo de Ollama sin proxy\n    endpoint = OLLAMA_BASE_URL\nelse:\n    endpoint = OPENAI_API_BASE_URL\n```\n## Regla resultante\n| Condición | Destino |\n|-----------|---------|\n| `urlIdx` definido | LiteLLM proxy (OpenAI endpoint) |\n| `urlIdx` ausente + `owned_by == \"ollama\"` | Ollama nativo |\n| Default | LiteLLM proxy |\n## Relacionado\n- [[Routing de modelos IA]] — La lógica de routing completa donde vive este fix",
+          "content_ltks": "titl validaci ón de urlidx type decision tags coels intelligent model ia litellm routing bug fix ali urlidx fix litellm routing fix respuest vac í as litellm description usar cuand diagnostic á s respuest vac í as con model litellm de prefij ollam o cuand necesit á s entend el fix de routing del changelog v1 3 0 estad vigent validaci ón de urlidx el problem upstream bug el upstream open webui determin el endpoint de un model bas á ndos ú nic en el camp owned _ by owned _ by ollam endpoint nativ de ollam cualqui otro endpoint openai el mismatch model configur en litellm con prefij ollam ej ollam llama3 70b tien owned _ by ollam el upstream los envi al endpoint nativ de ollam per litellm siempr respond en format openai no en el format nativ de ollam el mismatch de format gener respuest vac í as en la ui la correcci ón python backend serv utils chat py l í neas 263 293 antes upstream if model owned _ by ollam endpoint ollam _ bas _ url despu és fix coels if model urlidx is not non el model es proxi v í a litellm o simil siempr openai endpoint openai _ api _ bas _ url elif model owned _ by ollam model nativ de ollam sin proxy endpoint ollam _ bas _ url else endpoint openai _ api _ bas _ url regl result condici ón destin urlidx defin litellm proxy openai endpoint urlidx ausent owned _ by ollam ollam nativ default litellm proxy relacion routing de model ia la l ó gic de routing complet dond viv este fix",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "document_keyword": "Validación de urlIdx.md",
+          "id": "f917f99b59730443",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.31161109379626123,
+          "tag_kwd": [],
+          "term_similarity": 0.1088899482803732,
+          "vector_similarity": 0.7846271
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 3,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "169dbf04d33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar proveedor de almacenamiento.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema de errores centralizado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17006c80d33011f1a8c8134f9287b83e",
+          "doc_name": "CSP con nonces.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17057dd8d33011f1a8c8134f9287b83e",
+          "doc_name": "Dependencias vulnerables.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a03f7cd33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar router REST.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "doc_name": "URLs firmadas MinIO.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167d610ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD login exclusivo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170d40fed33011f1a8c8134f9287b83e",
+          "doc_name": "Protección SSRF.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168b48f6d33011f1a8c8134f9287b83e",
+          "doc_name": "bcrypt para contraseñas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171f52b2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ollama.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167fe7ead33011f1a8c8134f9287b83e",
+          "doc_name": "Control de acceso a recursos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1674dba2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis para WebSockets.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170a9f66d33011f1a8c8134f9287b83e",
+          "doc_name": "Path Traversal.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a5b100d33011f1a8c8134f9287b83e",
+          "doc_name": "Loguru y logging.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168284aad33011f1a8c8134f9287b83e",
+          "doc_name": "Grupos y permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171cb944d33011f1a8c8134f9287b83e",
+          "doc_name": "MinIO S3.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171a4510d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e24f02d33011f1a8c8134f9287b83e",
+          "doc_name": "Cadena SearXNG Context Forge.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1698681ad33011f1a8c8134f9287b83e",
+          "doc_name": "SSL corporativo en build.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169092d4d33011f1a8c8134f9287b83e",
+          "doc_name": "Despliegue en OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17030102d33011f1a8c8134f9287b83e",
+          "doc_name": "CVE-2025-7969 markdown-it.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b74492d33011f1a8c8134f9287b83e",
+          "doc_name": "Manejo de errores frontend.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16bc528ed33011f1a8c8134f9287b83e",
+          "doc_name": "Roles semánticos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones de componentes Svelte.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1695c72cd33011f1a8c8134f9287b83e",
+          "doc_name": "Pipelines Azure DevOps.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b467e0d33011f1a8c8134f9287b83e",
+          "doc_name": "Internacionalización i18n.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d61796d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Diseño y Frontend.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 16198,
+  "seconds": 0.14706091699190438,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---\n# JWT y sesiones\n## Qué es\nDespués de un login OAuth exitoso con [[Azure AD OAuth|Azure AD]], COELSA.Intelligent genera un **JWT interno** (JSON Web Token) que el frontend usa en todas las requests subsiguientes. Este token es independiente del token de Azure AD.\n## Especificaciones del token\n- **Algoritmo**: HS256 (HMAC con SHA-256)\n- **Clave secreta**: `WEBUI_SECRET_KEY` (variable de entorno)\n- **Módulo**: `backend/server/utils/auth.py`\n## Generación\n```python\n# Pseudocódigo del flujo\ntoken = jwt.encode(\n    {\n        \"id\": user.id,\n        \"email\": user.email,\n        \"role\": user.role,\n        \"exp\": datetime.utcnow() + timedelta(hours=SESSION_HOURS)\n    },\n    SESSION_SECRET,  # WEBUI_SECRET_KEY\n    algorithm=ALGORITHM  # HS256\n)\n```\n## Validación\nCada endpoint protegido valida el token usando el `HTTPBearer` security scheme de FastAPI. El decorador `get_current_user` extrae el usuario del token y verifica que exista en la base de datos.\n## Firma HMAC\nPara verificación de webhooks entre servicios internos, existe una firma HMAC separada (`verify_signature()`) usando `TRUSTED_SIGNATURE_KEY`. Usa `hmac.compare_digest` para prevenir timing attacks.\n## Relacionado\n- [[Azure AD login exclusivo]] — El flujo OAuth que termina en la generación del JWT\n- [[bcrypt para contraseñas]] — La otra pieza de auth; para contraseñas locales (deshabilitadas en COELSA)\n- [[FastAPI y uvicorn]] — El servidor donde se registran las dependencias de validación\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+        "content_ltks": "titl jwt y sesion type concept tags coels intelligent auth jwt sesion tokens ali jwt coels tokens de sesi ón hs256 coels description usar cuand necesit á s entend c ó mo se gener y valid los tokens de sesi ón intern de coels intelligent despu és del login con azur ad estad vigent jwt y sesion qu é es despu és de un login oauth exit con azur ad oauth azur ad coels intelligent gener un jwt intern json web tok que el frontend usa en tod las requests subsiguient este tok es independient del tok de azur ad especif del tok algoritm hs256 hmac con sha 256 clav secret webui _ secret _ key variabl de entorn m ó dul backend serv utils auth py generaci ón python pseudoc ó dig del fluj tok jwt encod id user id email user email rol user rol exp datetim utcnow timedelt hours session _ hours session _ secret webui _ secret _ key algorithm algorithm hs256 validaci ón cad endpoint proteg val el tok usand el httpbear security schem de fastapi el decor get _ current _ user extra el usuari del tok y verif que exist en la bas de dat firm hmac par verificaci ón de webhooks entre servici intern exist una firm hmac separ verify _ signatur usand trust _ signatur _ key usa hmac compar _ digest par preven timing attacks relacion azur ad login exclus el fluj oauth que termin en la generaci ón del jwt bcrypt par contr ñ as la otra piez de auth par contr ñ as local deshabilit en coels fastapi y uvicorn el servidor dond se registr las dependent de validaci ón moc autenticaci ón y permis í ndic del clust de auth",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16851378d33011f1a8c8134f9287b83e",
+        "document_keyword": "JWT y sesiones.md",
+        "id": "ce8d5e9a4048aab6",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3885580240724454,
+        "tag_kwd": [],
+        "term_similarity": 0.20371560581777917,
+        "vector_similarity": 0.819857
+      },
+      {
+        "content": "---\ntitle: \"Headers de usuario COELSA\"\ntype: concepto\ntags: [coelsa-intelligent, arquitectura, http-headers]\naliases: [Encabezados HTTP COELSA, X-COELSA headers]\ndescription: \"Usar cuando necesitás saber cómo se identifica al usuario actual en las requests HTTP entre componentes internos de COELSA.Intelligent.\"\nestado: vigente\n---\n# Headers de usuario COELSA\n## Qué es\nCOELSA.Intelligent renombró los encabezados HTTP que propagan la identidad del usuario autenticado entre componentes. La convención es:\n```\nX-COELSA.Intelligent-User-*\n```\nEstos headers viajan en las requests del proxy y del middleware de autenticación hacia los servicios internos.\n## Por qué el renombre\nEl upstream Open WebUI usaba nombres de header genéricos. El renombre hace que el origen de los headers sea inequívoco en logs y en reglas de seguridad de red, y evita colisiones con otros sistemas que puedan pasar headers similares.\n## Uso\nLos headers se inyectan automáticamente por el middleware de autenticación al validar el token JWT. Los routers que necesitan la identidad del usuario usan el sistema estándar de dependencias de FastAPI (`get_current_user`) en lugar de leer los headers directamente.\n## Relacionado\n- [[JWT y sesiones]] — El token JWT que valida la sesión antes de inyectar estos headers\n- [[FastAPI y uvicorn]] — El servidor donde el middleware de auth corre\n- [[Azure AD login exclusivo]] — La fuente de identidad que genera estos headers\n- [[MOC - Arquitectura]] — Contexto de la convención en el sistema",
+        "content_ltks": "titl headers de usuari coels type concept tags coels intelligent arquitectur http headers ali encabez http coels x coels headers description usar cuand necesit á s sab c ó mo se identif al usuari actual en las requests http entre component intern de coels intelligent estad vigent headers de usuari coels qu é es coels intelligent renombr ó los encabez http que propag la ident del usuari autentic entre component la convenci ón es x coels intelligent user estos headers viaj en las requests del proxy y del middlewar de autenticaci ón haci los servici intern por qu é el renombr el upstream open webui usab nombr de head gen é ric el renombr hac que el orig de los headers sea inequ í voc en logs y en regl de segur de red y evit colision con otros sistem que pued pas headers similar uso los headers se inyect autom á tic por el middlewar de autenticaci ón al valid el tok jwt los routers que necesit la ident del usuari usan el sistem est á ndar de dependent de fastapi get _ current _ user en lug de leer los headers direct relacion jwt y sesion el tok jwt que val la sesi ón antes de inyect estos headers fastapi y uvicorn el servidor dond el middlewar de auth corr azur ad login exclus la fuent de ident que gener estos headers moc arquitectur context de la convenci ón en el sistem",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "166cd38ad33011f1a8c8134f9287b83e",
+        "document_keyword": "Headers de usuario COELSA.md",
+        "id": "884e165933238d18",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3683837963444213,
+        "tag_kwd": [],
+        "term_similarity": 0.1828541519206019,
+        "vector_similarity": 0.8012863
+      },
+      {
+        "content": "---\ntitle: \"Validación de urlIdx\"\ntype: decision\ntags: [coelsa-intelligent, modelos-ia, litellm, routing, bug-fix]\naliases: [urlIdx fix, LiteLLM routing fix, Respuestas vacías LiteLLM]\ndescription: \"Usar cuando diagnosticás respuestas vacías con modelos LiteLLM de prefijo ollama/ o cuando necesitás entender el fix de routing del CHANGELOG v1.3.0.\"\nestado: vigente\n---\n# Validación de urlIdx\n## El problema (upstream bug)\nEl upstream Open WebUI determinaba el endpoint de un modelo basándose **únicamente** en el campo `owned_by`:\n- `owned_by == \"ollama\"` → endpoint nativo de Ollama\n- Cualquier otro → endpoint OpenAI\n**El mismatch**: modelos configurados en LiteLLM con prefijo `ollama/` (ej: `ollama/llama3:70b`) tienen `owned_by=ollama`. El upstream los enviaba al endpoint nativo de Ollama, pero LiteLLM **siempre responde en formato OpenAI**, no en el formato nativo de Ollama. El mismatch de formato generaba **respuestas vacías en la UI**.\n## La corrección\n```python\n# backend/server/utils/chat.py (líneas ~263–293)\n# ANTES (upstream):\nif model.owned_by == \"ollama\":\n    endpoint = OLLAMA_BASE_URL\n\n# DESPUÉS (fix COELSA):\nif model.urlIdx is not None:\n    # El modelo es proxied (vía LiteLLM o similar) → siempre OpenAI\n    endpoint = OPENAI_API_BASE_URL\nelif model.owned_by == \"ollama\":\n    # Modelo nativo de Ollama sin proxy\n    endpoint = OLLAMA_BASE_URL\nelse:\n    endpoint = OPENAI_API_BASE_URL\n```\n## Regla resultante\n| Condición | Destino |\n|-----------|---------|\n| `urlIdx` definido | LiteLLM proxy (OpenAI endpoint) |\n| `urlIdx` ausente + `owned_by == \"ollama\"` | Ollama nativo |\n| Default | LiteLLM proxy |\n## Relacionado\n- [[Routing de modelos IA]] — La lógica de routing completa donde vive este fix",
+        "content_ltks": "titl validaci ón de urlidx type decision tags coels intelligent model ia litellm routing bug fix ali urlidx fix litellm routing fix respuest vac í as litellm description usar cuand diagnostic á s respuest vac í as con model litellm de prefij ollam o cuand necesit á s entend el fix de routing del changelog v1 3 0 estad vigent validaci ón de urlidx el problem upstream bug el upstream open webui determin el endpoint de un model bas á ndos ú nic en el camp owned _ by owned _ by ollam endpoint nativ de ollam cualqui otro endpoint openai el mismatch model configur en litellm con prefij ollam ej ollam llama3 70b tien owned _ by ollam el upstream los envi al endpoint nativ de ollam per litellm siempr respond en format openai no en el format nativ de ollam el mismatch de format gener respuest vac í as en la ui la correcci ón python backend serv utils chat py l í neas 263 293 antes upstream if model owned _ by ollam endpoint ollam _ bas _ url despu és fix coels if model urlidx is not non el model es proxi v í a litellm o simil siempr openai endpoint openai _ api _ bas _ url elif model owned _ by ollam model nativ de ollam sin proxy endpoint ollam _ bas _ url else endpoint openai _ api _ bas _ url regl result condici ón destin urlidx defin litellm proxy openai endpoint urlidx ausent owned _ by ollam ollam nativ default litellm proxy relacion routing de model ia la l ó gic de routing complet dond viv este fix",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16eeea46d33011f1a8c8134f9287b83e",
+        "document_keyword": "Validación de urlIdx.md",
+        "id": "f917f99b59730443",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.31161109379626123,
+        "tag_kwd": [],
+        "term_similarity": 0.1088899482803732,
+        "vector_similarity": 0.7846271
+      }
+    ],
+    "total": 64
+  }
+}

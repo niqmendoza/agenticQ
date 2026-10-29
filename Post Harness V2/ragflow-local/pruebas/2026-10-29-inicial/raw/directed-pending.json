@@ -1,0 +1,444 @@
+{
+  "request": {
+    "question": "Roles de usuario pending pantalla de espera no puede usar el chat",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 3,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"Patrones de componentes Svelte\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]\naliases: [Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]\ndescription: \"Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.\"\nestado: vigente\n---\n# Patrones de componentes Svelte\n## Qué es\nHay **4 patrones de código en el frontend** que resuelven bugs concretos. Su omisión o reversión reproduce los bugs originales. Documentados aquí como referencia obligatoria al trabajar en `Chat.svelte` y componentes relacionados.\n## 1. Guarda de `chatId` (evita loop de renderizado)\n```typescript\n// src/routes/(app)/c/[id]/+page.svelte o Chat.svelte\nif ($chatId !== chatIdProp) {\n    chatId.set(chatIdProp);\n}\n```\n**Por qué**: sin esta guarda, el cambio de chat dispara una actualización del store que a su vez dispara otro cambio de chat, generando un **loop de renderizado infinito**.\n## 2. `AbortController` en `loadChat` (reduce requests duplicados ~80%)\n```typescript\nlet currentController: AbortController | null = null;\n\nasync function loadChat(id: string) {\n    currentController?.abort();  // Cancela la carga anterior\n    currentController = new AbortController();\n    const data = await fetchChat(id, { signal: currentController.signal });\n}\n```\n**Por qué**: si el usuario cambia de chat antes de que termine de cargar el anterior, sin `AbortController` ambas requests corren en paralelo y pueden pisarse. Reduce ~80% de requests duplicados.\n## 3. Unsubscribers en `onDestroy` (evita memory leaks)\n```typescript\nimport { onMount, onDestroy } from 'svelte';\n\nlet unsub: () => void;\n\nonMount(() => {\n    unsub = someStore.subscribe(value => { ... });\n});\n\nonDestroy(() => {\n    unsub?.();  // OBLIGATORIO: limpiar la suscripción\n});\n```",
+          "content_ltks": "titl patron de component svelt type concept tags coels intelligent dis ñ o frontend svelt patron bugs ali svelt patterns patron cr í tic frontend chat svelt patterns description usar cuand modific á s chat svelt o component relacion contien los 4 patron obligatori que resuelv bugs concret y no deb revert estad vigent patron de component svelt qu é es hay 4 patron de c ó dig en el frontend que resuelv bugs concret su omisi ón o reversi ón reproduc los bugs original document aqu í com referent obligatori al trabaj en chat svelt y component relacion 1 guard de chat evit loop de renderiz typescript src rout app c id pag svelt o chat svelt if chat chatidprop chat set chatidprop por qu é sin esta guard el cambi de chat disp una actualizaci ón del stor que a su vez disp otro cambi de chat gener un loop de renderiz infinit 2 abortcontroll en loadchat reduc requests duplic 80 typescript let currentcontroll abortcontroll null null async function loadchat id string currentcontroll abort cancel la carg anterior currentcontroll new abortcontroll const dat await fetchchat id signal currentcontroll signal por qu é si el usuari cambi de chat antes de que termin de carg el anterior sin abortcontroll ambas requests corr en paralel y pued pis reduc 80 de requests duplic 3 unsubscribers en ondestroy evit memory leaks typescript import onmount ondestroy from svelt let unsub void onmount unsub somestor subscrib valu ondestroy unsub obligatori limpi la suscripci ón",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "document_keyword": "Patrones de componentes Svelte.md",
+          "id": "cb869824558ceb6c",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2948197660535803,
+          "tag_kwd": [],
+          "term_similarity": 0.07716169436225755,
+          "vector_similarity": 0.8026886
+        },
+        {
+          "content": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---\n# Roles de usuario\n## Qué es\nCOELSA.Intelligent define tres roles de usuario, almacenados en el campo `role` del modelo `User`:\n<table>\n<thead>\n<tr>\n<th>Rol</th>\n<th>Descripción</th>\n<th>Capacidades principales</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>admin</code></td>\n<td>Administrador del sistema</td>\n<td>Acceso total; gestión de usuarios, grupos, modelos, configuración</td>\n</tr>\n<tr>\n<td><code>user</code></td>\n<td>Usuario activo</td>\n<td>Chat, upload de archivos, uso de bases de conocimiento según permisos</td>\n</tr>\n<tr>\n<td><code>pending</code></td>\n<td>En espera de aprobación</td>\n<td>Solo puede ver la pantalla de espera; no puede usar el chat</td>\n</tr>\n</tbody>\n</table>\n## Estado `pending`\nUn usuario recién logeado por primera vez via Azure AD puede quedar en estado `pending` si la configuración requiere aprobación manual. Un admin debe cambiar el rol a `user` para habilitar el acceso.\n## Restricciones por rol en la UI\nEn la vista de **Settings**, las siguientes tabs están restringidas a `admin`:\n- **Personalization** — configuración visual de la app\n- **Audio** — configuración de síntesis y transcripción de voz\nLos usuarios `user` ven estas tabs pero no pueden acceder a su contenido.\n## Funcionalidades deshabilitadas para todos los roles\nIndependientemente del rol, estas funcionalidades están desactivadas en el fork:\n- Sugerencias de chat automáticas\n- Ejecución de Python en CodeBlocks\n- Webhooks en la sección Account\n## Relacionado\n- [[Grupos y permisos]] — Permisos granulares dentro del rol `user`",
+          "content_ltks": "titl rol de usuari type concept tags coels intelligent auth rol permis ali user rol rol coels admin user pending description usar cuand necesit á s sab qu é pued hac un usuari seg ú n su rol en coels intelligent o cu á ndo restring acces a una funcional estad vigent rol de usuari qu é es coels intelligent defin tres rol de usuari almacen en el camp rol del model user the rol descripci ón capac principal the tbody cod admin cod administr del sistem acces total gesti ón de usuari grup model configuraci ón cod user cod usuari activ chat uplo de archiv uso de bas de conoc seg ú n permis cod pending cod en esper de aprobaci ón sol pued ver la pantall de esper no pued usar el chat tbody estad pending un usuari reci é n log por primer vez via azur ad pued qued en estad pending si la configuraci ón requier aprobaci ón manual un admin deb cambi el rol a user par habilit el acces restriccion por rol en la ui en la vist de settings las siguient tabs est á n restring a admin personalization configuraci ón visual de la app audi configuraci ón de s í ntesis y transcripci ón de voz los usuari user ven estas tabs per no pued acced a su conten funcional deshabilit par tod los rol independient del rol estas funcional est á n desactiv en el fork sugerent de chat autom á tic ejecuci ón de python en codeblocks webhooks en la secci ón account relacion grup y permis permis granular dentr del rol user",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16884264d33011f1a8c8134f9287b83e",
+          "document_keyword": "Roles de usuario.md",
+          "id": "073ac9214925bf31",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2933189305405289,
+          "tag_kwd": [],
+          "term_similarity": 0.05667355648646984,
+          "vector_similarity": 0.84549147
+        },
+        {
+          "content": "---\ntitle: \"Chats de referencia\"\ntype: concepto\ntags: [coelsa-intelligent, rag, chat, referencia, contexto]\naliases: [Reference chats, Chats adjuntos, Chat como contexto]\ndescription: \"Usar cuando necesitás entender cómo un usuario puede adjuntar una conversación previa como contexto en un nuevo mensaje en COELSA.Intelligent.\"\nestado: vigente\n---\n# Chats de referencia\n## Qué es\nLos **chats de referencia** permiten a los usuarios adjuntar conversaciones previas como contexto extendido al enviar un nuevo mensaje. El chat adjunto se recupera, se formatea y se inyecta en el prompt del modelo junto con el mensaje actual.\n## Cómo se adjunta en el cliente\nEl chat referenciado viaja como un elemento de tipo `\"chat\"` dentro del array `files` del payload del socket:\n```json\n{\n  \"files\": [\n    {\n      \"type\": \"chat\",\n      \"id\": \"chat-uuid-del-chat-referenciado\"\n    }\n  ],\n  \"content\": \"Basándote en la conversación adjunta...\"\n}\n```\n## Procesamiento en el backend\nEn `backend/server/retrieval/utils.py`:\n1. Se detecta el elemento `type == \"chat\"` en `files`\n2. Se recupera el chat por ID desde la BD (tabla `chat`)\n3. El historial del chat se formatea como bloque Markdown:\n```\n   ## Conversación de referencia\n   **Usuario**: ...\n   **Asistente**: ...\n   ```\n4. El bloque se inyecta al contexto del prompt antes del mensaje del usuario\n## Visibilidad en la UI\nLa opción de adjuntar chats de referencia aparece en el `InputMenu` y depende del permiso `chat.file_upload` (no del historial local del sidebar). El componente `InputMenu/Chats.svelte` hace su propia llamada a `getChatList` al abrirse, independientemente del estado del sidebar.\n## Relacionado\n- [[Módulo de retrieval]] — El módulo donde se procesa el chat referenciado\n- [[Grupos y permisos]] — El permiso `chat.file_upload` que controla la visibilidad\n- [[MOC - RAG y Búsqueda Vectorial]] — Índice del cluster de RAG",
+          "content_ltks": "titl chats de referent type concept tags coels intelligent rag chat referent context ali referenc chats chats adjunt chat com context description usar cuand necesit á s entend c ó mo un usuari pued adjunt una conversaci ón previ com context en un nuev mensaj en coels intelligent estad vigent chats de referent qu é es los chats de referent permit a los usuari adjunt convers previ com context extend al envi un nuev mensaj el chat adjunt se recuper se formate y se inyect en el prompt del model junt con el mensaj actual c ó mo se adjunt en el client el chat referenci viaj com un element de tip chat dentr del array fil del payl del socket json fil type chat id chat uuid del chat referenci content bas á ndot en la conversaci ón adjunt proces en el backend en backend serv retrieval utils py 1 se detect el element type chat en fil 2 se recuper el chat por id desd la bd tabl chat 3 el historial del chat se formate com bloqu markdown conversaci ón de referent usuari asistent 4 el bloqu se inyect al context del prompt antes del mensaj del usuari visibil en la ui la opci ón de adjunt chats de referent aparec en el inputmenu y depend del permis chat fil _ uplo no del historial local del sideb el component inputmenu chats svelt hac su propi llam a getchatlist al abrirs independient del estad del sideb relacion m ó dul de retrieval el m ó dul dond se proces el chat referenci grup y permis el permis chat fil _ uplo que control la visibil moc rag y b ú squed vectorial í ndic del clust de rag",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "document_keyword": "Chats de referencia.md",
+          "id": "7b5391d81f91906d",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.28702136954052887,
+          "tag_kwd": [],
+          "term_similarity": 0.05667355648646984,
+          "vector_similarity": 0.8244996
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 2,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16bc528ed33011f1a8c8134f9287b83e",
+          "doc_name": "Roles semánticos de color.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "doc_name": "URLs firmadas MinIO.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17006c80d33011f1a8c8134f9287b83e",
+          "doc_name": "CSP con nonces.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "171cb944d33011f1a8c8134f9287b83e",
+          "doc_name": "MinIO S3.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones de componentes Svelte.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "doc_name": "Chats de referencia.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1674dba2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis para WebSockets.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168284aad33011f1a8c8134f9287b83e",
+          "doc_name": "Grupos y permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c3d20cd33011f1a8c8134f9287b83e",
+          "doc_name": "Tokens primitivos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema de errores centralizado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c8d7acd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Arquitectura.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - RAG y Búsqueda Vectorial.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1695c72cd33011f1a8c8134f9287b83e",
+          "doc_name": "Pipelines Azure DevOps.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b74492d33011f1a8c8134f9287b83e",
+          "doc_name": "Manejo de errores frontend.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16dfc552d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Stack.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1662c016d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema híbrido de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ae2042d33011f1a8c8134f9287b83e",
+          "doc_name": "Dark mode reglas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e7761cd33011f1a8c8134f9287b83e",
+          "doc_name": "PyTorch CPU-only.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170fee94d33011f1a8c8134f9287b83e",
+          "doc_name": "Riesgos de seguridad aceptados.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171a4510d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169092d4d33011f1a8c8134f9287b83e",
+          "doc_name": "Despliegue en OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d61796d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Diseño y Frontend.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1712788ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD OAuth.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17057dd8d33011f1a8c8134f9287b83e",
+          "doc_name": "Dependencias vulnerables.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 16783,
+  "seconds": 0.19033987494185567,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"Patrones de componentes Svelte\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, frontend, svelte, patrones, bugs]\naliases: [Svelte patterns, Patrones críticos frontend, Chat.svelte patterns]\ndescription: \"Usar cuando modificás Chat.svelte o componentes relacionados — contiene los 4 patrones obligatorios que resuelven bugs concretos y no deben revertirse.\"\nestado: vigente\n---\n# Patrones de componentes Svelte\n## Qué es\nHay **4 patrones de código en el frontend** que resuelven bugs concretos. Su omisión o reversión reproduce los bugs originales. Documentados aquí como referencia obligatoria al trabajar en `Chat.svelte` y componentes relacionados.\n## 1. Guarda de `chatId` (evita loop de renderizado)\n```typescript\n// src/routes/(app)/c/[id]/+page.svelte o Chat.svelte\nif ($chatId !== chatIdProp) {\n    chatId.set(chatIdProp);\n}\n```\n**Por qué**: sin esta guarda, el cambio de chat dispara una actualización del store que a su vez dispara otro cambio de chat, generando un **loop de renderizado infinito**.\n## 2. `AbortController` en `loadChat` (reduce requests duplicados ~80%)\n```typescript\nlet currentController: AbortController | null = null;\n\nasync function loadChat(id: string) {\n    currentController?.abort();  // Cancela la carga anterior\n    currentController = new AbortController();\n    const data = await fetchChat(id, { signal: currentController.signal });\n}\n```\n**Por qué**: si el usuario cambia de chat antes de que termine de cargar el anterior, sin `AbortController` ambas requests corren en paralelo y pueden pisarse. Reduce ~80% de requests duplicados.\n## 3. Unsubscribers en `onDestroy` (evita memory leaks)\n```typescript\nimport { onMount, onDestroy } from 'svelte';\n\nlet unsub: () => void;\n\nonMount(() => {\n    unsub = someStore.subscribe(value => { ... });\n});\n\nonDestroy(() => {\n    unsub?.();  // OBLIGATORIO: limpiar la suscripción\n});\n```",
+        "content_ltks": "titl patron de component svelt type concept tags coels intelligent dis ñ o frontend svelt patron bugs ali svelt patterns patron cr í tic frontend chat svelt patterns description usar cuand modific á s chat svelt o component relacion contien los 4 patron obligatori que resuelv bugs concret y no deb revert estad vigent patron de component svelt qu é es hay 4 patron de c ó dig en el frontend que resuelv bugs concret su omisi ón o reversi ón reproduc los bugs original document aqu í com referent obligatori al trabaj en chat svelt y component relacion 1 guard de chat evit loop de renderiz typescript src rout app c id pag svelt o chat svelt if chat chatidprop chat set chatidprop por qu é sin esta guard el cambi de chat disp una actualizaci ón del stor que a su vez disp otro cambi de chat gener un loop de renderiz infinit 2 abortcontroll en loadchat reduc requests duplic 80 typescript let currentcontroll abortcontroll null null async function loadchat id string currentcontroll abort cancel la carg anterior currentcontroll new abortcontroll const dat await fetchchat id signal currentcontroll signal por qu é si el usuari cambi de chat antes de que termin de carg el anterior sin abortcontroll ambas requests corr en paralel y pued pis reduc 80 de requests duplic 3 unsubscribers en ondestroy evit memory leaks typescript import onmount ondestroy from svelt let unsub void onmount unsub somestor subscrib valu ondestroy unsub obligatori limpi la suscripci ón",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16b9c2dad33011f1a8c8134f9287b83e",
+        "document_keyword": "Patrones de componentes Svelte.md",
+        "id": "cb869824558ceb6c",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2948197660535803,
+        "tag_kwd": [],
+        "term_similarity": 0.07716169436225755,
+        "vector_similarity": 0.8026886
+      },
+      {
+        "content": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---\n# Roles de usuario\n## Qué es\nCOELSA.Intelligent define tres roles de usuario, almacenados en el campo `role` del modelo `User`:\n<table>\n<thead>\n<tr>\n<th>Rol</th>\n<th>Descripción</th>\n<th>Capacidades principales</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>admin</code></td>\n<td>Administrador del sistema</td>\n<td>Acceso total; gestión de usuarios, grupos, modelos, configuración</td>\n</tr>\n<tr>\n<td><code>user</code></td>\n<td>Usuario activo</td>\n<td>Chat, upload de archivos, uso de bases de conocimiento según permisos</td>\n</tr>\n<tr>\n<td><code>pending</code></td>\n<td>En espera de aprobación</td>\n<td>Solo puede ver la pantalla de espera; no puede usar el chat</td>\n</tr>\n</tbody>\n</table>\n## Estado `pending`\nUn usuario recién logeado por primera vez via Azure AD puede quedar en estado `pending` si la configuración requiere aprobación manual. Un admin debe cambiar el rol a `user` para habilitar el acceso.\n## Restricciones por rol en la UI\nEn la vista de **Settings**, las siguientes tabs están restringidas a `admin`:\n- **Personalization** — configuración visual de la app\n- **Audio** — configuración de síntesis y transcripción de voz\nLos usuarios `user` ven estas tabs pero no pueden acceder a su contenido.\n## Funcionalidades deshabilitadas para todos los roles\nIndependientemente del rol, estas funcionalidades están desactivadas en el fork:\n- Sugerencias de chat automáticas\n- Ejecución de Python en CodeBlocks\n- Webhooks en la sección Account\n## Relacionado\n- [[Grupos y permisos]] — Permisos granulares dentro del rol `user`",
+        "content_ltks": "titl rol de usuari type concept tags coels intelligent auth rol permis ali user rol rol coels admin user pending description usar cuand necesit á s sab qu é pued hac un usuari seg ú n su rol en coels intelligent o cu á ndo restring acces a una funcional estad vigent rol de usuari qu é es coels intelligent defin tres rol de usuari almacen en el camp rol del model user the rol descripci ón capac principal the tbody cod admin cod administr del sistem acces total gesti ón de usuari grup model configuraci ón cod user cod usuari activ chat uplo de archiv uso de bas de conoc seg ú n permis cod pending cod en esper de aprobaci ón sol pued ver la pantall de esper no pued usar el chat tbody estad pending un usuari reci é n log por primer vez via azur ad pued qued en estad pending si la configuraci ón requier aprobaci ón manual un admin deb cambi el rol a user par habilit el acces restriccion por rol en la ui en la vist de settings las siguient tabs est á n restring a admin personalization configuraci ón visual de la app audi configuraci ón de s í ntesis y transcripci ón de voz los usuari user ven estas tabs per no pued acced a su conten funcional deshabilit par tod los rol independient del rol estas funcional est á n desactiv en el fork sugerent de chat autom á tic ejecuci ón de python en codeblocks webhooks en la secci ón account relacion grup y permis permis granular dentr del rol user",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16884264d33011f1a8c8134f9287b83e",
+        "document_keyword": "Roles de usuario.md",
+        "id": "073ac9214925bf31",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2933189305405289,
+        "tag_kwd": [],
+        "term_similarity": 0.05667355648646984,
+        "vector_similarity": 0.84549147
+      },
+      {
+        "content": "---\ntitle: \"Chats de referencia\"\ntype: concepto\ntags: [coelsa-intelligent, rag, chat, referencia, contexto]\naliases: [Reference chats, Chats adjuntos, Chat como contexto]\ndescription: \"Usar cuando necesitás entender cómo un usuario puede adjuntar una conversación previa como contexto en un nuevo mensaje en COELSA.Intelligent.\"\nestado: vigente\n---\n# Chats de referencia\n## Qué es\nLos **chats de referencia** permiten a los usuarios adjuntar conversaciones previas como contexto extendido al enviar un nuevo mensaje. El chat adjunto se recupera, se formatea y se inyecta en el prompt del modelo junto con el mensaje actual.\n## Cómo se adjunta en el cliente\nEl chat referenciado viaja como un elemento de tipo `\"chat\"` dentro del array `files` del payload del socket:\n```json\n{\n  \"files\": [\n    {\n      \"type\": \"chat\",\n      \"id\": \"chat-uuid-del-chat-referenciado\"\n    }\n  ],\n  \"content\": \"Basándote en la conversación adjunta...\"\n}\n```\n## Procesamiento en el backend\nEn `backend/server/retrieval/utils.py`:\n1. Se detecta el elemento `type == \"chat\"` en `files`\n2. Se recupera el chat por ID desde la BD (tabla `chat`)\n3. El historial del chat se formatea como bloque Markdown:\n```\n   ## Conversación de referencia\n   **Usuario**: ...\n   **Asistente**: ...\n   ```\n4. El bloque se inyecta al contexto del prompt antes del mensaje del usuario\n## Visibilidad en la UI\nLa opción de adjuntar chats de referencia aparece en el `InputMenu` y depende del permiso `chat.file_upload` (no del historial local del sidebar). El componente `InputMenu/Chats.svelte` hace su propia llamada a `getChatList` al abrirse, independientemente del estado del sidebar.\n## Relacionado\n- [[Módulo de retrieval]] — El módulo donde se procesa el chat referenciado\n- [[Grupos y permisos]] — El permiso `chat.file_upload` que controla la visibilidad\n- [[MOC - RAG y Búsqueda Vectorial]] — Índice del cluster de RAG",
+        "content_ltks": "titl chats de referent type concept tags coels intelligent rag chat referent context ali referenc chats chats adjunt chat com context description usar cuand necesit á s entend c ó mo un usuari pued adjunt una conversaci ón previ com context en un nuev mensaj en coels intelligent estad vigent chats de referent qu é es los chats de referent permit a los usuari adjunt convers previ com context extend al envi un nuev mensaj el chat adjunt se recuper se formate y se inyect en el prompt del model junt con el mensaj actual c ó mo se adjunt en el client el chat referenci viaj com un element de tip chat dentr del array fil del payl del socket json fil type chat id chat uuid del chat referenci content bas á ndot en la conversaci ón adjunt proces en el backend en backend serv retrieval utils py 1 se detect el element type chat en fil 2 se recuper el chat por id desd la bd tabl chat 3 el historial del chat se formate com bloqu markdown conversaci ón de referent usuari asistent 4 el bloqu se inyect al context del prompt antes del mensaj del usuari visibil en la ui la opci ón de adjunt chats de referent aparec en el inputmenu y depend del permis chat fil _ uplo no del historial local del sideb el component inputmenu chats svelt hac su propi llam a getchatlist al abrirs independient del estad del sideb relacion m ó dul de retrieval el m ó dul dond se proces el chat referenci grup y permis el permis chat fil _ uplo que control la visibil moc rag y b ú squed vectorial í ndic del clust de rag",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16f68fc6d33011f1a8c8134f9287b83e",
+        "document_keyword": "Chats de referencia.md",
+        "id": "7b5391d81f91906d",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.28702136954052887,
+        "tag_kwd": [],
+        "term_similarity": 0.05667355648646984,
+        "vector_similarity": 0.8244996
+      }
+    ],
+    "total": 64
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "release": "v0.27.3",
+  "files": {
+    ".env": {
+      "url": "https://raw.githubusercontent.com/infiniflow/ragflow/v0.27.3/docker/.env",
+      "sha256": "284173e699f193b423f801e110c1aab4c479dfba5701aba592d75d99da38fc09"
+    },
+    "entrypoint.sh": {
+      "url": "https://raw.githubusercontent.com/infiniflow/ragflow/v0.27.3/docker/entrypoint.sh",
+      "sha256": "95ad4645907cc2f8fc66b1bd20599586056c561f63beac4ff10ccbc4d29566b2"
+    },
+    "service_conf.yaml.template": {
+      "url": "https://raw.githubusercontent.com/infiniflow/ragflow/v0.27.3/docker/service_conf.yaml.template",
+      "sha256": "75d38b8503847a40845385417fb480357ea055e96bf25c63339ba9f61daf4ebc"
+    },
+    "docker-compose-base.yml": {
+      "url": "https://raw.githubusercontent.com/infiniflow/ragflow/v0.27.3/docker/docker-compose-base.yml",
+      "sha256": "643e3e6a3797d0905e33896017389e59a8d5deee65909c36e28291babb5d5605"
+    },
+    "init.sql": {
+      "url": "https://raw.githubusercontent.com/infiniflow/ragflow/v0.27.3/docker/init.sql",
+      "sha256": "68217c32597373c52bead702e38b740c5d14279f8fd226def77780cdb7eaa125"
+    },
+    "public.pem": {
+      "url": "https://raw.githubusercontent.com/infiniflow/ragflow/v0.27.3/conf/public.pem",
+      "sha256": "6745cb2fb7215142aca36a2b0b7d4794a7a21894b991263c715fa26367f11e8d"
+    }
+  }
+}

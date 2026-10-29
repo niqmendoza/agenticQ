@@ -1,0 +1,20 @@
+{
+  "report": "Hito-2.html",
+  "map": "Mapa-QA-agentizada.html",
+  "viewports": [
+    "1440x1050",
+    "390x844"
+  ],
+  "report_profiles": "full/bounded/continued OK",
+  "map_milestones": 29,
+  "map_completed": 5,
+  "qa_review": "en-curso",
+  "external_report_requests": 0,
+  "runtime_errors": 0,
+  "notes": [
+    "Reporte HTML y mapa revisados visualmente en Chrome headless.",
+    "Interacción y diseño adaptados a escritorio y móvil, sin recursos remotos en el reporte.",
+    "Exportación/reapertura y conservación de avances comprobadas en DOM.",
+    "La revisión de presentación no equivale a validación funcional del sistema de QA."
+  ]
+}

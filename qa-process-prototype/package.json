@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "check:model": "node scripts/validate-model.mjs",
-    "check:flow": "node scripts/check-process-flow.mjs"
+    "check:flow": "node scripts/check-process-flow.mjs",
+    "check:milestones": "node scripts/check-milestones.mjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.12.0",

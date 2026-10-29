@@ -3,7 +3,10 @@ import { readFileSync } from 'node:fs';
 const m = JSON.parse(readFileSync(new URL('../src/data/qa-process.json', import.meta.url), 'utf8'));
 const has = (a,b,type) => m.edges.some(e => e.source === a && e.target === b && (!type || e.type === type));
 const incoming = id => m.edges.filter(e => e.target === id).map(e=>e.source);
-assert(has('qa-reviewer','dual-approval','human-approval') && has('dev-reviewer','dual-approval','human-approval'), 'Deben intervenir las dos áreas.');
+assert(has('qa-reviewer','qa-readiness','human-approval') && has('test-proposal-pr','dev-informed','data'), 'QA revisa el alcance; desarrollo recibe la información.');
+assert.deepEqual(incoming('qa-readiness'), ['qa-reviewer'], 'La preparación de QA no depende de desarrollo.');
+assert(!m.edges.some(e => e.source === 'dev-informed' && ['qa-readiness','approval-decision','publish-test-case'].includes(e.target)), 'No debe existir una compuerta de autorización de desarrollo para los casos.');
+assert(has('knowledge-retrieval','ragflow','data') && has('knowledge-retrieval','context-check','data'), 'El contexto se consulta mediante los scripts y se valida antes de usarse.');
 assert.deepEqual(incoming('publish-test-case'), ['approval-decision'], 'Publicar requiere pasar por la decisión de aprobación.');
 assert(has('approval-decision','case-designer','feedback'), 'La revisión puede devolver la propuesta.');
 assert(has('coverage-decision','coverage-kept','conditional'), 'Un caso suficiente debe poder conservarse sin regenerar.');
@@ -13,4 +16,4 @@ assert.deepEqual(incoming('defect-markdown'), ['result-decision'], 'El Markdown 
 assert(has('fix-pr','retest-request') && has('retest-request','ci-pipeline'), 'Una corrección dispara una ejecución nueva.');
 assert(!has('fix-pr','regression-check') && has('result-decision','regression-check') && has('regression-check','result-record'), 'El cierre requiere evaluar resultados nuevos, no sólo incorporar código.');
 assert(has('approval','design','feedback') && has('evaluation','execution','feedback') && has('feedback','execution','feedback'), 'El mapa maestro debe conservar los retornos principales.');
-console.log('10 controles de flujo aprobados: revisión conjunta, publicación, duplicados, conocimiento, fallos, corrección y cierre.');
+console.log('13 controles de flujo aprobados: alcance de QA, desarrollo informado sin bloqueo, retrieval, publicación, duplicados, conocimiento, fallos, corrección y cierre.');

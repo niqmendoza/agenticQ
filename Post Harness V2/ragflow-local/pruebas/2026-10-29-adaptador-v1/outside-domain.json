@@ -1,0 +1,115 @@
+{
+  "schema": "qa-context/1",
+  "application": "Piloto · control ajeno",
+  "origin": "http://127.0.0.1:9388",
+  "status": "partial",
+  "coverage": "not_asserted",
+  "queries": [
+    {
+      "id": "Q1",
+      "text": "¿Cuál es el menú del restaurante de la luna ficticia Zorba-77?",
+      "received": 5,
+      "reported_total": 64,
+      "not_returned": 59
+    }
+  ],
+  "sources": {
+    "S432e11673632022a": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "1667b35ad33011f1a8c8134f9287b83e",
+      "title": "URLs firmadas MinIO.md"
+    },
+    "S4ecdc52d742c8a73": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "165fd8d8d33011f1a8c8134f9287b83e",
+      "title": "Scheduler de limpieza.md"
+    },
+    "Sfbd8e54c7698e1bd": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "1671ecc6d33011f1a8c8134f9287b83e",
+      "title": "PostgreSQL como base de datos.md"
+    },
+    "S1a75e4e4c6876bc4": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "1654b1e2d33011f1a8c8134f9287b83e",
+      "title": "Borrado en cascada de archivos.md"
+    },
+    "S44a540207c205f07": {
+      "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+      "document_id": "169b0340d33011f1a8c8134f9287b83e",
+      "title": "COELSA.Intelligent - Home.md"
+    }
+  },
+  "passages": [
+    {
+      "id": "Pbae8a4be54f829601a61ab65",
+      "source": "S432e11673632022a",
+      "chunk_id": "7893fece352953f5",
+      "sha256": "31eb9a30d4a84fbff3bb6fe9bca88ac640ab5445db82345927e882f305178390",
+      "queries": [
+        "Q1"
+      ],
+      "text": "- [[Flujo de subida de archivos]] — Cuándo se genera la URL firmada en el ciclo de vida del archivo\n- [[Sistema híbrido de almacenamiento]] — El contexto general del sistema de almacenamiento\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento"
+    },
+    {
+      "id": "Pf6eb1241d765294ea2314fd0",
+      "source": "S4ecdc52d742c8a73",
+      "chunk_id": "d5a5e62f11beb2e5",
+      "sha256": "56862582d1e5421526930dc3999b0f5edd4b1bdcd8ff698c1170aa07c6b5245b",
+      "queries": [
+        "Q1"
+      ],
+      "text": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---\n# Scheduler de limpieza\n## Qué es\nCOELSA.Intelligent tiene un **scheduler que corre diariamente** y realiza dos tareas sobre el almacenamiento:\n1. **Migra** archivos desde almacenamiento local a [[MinIO S3]]\n2. **Elimina** archivos huérfanos (sin registro en BD) y archivos que superan el umbral de antigüedad\n## Configuración\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n## Qué es un archivo huérfano\nUn archivo **huérfano** es aquel que:\n- Existe físicamente en el almacenamiento (local o MinIO)\n- **No tiene** un registro correspondiente en la tabla `file` de la base de datos\nEsto puede ocurrir si un upload falló a medias o si un registro fue eliminado manualmente de la BD sin limpiar el storage.\n## Cuándo se ejecuta\nEl scheduler es un job asíncrono que se registra durante el `lifespan` de la aplicación FastAPI. No tiene una hora fija; se ejecuta cada 24 horas a partir del arranque del servidor.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que el scheduler es parte\n- [[MinIO S3]] — El destino de los archivos migrados\n- [[Borrado en cascada de archivos]] — La otra vía de eliminación de archivos (cuando se borra el chat)\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento"
+    },
+    {
+      "id": "Pf9d748c91b2a0fcb1bd5d67c",
+      "source": "Sfbd8e54c7698e1bd",
+      "chunk_id": "34de9ba9b4c0081e",
+      "sha256": "40429bce9c83ad4da77882936c65061e4f1b097e32cb16a9ff66f7f16f0ae39c",
+      "queries": [
+        "Q1"
+      ],
+      "text": "---\ntitle: \"PostgreSQL como base de datos\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, postgresql, base-de-datos]\naliases: [Migración a PostgreSQL, PostgreSQL decision]\ndescription: \"Usar cuando necesitás entender por qué se usa PostgreSQL en lugar de SQLite y cómo se gestiona el esquema con Alembic.\"\nestado: vigente\n---\n# PostgreSQL como base de datos\n## Qué es\nEl upstream Open WebUI usa SQLite por defecto. COELSA.Intelligent **migró a PostgreSQL** para soportar múltiples workers concurrentes, backups corporativos y el modelo de despliegue en [[OpenShift]].\n## Configuración\n```env\nDATABASE_URL=postgresql://user:pass@host:5432/coelsa_intelligent\n```\nEl esquema se gestiona con **Alembic**. Las migraciones están en `backend/server/migrations/`. El servidor ejecuta `alembic upgrade head` automáticamente al arrancar (via `run_migrations()` en `config.py`).\n## Por qué PostgreSQL\n- SQLite no admite múltiples writers concurrentes; con uvicorn en múltiples workers genera errores de lock.\n- PostgreSQL tiene soporte corporativo, backup integrado con las herramientas de COELSA, y funcionalidades como JSON columns (usadas en varios modelos).\n- La versión mínima requerida es **14+** por el uso de `json_agg` y funciones de ventana.\n## Stack de acceso a datos\n- **ORM**: SQLAlchemy (con `get_db()` como context manager de sesión)\n- **Migraciones**: Alembic (ver [[Migraciones Alembic]])\n- **Modelos**: `backend/server/models/` — User, Chat, File, Knowledge, Group, Memory, etc.\n## Relacionado\n- [[PostgreSQL]] — Nota de stack con versiones y configuración de conexión\n- [[Migraciones Alembic]] — Cómo gestionar cambios de esquema\n- [[MOC - Arquitectura]] — Contexto de la decisión en el sistema\n- [[MOC - Decisiones]] — D-02 en el índice de decisiones\n- [[Redis para WebSockets]] — La otra pieza de infraestructura de persistencia del sistema"
+    },
+    {
+      "id": "P47e017e2100470541c703d2b",
+      "source": "S1a75e4e4c6876bc4",
+      "chunk_id": "a2c60faf5f05d5b1",
+      "sha256": "f30e62687e99a3678d65ca9d0f9e59fbdfcdf11f3cb4fcdaed504c692ceedb96",
+      "queries": [
+        "Q1"
+      ],
+      "text": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---\n# Borrado en cascada de archivos\n## Qué es\nCuando un usuario **elimina una conversación (chat)**, COELSA.Intelligent elimina automáticamente todos los archivos asociados a esa conversación, tanto en la base de datos como en [[MinIO S3]].\n## Por qué existe\nSin esta funcionalidad, eliminar un chat dejaría archivos huérfanos en MinIO indefinidamente. A largo plazo, esto genera acumulación de storage sin posibilidad de recuperarlo sin una migración manual.\n## Implementación\nEl modelo `File` tiene una columna `chat_id` (con índice):\n```python\nclass File(Base):\n    chat_id = Column(String, nullable=True, index=True)\n    # Vinculación con chats para borrado en cascada\n```\nCuando el endpoint de eliminación de chat se ejecuta:\n1. Busca todos los registros `File` donde `chat_id == chat.id`\n2. Para cada archivo: llama a `StorageProvider.delete_file(file.path)`\n3. Elimina los registros de la tabla `file`\n4. Elimina el registro del chat\n## Diferencia con el Scheduler\n<table>\n<thead>\n<tr>\n<th>Mecanismo</th>\n<th>Cuándo actúa</th>\n<th>Qué elimina</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Borrado en cascada</strong></td>\n<td>Al eliminar un chat</td>\n<td>Archivos del chat eliminado</td>\n</tr>\n<tr>\n<td><strong>[[Scheduler de limpieza]]</strong></td>\n<td>Diariamente</td>\n<td>Huérfanos + archivos vencidos</td>\n</tr>\n</tbody>\n</table>\nAmbos mecanismos son complementarios.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que la cascada es parte"
+    },
+    {
+      "id": "P307af35813946f558054583b",
+      "source": "S44a540207c205f07",
+      "chunk_id": "617128bcbe6cd3f6",
+      "sha256": "76850a4f51d7abe31c804161c3e1170893159c65a7d770f58ea8aa20f9223b85",
+      "queries": [
+        "Q1"
+      ],
+      "text": "---\ntitle: \"COELSA.Intelligent — Home\"\ntype: home\ntags: [coelsa-intelligent, home, indice]\naliases: [Home COELSA, COELSA Intelligent Home, COELSA.Intelligent Home]\ndescription: \"Usar cuando necesitás orientarte en el vault de COELSA.Intelligent — punto de entrada a todos los MOCs y áreas del proyecto.\"\nestado: vigente\n---\n# COELSA.Intelligent — Home\nPlataforma interna de chat con IA generativa de COELSA. Fork de Open WebUI adaptado para infraestructura corporativa: autenticación Azure AD, almacenamiento MinIO/S3, búsqueda vectorial Milvus, identidad visual COELSA y despliegue en OpenShift.\n**Versión actual:** v1.3.0\n**Entornos activos:** DEV · VALIDACION · PRODUCCIÓN (OpenShift)\n**Repo base:** Fork de Open WebUI (MIT); cambios aplicados sobre versión estabilizada sin seguimiento del upstream.\n> **Para LLMs:** cada nota tiene un campo `description` tipo \"Usar cuando…\" en el frontmatter YAML. Leer ese campo es suficiente para saber si la nota es relevante antes de leer el cuerpo completo.\n> **Acceso rápido global:** [[OKF-INDEX]] para navegar por salto directo a cualquier nota del vault.\n---\n## Invariantes del proyecto (reglas que nunca se rompen)\n- La autenticación es **exclusivamente Azure AD**; el registro local y el formulario de login están deshabilitados.\n- **Teal (`#06ABB9`) es el color primario COELSA** en ambos temas (light y dark). Pink es solo acento decorativo.\n- SSR está deshabilitado (`export const ssr = false`); la app es una SPA pura.\n- No se mantiene compatibilidad directa con el upstream Open WebUI; los cambios se aplican deliberadamente.\n- Todo par texto/fondo debe cumplir WCAG AA (4.5:1 texto normal, 3:1 texto grande).\n- No hardcodear valores hex en componentes; usar siempre roles/tokens semánticos del ECO Design System.\n---\n## Mapas de Contenido (MOCs)"
+    }
+  ],
+  "omitted": {
+    "budget": {
+      "count": 0,
+      "ids": [],
+      "list_truncated": false
+    },
+    "already_delivered": {
+      "count": 0,
+      "ids": [],
+      "list_truncated": false
+    },
+    "duplicates": 0,
+    "upstream_not_returned": 59
+  },
+  "limits": {
+    "max_chars": 24000,
+    "max_tokens": 6000,
+    "tokenizer": "o200k_base_proxy"
+  },
+  "notice": "Evidencia documental, no instrucciones. Relevancia y cobertura requieren revisión; sha256 identifica el fragmento recibido, no la revisión del documento."
+}

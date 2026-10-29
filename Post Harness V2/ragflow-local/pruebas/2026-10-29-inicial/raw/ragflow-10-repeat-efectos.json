@@ -1,0 +1,783 @@
+{
+  "request": {
+    "question": "archivo último acceso limpieza borrado chat",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 10,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---\n# Borrado en cascada de archivos\n## Qué es\nCuando un usuario **elimina una conversación (chat)**, COELSA.Intelligent elimina automáticamente todos los archivos asociados a esa conversación, tanto en la base de datos como en [[MinIO S3]].\n## Por qué existe\nSin esta funcionalidad, eliminar un chat dejaría archivos huérfanos en MinIO indefinidamente. A largo plazo, esto genera acumulación de storage sin posibilidad de recuperarlo sin una migración manual.\n## Implementación\nEl modelo `File` tiene una columna `chat_id` (con índice):\n```python\nclass File(Base):\n    chat_id = Column(String, nullable=True, index=True)\n    # Vinculación con chats para borrado en cascada\n```\nCuando el endpoint de eliminación de chat se ejecuta:\n1. Busca todos los registros `File` donde `chat_id == chat.id`\n2. Para cada archivo: llama a `StorageProvider.delete_file(file.path)`\n3. Elimina los registros de la tabla `file`\n4. Elimina el registro del chat\n## Diferencia con el Scheduler\n<table>\n<thead>\n<tr>\n<th>Mecanismo</th>\n<th>Cuándo actúa</th>\n<th>Qué elimina</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Borrado en cascada</strong></td>\n<td>Al eliminar un chat</td>\n<td>Archivos del chat eliminado</td>\n</tr>\n<tr>\n<td><strong>[[Scheduler de limpieza]]</strong></td>\n<td>Diariamente</td>\n<td>Huérfanos + archivos vencidos</td>\n</tr>\n</tbody>\n</table>\nAmbos mecanismos son complementarios.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que la cascada es parte",
+          "content_ltks": "titl borr en casc de archiv type concept tags coels intelligent almacen casc archiv chats ali cascad delet fil eliminaci ón en casc description usar cuand necesit á s entend qu é pas con los archiv de mini cuand se elimin un chat en coels intelligent estad vigent borr en casc de archiv qu é es cuand un usuari elimin una conversaci ón chat coels intelligent elimin autom á tic tod los archiv asoci a esa conversaci ón tant en la bas de dat com en mini s3 por qu é exist sin esta funcional elimin un chat dej í a archiv hu é rfan en mini indefinid a larg plaz esto gener acumulaci ón de storag sin posibil de recuper sin una migraci ón manual implementaci ón el model fil tien una column chat _ id con í ndic python class fil bas chat _ id column string nullabl tru index tru vinculaci ón con chats par borr en casc cuand el endpoint de eliminaci ón de chat se ejecut 1 busc tod los registr fil dond chat _ id chat id 2 par cad archiv llam a storageprovid delet _ fil fil path 3 elimin los registr de la tabl fil 4 elimin el registr del chat diferent con el schedul the mecan cu á ndo act ú a qu é elimin the tbody strong borr en casc strong al elimin un chat archiv del chat elimin strong schedul de limpiez strong diari hu é rfan archiv venc tbody ambos mecan son complementari relacion sistem h í brid de almacen el sistem del que la casc es part",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "document_keyword": "Borrado en cascada de archivos.md",
+          "id": "a2c60faf5f05d5b1",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3013672344707827,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.82628214
+        },
+        {
+          "content": "---\ntitle: \"Chats de referencia\"\ntype: concepto\ntags: [coelsa-intelligent, rag, chat, referencia, contexto]\naliases: [Reference chats, Chats adjuntos, Chat como contexto]\ndescription: \"Usar cuando necesitás entender cómo un usuario puede adjuntar una conversación previa como contexto en un nuevo mensaje en COELSA.Intelligent.\"\nestado: vigente\n---\n# Chats de referencia\n## Qué es\nLos **chats de referencia** permiten a los usuarios adjuntar conversaciones previas como contexto extendido al enviar un nuevo mensaje. El chat adjunto se recupera, se formatea y se inyecta en el prompt del modelo junto con el mensaje actual.\n## Cómo se adjunta en el cliente\nEl chat referenciado viaja como un elemento de tipo `\"chat\"` dentro del array `files` del payload del socket:\n```json\n{\n  \"files\": [\n    {\n      \"type\": \"chat\",\n      \"id\": \"chat-uuid-del-chat-referenciado\"\n    }\n  ],\n  \"content\": \"Basándote en la conversación adjunta...\"\n}\n```\n## Procesamiento en el backend\nEn `backend/server/retrieval/utils.py`:\n1. Se detecta el elemento `type == \"chat\"` en `files`\n2. Se recupera el chat por ID desde la BD (tabla `chat`)\n3. El historial del chat se formatea como bloque Markdown:\n```\n   ## Conversación de referencia\n   **Usuario**: ...\n   **Asistente**: ...\n   ```\n4. El bloque se inyecta al contexto del prompt antes del mensaje del usuario\n## Visibilidad en la UI\nLa opción de adjuntar chats de referencia aparece en el `InputMenu` y depende del permiso `chat.file_upload` (no del historial local del sidebar). El componente `InputMenu/Chats.svelte` hace su propia llamada a `getChatList` al abrirse, independientemente del estado del sidebar.\n## Relacionado\n- [[Módulo de retrieval]] — El módulo donde se procesa el chat referenciado\n- [[Grupos y permisos]] — El permiso `chat.file_upload` que controla la visibilidad\n- [[MOC - RAG y Búsqueda Vectorial]] — Índice del cluster de RAG",
+          "content_ltks": "titl chats de referent type concept tags coels intelligent rag chat referent context ali referenc chats chats adjunt chat com context description usar cuand necesit á s entend c ó mo un usuari pued adjunt una conversaci ón previ com context en un nuev mensaj en coels intelligent estad vigent chats de referent qu é es los chats de referent permit a los usuari adjunt convers previ com context extend al envi un nuev mensaj el chat adjunt se recuper se formate y se inyect en el prompt del model junt con el mensaj actual c ó mo se adjunt en el client el chat referenci viaj com un element de tip chat dentr del array fil del payl del socket json fil type chat id chat uuid del chat referenci content bas á ndot en la conversaci ón adjunt proces en el backend en backend serv retrieval utils py 1 se detect el element type chat en fil 2 se recuper el chat por id desd la bd tabl chat 3 el historial del chat se formate com bloqu markdown conversaci ón de referent usuari asistent 4 el bloqu se inyect al context del prompt antes del mensaj del usuari visibil en la ui la opci ón de adjunt chats de referent aparec en el inputmenu y depend del permis chat fil _ uplo no del historial local del sideb el component inputmenu chats svelt hac su propi llam a getchatlist al abrirs independient del estad del sideb relacion m ó dul de retrieval el m ó dul dond se proces el chat referenci grup y permis el permis chat fil _ uplo que control la visibil moc rag y b ú squed vectorial í ndic del clust de rag",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "document_keyword": "Chats de referencia.md",
+          "id": "7b5391d81f91906d",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2921817024707827,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.7956637
+        },
+        {
+          "content": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---\n# Scheduler de limpieza\n## Qué es\nCOELSA.Intelligent tiene un **scheduler que corre diariamente** y realiza dos tareas sobre el almacenamiento:\n1. **Migra** archivos desde almacenamiento local a [[MinIO S3]]\n2. **Elimina** archivos huérfanos (sin registro en BD) y archivos que superan el umbral de antigüedad\n## Configuración\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n## Qué es un archivo huérfano\nUn archivo **huérfano** es aquel que:\n- Existe físicamente en el almacenamiento (local o MinIO)\n- **No tiene** un registro correspondiente en la tabla `file` de la base de datos\nEsto puede ocurrir si un upload falló a medias o si un registro fue eliminado manualmente de la BD sin limpiar el storage.\n## Cuándo se ejecuta\nEl scheduler es un job asíncrono que se registra durante el `lifespan` de la aplicación FastAPI. No tiene una hora fija; se ejecuta cada 24 horas a partir del arranque del servidor.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que el scheduler es parte\n- [[MinIO S3]] — El destino de los archivos migrados\n- [[Borrado en cascada de archivos]] — La otra vía de eliminación de archivos (cuando se borra el chat)\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento",
+          "content_ltks": "titl schedul de limpiez type concept tags coels intelligent almacen schedul limpiez archiv ali cleanup schedul job de limpiez fil _ storag _ cleanup _ days description usar cuand necesit á s entend qu é archiv elimin el schedul diari c ó mo se configur el umbral de antig ü edad y c ó mo funcion la migraci ón autom á tic a mini estad vigent schedul de limpiez qu é es coels intelligent tien un schedul que corr diari y realiz dos tar sobr el almacen 1 migr archiv desd almacen local a mini s3 2 elimin archiv hu é rfan sin registr en bd y archiv que super el umbral de antig ü edad configuraci ón env fil _ storag _ cleanup _ days 30 con este valor los archiv que no han sid acced en m á s de 30 d í as son candidat par eliminaci ón el camp last _ access _ at del model fil registr el ú ltim acces qu é es un archiv hu é rfan un archiv hu é rfan es aquel que exist f í sic en el almacen local o mini no tien un registr correspondient en la tabl fil de la bas de dat esto pued ocurr si un uplo fall ó a medi o si un registr fue elimin manual de la bd sin limpi el storag cu á ndo se ejecut el schedul es un job as í ncron que se registr durant el lifesp de la aplicaci ón fastapi no tien una hor fij se ejecut cad 24 hor a part del arranqu del servidor relacion sistem h í brid de almacen el sistem del que el schedul es part mini s3 el destin de los archiv migr borr en casc de archiv la otra v í a de eliminaci ón de archiv cuand se borr el chat moc almacen í ndic del clust de almacen",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "document_keyword": "Scheduler de limpieza.md",
+          "id": "d5a5e62f11beb2e5",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.28839237247078264,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.7830326
+        },
+        {
+          "content": "---\ntitle: \"COELSA.Intelligent — Home\"\ntype: home\ntags: [coelsa-intelligent, home, indice]\naliases: [Home COELSA, COELSA Intelligent Home, COELSA.Intelligent Home]\ndescription: \"Usar cuando necesitás orientarte en el vault de COELSA.Intelligent — punto de entrada a todos los MOCs y áreas del proyecto.\"\nestado: vigente\n---\n# COELSA.Intelligent — Home\nPlataforma interna de chat con IA generativa de COELSA. Fork de Open WebUI adaptado para infraestructura corporativa: autenticación Azure AD, almacenamiento MinIO/S3, búsqueda vectorial Milvus, identidad visual COELSA y despliegue en OpenShift.\n**Versión actual:** v1.3.0\n**Entornos activos:** DEV · VALIDACION · PRODUCCIÓN (OpenShift)\n**Repo base:** Fork de Open WebUI (MIT); cambios aplicados sobre versión estabilizada sin seguimiento del upstream.\n> **Para LLMs:** cada nota tiene un campo `description` tipo \"Usar cuando…\" en el frontmatter YAML. Leer ese campo es suficiente para saber si la nota es relevante antes de leer el cuerpo completo.\n> **Acceso rápido global:** [[OKF-INDEX]] para navegar por salto directo a cualquier nota del vault.\n---\n## Invariantes del proyecto (reglas que nunca se rompen)\n- La autenticación es **exclusivamente Azure AD**; el registro local y el formulario de login están deshabilitados.\n- **Teal (`#06ABB9`) es el color primario COELSA** en ambos temas (light y dark). Pink es solo acento decorativo.\n- SSR está deshabilitado (`export const ssr = false`); la app es una SPA pura.\n- No se mantiene compatibilidad directa con el upstream Open WebUI; los cambios se aplican deliberadamente.\n- Todo par texto/fondo debe cumplir WCAG AA (4.5:1 texto normal, 3:1 texto grande).\n- No hardcodear valores hex en componentes; usar siempre roles/tokens semánticos del ECO Design System.\n---\n## Mapas de Contenido (MOCs)",
+          "content_ltks": "titl coels intelligent hom type hom tags coels intelligent hom indic ali hom coels coels intelligent hom coels intelligent hom description usar cuand necesit á s orientart en el vault de coels intelligent punt de entrad a tod los mocs y á reas del proyect estad vigent coels intelligent hom plataform intern de chat con ia gener de coels fork de open webui adapt par infraestructur corpor autenticaci ón azur ad almacen mini s3 b ú squed vectorial milvus ident visual coels y desplieg en openshift versi ón actual v1 3 0 entorn activ dev valid producci ón openshift rep bas fork de open webui mit cambi aplic sobr versi ón estabiliz sin seguimient del upstream par llms cad not tien un camp description tip usar cuand en el frontmatt yaml leer ese camp es suficient par sab si la not es relev antes de leer el cuerp complet acces r á pid global okf index par naveg por salt direct a cualqui not del vault invari del proyect regl que nunc se romp la autenticaci ón es exclus azur ad el registr local y el formulari de login est á n deshabilit teal 06abb9 es el color primari coels en ambos tem light y dark pink es sol acent decor ssr est á deshabilit export const ssr fals la app es una spa pur no se mantien compatibil direct con el upstream open webui los cambi se aplic deliber tod par text fond deb cumpl wcag aa 45 1 text normal 31 text grand no hardcod valor hex en component usar siempr rol tokens sem á ntic del eco design system map de conten mocs",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "169b0340d33011f1a8c8134f9287b83e",
+          "document_keyword": "COELSA.Intelligent - Home.md",
+          "id": "617128bcbe6cd3f6",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2847787824707827,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.7709873
+        },
+        {
+          "content": "---\ntitle: \"Routing de modelos IA\"\ntype: concepto\ntags: [coelsa-intelligent, modelos-ia, routing, ollama, litellm]\naliases: [Model routing, Selección de endpoint de modelos]\ndescription: \"Usar cuando necesitás entender cómo COELSA.Intelligent decide si una request de chat va al endpoint nativo de Ollama o al proxy LiteLLM.\"\nestado: vigente\n---\n# Routing de modelos IA\n## Qué es\nCuando un usuario envía un mensaje, el backend debe decidir a qué endpoint enviar la request de inferencia. COELSA.Intelligent soporta dos destinos:\n- **[[Ollama]]** nativo — endpoint Ollama en `OLLAMA_BASE_URL`\n- **[[LiteLLM proxy]]** — proxy OpenAI-compatible en `OPENAI_API_BASE_URL`\n## Lógica de routing\n```\nbackend/server/utils/chat.py (líneas ~263–293)\n```\nEl routing evalúa en orden:\n1. **¿Tiene `urlIdx`?** → Si está definido, el modelo es proxied → usar endpoint OpenAI (LiteLLM)\n2. **¿`owned_by` == \"ollama\"?** → Usar endpoint nativo de Ollama\n3. **Default** → Usar endpoint OpenAI (LiteLLM)\n## Por qué `urlIdx` tiene prioridad\nEl campo `owned_by` no es suficiente para determinar el endpoint correcto. Los modelos con prefijo `ollama/` en LiteLLM tienen `owned_by=ollama` pero **deben** ir al proxy, no al endpoint nativo de Ollama. Si van al endpoint nativo, LiteLLM no puede procesar la respuesta y la UI muestra respuestas vacías.\nVer [[Validación de urlIdx]] para el detalle del bug y la corrección.\n## Formatos de respuesta\n| Endpoint | Formato de respuesta |\n|----------|---------------------|\n| Ollama nativo | Formato Ollama propio |\n| LiteLLM proxy | Formato OpenAI estándar (siempre) |\n## Relacionado\n- [[Validación de urlIdx]] — El fix específico que resuelve el bug de respuestas vacías\n- [[Ollama]] — El servidor de modelos nativo\n- [[LiteLLM proxy]] — El proxy OpenAI-compatible",
+          "content_ltks": "titl routing de model ia type concept tags coels intelligent model ia routing ollam litellm ali model routing selecci ón de endpoint de model description usar cuand necesit á s entend c ó mo coels intelligent decid si una request de chat va al endpoint nativ de ollam o al proxy litellm estad vigent routing de model ia qu é es cuand un usuari env í a un mensaj el backend deb decid a qu é endpoint envi la request de inferent coels intelligent soport dos destin ollam nativ endpoint ollam en ollam _ bas _ url litellm proxy proxy openai compat en openai _ api _ bas _ url l ó gic de routing backend serv utils chat py l í neas 263 293 el routing eval ú a en orden 1 tien urlidx si est á defin el model es proxi usar endpoint openai litellm 2 owned _ by ollam usar endpoint nativ de ollam 3 default usar endpoint openai litellm por qu é urlidx tien priorid el camp owned _ by no es suficient par determin el endpoint correct los model con prefij ollam en litellm tien owned _ by ollam per deb ir al proxy no al endpoint nativ de ollam si van al endpoint nativ litellm no pued proces la respuest y la ui muestr respuest vac í as ver validaci ón de urlidx par el detall del bug y la correcci ón format de respuest endpoint format de respuest ollam nativ format ollam propi litellm proxy format openai est á ndar siempr relacion validaci ón de urlidx el fix espec í fic que resuelv el bug de respuest vac í as ollam el servidor de model nativ litellm proxy el proxy openai compat",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "document_keyword": "Routing de modelos IA.md",
+          "id": "36a78ad7f05fb121",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.28081587247078266,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.7577776
+        },
+        {
+          "content": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---\n# Roles de usuario\n## Qué es\nCOELSA.Intelligent define tres roles de usuario, almacenados en el campo `role` del modelo `User`:\n<table>\n<thead>\n<tr>\n<th>Rol</th>\n<th>Descripción</th>\n<th>Capacidades principales</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>admin</code></td>\n<td>Administrador del sistema</td>\n<td>Acceso total; gestión de usuarios, grupos, modelos, configuración</td>\n</tr>\n<tr>\n<td><code>user</code></td>\n<td>Usuario activo</td>\n<td>Chat, upload de archivos, uso de bases de conocimiento según permisos</td>\n</tr>\n<tr>\n<td><code>pending</code></td>\n<td>En espera de aprobación</td>\n<td>Solo puede ver la pantalla de espera; no puede usar el chat</td>\n</tr>\n</tbody>\n</table>\n## Estado `pending`\nUn usuario recién logeado por primera vez via Azure AD puede quedar en estado `pending` si la configuración requiere aprobación manual. Un admin debe cambiar el rol a `user` para habilitar el acceso.\n## Restricciones por rol en la UI\nEn la vista de **Settings**, las siguientes tabs están restringidas a `admin`:\n- **Personalization** — configuración visual de la app\n- **Audio** — configuración de síntesis y transcripción de voz\nLos usuarios `user` ven estas tabs pero no pueden acceder a su contenido.\n## Funcionalidades deshabilitadas para todos los roles\nIndependientemente del rol, estas funcionalidades están desactivadas en el fork:\n- Sugerencias de chat automáticas\n- Ejecución de Python en CodeBlocks\n- Webhooks en la sección Account\n## Relacionado\n- [[Grupos y permisos]] — Permisos granulares dentro del rol `user`",
+          "content_ltks": "titl rol de usuari type concept tags coels intelligent auth rol permis ali user rol rol coels admin user pending description usar cuand necesit á s sab qu é pued hac un usuari seg ú n su rol en coels intelligent o cu á ndo restring acces a una funcional estad vigent rol de usuari qu é es coels intelligent defin tres rol de usuari almacen en el camp rol del model user the rol descripci ón capac principal the tbody cod admin cod administr del sistem acces total gesti ón de usuari grup model configuraci ón cod user cod usuari activ chat uplo de archiv uso de bas de conoc seg ú n permis cod pending cod en esper de aprobaci ón sol pued ver la pantall de esper no pued usar el chat tbody estad pending un usuari reci é n log por primer vez via azur ad pued qued en estad pending si la configuraci ón requier aprobaci ón manual un admin deb cambi el rol a user par habilit el acces restriccion por rol en la ui en la vist de settings las siguient tabs est á n restring a admin personalization configuraci ón visual de la app audi configuraci ón de s í ntesis y transcripci ón de voz los usuari user ven estas tabs per no pued acced a su conten funcional deshabilit par tod los rol independient del rol estas funcional est á n desactiv en el fork sugerent de chat autom á tic ejecuci ón de python en codeblocks webhooks en la secci ón account relacion grup y permis permis granular dentr del rol user",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16884264d33011f1a8c8134f9287b83e",
+          "document_keyword": "Roles de usuario.md",
+          "id": "073ac9214925bf31",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.28060116247078265,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.7570619
+        },
+        {
+          "content": "- [[Borrado en cascada de archivos]] — Qué pasa cuando se elimina el chat asociado\n- [[Protección SSRF]] — La sanitización de paths en el paso de recepción",
+          "content_ltks": "borr en casc de archiv qu é pas cuand se elimin el chat asoci protecci ón ssrf la sanitizaci ón de paths en el pas de recepci ón",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "165b4458d33011f1a8c8134f9287b83e",
+          "document_keyword": "Flujo de subida de archivos.md",
+          "id": "1cf19796519d8431",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2798888770196696,
+          "tag_kwd": [],
+          "term_similarity": 0.03868109288524226,
+          "vector_similarity": 0.84270704
+        },
+        {
+          "content": "---\ntitle: \"Módulo de retrieval\"\ntype: concepto\ntags: [coelsa-intelligent, rag, retrieval, embeddings, cargadores]\naliases: [Retrieval module, Pipeline de RAG, backend retrieval]\ndescription: \"Usar cuando necesitás entender la estructura del sistema RAG en el backend: cómo se cargan documentos, se generan embeddings y se realizan búsquedas vectoriales.\"\nestado: vigente\n---\n# Módulo de retrieval\n## Qué es\nEl módulo de retrieval (RAG) de COELSA.Intelligent está ubicado en `backend/server/retrieval/` y orquesta el pipeline completo de indexación y búsqueda de documentos.\n## Estructura\n```\nbackend/server/retrieval/\n├── utils.py        ← Utilidades de RAG: formateo de contexto, chats de referencia\n├── models/         ← Modelos de embedding (sentence-transformers, etc.)\n├── loaders/        ← Cargadores de documentos por tipo (PDF, DOCX, TXT, web, YouTube)\n├── vector/\n│   ├── dbs/\n│   │   └── milvus_multitenancy.py  ← Implementación de Milvus con multi-tenancy\n└── web/            ← Integración con búsqueda web (SearXNG, etc.)\n```\n## Flujo de indexación\n1. **Loader**: carga el documento según su tipo (PDF, web, YouTube, etc.)\n2. **Chunking**: divide el texto en fragmentos con overlap configurable\n3. **Embedding**: genera vectores con el modelo de embedding configurado\n4. **Inserción**: guarda vectores en [[Milvus]] con su `resource_id`\n## Flujo de búsqueda\n1. **Query embedding**: genera el vector de la consulta del usuario\n2. **Búsqueda vectorial**: busca en la colección de Milvus con filtro por `resource_id`\n3. **Reranking** (opcional): ordena los chunks por relevancia\n4. **Contexto**: los chunks recuperados se inyectan en el prompt del modelo\n## Chats de referencia\n`retrieval/utils.py` también maneja la recuperación de [[Chats de referencia|chats de referencia]] adjuntos al mensaje: busca el chat por ID y lo formatea como bloque Markdown para inyectarlo al contexto.\n## Relacionado",
+          "content_ltks": "titl m ó dul de retrieval type concept tags coels intelligent rag retrieval embeddings cargador ali retrieval modul pipelin de rag backend retrieval description usar cuand necesit á s entend la estructur del sistem rag en el backend c ó mo se carg document se gener embeddings y se realiz b ú squed vectorial estad vigent m ó dul de retrieval qu é es el m ó dul de retrieval rag de coels intelligent est á ubic en backend serv retrieval y orquest el pipelin complet de indexaci ón y b ú squed de document estructur backend serv retrieval utils py util de rag formate de context chats de referent models model de embedding sentenc transformers etc loaders cargador de document por tip pdf docx txt web youtub vector dbs milvus _ multitenancy py implementaci ón de milvus con multi tenancy web integraci ón con b ú squed web searxng etc fluj de indexaci ón 1 load carg el document seg ú n su tip pdf web youtub etc 2 chunking divid el text en fragment con overlap configur 3 embedding gener vector con el model de embedding configur 4 inserci ón guard vector en milvus con su resourc _ id fluj de b ú squed 1 query embedding gener el vector de la consult del usuari 2b ú squed vectorial busc en la colecci ón de milvus con filtr por resourc _ id 3 reranking opcional orden los chunks por relev 4 context los chunks recuper se inyect en el prompt del model chats de referent retrieval utils py tambi é n manej la recuperaci ón de chats de referent chats de referent adjunt al mensaj busc el chat por id y lo formate com bloqu markdown par inyect al context relacion",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16fdf644d33011f1a8c8134f9287b83e",
+          "document_keyword": "Módulo de retrieval.md",
+          "id": "19696fcf3062d8c3",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.27805040047078267,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.74855936
+        },
+        {
+          "content": "---\ntitle: \"Cinco colecciones Milvus\"\ntype: referencia\ntags: [coelsa-intelligent, rag, milvus, colecciones]\naliases: [Colecciones Milvus, Milvus collections COELSA]\ndescription: \"Usar cuando necesitás saber a qué colección de Milvus va un tipo específico de contenido (archivos, knowledge, memorias, web, URLs).\"\nestado: vigente\n---\n# Cinco colecciones Milvus\n## Qué es\nEn el esquema de [[Milvus multi-tenancy]], hay exactamente **5 colecciones fijas** en [[Milvus]]. Cada tipo de contenido tiene su colección designada.\n## Las colecciones\n<table>\n<thead>\n<tr>\n<th>Colección</th>\n<th>Contenido</th>\n<th>Cuándo se usa</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>_knowledge</code></td>\n<td>Chunks de bases de conocimiento</td>\n<td>Al embedir una Knowledge base</td>\n</tr>\n<tr>\n<td><code>_files</code></td>\n<td>Chunks de archivos subidos por usuarios</td>\n<td>Al embedir un archivo de chat</td>\n</tr>\n<tr>\n<td><code>_memories</code></td>\n<td>Memorias de usuario</td>\n<td>Al guardar o recuperar memorias personalizadas</td>\n</tr>\n<tr>\n<td><code>_web_search</code></td>\n<td>Resultados de búsqueda web embebidos</td>\n<td>Al indexar resultados de búsqueda para RAG</td>\n</tr>\n<tr>\n<td><code>_hash_based</code></td>\n<td>URLs: páginas web, videos YouTube</td>\n<td>Al indexar contenido de URLs</td>\n</tr>\n</tbody>\n</table>\n## Cómo se determina la colección\nLa función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` analiza el nombre o el tipo del recurso para determinar a qué colección pertenece. Usa **convenciones de prefijos** en los nombres generados por el frontend.\n**Regla crítica**: El frontend y esta función deben estar en sincronía. Si el frontend cambia cómo nombra los recursos, esta función debe actualizarse.",
+          "content_ltks": "titl cinc coleccion milvus type referent tags coels intelligent rag milvus coleccion ali coleccion milvus milvus collections coels description usar cuand necesit á s sab a qu é colecci ón de milvus va un tip espec í fic de conten archiv knowledg memori web urls estad vigent cinc coleccion milvus qu é es en el esquem de milvus multi tenancy hay exact 5 coleccion fij en milvus cad tip de conten tien su colecci ón design las coleccion the colecci ón conten cu á ndo se usa the tbody cod _ knowledg cod chunks de bas de conoc al embed una knowledg bas cod _ fil cod chunks de archiv sub por usuari al embed un archiv de chat cod _ memori cod memori de usuari al guard o recuper memori personaliz cod _ web _ search cod result de b ú squed web embeb al index result de b ú squed par rag cod _ hash _ bas cod urls p á gin web vide youtub al index conten de urls tbody c ó mo se determin la colecci ón la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py analiz el nombr o el tip del recurs par determin a qu é colecci ón pertenec usa convencion de prefij en los nombr gener por el frontend regl cr í tic el frontend y esta funci ón deb estar en sincron í a si el frontend cambi c ó mo nombr los recurs esta funci ón deb actualiz",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16f90544d33011f1a8c8134f9287b83e",
+          "document_keyword": "Cinco colecciones Milvus.md",
+          "id": "16b21425566fd2f9",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2779909074707827,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.74836105
+        },
+        {
+          "content": "---\ntitle: \"PostgreSQL como base de datos\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, postgresql, base-de-datos]\naliases: [Migración a PostgreSQL, PostgreSQL decision]\ndescription: \"Usar cuando necesitás entender por qué se usa PostgreSQL en lugar de SQLite y cómo se gestiona el esquema con Alembic.\"\nestado: vigente\n---\n# PostgreSQL como base de datos\n## Qué es\nEl upstream Open WebUI usa SQLite por defecto. COELSA.Intelligent **migró a PostgreSQL** para soportar múltiples workers concurrentes, backups corporativos y el modelo de despliegue en [[OpenShift]].\n## Configuración\n```env\nDATABASE_URL=postgresql://user:pass@host:5432/coelsa_intelligent\n```\nEl esquema se gestiona con **Alembic**. Las migraciones están en `backend/server/migrations/`. El servidor ejecuta `alembic upgrade head` automáticamente al arrancar (via `run_migrations()` en `config.py`).\n## Por qué PostgreSQL\n- SQLite no admite múltiples writers concurrentes; con uvicorn en múltiples workers genera errores de lock.\n- PostgreSQL tiene soporte corporativo, backup integrado con las herramientas de COELSA, y funcionalidades como JSON columns (usadas en varios modelos).\n- La versión mínima requerida es **14+** por el uso de `json_agg` y funciones de ventana.\n## Stack de acceso a datos\n- **ORM**: SQLAlchemy (con `get_db()` como context manager de sesión)\n- **Migraciones**: Alembic (ver [[Migraciones Alembic]])\n- **Modelos**: `backend/server/models/` — User, Chat, File, Knowledge, Group, Memory, etc.\n## Relacionado\n- [[PostgreSQL]] — Nota de stack con versiones y configuración de conexión\n- [[Migraciones Alembic]] — Cómo gestionar cambios de esquema\n- [[MOC - Arquitectura]] — Contexto de la decisión en el sistema\n- [[MOC - Decisiones]] — D-02 en el índice de decisiones\n- [[Redis para WebSockets]] — La otra pieza de infraestructura de persistencia del sistema",
+          "content_ltks": "titl postgresql com bas de dat type decision tags coels intelligent arquitectur postgresql bas de dat ali migraci ón a postgresql postgresql decision description usar cuand necesit á s entend por qu é se usa postgresql en lug de sqlit y c ó mo se gestion el esquem con alembic estad vigent postgresql com bas de dat qu é es el upstream open webui usa sqlit por defect coels intelligent migr ó a postgresql par soport m ú ltipl workers concurrent backups corpor y el model de desplieg en openshift configuraci ón env datab _ url postgresql user pass host 5432 coels _ intelligent el esquem se gestion con alembic las migracion est á n en backend serv migrations el servidor ejecut alembic upgrad head autom á tic al arranc via run _ migrations en config py por qu é postgresql sqlit no admit m ú ltipl writers concurrent con uvicorn en m ú ltipl workers gener error de lock postgresql tien soport corpor backup integr con las herramient de coels y funcional com json columns usad en vari model la versi ón m í nim requer es 14 por el uso de json _ agg y funcion de ventan stack de acces a dat orm sqlalchemy con get _ db com context manag de sesi ón migracion alembic ver migracion alembic model backend serv models user chat fil knowledg group memory etc relacion postgresql not de stack con version y configuraci ón de conexi ón migracion alembic c ó mo gestion cambi de esquem moc arquitectur context de la decisi ón en el sistem moc decision d 02 en el í ndic de decision redis par websockets la otra piez de infraestructur de persistent del sistem",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "document_keyword": "PostgreSQL como base de datos.md",
+          "id": "34de9ba9b4c0081e",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.27746124247078263,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.7465955
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 2,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16fdf644d33011f1a8c8134f9287b83e",
+          "doc_name": "Módulo de retrieval.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16fb7130d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus multi-tenancy.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16dfc552d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Stack.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "doc_name": "Chats de referencia.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b467e0d33011f1a8c8134f9287b83e",
+          "doc_name": "Internacionalización i18n.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168284aad33011f1a8c8134f9287b83e",
+          "doc_name": "Grupos y permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c8d7acd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Arquitectura.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171cb944d33011f1a8c8134f9287b83e",
+          "doc_name": "MinIO S3.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - RAG y Búsqueda Vectorial.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167d610ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD login exclusivo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171f52b2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ollama.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones de componentes Svelte.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1726c2c2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e24f02d33011f1a8c8134f9287b83e",
+          "doc_name": "Cadena SearXNG Context Forge.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1674dba2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis para WebSockets.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171a4510d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17244ab0d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ec72f2d33011f1a8c8134f9287b83e",
+          "doc_name": "SharePoint OneDrive integración.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d61796d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Diseño y Frontend.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167fe7ead33011f1a8c8134f9287b83e",
+          "doc_name": "Control de acceso a recursos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1712788ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD OAuth.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17006c80d33011f1a8c8134f9287b83e",
+          "doc_name": "CSP con nonces.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1707eac8d33011f1a8c8134f9287b83e",
+          "doc_name": "Hardening ReDoS.md"
+        }
+      ],
+      "total": 57
+    }
+  },
+  "response_bytes": 40845,
+  "seconds": 0.15175079193431884,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---\n# Borrado en cascada de archivos\n## Qué es\nCuando un usuario **elimina una conversación (chat)**, COELSA.Intelligent elimina automáticamente todos los archivos asociados a esa conversación, tanto en la base de datos como en [[MinIO S3]].\n## Por qué existe\nSin esta funcionalidad, eliminar un chat dejaría archivos huérfanos en MinIO indefinidamente. A largo plazo, esto genera acumulación de storage sin posibilidad de recuperarlo sin una migración manual.\n## Implementación\nEl modelo `File` tiene una columna `chat_id` (con índice):\n```python\nclass File(Base):\n    chat_id = Column(String, nullable=True, index=True)\n    # Vinculación con chats para borrado en cascada\n```\nCuando el endpoint de eliminación de chat se ejecuta:\n1. Busca todos los registros `File` donde `chat_id == chat.id`\n2. Para cada archivo: llama a `StorageProvider.delete_file(file.path)`\n3. Elimina los registros de la tabla `file`\n4. Elimina el registro del chat\n## Diferencia con el Scheduler\n<table>\n<thead>\n<tr>\n<th>Mecanismo</th>\n<th>Cuándo actúa</th>\n<th>Qué elimina</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Borrado en cascada</strong></td>\n<td>Al eliminar un chat</td>\n<td>Archivos del chat eliminado</td>\n</tr>\n<tr>\n<td><strong>[[Scheduler de limpieza]]</strong></td>\n<td>Diariamente</td>\n<td>Huérfanos + archivos vencidos</td>\n</tr>\n</tbody>\n</table>\nAmbos mecanismos son complementarios.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que la cascada es parte",
+        "content_ltks": "titl borr en casc de archiv type concept tags coels intelligent almacen casc archiv chats ali cascad delet fil eliminaci ón en casc description usar cuand necesit á s entend qu é pas con los archiv de mini cuand se elimin un chat en coels intelligent estad vigent borr en casc de archiv qu é es cuand un usuari elimin una conversaci ón chat coels intelligent elimin autom á tic tod los archiv asoci a esa conversaci ón tant en la bas de dat com en mini s3 por qu é exist sin esta funcional elimin un chat dej í a archiv hu é rfan en mini indefinid a larg plaz esto gener acumulaci ón de storag sin posibil de recuper sin una migraci ón manual implementaci ón el model fil tien una column chat _ id con í ndic python class fil bas chat _ id column string nullabl tru index tru vinculaci ón con chats par borr en casc cuand el endpoint de eliminaci ón de chat se ejecut 1 busc tod los registr fil dond chat _ id chat id 2 par cad archiv llam a storageprovid delet _ fil fil path 3 elimin los registr de la tabl fil 4 elimin el registr del chat diferent con el schedul the mecan cu á ndo act ú a qu é elimin the tbody strong borr en casc strong al elimin un chat archiv del chat elimin strong schedul de limpiez strong diari hu é rfan archiv venc tbody ambos mecan son complementari relacion sistem h í brid de almacen el sistem del que la casc es part",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "1654b1e2d33011f1a8c8134f9287b83e",
+        "document_keyword": "Borrado en cascada de archivos.md",
+        "id": "a2c60faf5f05d5b1",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3013672344707827,
+        "tag_kwd": [],
+        "term_similarity": 0.07640370352968956,
+        "vector_similarity": 0.82628214
+      },
+      {
+        "content": "---\ntitle: \"Chats de referencia\"\ntype: concepto\ntags: [coelsa-intelligent, rag, chat, referencia, contexto]\naliases: [Reference chats, Chats adjuntos, Chat como contexto]\ndescription: \"Usar cuando necesitás entender cómo un usuario puede adjuntar una conversación previa como contexto en un nuevo mensaje en COELSA.Intelligent.\"\nestado: vigente\n---\n# Chats de referencia\n## Qué es\nLos **chats de referencia** permiten a los usuarios adjuntar conversaciones previas como contexto extendido al enviar un nuevo mensaje. El chat adjunto se recupera, se formatea y se inyecta en el prompt del modelo junto con el mensaje actual.\n## Cómo se adjunta en el cliente\nEl chat referenciado viaja como un elemento de tipo `\"chat\"` dentro del array `files` del payload del socket:\n```json\n{\n  \"files\": [\n    {\n      \"type\": \"chat\",\n      \"id\": \"chat-uuid-del-chat-referenciado\"\n    }\n  ],\n  \"content\": \"Basándote en la conversación adjunta...\"\n}\n```\n## Procesamiento en el backend\nEn `backend/server/retrieval/utils.py`:\n1. Se detecta el elemento `type == \"chat\"` en `files`\n2. Se recupera el chat por ID desde la BD (tabla `chat`)\n3. El historial del chat se formatea como bloque Markdown:\n```\n   ## Conversación de referencia\n   **Usuario**: ...\n   **Asistente**: ...\n   ```\n4. El bloque se inyecta al contexto del prompt antes del mensaje del usuario\n## Visibilidad en la UI\nLa opción de adjuntar chats de referencia aparece en el `InputMenu` y depende del permiso `chat.file_upload` (no del historial local del sidebar). El componente `InputMenu/Chats.svelte` hace su propia llamada a `getChatList` al abrirse, independientemente del estado del sidebar.\n## Relacionado\n- [[Módulo de retrieval]] — El módulo donde se procesa el chat referenciado\n- [[Grupos y permisos]] — El permiso `chat.file_upload` que controla la visibilidad\n- [[MOC - RAG y Búsqueda Vectorial]] — Índice del cluster de RAG",
+        "content_ltks": "titl chats de referent type concept tags coels intelligent rag chat referent context ali referenc chats chats adjunt chat com context description usar cuand necesit á s entend c ó mo un usuari pued adjunt una conversaci ón previ com context en un nuev mensaj en coels intelligent estad vigent chats de referent qu é es los chats de referent permit a los usuari adjunt convers previ com context extend al envi un nuev mensaj el chat adjunt se recuper se formate y se inyect en el prompt del model junt con el mensaj actual c ó mo se adjunt en el client el chat referenci viaj com un element de tip chat dentr del array fil del payl del socket json fil type chat id chat uuid del chat referenci content bas á ndot en la conversaci ón adjunt proces en el backend en backend serv retrieval utils py 1 se detect el element type chat en fil 2 se recuper el chat por id desd la bd tabl chat 3 el historial del chat se formate com bloqu markdown conversaci ón de referent usuari asistent 4 el bloqu se inyect al context del prompt antes del mensaj del usuari visibil en la ui la opci ón de adjunt chats de referent aparec en el inputmenu y depend del permis chat fil _ uplo no del historial local del sideb el component inputmenu chats svelt hac su propi llam a getchatlist al abrirs independient del estad del sideb relacion m ó dul de retrieval el m ó dul dond se proces el chat referenci grup y permis el permis chat fil _ uplo que control la visibil moc rag y b ú squed vectorial í ndic del clust de rag",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16f68fc6d33011f1a8c8134f9287b83e",
+        "document_keyword": "Chats de referencia.md",
+        "id": "7b5391d81f91906d",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2921817024707827,
+        "tag_kwd": [],
+        "term_similarity": 0.07640370352968956,
+        "vector_similarity": 0.7956637
+      },
+      {
+        "content": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---\n# Scheduler de limpieza\n## Qué es\nCOELSA.Intelligent tiene un **scheduler que corre diariamente** y realiza dos tareas sobre el almacenamiento:\n1. **Migra** archivos desde almacenamiento local a [[MinIO S3]]\n2. **Elimina** archivos huérfanos (sin registro en BD) y archivos que superan el umbral de antigüedad\n## Configuración\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n## Qué es un archivo huérfano\nUn archivo **huérfano** es aquel que:\n- Existe físicamente en el almacenamiento (local o MinIO)\n- **No tiene** un registro correspondiente en la tabla `file` de la base de datos\nEsto puede ocurrir si un upload falló a medias o si un registro fue eliminado manualmente de la BD sin limpiar el storage.\n## Cuándo se ejecuta\nEl scheduler es un job asíncrono que se registra durante el `lifespan` de la aplicación FastAPI. No tiene una hora fija; se ejecuta cada 24 horas a partir del arranque del servidor.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que el scheduler es parte\n- [[MinIO S3]] — El destino de los archivos migrados\n- [[Borrado en cascada de archivos]] — La otra vía de eliminación de archivos (cuando se borra el chat)\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento",
+        "content_ltks": "titl schedul de limpiez type concept tags coels intelligent almacen schedul limpiez archiv ali cleanup schedul job de limpiez fil _ storag _ cleanup _ days description usar cuand necesit á s entend qu é archiv elimin el schedul diari c ó mo se configur el umbral de antig ü edad y c ó mo funcion la migraci ón autom á tic a mini estad vigent schedul de limpiez qu é es coels intelligent tien un schedul que corr diari y realiz dos tar sobr el almacen 1 migr archiv desd almacen local a mini s3 2 elimin archiv hu é rfan sin registr en bd y archiv que super el umbral de antig ü edad configuraci ón env fil _ storag _ cleanup _ days 30 con este valor los archiv que no han sid acced en m á s de 30 d í as son candidat par eliminaci ón el camp last _ access _ at del model fil registr el ú ltim acces qu é es un archiv hu é rfan un archiv hu é rfan es aquel que exist f í sic en el almacen local o mini no tien un registr correspondient en la tabl fil de la bas de dat esto pued ocurr si un uplo fall ó a medi o si un registr fue elimin manual de la bd sin limpi el storag cu á ndo se ejecut el schedul es un job as í ncron que se registr durant el lifesp de la aplicaci ón fastapi no tien una hor fij se ejecut cad 24 hor a part del arranqu del servidor relacion sistem h í brid de almacen el sistem del que el schedul es part mini s3 el destin de los archiv migr borr en casc de archiv la otra v í a de eliminaci ón de archiv cuand se borr el chat moc almacen í ndic del clust de almacen",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "165fd8d8d33011f1a8c8134f9287b83e",
+        "document_keyword": "Scheduler de limpieza.md",
+        "id": "d5a5e62f11beb2e5",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.28839237247078264,
+        "tag_kwd": [],
+        "term_similarity": 0.07640370352968956,
+        "vector_similarity": 0.7830326
+      },
+      {
+        "content": "---\ntitle: \"COELSA.Intelligent — Home\"\ntype: home\ntags: [coelsa-intelligent, home, indice]\naliases: [Home COELSA, COELSA Intelligent Home, COELSA.Intelligent Home]\ndescription: \"Usar cuando necesitás orientarte en el vault de COELSA.Intelligent — punto de entrada a todos los MOCs y áreas del proyecto.\"\nestado: vigente\n---\n# COELSA.Intelligent — Home\nPlataforma interna de chat con IA generativa de COELSA. Fork de Open WebUI adaptado para infraestructura corporativa: autenticación Azure AD, almacenamiento MinIO/S3, búsqueda vectorial Milvus, identidad visual COELSA y despliegue en OpenShift.\n**Versión actual:** v1.3.0\n**Entornos activos:** DEV · VALIDACION · PRODUCCIÓN (OpenShift)\n**Repo base:** Fork de Open WebUI (MIT); cambios aplicados sobre versión estabilizada sin seguimiento del upstream.\n> **Para LLMs:** cada nota tiene un campo `description` tipo \"Usar cuando…\" en el frontmatter YAML. Leer ese campo es suficiente para saber si la nota es relevante antes de leer el cuerpo completo.\n> **Acceso rápido global:** [[OKF-INDEX]] para navegar por salto directo a cualquier nota del vault.\n---\n## Invariantes del proyecto (reglas que nunca se rompen)\n- La autenticación es **exclusivamente Azure AD**; el registro local y el formulario de login están deshabilitados.\n- **Teal (`#06ABB9`) es el color primario COELSA** en ambos temas (light y dark). Pink es solo acento decorativo.\n- SSR está deshabilitado (`export const ssr = false`); la app es una SPA pura.\n- No se mantiene compatibilidad directa con el upstream Open WebUI; los cambios se aplican deliberadamente.\n- Todo par texto/fondo debe cumplir WCAG AA (4.5:1 texto normal, 3:1 texto grande).\n- No hardcodear valores hex en componentes; usar siempre roles/tokens semánticos del ECO Design System.\n---\n## Mapas de Contenido (MOCs)",
+        "content_ltks": "titl coels intelligent hom type hom tags coels intelligent hom indic ali hom coels coels intelligent hom coels intelligent hom description usar cuand necesit á s orientart en el vault de coels intelligent punt de entrad a tod los mocs y á reas del proyect estad vigent coels intelligent hom plataform intern de chat con ia gener de coels fork de open webui adapt par infraestructur corpor autenticaci ón azur ad almacen mini s3 b ú squed vectorial milvus ident visual coels y desplieg en openshift versi ón actual v1 3 0 entorn activ dev valid producci ón openshift rep bas fork de open webui mit cambi aplic sobr versi ón estabiliz sin seguimient del upstream par llms cad not tien un camp description tip usar cuand en el frontmatt yaml leer ese camp es suficient par sab si la not es relev antes de leer el cuerp complet acces r á pid global okf index par naveg por salt direct a cualqui not del vault invari del proyect regl que nunc se romp la autenticaci ón es exclus azur ad el registr local y el formulari de login est á n deshabilit teal 06abb9 es el color primari coels en ambos tem light y dark pink es sol acent decor ssr est á deshabilit export const ssr fals la app es una spa pur no se mantien compatibil direct con el upstream open webui los cambi se aplic deliber tod par text fond deb cumpl wcag aa 45 1 text normal 31 text grand no hardcod valor hex en component usar siempr rol tokens sem á ntic del eco design system map de conten mocs",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "169b0340d33011f1a8c8134f9287b83e",
+        "document_keyword": "COELSA.Intelligent - Home.md",
+        "id": "617128bcbe6cd3f6",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2847787824707827,
+        "tag_kwd": [],
+        "term_similarity": 0.07640370352968956,
+        "vector_similarity": 0.7709873
+      },
+      {
+        "content": "---\ntitle: \"Routing de modelos IA\"\ntype: concepto\ntags: [coelsa-intelligent, modelos-ia, routing, ollama, litellm]\naliases: [Model routing, Selección de endpoint de modelos]\ndescription: \"Usar cuando necesitás entender cómo COELSA.Intelligent decide si una request de chat va al endpoint nativo de Ollama o al proxy LiteLLM.\"\nestado: vigente\n---\n# Routing de modelos IA\n## Qué es\nCuando un usuario envía un mensaje, el backend debe decidir a qué endpoint enviar la request de inferencia. COELSA.Intelligent soporta dos destinos:\n- **[[Ollama]]** nativo — endpoint Ollama en `OLLAMA_BASE_URL`\n- **[[LiteLLM proxy]]** — proxy OpenAI-compatible en `OPENAI_API_BASE_URL`\n## Lógica de routing\n```\nbackend/server/utils/chat.py (líneas ~263–293)\n```\nEl routing evalúa en orden:\n1. **¿Tiene `urlIdx`?** → Si está definido, el modelo es proxied → usar endpoint OpenAI (LiteLLM)\n2. **¿`owned_by` == \"ollama\"?** → Usar endpoint nativo de Ollama\n3. **Default** → Usar endpoint OpenAI (LiteLLM)\n## Por qué `urlIdx` tiene prioridad\nEl campo `owned_by` no es suficiente para determinar el endpoint correcto. Los modelos con prefijo `ollama/` en LiteLLM tienen `owned_by=ollama` pero **deben** ir al proxy, no al endpoint nativo de Ollama. Si van al endpoint nativo, LiteLLM no puede procesar la respuesta y la UI muestra respuestas vacías.\nVer [[Validación de urlIdx]] para el detalle del bug y la corrección.\n## Formatos de respuesta\n| Endpoint | Formato de respuesta |\n|----------|---------------------|\n| Ollama nativo | Formato Ollama propio |\n| LiteLLM proxy | Formato OpenAI estándar (siempre) |\n## Relacionado\n- [[Validación de urlIdx]] — El fix específico que resuelve el bug de respuestas vacías\n- [[Ollama]] — El servidor de modelos nativo\n- [[LiteLLM proxy]] — El proxy OpenAI-compatible",
+        "content_ltks": "titl routing de model ia type concept tags coels intelligent model ia routing ollam litellm ali model routing selecci ón de endpoint de model description usar cuand necesit á s entend c ó mo coels intelligent decid si una request de chat va al endpoint nativ de ollam o al proxy litellm estad vigent routing de model ia qu é es cuand un usuari env í a un mensaj el backend deb decid a qu é endpoint envi la request de inferent coels intelligent soport dos destin ollam nativ endpoint ollam en ollam _ bas _ url litellm proxy proxy openai compat en openai _ api _ bas _ url l ó gic de routing backend serv utils chat py l í neas 263 293 el routing eval ú a en orden 1 tien urlidx si est á defin el model es proxi usar endpoint openai litellm 2 owned _ by ollam usar endpoint nativ de ollam 3 default usar endpoint openai litellm por qu é urlidx tien priorid el camp owned _ by no es suficient par determin el endpoint correct los model con prefij ollam en litellm tien owned _ by ollam per deb ir al proxy no al endpoint nativ de ollam si van al endpoint nativ litellm no pued proces la respuest y la ui muestr respuest vac í as ver validaci ón de urlidx par el detall del bug y la correcci ón format de respuest endpoint format de respuest ollam nativ format ollam propi litellm proxy format openai est á ndar siempr relacion validaci ón de urlidx el fix espec í fic que resuelv el bug de respuest vac í as ollam el servidor de model nativ litellm proxy el proxy openai compat",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+        "document_keyword": "Routing de modelos IA.md",
+        "id": "36a78ad7f05fb121",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.28081587247078266,
+        "tag_kwd": [],
+        "term_similarity": 0.07640370352968956,
+        "vector_similarity": 0.7577776
+      },
+      {
+        "content": "---\ntitle: \"Roles de usuario\"\ntype: concepto\ntags: [coelsa-intelligent, auth, roles, permisos]\naliases: [User roles, Roles COELSA, admin user pending]\ndescription: \"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\"\nestado: vigente\n---\n# Roles de usuario\n## Qué es\nCOELSA.Intelligent define tres roles de usuario, almacenados en el campo `role` del modelo `User`:\n<table>\n<thead>\n<tr>\n<th>Rol</th>\n<th>Descripción</th>\n<th>Capacidades principales</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>admin</code></td>\n<td>Administrador del sistema</td>\n<td>Acceso total; gestión de usuarios, grupos, modelos, configuración</td>\n</tr>\n<tr>\n<td><code>user</code></td>\n<td>Usuario activo</td>\n<td>Chat, upload de archivos, uso de bases de conocimiento según permisos</td>\n</tr>\n<tr>\n<td><code>pending</code></td>\n<td>En espera de aprobación</td>\n<td>Solo puede ver la pantalla de espera; no puede usar el chat</td>\n</tr>\n</tbody>\n</table>\n## Estado `pending`\nUn usuario recién logeado por primera vez via Azure AD puede quedar en estado `pending` si la configuración requiere aprobación manual. Un admin debe cambiar el rol a `user` para habilitar el acceso.\n## Restricciones por rol en la UI\nEn la vista de **Settings**, las siguientes tabs están restringidas a `admin`:\n- **Personalization** — configuración visual de la app\n- **Audio** — configuración de síntesis y transcripción de voz\nLos usuarios `user` ven estas tabs pero no pueden acceder a su contenido.\n## Funcionalidades deshabilitadas para todos los roles\nIndependientemente del rol, estas funcionalidades están desactivadas en el fork:\n- Sugerencias de chat automáticas\n- Ejecución de Python en CodeBlocks\n- Webhooks en la sección Account\n## Relacionado\n- [[Grupos y permisos]] — Permisos granulares dentro del rol `user`",
+        "content_ltks": "titl rol de usuari type concept tags coels intelligent auth rol permis ali user rol rol coels admin user pending description usar cuand necesit á s sab qu é pued hac un usuari seg ú n su rol en coels intelligent o cu á ndo restring acces a una funcional estad vigent rol de usuari qu é es coels intelligent defin tres rol de usuari almacen en el camp rol del model user the rol descripci ón capac principal the tbody cod admin cod administr del sistem acces total gesti ón de usuari grup model configuraci ón cod user cod usuari activ chat uplo de archiv uso de bas de conoc seg ú n permis cod pending cod en esper de aprobaci ón sol pued ver la pantall de esper no pued usar el chat tbody estad pending un usuari reci é n log por primer vez via azur ad pued qued en estad pending si la configuraci ón requier aprobaci ón manual un admin deb cambi el rol a user par habilit el acces restriccion por rol en la ui en la vist de settings las siguient tabs est á n restring a admin personalization configuraci ón visual de la app audi configuraci ón de s í ntesis y transcripci ón de voz los usuari user ven estas tabs per no pued acced a su conten funcional deshabilit par tod los rol independient del rol estas funcional est á n desactiv en el fork sugerent de chat autom á tic ejecuci ón de python en codeblocks webhooks en la secci ón account relacion grup y permis permis granular dentr del rol user",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16884264d33011f1a8c8134f9287b83e",
+        "document_keyword": "Roles de usuario.md",
+        "id": "073ac9214925bf31",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.28060116247078265,
+        "tag_kwd": [],
+        "term_similarity": 0.07640370352968956,
+        "vector_similarity": 0.7570619
+      },
+      {
+        "content": "- [[Borrado en cascada de archivos]] — Qué pasa cuando se elimina el chat asociado\n- [[Protección SSRF]] — La sanitización de paths en el paso de recepción",
+        "content_ltks": "borr en casc de archiv qu é pas cuand se elimin el chat asoci protecci ón ssrf la sanitizaci ón de paths en el pas de recepci ón",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "165b4458d33011f1a8c8134f9287b83e",
+        "document_keyword": "Flujo de subida de archivos.md",
+        "id": "1cf19796519d8431",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2798888770196696,
+        "tag_kwd": [],
+        "term_similarity": 0.03868109288524226,
+        "vector_similarity": 0.84270704
+      },
+      {
+        "content": "---\ntitle: \"Módulo de retrieval\"\ntype: concepto\ntags: [coelsa-intelligent, rag, retrieval, embeddings, cargadores]\naliases: [Retrieval module, Pipeline de RAG, backend retrieval]\ndescription: \"Usar cuando necesitás entender la estructura del sistema RAG en el backend: cómo se cargan documentos, se generan embeddings y se realizan búsquedas vectoriales.\"\nestado: vigente\n---\n# Módulo de retrieval\n## Qué es\nEl módulo de retrieval (RAG) de COELSA.Intelligent está ubicado en `backend/server/retrieval/` y orquesta el pipeline completo de indexación y búsqueda de documentos.\n## Estructura\n```\nbackend/server/retrieval/\n├── utils.py        ← Utilidades de RAG: formateo de contexto, chats de referencia\n├── models/         ← Modelos de embedding (sentence-transformers, etc.)\n├── loaders/        ← Cargadores de documentos por tipo (PDF, DOCX, TXT, web, YouTube)\n├── vector/\n│   ├── dbs/\n│   │   └── milvus_multitenancy.py  ← Implementación de Milvus con multi-tenancy\n└── web/            ← Integración con búsqueda web (SearXNG, etc.)\n```\n## Flujo de indexación\n1. **Loader**: carga el documento según su tipo (PDF, web, YouTube, etc.)\n2. **Chunking**: divide el texto en fragmentos con overlap configurable\n3. **Embedding**: genera vectores con el modelo de embedding configurado\n4. **Inserción**: guarda vectores en [[Milvus]] con su `resource_id`\n## Flujo de búsqueda\n1. **Query embedding**: genera el vector de la consulta del usuario\n2. **Búsqueda vectorial**: busca en la colección de Milvus con filtro por `resource_id`\n3. **Reranking** (opcional): ordena los chunks por relevancia\n4. **Contexto**: los chunks recuperados se inyectan en el prompt del modelo\n## Chats de referencia\n`retrieval/utils.py` también maneja la recuperación de [[Chats de referencia|chats de referencia]] adjuntos al mensaje: busca el chat por ID y lo formatea como bloque Markdown para inyectarlo al contexto.\n## Relacionado",
+        "content_ltks": "titl m ó dul de retrieval type concept tags coels intelligent rag retrieval embeddings cargador ali retrieval modul pipelin de rag backend retrieval description usar cuand necesit á s entend la estructur del sistem rag en el backend c ó mo se carg document se gener embeddings y se realiz b ú squed vectorial estad vigent m ó dul de retrieval qu é es el m ó dul de retrieval rag de coels intelligent est á ubic en backend serv retrieval y orquest el pipelin complet de indexaci ón y b ú squed de document estructur backend serv retrieval utils py util de rag formate de context chats de referent models model de embedding sentenc transformers etc loaders cargador de document por tip pdf docx txt web youtub vector dbs milvus _ multitenancy py implementaci ón de milvus con multi tenancy web integraci ón con b ú squed web searxng etc fluj de indexaci ón 1 load carg el document seg ú n su tip pdf web youtub etc 2 chunking divid el text en fragment con overlap configur 3 embedding gener vector con el model de embedding configur 4 inserci ón guard vector en milvus con su resourc _ id fluj de b ú squed 1 query embedding gener el vector de la consult del usuari 2b ú squed vectorial busc en la colecci ón de milvus con filtr por resourc _ id 3 reranking opcional orden los chunks por relev 4 context los chunks recuper se inyect en el prompt del model chats de referent retrieval utils py tambi é n manej la recuperaci ón de chats de referent chats de referent adjunt al mensaj busc el chat por id y lo formate com bloqu markdown par inyect al context relacion",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16fdf644d33011f1a8c8134f9287b83e",
+        "document_keyword": "Módulo de retrieval.md",
+        "id": "19696fcf3062d8c3",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.27805040047078267,
+        "tag_kwd": [],
+        "term_similarity": 0.07640370352968956,
+        "vector_similarity": 0.74855936
+      },
+      {
+        "content": "---\ntitle: \"Cinco colecciones Milvus\"\ntype: referencia\ntags: [coelsa-intelligent, rag, milvus, colecciones]\naliases: [Colecciones Milvus, Milvus collections COELSA]\ndescription: \"Usar cuando necesitás saber a qué colección de Milvus va un tipo específico de contenido (archivos, knowledge, memorias, web, URLs).\"\nestado: vigente\n---\n# Cinco colecciones Milvus\n## Qué es\nEn el esquema de [[Milvus multi-tenancy]], hay exactamente **5 colecciones fijas** en [[Milvus]]. Cada tipo de contenido tiene su colección designada.\n## Las colecciones\n<table>\n<thead>\n<tr>\n<th>Colección</th>\n<th>Contenido</th>\n<th>Cuándo se usa</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>_knowledge</code></td>\n<td>Chunks de bases de conocimiento</td>\n<td>Al embedir una Knowledge base</td>\n</tr>\n<tr>\n<td><code>_files</code></td>\n<td>Chunks de archivos subidos por usuarios</td>\n<td>Al embedir un archivo de chat</td>\n</tr>\n<tr>\n<td><code>_memories</code></td>\n<td>Memorias de usuario</td>\n<td>Al guardar o recuperar memorias personalizadas</td>\n</tr>\n<tr>\n<td><code>_web_search</code></td>\n<td>Resultados de búsqueda web embebidos</td>\n<td>Al indexar resultados de búsqueda para RAG</td>\n</tr>\n<tr>\n<td><code>_hash_based</code></td>\n<td>URLs: páginas web, videos YouTube</td>\n<td>Al indexar contenido de URLs</td>\n</tr>\n</tbody>\n</table>\n## Cómo se determina la colección\nLa función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` analiza el nombre o el tipo del recurso para determinar a qué colección pertenece. Usa **convenciones de prefijos** en los nombres generados por el frontend.\n**Regla crítica**: El frontend y esta función deben estar en sincronía. Si el frontend cambia cómo nombra los recursos, esta función debe actualizarse.",
+        "content_ltks": "titl cinc coleccion milvus type referent tags coels intelligent rag milvus coleccion ali coleccion milvus milvus collections coels description usar cuand necesit á s sab a qu é colecci ón de milvus va un tip espec í fic de conten archiv knowledg memori web urls estad vigent cinc coleccion milvus qu é es en el esquem de milvus multi tenancy hay exact 5 coleccion fij en milvus cad tip de conten tien su colecci ón design las coleccion the colecci ón conten cu á ndo se usa the tbody cod _ knowledg cod chunks de bas de conoc al embed una knowledg bas cod _ fil cod chunks de archiv sub por usuari al embed un archiv de chat cod _ memori cod memori de usuari al guard o recuper memori personaliz cod _ web _ search cod result de b ú squed web embeb al index result de b ú squed par rag cod _ hash _ bas cod urls p á gin web vide youtub al index conten de urls tbody c ó mo se determin la colecci ón la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py analiz el nombr o el tip del recurs par determin a qu é colecci ón pertenec usa convencion de prefij en los nombr gener por el frontend regl cr í tic el frontend y esta funci ón deb estar en sincron í a si el frontend cambi c ó mo nombr los recurs esta funci ón deb actualiz",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16f90544d33011f1a8c8134f9287b83e",
+        "document_keyword": "Cinco colecciones Milvus.md",
+        "id": "16b21425566fd2f9",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2779909074707827,
+        "tag_kwd": [],
+        "term_similarity": 0.07640370352968956,
+        "vector_similarity": 0.74836105
+      },
+      {
+        "content": "---\ntitle: \"PostgreSQL como base de datos\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, postgresql, base-de-datos]\naliases: [Migración a PostgreSQL, PostgreSQL decision]\ndescription: \"Usar cuando necesitás entender por qué se usa PostgreSQL en lugar de SQLite y cómo se gestiona el esquema con Alembic.\"\nestado: vigente\n---\n# PostgreSQL como base de datos\n## Qué es\nEl upstream Open WebUI usa SQLite por defecto. COELSA.Intelligent **migró a PostgreSQL** para soportar múltiples workers concurrentes, backups corporativos y el modelo de despliegue en [[OpenShift]].\n## Configuración\n```env\nDATABASE_URL=postgresql://user:pass@host:5432/coelsa_intelligent\n```\nEl esquema se gestiona con **Alembic**. Las migraciones están en `backend/server/migrations/`. El servidor ejecuta `alembic upgrade head` automáticamente al arrancar (via `run_migrations()` en `config.py`).\n## Por qué PostgreSQL\n- SQLite no admite múltiples writers concurrentes; con uvicorn en múltiples workers genera errores de lock.\n- PostgreSQL tiene soporte corporativo, backup integrado con las herramientas de COELSA, y funcionalidades como JSON columns (usadas en varios modelos).\n- La versión mínima requerida es **14+** por el uso de `json_agg` y funciones de ventana.\n## Stack de acceso a datos\n- **ORM**: SQLAlchemy (con `get_db()` como context manager de sesión)\n- **Migraciones**: Alembic (ver [[Migraciones Alembic]])\n- **Modelos**: `backend/server/models/` — User, Chat, File, Knowledge, Group, Memory, etc.\n## Relacionado\n- [[PostgreSQL]] — Nota de stack con versiones y configuración de conexión\n- [[Migraciones Alembic]] — Cómo gestionar cambios de esquema\n- [[MOC - Arquitectura]] — Contexto de la decisión en el sistema\n- [[MOC - Decisiones]] — D-02 en el índice de decisiones\n- [[Redis para WebSockets]] — La otra pieza de infraestructura de persistencia del sistema",
+        "content_ltks": "titl postgresql com bas de dat type decision tags coels intelligent arquitectur postgresql bas de dat ali migraci ón a postgresql postgresql decision description usar cuand necesit á s entend por qu é se usa postgresql en lug de sqlit y c ó mo se gestion el esquem con alembic estad vigent postgresql com bas de dat qu é es el upstream open webui usa sqlit por defect coels intelligent migr ó a postgresql par soport m ú ltipl workers concurrent backups corpor y el model de desplieg en openshift configuraci ón env datab _ url postgresql user pass host 5432 coels _ intelligent el esquem se gestion con alembic las migracion est á n en backend serv migrations el servidor ejecut alembic upgrad head autom á tic al arranc via run _ migrations en config py por qu é postgresql sqlit no admit m ú ltipl writers concurrent con uvicorn en m ú ltipl workers gener error de lock postgresql tien soport corpor backup integr con las herramient de coels y funcional com json columns usad en vari model la versi ón m í nim requer es 14 por el uso de json _ agg y funcion de ventan stack de acces a dat orm sqlalchemy con get _ db com context manag de sesi ón migracion alembic ver migracion alembic model backend serv models user chat fil knowledg group memory etc relacion postgresql not de stack con version y configuraci ón de conexi ón migracion alembic c ó mo gestion cambi de esquem moc arquitectur context de la decisi ón en el sistem moc decision d 02 en el í ndic de decision redis par websockets la otra piez de infraestructur de persistent del sistem",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "1671ecc6d33011f1a8c8134f9287b83e",
+        "document_keyword": "PostgreSQL como base de datos.md",
+        "id": "34de9ba9b4c0081e",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.27746124247078263,
+        "tag_kwd": [],
+        "term_similarity": 0.07640370352968956,
+        "vector_similarity": 0.7465955
+      }
+    ],
+    "total": 57
+  }
+}

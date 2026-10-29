@@ -1,0 +1,153 @@
+{
+  "time": "2026-10-29T21:56:26.257545+00:00",
+  "scope": "Preguntas nuevas respecto del ensayo de cinco consultas, sobre el mismo corpus conocido. Señales documentales; no equivale a casos ejecutados ni a una validación ciega de QA.",
+  "protocol_sha256": "483e58cd04576b70224a57164c7f5cb08700dee1a0a97cd4a09afa106e1f396e",
+  "tokenizer": "o200k_base_proxy",
+  "native_tokens": 14724,
+  "native_passages": 15,
+  "unique_native_passages": 13,
+  "full_tokens": 8667,
+  "full_passages": 13,
+  "full_checks": [
+    {
+      "id": "group-users",
+      "title": "Miembros del grupo",
+      "document": "Grupos y permisos.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    },
+    {
+      "id": "group-capabilities",
+      "title": "Permisos por capacidad",
+      "document": "Grupos y permisos.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    },
+    {
+      "id": "migration-startup",
+      "title": "Migraciones al iniciar",
+      "document": "Migraciones Alembic.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    },
+    {
+      "id": "migration-deploy",
+      "title": "Comando y despliegue",
+      "document": "Migraciones Alembic.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    },
+    {
+      "id": "isolation-field",
+      "title": "Campo de aislamiento",
+      "document": "Aislamiento por resource_id.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    },
+    {
+      "id": "isolation-filter",
+      "title": "Filtro al buscar",
+      "document": "Aislamiento por resource_id.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    }
+  ],
+  "bounded_tokens": 5525,
+  "bounded_chars": 18188,
+  "bounded_passages": 8,
+  "bounded_checks": [
+    {
+      "id": "group-users",
+      "title": "Miembros del grupo",
+      "document": "Grupos y permisos.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    },
+    {
+      "id": "group-capabilities",
+      "title": "Permisos por capacidad",
+      "document": "Grupos y permisos.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    },
+    {
+      "id": "migration-startup",
+      "title": "Migraciones al iniciar",
+      "document": "Migraciones Alembic.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    },
+    {
+      "id": "migration-deploy",
+      "title": "Comando y despliegue",
+      "document": "Migraciones Alembic.md",
+      "source_present": true,
+      "matched": true,
+      "missing_markers": []
+    },
+    {
+      "id": "isolation-field",
+      "title": "Campo de aislamiento",
+      "document": "Aislamiento por resource_id.md",
+      "source_present": false,
+      "matched": false,
+      "missing_markers": [
+        "resource_id",
+        "campo escalar"
+      ]
+    },
+    {
+      "id": "isolation-filter",
+      "title": "Filtro al buscar",
+      "document": "Aislamiento por resource_id.md",
+      "source_present": false,
+      "matched": false,
+      "missing_markers": [
+        "filter",
+        "collection.search",
+        "resource_id =="
+      ]
+    }
+  ],
+  "bounded_omitted": {
+    "budget": {
+      "count": 5,
+      "ids": [
+        "Pf6eb1241d765294ea2314fd0",
+        "Pdd0d9355fd4876e86edf2391",
+        "P0ada482f87b4c3f484e01853",
+        "Pd47796c6a19af422999a530e",
+        "Pabb75452679585528768ec3c"
+      ],
+      "list_truncated": false
+    },
+    "already_delivered": {
+      "count": 0,
+      "ids": [],
+      "list_truncated": false
+    },
+    "duplicates": 2,
+    "upstream_not_returned": 177
+  },
+  "repeat_tokens": 428,
+  "text_and_ids_preserved": true,
+  "hashes_verified": true,
+  "cli_statuses": [
+    "partial",
+    "already_delivered",
+    "partial"
+  ],
+  "outside_domain_passages": 5,
+  "copilot_usage": "not_measured",
+  "generation": "not_run",
+  "reduction_percent": 41.1
+}

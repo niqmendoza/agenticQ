@@ -1,0 +1,58 @@
+{
+  "request": {
+    "question": "archivo último acceso limpieza borrado chat",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.3,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---\n# Borrado en cascada de archivos\n## Qué es\nCuando un usuario **elimina una conversación (chat)**, COELSA.Intelligent elimina automáticamente todos los archivos asociados a esa conversación, tanto en la base de datos como en [[MinIO S3]].\n## Por qué existe\nSin esta funcionalidad, eliminar un chat dejaría archivos huérfanos en MinIO indefinidamente. A largo plazo, esto genera acumulación de storage sin posibilidad de recuperarlo sin una migración manual.\n## Implementación\nEl modelo `File` tiene una columna `chat_id` (con índice):\n```python\nclass File(Base):\n    chat_id = Column(String, nullable=True, index=True)\n    # Vinculación con chats para borrado en cascada\n```\nCuando el endpoint de eliminación de chat se ejecuta:\n1. Busca todos los registros `File` donde `chat_id == chat.id`\n2. Para cada archivo: llama a `StorageProvider.delete_file(file.path)`\n3. Elimina los registros de la tabla `file`\n4. Elimina el registro del chat\n## Diferencia con el Scheduler\n<table>\n<thead>\n<tr>\n<th>Mecanismo</th>\n<th>Cuándo actúa</th>\n<th>Qué elimina</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Borrado en cascada</strong></td>\n<td>Al eliminar un chat</td>\n<td>Archivos del chat eliminado</td>\n</tr>\n<tr>\n<td><strong>[[Scheduler de limpieza]]</strong></td>\n<td>Diariamente</td>\n<td>Huérfanos + archivos vencidos</td>\n</tr>\n</tbody>\n</table>\nAmbos mecanismos son complementarios.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que la cascada es parte",
+          "content_ltks": "titl borr en casc de archiv type concept tags coels intelligent almacen casc archiv chats ali cascad delet fil eliminaci ón en casc description usar cuand necesit á s entend qu é pas con los archiv de mini cuand se elimin un chat en coels intelligent estad vigent borr en casc de archiv qu é es cuand un usuari elimin una conversaci ón chat coels intelligent elimin autom á tic tod los archiv asoci a esa conversaci ón tant en la bas de dat com en mini s3 por qu é exist sin esta funcional elimin un chat dej í a archiv hu é rfan en mini indefinid a larg plaz esto gener acumulaci ón de storag sin posibil de recuper sin una migraci ón manual implementaci ón el model fil tien una column chat _ id con í ndic python class fil bas chat _ id column string nullabl tru index tru vinculaci ón con chats par borr en casc cuand el endpoint de eliminaci ón de chat se ejecut 1 busc tod los registr fil dond chat _ id chat id 2 par cad archiv llam a storageprovid delet _ fil fil path 3 elimin los registr de la tabl fil 4 elimin el registr del chat diferent con el schedul the mecan cu á ndo act ú a qu é elimin the tbody strong borr en casc strong al elimin un chat archiv del chat elimin strong schedul de limpiez strong diari hu é rfan archiv venc tbody ambos mecan son complementari relacion sistem h í brid de almacen el sistem del que la casc es part",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "document_keyword": "Borrado en cascada de archivos.md",
+          "id": "a2c60faf5f05d5b1",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3013672344707827,
+          "tag_kwd": [],
+          "term_similarity": 0.07640370352968956,
+          "vector_similarity": 0.82628214
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 1,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        }
+      ],
+      "total": 1
+    }
+  },
+  "response_bytes": 4010
+}

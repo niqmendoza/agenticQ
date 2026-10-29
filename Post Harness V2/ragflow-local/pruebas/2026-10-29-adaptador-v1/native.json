@@ -1,0 +1,407 @@
+{
+  "¿Cómo se definen los permisos granulares de un grupo y se guarda qué usuarios lo integran?": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"Grupos y permisos\"\ntype: concepto\ntags: [coelsa-intelligent, auth, grupos, permisos]\naliases: [Groups COELSA, Permisos de grupo]\ndescription: \"Usar cuando necesitás entender cómo se organizan los permisos granulares por grupo en COELSA.Intelligent o cómo crear/gestionar grupos de usuarios.\"\nestado: vigente\n---\n# Grupos y permisos\n## Qué es\nAdemás del sistema de [[Roles de usuario|roles]], COELSA.Intelligent implementa **grupos** con permisos granulares en formato JSON. Los grupos permiten dar acceso diferenciado a conjuntos de funcionalidades a subconjuntos de usuarios.\n## Modelo de datos (Group)\n```python\nclass Group(Base):\n    id: Text           # UUID\n    user_id: Text      # Creador del grupo\n    name: Text\n    description: Text\n    data: JSON         # Datos adicionales\n    meta: JSON         # Metadatos internos\n    permissions: JSON  # Permisos del grupo\n    user_ids: JSON     # Lista de IDs de usuarios en el grupo\n    created_at: BigInteger\n    updated_at: BigInteger\n```\n## Estructura del JSON de permisos\nLos permisos se definen como un objeto JSON con capacidades específicas. Ejemplo:\n```json\n{\n  \"chat\": {\n    \"file_upload\": true,\n    \"web_search\": false\n  },\n  \"workspace\": {\n    \"models\": false,\n    \"knowledge\": true\n  }\n}\n```\n## Permisos por defecto\nLa configuración de permisos iniciales para nuevos usuarios y grupos se ajustó en v1.3.0 a las necesidades corporativas de COELSA (ver CHANGELOG). Los defaults del upstream no aplicaban al contexto corporativo.\n## Relacionado\n- [[Roles de usuario]] — El rol es la primera capa; los grupos son la segunda capa granular\n- [[Control de acceso a recursos]] — Cómo los grupos interactúan con el access_control de Knowledge y Files\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+        "content_ltks": "titl grup y permis type concept tags coels intelligent auth grup permis ali groups coels permis de grup description usar cuand necesit á s entend c ó mo se organiz los permis granular por grup en coels intelligent o c ó mo cre gestion grup de usuari estad vigent grup y permis qu é es adem á s del sistem de rol de usuari rol coels intelligent implement grup con permis granular en format json los grup permit dar acces diferenci a conjunt de funcional a subconjunt de usuari model de dat group python class group bas id text uuid user _ id text creador del grup nam text description text dat json dat adicional met json metadat intern permissions json permis del grup user _ ids json list de ids de usuari en el grup creat _ at biginteg updat _ at biginteg estructur del json de permis los permis se defin com un objet json con capac espec í fic ejempl json chat fil _ uplo tru web _ search fals workspac models fals knowledg tru permis por defect la configuraci ón de permis inicial par nuev usuari y grup se ajust ó en v1 3 0 a las neces corpor de coels ver changelog los defaults del upstream no aplic al context corpor relacion rol de usuari el rol es la primer cap los grup son la segund cap granul control de acces a recurs c ó mo los grup interact ú an con el access _ control de knowledg y fil moc autenticaci ón y permis í ndic del clust de auth",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "168284aad33011f1a8c8134f9287b83e",
+        "document_keyword": "Grupos y permisos.md",
+        "id": "d65d1dd71b06bbd8",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3244665323391731,
+        "tag_kwd": [],
+        "term_similarity": 0.09471981762739017,
+        "vector_similarity": 0.8605422
+      },
+      {
+        "content": "---\ntitle: \"JWT y sesiones\"\ntype: concepto\ntags: [coelsa-intelligent, auth, jwt, sesiones, tokens]\naliases: [JWT COELSA, Tokens de sesión, HS256 COELSA]\ndescription: \"Usar cuando necesitás entender cómo se generan y validan los tokens de sesión internos de COELSA.Intelligent después del login con Azure AD.\"\nestado: vigente\n---\n# JWT y sesiones\n## Qué es\nDespués de un login OAuth exitoso con [[Azure AD OAuth|Azure AD]], COELSA.Intelligent genera un **JWT interno** (JSON Web Token) que el frontend usa en todas las requests subsiguientes. Este token es independiente del token de Azure AD.\n## Especificaciones del token\n- **Algoritmo**: HS256 (HMAC con SHA-256)\n- **Clave secreta**: `WEBUI_SECRET_KEY` (variable de entorno)\n- **Módulo**: `backend/server/utils/auth.py`\n## Generación\n```python\n# Pseudocódigo del flujo\ntoken = jwt.encode(\n    {\n        \"id\": user.id,\n        \"email\": user.email,\n        \"role\": user.role,\n        \"exp\": datetime.utcnow() + timedelta(hours=SESSION_HOURS)\n    },\n    SESSION_SECRET,  # WEBUI_SECRET_KEY\n    algorithm=ALGORITHM  # HS256\n)\n```\n## Validación\nCada endpoint protegido valida el token usando el `HTTPBearer` security scheme de FastAPI. El decorador `get_current_user` extrae el usuario del token y verifica que exista en la base de datos.\n## Firma HMAC\nPara verificación de webhooks entre servicios internos, existe una firma HMAC separada (`verify_signature()`) usando `TRUSTED_SIGNATURE_KEY`. Usa `hmac.compare_digest` para prevenir timing attacks.\n## Relacionado\n- [[Azure AD login exclusivo]] — El flujo OAuth que termina en la generación del JWT\n- [[bcrypt para contraseñas]] — La otra pieza de auth; para contraseñas locales (deshabilitadas en COELSA)\n- [[FastAPI y uvicorn]] — El servidor donde se registran las dependencias de validación\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+        "content_ltks": "titl jwt y sesion type concept tags coels intelligent auth jwt sesion tokens ali jwt coels tokens de sesi ón hs256 coels description usar cuand necesit á s entend c ó mo se gener y valid los tokens de sesi ón intern de coels intelligent despu és del login con azur ad estad vigent jwt y sesion qu é es despu és de un login oauth exit con azur ad oauth azur ad coels intelligent gener un jwt intern json web tok que el frontend usa en tod las requests subsiguient este tok es independient del tok de azur ad especif del tok algoritm hs256 hmac con sha 256 clav secret webui _ secret _ key variabl de entorn m ó dul backend serv utils auth py generaci ón python pseudoc ó dig del fluj tok jwt encod id user id email user email rol user rol exp datetim utcnow timedelt hours session _ hours session _ secret webui _ secret _ key algorithm algorithm hs256 validaci ón cad endpoint proteg val el tok usand el httpbear security schem de fastapi el decor get _ current _ user extra el usuari del tok y verif que exist en la bas de dat firm hmac par verificaci ón de webhooks entre servici intern exist una firm hmac separ verify _ signatur usand trust _ signatur _ key usa hmac compar _ digest par preven timing attacks relacion azur ad login exclus el fluj oauth que termin en la generaci ón del jwt bcrypt par contr ñ as la otra piez de auth par contr ñ as local deshabilit en coels fastapi y uvicorn el servidor dond se registr las dependent de validaci ón moc autenticaci ón y permis í ndic del clust de auth",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16851378d33011f1a8c8134f9287b83e",
+        "document_keyword": "JWT y sesiones.md",
+        "id": "ce8d5e9a4048aab6",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2939260384988641,
+        "tag_kwd": [],
+        "term_similarity": 0.08248498356980591,
+        "vector_similarity": 0.7872885
+      },
+      {
+        "content": "---\ntitle: \"Cinco colecciones Milvus\"\ntype: referencia\ntags: [coelsa-intelligent, rag, milvus, colecciones]\naliases: [Colecciones Milvus, Milvus collections COELSA]\ndescription: \"Usar cuando necesitás saber a qué colección de Milvus va un tipo específico de contenido (archivos, knowledge, memorias, web, URLs).\"\nestado: vigente\n---\n# Cinco colecciones Milvus\n## Qué es\nEn el esquema de [[Milvus multi-tenancy]], hay exactamente **5 colecciones fijas** en [[Milvus]]. Cada tipo de contenido tiene su colección designada.\n## Las colecciones\n<table>\n<thead>\n<tr>\n<th>Colección</th>\n<th>Contenido</th>\n<th>Cuándo se usa</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>_knowledge</code></td>\n<td>Chunks de bases de conocimiento</td>\n<td>Al embedir una Knowledge base</td>\n</tr>\n<tr>\n<td><code>_files</code></td>\n<td>Chunks de archivos subidos por usuarios</td>\n<td>Al embedir un archivo de chat</td>\n</tr>\n<tr>\n<td><code>_memories</code></td>\n<td>Memorias de usuario</td>\n<td>Al guardar o recuperar memorias personalizadas</td>\n</tr>\n<tr>\n<td><code>_web_search</code></td>\n<td>Resultados de búsqueda web embebidos</td>\n<td>Al indexar resultados de búsqueda para RAG</td>\n</tr>\n<tr>\n<td><code>_hash_based</code></td>\n<td>URLs: páginas web, videos YouTube</td>\n<td>Al indexar contenido de URLs</td>\n</tr>\n</tbody>\n</table>\n## Cómo se determina la colección\nLa función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` analiza el nombre o el tipo del recurso para determinar a qué colección pertenece. Usa **convenciones de prefijos** en los nombres generados por el frontend.\n**Regla crítica**: El frontend y esta función deben estar en sincronía. Si el frontend cambia cómo nombra los recursos, esta función debe actualizarse.",
+        "content_ltks": "titl cinc coleccion milvus type referent tags coels intelligent rag milvus coleccion ali coleccion milvus milvus collections coels description usar cuand necesit á s sab a qu é colecci ón de milvus va un tip espec í fic de conten archiv knowledg memori web urls estad vigent cinc coleccion milvus qu é es en el esquem de milvus multi tenancy hay exact 5 coleccion fij en milvus cad tip de conten tien su colecci ón design las coleccion the colecci ón conten cu á ndo se usa the tbody cod _ knowledg cod chunks de bas de conoc al embed una knowledg bas cod _ fil cod chunks de archiv sub por usuari al embed un archiv de chat cod _ memori cod memori de usuari al guard o recuper memori personaliz cod _ web _ search cod result de b ú squed web embeb al index result de b ú squed par rag cod _ hash _ bas cod urls p á gin web vide youtub al index conten de urls tbody c ó mo se determin la colecci ón la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py analiz el nombr o el tip del recurs par determin a qu é colecci ón pertenec usa convencion de prefij en los nombr gener por el frontend regl cr í tic el frontend y esta funci ón deb estar en sincron í a si el frontend cambi c ó mo nombr los recurs esta funci ón deb actualiz",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16f90544d33011f1a8c8134f9287b83e",
+        "document_keyword": "Cinco colecciones Milvus.md",
+        "id": "16b21425566fd2f9",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2938467139606154,
+        "tag_kwd": [],
+        "term_similarity": 0.08232207708659345,
+        "vector_similarity": 0.7874042
+      },
+      {
+        "content": "---\ntitle: \"Dependencias vulnerables\"\ntype: referencia\ntags: [coelsa-intelligent, seguridad, dependencias, cve, npm, overrides]\naliases: [Vulnerable dependencies, CVEs COELSA, Package overrides]\ndescription: \"Usar cuando necesitás saber qué dependencias de COELSA.Intelligent tienen CVEs activos, qué versiones son seguras y cómo están manejadas en package.json.\"\nestado: vigente\n---\n# Dependencias vulnerables\n## Qué es\nCOELSA.Intelligent gestiona las dependencias vulnerables mediante el campo `overrides` en `package.json`, que fuerza a npm a usar versiones seguras de paquetes transitivos aunque los paquetes padre no hayan actualizado sus dependencias.\n## Estado actual de CVEs\n<table>\n<thead>\n<tr>\n<th>Paquete</th>\n<th>Versión anterior</th>\n<th>Versión segura</th>\n<th>Severidad</th>\n<th>Estado</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>jspdf</code></td>\n<td>^4.0.0</td>\n<td>^4.2.1</td>\n<td>HIGH</td>\n<td>✅ Actualizado via override</td>\n</tr>\n<tr>\n<td><code>tar</code></td>\n<td>7.5.6</td>\n<td>7.6.0+</td>\n<td>HIGH</td>\n<td>✅ Actualizado via override</td>\n</tr>\n<tr>\n<td><code>markdown-it</code></td>\n<td>14.1.0</td>\n<td>—</td>\n<td>—</td>\n<td>⚠️ Falso positivo — ver [[CVE-2025-7969 markdown-it]]</td>\n</tr>\n</tbody>\n</table>\n## Cómo funciona el override\n```json\n// package.json\n{\n  \"overrides\": {\n    \"jspdf\": \"^4.2.1\",\n    \"tar\": \"^7.6.0\"\n  }\n}\n```\nCuando npm resuelve el árbol de dependencias, usa la versión del `overrides` en lugar de la que pide el paquete padre. Esto es equivalente a un \"force resolution\" en otros gestores de paquetes.\n## Cuándo revisar",
+        "content_ltks": "titl dependent vulner type referent tags coels intelligent segur dependent cve npm overrid ali vulner dependenci cves coels packag overrid description usar cuand necesit á s sab qu é dependent de coels intelligent tien cves activ qu é version son segur y c ó mo est á n manej en packag json estad vigent dependent vulner qu é es coels intelligent gestion las dependent vulner mediant el camp overrid en packag json que fuerz a npm a usar version segur de paquet transit aunqu los paquet padr no hay actualiz sus dependent estad actual de cves the paquet versi ón anterior versi ón segur sever estad the tbody cod jspdf cod 400 42 1 high actualiz via overrid cod tar cod 75 67 60 high actualiz via overrid cod markdown it cod 14 10 fals posit ver cve 2025 7969 markdown it tbody c ó mo funcion el overrid json packag json overrid jspdf 42 1 tar 76 0 cuand npm resuelv el á rbol de dependent usa la versi ón del overrid en lug de la que pid el paquet padr esto es equivalent a un forc resolution en otros gestor de paquet cu á ndo revis",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "17057dd8d33011f1a8c8134f9287b83e",
+        "document_keyword": "Dependencias vulnerables.md",
+        "id": "1a9e9cbc5c043849",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2934433879096171,
+        "tag_kwd": [],
+        "term_similarity": 0.08210486844231016,
+        "vector_similarity": 0.7865666
+      },
+      {
+        "content": "---\ntitle: \"Aislamiento por resource_id\"\ntype: concepto\ntags: [coelsa-intelligent, rag, milvus, resource-id, aislamiento]\naliases: [resource_id Milvus, Filtro por recurso, Vector isolation]\ndescription: \"Usar cuando necesitás entender cómo se garantiza que las búsquedas vectoriales devuelven solo datos del recurso correcto en el esquema multi-tenancy de Milvus.\"\nestado: vigente\n---\n# Aislamiento por resource_id\n## Qué es\nEn el esquema de [[Milvus multi-tenancy|multi-tenancy de Milvus]], el aislamiento entre recursos se logra mediante un campo escalar llamado `resource_id` que se almacena junto a cada vector.\n## Cómo funciona\n**Al insertar** un vector (chunk de texto):\n```python\n# Se incluye resource_id en los metadatos del punto\n{\n    \"vector\": [0.1, 0.2, ...],\n    \"resource_id\": \"knowledge-abc123\",\n    \"content\": \"texto del chunk\",\n    \"metadata\": {...}\n}\n```\n**Al buscar**:\n```python\n# Se aplica un filtro booleano sobre resource_id\nsearch_results = collection.search(\n    data=[query_embedding],\n    filter=f'resource_id == \"{resource_id}\"',\n    ...\n)\n```\nEsto garantiza que los resultados de búsqueda pertenecen exclusivamente al recurso solicitado.\n## Por qué es seguro\nMilvus ejecuta el filtro booleano en el nivel de cada segmento, antes de devolver resultados. No es posible que un chunk de un `resource_id` diferente aparezca en los resultados de una búsqueda filtrada por otro `resource_id`, siempre que el campo esté indexado correctamente.\n## Cómo se genera el resource_id\nEl `resource_id` se deriva del identificador del recurso (ID de la Knowledge base, ID del archivo, etc.) mediante una convención de nombres que la función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` implementa.\n## Relacionado\n- [[Milvus multi-tenancy]] — El diseño del que este mecanismo es parte\n- [[Cinco colecciones Milvus]] — Las colecciones donde se usa resource_id",
+        "content_ltks": "titl aislamient por resourc _ id type concept tags coels intelligent rag milvus resourc id aislamient ali resourc _ id milvus filtr por recurs vector isolation description usar cuand necesit á s entend c ó mo se garantiz que las b ú squed vectorial devuelv sol dat del recurs correct en el esquem multi tenancy de milvus estad vigent aislamient por resourc _ id qu é es en el esquem de milvus multi tenancy multi tenancy de milvus el aislamient entre recurs se logr mediant un camp escal llam resourc _ id que se almacen junt a cad vector c ó mo funcion al insert un vector chunk de text python se inclu resourc _ id en los metadat del punt vector 01 02 resourc _ id knowledg abc123 content text del chunk metadat al busc python se aplic un filtr boolean sobr resourc _ id search _ results collection search dat query _ embedding filt f resourc _ id resourc _ id esto garantiz que los result de b ú squed pertenec exclus al recurs solicit por qu é es segur milvus ejecut el filtr boolean en el nivel de cad segment antes de devolv result no es posibl que un chunk de un resourc _ id diferent aparezc en los result de una b ú squed filtr por otro resourc _ id siempr que el camp est é index correct c ó mo se gener el resourc _ id el resourc _ id se deriv del identif del recurs id de la knowledg bas id del archiv etc mediant una convenci ón de nombr que la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py implement relacion milvus multi tenancy el dis ñ o del que este mecan es part cinc coleccion milvus las coleccion dond se usa resourc _ id",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16f41d18d33011f1a8c8134f9287b83e",
+        "document_keyword": "Aislamiento por resource_id.md",
+        "id": "ccbb4ccebc3c07c7",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.290729115473365,
+        "tag_kwd": [],
+        "term_similarity": 0.08237637924766426,
+        "vector_similarity": 0.7768855
+      }
+    ],
+    "total": 64
+  },
+  "¿Cuándo se aplican las migraciones de base de datos y cómo se ejecutan con Alembic?": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"PostgreSQL como base de datos\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, postgresql, base-de-datos]\naliases: [Migración a PostgreSQL, PostgreSQL decision]\ndescription: \"Usar cuando necesitás entender por qué se usa PostgreSQL en lugar de SQLite y cómo se gestiona el esquema con Alembic.\"\nestado: vigente\n---\n# PostgreSQL como base de datos\n## Qué es\nEl upstream Open WebUI usa SQLite por defecto. COELSA.Intelligent **migró a PostgreSQL** para soportar múltiples workers concurrentes, backups corporativos y el modelo de despliegue en [[OpenShift]].\n## Configuración\n```env\nDATABASE_URL=postgresql://user:pass@host:5432/coelsa_intelligent\n```\nEl esquema se gestiona con **Alembic**. Las migraciones están en `backend/server/migrations/`. El servidor ejecuta `alembic upgrade head` automáticamente al arrancar (via `run_migrations()` en `config.py`).\n## Por qué PostgreSQL\n- SQLite no admite múltiples writers concurrentes; con uvicorn en múltiples workers genera errores de lock.\n- PostgreSQL tiene soporte corporativo, backup integrado con las herramientas de COELSA, y funcionalidades como JSON columns (usadas en varios modelos).\n- La versión mínima requerida es **14+** por el uso de `json_agg` y funciones de ventana.\n## Stack de acceso a datos\n- **ORM**: SQLAlchemy (con `get_db()` como context manager de sesión)\n- **Migraciones**: Alembic (ver [[Migraciones Alembic]])\n- **Modelos**: `backend/server/models/` — User, Chat, File, Knowledge, Group, Memory, etc.\n## Relacionado\n- [[PostgreSQL]] — Nota de stack con versiones y configuración de conexión\n- [[Migraciones Alembic]] — Cómo gestionar cambios de esquema\n- [[MOC - Arquitectura]] — Contexto de la decisión en el sistema\n- [[MOC - Decisiones]] — D-02 en el índice de decisiones\n- [[Redis para WebSockets]] — La otra pieza de infraestructura de persistencia del sistema",
+        "content_ltks": "titl postgresql com bas de dat type decision tags coels intelligent arquitectur postgresql bas de dat ali migraci ón a postgresql postgresql decision description usar cuand necesit á s entend por qu é se usa postgresql en lug de sqlit y c ó mo se gestion el esquem con alembic estad vigent postgresql com bas de dat qu é es el upstream open webui usa sqlit por defect coels intelligent migr ó a postgresql par soport m ú ltipl workers concurrent backups corpor y el model de desplieg en openshift configuraci ón env datab _ url postgresql user pass host 5432 coels _ intelligent el esquem se gestion con alembic las migracion est á n en backend serv migrations el servidor ejecut alembic upgrad head autom á tic al arranc via run _ migrations en config py por qu é postgresql sqlit no admit m ú ltipl writers concurrent con uvicorn en m ú ltipl workers gener error de lock postgresql tien soport corpor backup integr con las herramient de coels y funcional com json columns usad en vari model la versi ón m í nim requer es 14 por el uso de json _ agg y funcion de ventan stack de acces a dat orm sqlalchemy con get _ db com context manag de sesi ón migracion alembic ver migracion alembic model backend serv models user chat fil knowledg group memory etc relacion postgresql not de stack con version y configuraci ón de conexi ón migracion alembic c ó mo gestion cambi de esquem moc arquitectur context de la decisi ón en el sistem moc decision d 02 en el í ndic de decision redis par websockets la otra piez de infraestructur de persistent del sistem",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "1671ecc6d33011f1a8c8134f9287b83e",
+        "document_keyword": "PostgreSQL como base de datos.md",
+        "id": "34de9ba9b4c0081e",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2878979641964177,
+        "tag_kwd": [],
+        "term_similarity": 0.05621156599488249,
+        "vector_similarity": 0.82849956
+      },
+      {
+        "content": "---\ntitle: \"Migraciones Alembic\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, alembic, migraciones, postgresql]\naliases: [Alembic migrations, Database migrations COELSA]\ndescription: \"Usar cuando necesitás agregar una migración de base de datos, aplicar migraciones pendientes o entender el flujo de gestión de esquema en COELSA.Intelligent.\"\nestado: vigente\n---\n# Migraciones Alembic\n## Qué es\nCOELSA.Intelligent usa **Alembic** para gestionar los cambios de esquema de [[PostgreSQL]]. Las migraciones están en `backend/server/migrations/`.\n## Arranque automático\nAl iniciar el servidor, `run_migrations()` en `config.py` aplica automáticamente las migraciones pendientes:\n```python\n# backend/server/config.py\ndef run_migrations():\n    from alembic import command\n    from alembic.config import Config\n    alembic_cfg = Config(SERVER_DIR / \"alembic.ini\")\n    command.upgrade(alembic_cfg, \"head\")\n```\n## Comandos manuales\n```bash\n# Aplicar todas las migraciones pendientes\ncd backend\nalembic upgrade head\n\n# Ver el estado actual\nalembic current\n\n# Ver el historial de migraciones\nalembic history\n\n# Crear una nueva migración (autogenerada)\nalembic revision --autogenerate -m \"descripcion_del_cambio\"\n\n# Crear una migración manual vacía\nalembic revision -m \"descripcion_del_cambio\"\n```\n## Convención de nombres\nLos archivos de migración siguen el patrón: `<revision_id>_<descripcion>.py`\nEjemplo: `add_minio_file_fields.sql` (también hay migraciones SQL directas en `backend/migrations/`).\n## Cuándo ejecutar\n- Antes del primer arranque en un entorno nuevo\n- Después de cada deploy que incluya cambios de esquema\n- Los pipelines de CI/CD deben ejecutar `alembic upgrade head` como parte del proceso de deploy\n## Relacionado\n- [[PostgreSQL]] — La base de datos que gestionan las migraciones\n- [[PostgreSQL como base de datos]] — Por qué se usa PostgreSQL (y Alembic)",
+        "content_ltks": "titl migracion alembic type referent tags coels intelligent desarroll alembic migracion postgresql ali alembic migrations datab migrations coels description usar cuand necesit á s agreg una migraci ón de bas de dat aplic migracion pendient o entend el fluj de gesti ón de esquem en coels intelligent estad vigent migracion alembic qu é es coels intelligent usa alembic par gestion los cambi de esquem de postgresql las migracion est á n en backend serv migrations arranqu autom á tic al inici el servidor run _ migrations en config py aplic autom á tic las migracion pendient python backend serv config py def run _ migrations from alembic import command from alembic config import config alembic _ cfg config serv _ dir alembic ini command upgrad alembic _ cfg head comand manual bash aplic tod las migracion pendient cd backend alembic upgrad head ver el estad actual alembic current ver el historial de migracion alembic history cre una nuev migraci ón autogener alembic revision autogenerat m descripcion _ del _ cambi cre una migraci ón manual vac í a alembic revision m descripcion _ del _ cambi convenci ón de nombr los archiv de migraci ón sig el patr ón revision _ id _ descripcion py ejempl add _ mini _ fil _ fields sql tambi é n hay migracion sql direct en backend migrations cu á ndo ejecut antes del prim arranqu en un entorn nuev despu és de cad deploy que inclu cambi de esquem los pipelin de ci cd deb ejecut alembic upgrad head com part del proces de deploy relacion postgresql la bas de dat que gestion las migracion postgresql com bas de dat por qu é se usa postgresql y alembic",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16a829f8d33011f1a8c8134f9287b83e",
+        "document_keyword": "Migraciones Alembic.md",
+        "id": "154c154ec393c85f",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2809246108634522,
+        "tag_kwd": [],
+        "term_similarity": 0.024985846947788916,
+        "vector_similarity": 0.87811506
+      },
+      {
+        "content": "---\ntitle: \"MOC — Desarrollo\"\ntype: moc\ntags: [coelsa-intelligent, desarrollo, patrones, migraciones, moc]\naliases: [MOC Desarrollo, Dev COELSA, Patrones COELSA]\ndescription: \"Usar cuando estás desarrollando en COELSA.Intelligent: patrones obligatorios del frontend, cómo agregar rutas REST, migraciones de BD, logging o ejecución local.\"\nestado: vigente\n---\n# MOC — Desarrollo\nEste cluster agrupa las guías prácticas para trabajar en el código de COELSA.Intelligent. Los [[Patrones frontend críticos]] son invariantes que resuelven bugs concretos y no deben revertirse sin entender su implicancia.\n## Notas de este cluster\n- [[Patrones frontend críticos]] — Las 4 guardas de código obligatorias en Chat.svelte y componentes relacionados\n- [[Migraciones Alembic]] — Flujo de migraciones de base de datos; comandos y cuándo ejecutarlas\n- [[Agregar router REST]] — Cómo extender la API de FastAPI con un nuevo router\n- [[Agregar proveedor de almacenamiento]] — Cómo implementar la interfaz `StorageProvider` para un nuevo backend\n- [[Loguru y logging]] — Configuración de logs con loguru; variable `LOG_LEVEL`; niveles por módulo\n- [[Ejecución local]] — Comandos para correr frontend y backend en modo desarrollo\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Las decisiones de diseño que estos patrones materializan\n- [[MOC - CI-CD y Despliegue]] — Diferencias entre dev local y el proceso de CI/CD\n- [[MOC - Diseño y Frontend]] — El sistema de diseño que el frontend implementa\n- [[MOC - Almacenamiento]] — La interfaz StorageProvider que se extiende al agregar providers",
+        "content_ltks": "titl moc desarroll type moc tags coels intelligent desarroll patron migracion moc ali moc desarroll dev coels patron coels description usar cuand est á s desarroll en coels intelligent patron obligatori del frontend c ó mo agreg rut rest migracion de bd logging o ejecuci ón local estad vigent moc desarroll este clust agrup las gu í as pr á ctic par trabaj en el c ó dig de coels intelligent los patron frontend cr í tic son invari que resuelv bugs concret y no deb revert sin entend su implic not de este clust patron frontend cr í tic las 4 guard de c ó dig obligatori en chat svelt y component relacion migracion alembic fluj de migracion de bas de dat comand y cu á ndo ejecut agreg rout rest c ó mo extend la api de fastapi con un nuev rout agreg proveedor de almacen c ó mo implement la interfaz storageprovid par un nuev backend loguru y logging configuraci ón de logs con loguru variabl log _ level nivel por m ó dul ejecuci ón local comand par corr frontend y backend en mod desarroll mocs vecin moc arquitectur las decision de dis ñ o que estos patron materializ moc ci cd y desplieg diferent entre dev local y el proces de ci cd moc dis ñ o y frontend el sistem de dis ñ o que el frontend implement moc almacen la interfaz storageprovid que se extiend al agreg providers",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16d38a6cd33011f1a8c8134f9287b83e",
+        "document_keyword": "MOC - Desarrollo.md",
+        "id": "a8b570e8d2420130",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.28067318323152346,
+        "tag_kwd": [],
+        "term_similarity": 0.06393071890217641,
+        "vector_similarity": 0.7864056
+      },
+      {
+        "content": "---\ntitle: \"Scheduler de limpieza\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, scheduler, limpieza, archivos]\naliases: [Cleanup scheduler, Job de limpieza, FILE_STORAGE_CLEANUP_DAYS]\ndescription: \"Usar cuando necesitás entender qué archivos elimina el scheduler diario, cómo se configura el umbral de antigüedad y cómo funciona la migración automática a MinIO.\"\nestado: vigente\n---\n# Scheduler de limpieza\n## Qué es\nCOELSA.Intelligent tiene un **scheduler que corre diariamente** y realiza dos tareas sobre el almacenamiento:\n1. **Migra** archivos desde almacenamiento local a [[MinIO S3]]\n2. **Elimina** archivos huérfanos (sin registro en BD) y archivos que superan el umbral de antigüedad\n## Configuración\n```env\nFILE_STORAGE_CLEANUP_DAYS=30\n```\nCon este valor, los archivos que no han sido accedidos en más de 30 días son candidatos para eliminación. El campo `last_accessed_at` del modelo `File` registra el último acceso.\n## Qué es un archivo huérfano\nUn archivo **huérfano** es aquel que:\n- Existe físicamente en el almacenamiento (local o MinIO)\n- **No tiene** un registro correspondiente en la tabla `file` de la base de datos\nEsto puede ocurrir si un upload falló a medias o si un registro fue eliminado manualmente de la BD sin limpiar el storage.\n## Cuándo se ejecuta\nEl scheduler es un job asíncrono que se registra durante el `lifespan` de la aplicación FastAPI. No tiene una hora fija; se ejecuta cada 24 horas a partir del arranque del servidor.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que el scheduler es parte\n- [[MinIO S3]] — El destino de los archivos migrados\n- [[Borrado en cascada de archivos]] — La otra vía de eliminación de archivos (cuando se borra el chat)\n- [[MOC - Almacenamiento]] — Índice del cluster de almacenamiento",
+        "content_ltks": "titl schedul de limpiez type concept tags coels intelligent almacen schedul limpiez archiv ali cleanup schedul job de limpiez fil _ storag _ cleanup _ days description usar cuand necesit á s entend qu é archiv elimin el schedul diari c ó mo se configur el umbral de antig ü edad y c ó mo funcion la migraci ón autom á tic a mini estad vigent schedul de limpiez qu é es coels intelligent tien un schedul que corr diari y realiz dos tar sobr el almacen 1 migr archiv desd almacen local a mini s3 2 elimin archiv hu é rfan sin registr en bd y archiv que super el umbral de antig ü edad configuraci ón env fil _ storag _ cleanup _ days 30 con este valor los archiv que no han sid acced en m á s de 30 d í as son candidat par eliminaci ón el camp last _ access _ at del model fil registr el ú ltim acces qu é es un archiv hu é rfan un archiv hu é rfan es aquel que exist f í sic en el almacen local o mini no tien un registr correspondient en la tabl fil de la bas de dat esto pued ocurr si un uplo fall ó a medi o si un registr fue elimin manual de la bd sin limpi el storag cu á ndo se ejecut el schedul es un job as í ncron que se registr durant el lifesp de la aplicaci ón fastapi no tien una hor fij se ejecut cad 24 hor a part del arranqu del servidor relacion sistem h í brid de almacen el sistem del que el schedul es part mini s3 el destin de los archiv migr borr en casc de archiv la otra v í a de eliminaci ón de archiv cuand se borr el chat moc almacen í ndic del clust de almacen",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "165fd8d8d33011f1a8c8134f9287b83e",
+        "document_keyword": "Scheduler de limpieza.md",
+        "id": "d5a5e62f11beb2e5",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.27637604726326453,
+        "tag_kwd": [],
+        "term_similarity": 0.055120183233235046,
+        "vector_similarity": 0.79263973
+      },
+      {
+        "content": "---\ntitle: \"PostgreSQL\"\ntype: stack\ntags: [coelsa-intelligent, stack, postgresql, base-de-datos, sqlalchemy]\naliases: [PostgreSQL stack, BD relacional COELSA]\ndescription: \"Usar cuando necesitás configurar o diagnosticar la conexión a PostgreSQL, entender los modelos SQLAlchemy o ejecutar migraciones Alembic.\"\nestado: vigente\n---\n# PostgreSQL\n## Qué es\nCOELSA.Intelligent usa **PostgreSQL 14+** como base de datos relacional principal. El acceso se hace a través de **SQLAlchemy** como ORM y **Alembic** para migraciones de esquema.\n## Versión mínima\nPostgreSQL **14** — requerido por el uso de funciones JSON y de ventana.\n## Configuración\n```env\nDATABASE_URL=postgresql://user:pass@localhost:5432/coelsa_intelligent\n```\n## Modelos principales\n| Tabla | Archivo | Descripción |\n|-------|---------|-------------|\n| `user` | `models/users.py` | Usuarios con rol, email, oauth_sub, settings |\n| `chat` | `models/chats.py` | Conversaciones con JSON del historial |\n| `file` | `models/files.py` | Metadatos de archivos subidos; `chat_id` para cascada |\n| `knowledge` | `models/knowledge.py` | Bases de conocimiento con access_control |\n| `group` | `models/groups.py` | Grupos con permisos JSON |\n| `config` | `config.py` | Configuración persistente de la app |\n## Migraciones\nLas migraciones se gestionan con Alembic. El servidor las aplica automáticamente al iniciar (`run_migrations()` en `config.py`). Ver [[Migraciones Alembic]] para el flujo manual.\n## Relacionado\n- [[PostgreSQL como base de datos]] — La decisión de migrar de SQLite a PostgreSQL\n- [[Migraciones Alembic]] — Cómo gestionar cambios de esquema\n- [[Borrado en cascada de archivos]] — El campo `chat_id` en `file` que habilita la cascada\n- [[MOC - Stack]] — Contexto de PostgreSQL en el stack completo",
+        "content_ltks": "titl postgresql type stack tags coels intelligent stack postgresql bas de dat sqlalchemy ali postgresql stack bd relacional coels description usar cuand necesit á s configur o diagnostic la conexi ón a postgresql entend los model sqlalchemy o ejecut migracion alembic estad vigent postgresql qu é es coels intelligent usa postgresql 14 com bas de dat relacional principal el acces se hac a trav és de sqlalchemy com orm y alembic par migracion de esquem versi ón m í nim postgresql 14 requer por el uso de funcion json y de ventan configuraci ón env datab _ url postgresql user pass localhost 5432 coels _ intelligent model principal tabl archiv descripci ón user models users py usuari con rol email oauth _ sub settings chat models chats py convers con json del historial fil models fil py metadat de archiv sub chat _ id par casc knowledg models knowledg py bas de conoc con access _ control group models groups py grup con permis json config config py configuraci ón persistent de la app migracion las migracion se gestion con alembic el servidor las aplic autom á tic al inici run _ migrations en config py ver migracion alembic par el fluj manual relacion postgresql com bas de dat la decisi ón de migr de sqlit a postgresql migracion alembic c ó mo gestion cambi de esquem borr en casc de archiv el camp chat _ id en fil que habilit la casc moc stack context de postgresql en el stack complet",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "17244ab0d33011f1a8c8134f9287b83e",
+        "document_keyword": "PostgreSQL.md",
+        "id": "9e18b72ab2bc7e18",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.27330462679890355,
+        "tag_kwd": [],
+        "term_similarity": 0.05609519685557654,
+        "vector_similarity": 0.78012663
+      }
+    ],
+    "total": 64
+  },
+  "¿Cómo se evita que una búsqueda vectorial devuelva datos de un recurso distinto al solicitado?": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"MOC — RAG y Búsqueda Vectorial\"\ntype: moc\ntags: [coelsa-intelligent, rag, milvus, vectores, moc]\naliases: [MOC RAG, Búsqueda Vectorial COELSA, RAG COELSA]\ndescription: \"Usar cuando trabajás con embeddings, retrieval, colecciones Milvus o chats de referencia en COELSA.Intelligent.\"\nestado: vigente\n---\n# MOC — RAG y Búsqueda Vectorial\nEl sistema RAG usa [[Milvus]] con un esquema de [[Milvus multi-tenancy|multi-tenancy]] de 5 colecciones compartidas. El aislamiento entre recursos se logra con filtros por [[Aislamiento por resource_id|resource_id]].\n## Notas de este cluster\n- [[Milvus multi-tenancy]] — Esquema de 5 colecciones compartidas vs una por recurso; decisión de diseño y trade-offs\n- [[Cinco colecciones Milvus]] — Las cinco colecciones fijas: `_knowledge`, `_files`, `_memories`, `_web_search`, `_hash_based`\n- [[Aislamiento por resource_id]] — Cómo el campo `resource_id` filtra chunks en búsquedas para garantizar aislamiento\n- [[Módulo de retrieval]] — Estructura de `backend/server/retrieval/`; cargadores, embeddings, función de búsqueda\n- [[Chats de referencia]] — Adjuntar conversaciones previas como contexto en el input de mensajes\n## MOCs vecinos\n- [[MOC - Stack]] — Milvus como componente del stack; dependencia de versión 2.4+\n- [[MOC - Modelos IA y Routing]] — Cómo los modelos consumen el contexto generado por RAG\n- [[MOC - Almacenamiento]] — Los archivos que se embedden también viven en MinIO\n- [[MOC - Decisiones]] — Decisión de multi-tenancy con justificación de overhead de escalado",
+        "content_ltks": "titl moc rag y b ú squed vectorial type moc tags coels intelligent rag milvus vector moc ali moc rag b ú squed vectorial coels rag coels description usar cuand trabaj á s con embeddings retrieval coleccion milvus o chats de referent en coels intelligent estad vigent moc rag y b ú squed vectorial el sistem rag usa milvus con un esquem de milvus multi tenancy multi tenancy de 5 coleccion compart el aislamient entre recurs se logr con filtr por aislamient por resourc _ id resourc _ id not de este clust milvus multi tenancy esquem de 5 coleccion compart vs una por recurs decisi ón de dis ñ o y trad offs cinc coleccion milvus las cinc coleccion fij _ knowledg _ fil _ memori _ web _ search _ hash _ bas aislamient por resourc _ id c ó mo el camp resourc _ id filtr chunks en b ú squed par garantiz aislamient m ó dul de retrieval estructur de backend serv retrieval cargador embeddings funci ón de b ú squed chats de referent adjunt convers previ com context en el input de mensaj mocs vecin moc stack milvus com component del stack dependent de versi ón 24 moc model ia y routing c ó mo los model consum el context gener por rag moc almacen los archiv que se embedd tambi é n viv en mini moc decision decisi ón de multi tenancy con justificaci ón de overh de escal",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16daf63ad33011f1a8c8134f9287b83e",
+        "document_keyword": "MOC - RAG y Búsqueda Vectorial.md",
+        "id": "7f3e1cdb3978a25d",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3437688055097251,
+        "tag_kwd": [],
+        "term_similarity": 0.13845223644246443,
+        "vector_similarity": 0.8228408
+      },
+      {
+        "content": "---\ntitle: \"Aislamiento por resource_id\"\ntype: concepto\ntags: [coelsa-intelligent, rag, milvus, resource-id, aislamiento]\naliases: [resource_id Milvus, Filtro por recurso, Vector isolation]\ndescription: \"Usar cuando necesitás entender cómo se garantiza que las búsquedas vectoriales devuelven solo datos del recurso correcto en el esquema multi-tenancy de Milvus.\"\nestado: vigente\n---\n# Aislamiento por resource_id\n## Qué es\nEn el esquema de [[Milvus multi-tenancy|multi-tenancy de Milvus]], el aislamiento entre recursos se logra mediante un campo escalar llamado `resource_id` que se almacena junto a cada vector.\n## Cómo funciona\n**Al insertar** un vector (chunk de texto):\n```python\n# Se incluye resource_id en los metadatos del punto\n{\n    \"vector\": [0.1, 0.2, ...],\n    \"resource_id\": \"knowledge-abc123\",\n    \"content\": \"texto del chunk\",\n    \"metadata\": {...}\n}\n```\n**Al buscar**:\n```python\n# Se aplica un filtro booleano sobre resource_id\nsearch_results = collection.search(\n    data=[query_embedding],\n    filter=f'resource_id == \"{resource_id}\"',\n    ...\n)\n```\nEsto garantiza que los resultados de búsqueda pertenecen exclusivamente al recurso solicitado.\n## Por qué es seguro\nMilvus ejecuta el filtro booleano en el nivel de cada segmento, antes de devolver resultados. No es posible que un chunk de un `resource_id` diferente aparezca en los resultados de una búsqueda filtrada por otro `resource_id`, siempre que el campo esté indexado correctamente.\n## Cómo se genera el resource_id\nEl `resource_id` se deriva del identificador del recurso (ID de la Knowledge base, ID del archivo, etc.) mediante una convención de nombres que la función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` implementa.\n## Relacionado\n- [[Milvus multi-tenancy]] — El diseño del que este mecanismo es parte\n- [[Cinco colecciones Milvus]] — Las colecciones donde se usa resource_id",
+        "content_ltks": "titl aislamient por resourc _ id type concept tags coels intelligent rag milvus resourc id aislamient ali resourc _ id milvus filtr por recurs vector isolation description usar cuand necesit á s entend c ó mo se garantiz que las b ú squed vectorial devuelv sol dat del recurs correct en el esquem multi tenancy de milvus estad vigent aislamient por resourc _ id qu é es en el esquem de milvus multi tenancy multi tenancy de milvus el aislamient entre recurs se logr mediant un camp escal llam resourc _ id que se almacen junt a cad vector c ó mo funcion al insert un vector chunk de text python se inclu resourc _ id en los metadat del punt vector 01 02 resourc _ id knowledg abc123 content text del chunk metadat al busc python se aplic un filtr boolean sobr resourc _ id search _ results collection search dat query _ embedding filt f resourc _ id resourc _ id esto garantiz que los result de b ú squed pertenec exclus al recurs solicit por qu é es segur milvus ejecut el filtr boolean en el nivel de cad segment antes de devolv result no es posibl que un chunk de un resourc _ id diferent aparezc en los result de una b ú squed filtr por otro resourc _ id siempr que el camp est é index correct c ó mo se gener el resourc _ id el resourc _ id se deriv del identif del recurs id de la knowledg bas id del archiv etc mediant una convenci ón de nombr que la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py implement relacion milvus multi tenancy el dis ñ o del que este mecan es part cinc coleccion milvus las coleccion dond se usa resourc _ id",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16f41d18d33011f1a8c8134f9287b83e",
+        "document_keyword": "Aislamiento por resource_id.md",
+        "id": "ccbb4ccebc3c07c7",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3100905429372862,
+        "tag_kwd": [],
+        "term_similarity": 0.08488032133898031,
+        "vector_similarity": 0.83558106
+      },
+      {
+        "content": "---\ntitle: \"Cinco colecciones Milvus\"\ntype: referencia\ntags: [coelsa-intelligent, rag, milvus, colecciones]\naliases: [Colecciones Milvus, Milvus collections COELSA]\ndescription: \"Usar cuando necesitás saber a qué colección de Milvus va un tipo específico de contenido (archivos, knowledge, memorias, web, URLs).\"\nestado: vigente\n---\n# Cinco colecciones Milvus\n## Qué es\nEn el esquema de [[Milvus multi-tenancy]], hay exactamente **5 colecciones fijas** en [[Milvus]]. Cada tipo de contenido tiene su colección designada.\n## Las colecciones\n<table>\n<thead>\n<tr>\n<th>Colección</th>\n<th>Contenido</th>\n<th>Cuándo se usa</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>_knowledge</code></td>\n<td>Chunks de bases de conocimiento</td>\n<td>Al embedir una Knowledge base</td>\n</tr>\n<tr>\n<td><code>_files</code></td>\n<td>Chunks de archivos subidos por usuarios</td>\n<td>Al embedir un archivo de chat</td>\n</tr>\n<tr>\n<td><code>_memories</code></td>\n<td>Memorias de usuario</td>\n<td>Al guardar o recuperar memorias personalizadas</td>\n</tr>\n<tr>\n<td><code>_web_search</code></td>\n<td>Resultados de búsqueda web embebidos</td>\n<td>Al indexar resultados de búsqueda para RAG</td>\n</tr>\n<tr>\n<td><code>_hash_based</code></td>\n<td>URLs: páginas web, videos YouTube</td>\n<td>Al indexar contenido de URLs</td>\n</tr>\n</tbody>\n</table>\n## Cómo se determina la colección\nLa función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` analiza el nombre o el tipo del recurso para determinar a qué colección pertenece. Usa **convenciones de prefijos** en los nombres generados por el frontend.\n**Regla crítica**: El frontend y esta función deben estar en sincronía. Si el frontend cambia cómo nombra los recursos, esta función debe actualizarse.",
+        "content_ltks": "titl cinc coleccion milvus type referent tags coels intelligent rag milvus coleccion ali coleccion milvus milvus collections coels description usar cuand necesit á s sab a qu é colecci ón de milvus va un tip espec í fic de conten archiv knowledg memori web urls estad vigent cinc coleccion milvus qu é es en el esquem de milvus multi tenancy hay exact 5 coleccion fij en milvus cad tip de conten tien su colecci ón design las coleccion the colecci ón conten cu á ndo se usa the tbody cod _ knowledg cod chunks de bas de conoc al embed una knowledg bas cod _ fil cod chunks de archiv sub por usuari al embed un archiv de chat cod _ memori cod memori de usuari al guard o recuper memori personaliz cod _ web _ search cod result de b ú squed web embeb al index result de b ú squed par rag cod _ hash _ bas cod urls p á gin web vide youtub al index conten de urls tbody c ó mo se determin la colecci ón la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py analiz el nombr o el tip del recurs par determin a qu é colecci ón pertenec usa convencion de prefij en los nombr gener por el frontend regl cr í tic el frontend y esta funci ón deb estar en sincron í a si el frontend cambi c ó mo nombr los recurs esta funci ón deb actualiz",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16f90544d33011f1a8c8134f9287b83e",
+        "document_keyword": "Cinco colecciones Milvus.md",
+        "id": "16b21425566fd2f9",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2924171382297446,
+        "tag_kwd": [],
+        "term_similarity": 0.07484496604249233,
+        "vector_similarity": 0.80008554
+      },
+      {
+        "content": "---\ntitle: \"Milvus multi-tenancy\"\ntype: decision\ntags: [coelsa-intelligent, rag, milvus, multi-tenancy, arquitectura]\naliases: [Multi-tenancy Milvus, 5 colecciones Milvus, Milvus shared collections]\ndescription: \"Usar cuando necesitás entender por qué Milvus usa 5 colecciones compartidas en lugar de una por recurso, y qué trade-offs implica esta decisión.\"\nestado: vigente\n---\n# Milvus multi-tenancy\n## Qué es\nLa implementación de [[Milvus]] en COELSA.Intelligent usa un esquema de **multi-tenancy con 5 colecciones fijas compartidas** para todos los usuarios y recursos, en lugar del esquema del upstream que crea una colección por cada archivo o recurso.\n## Motivación del cambio\nEl esquema del upstream (una colección por recurso) genera **overhead significativo al escalar**:\n- Milvus tiene un límite práctico de colecciones que puede gestionar eficientemente\n- Con muchos usuarios subiendo archivos, el número de colecciones crece sin límite\n- El tiempo de carga de colecciones al iniciar Milvus escala con la cantidad de colecciones\nCon 5 colecciones fijas, el overhead de gestión de colecciones es constante independientemente de cuántos usuarios y archivos tenga el sistema.\n## Aislamiento garantizado\nEl aislamiento entre recursos se logra mediante el campo `resource_id` en cada vector. Ver [[Aislamiento por resource_id]].\n## Advertencia crítica\nEl mapeo de colecciones depende de convenciones de prefijos de nombres (cómo el frontend genera los nombres de colección). La función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` implementa esta lógica.\n**Si el frontend cambia cómo genera nombres de colección sin actualizar esta función, puede ocurrir mezcla de datos entre recursos.** Este es el riesgo más crítico de este diseño.\n## Módulo\n```\nbackend/server/retrieval/vector/dbs/milvus_multitenancy.py\n```\n## Relacionado\n- [[Cinco colecciones Milvus]] — Las 5 colecciones y qué tipo de datos almacena cada una",
+        "content_ltks": "titl milvus multi tenancy type decision tags coels intelligent rag milvus multi tenancy arquitectur ali multi tenancy milvus 5 coleccion milvus milvus shar collections description usar cuand necesit á s entend por qu é milvus usa 5 coleccion compart en lug de una por recurs y qu é trad offs implic esta decisi ón estad vigent milvus multi tenancy qu é es la implementaci ón de milvus en coels intelligent usa un esquem de multi tenancy con 5 coleccion fij compart par tod los usuari y recurs en lug del esquem del upstream que cre una colecci ón por cad archiv o recurs motivaci ón del cambi el esquem del upstream una colecci ón por recurs gener overh signific al escal milvus tien un l í mit pr á ctic de coleccion que pued gestion eficient con much usuari sub archiv el n ú mer de coleccion crec sin l í mit el tiemp de carg de coleccion al inici milvus escal con la cantid de coleccion con 5 coleccion fij el overh de gesti ón de coleccion es constant independient de cu á ntos usuari y archiv teng el sistem aislamient garantiz el aislamient entre recurs se logr mediant el camp resourc _ id en cad vector ver aislamient por resourc _ id advertent cr í tic el mape de coleccion depend de convencion de prefij de nombr c ó mo el frontend gener los nombr de colecci ón la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py implement esta l ó gic si el frontend cambi c ó mo gener nombr de colecci ón sin actualiz esta funci ón pued ocurr mezcl de dat entre recurs este es el riesg m á s cr í tic de este dis ñ o m ó dul backend serv retrieval vector dbs milvus _ multitenancy py relacion cinc coleccion milvus las 5 coleccion y qu é tip de dat almacen cad una",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16fb7130d33011f1a8c8134f9287b83e",
+        "document_keyword": "Milvus multi-tenancy.md",
+        "id": "c745185dada6e372",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2896783995392557,
+        "tag_kwd": [],
+        "term_similarity": 0.06980257077036536,
+        "vector_similarity": 0.802722
+      },
+      {
+        "content": "---\ntitle: \"MOC — Stack\"\ntype: moc\ntags: [coelsa-intelligent, stack, tecnologia, moc]\naliases: [Stack COELSA, Tecnologías COELSA, MOC Stack]\ndescription: \"Usar cuando necesitás saber qué tecnología usa COELSA.Intelligent en cada capa, su versión mínima requerida y cómo se configura.\"\nestado: vigente\n---\n# MOC — Stack\nEl stack de COELSA.Intelligent cubre todas las capas: frontend, backend, persistencia, mensajería, almacenamiento de objetos, búsqueda vectorial, identidad y despliegue.\n## Notas de este cluster\n### Frontend\n- [[SvelteKit 2]] — Framework SPA con TailwindCSS; SSR deshabilitado; más de 4.500 módulos en build\n### Backend\n- [[FastAPI y uvicorn]] — Servidor HTTP ASGI con python-socketio para WebSockets\n### Persistencia\n- [[PostgreSQL]] — Base de datos relacional con SQLAlchemy + Alembic; versión mínima 14\n- [[Redis]] — Canal de WebSockets y cache distribuida; versión mínima 7\n### Almacenamiento de objetos\n- [[MinIO S3]] — Almacenamiento compatible S3 para archivos del sistema\n### Búsqueda vectorial\n- [[Milvus]] — Base de datos vectorial para RAG con multi-tenancy; versión mínima 2.4\n### Identidad\n- [[Azure AD OAuth]] — Proveedor OAuth 2.0 / OpenID Connect corporativo; único medio de login\n### Modelos IA\n- [[Ollama]] — Servidor local de modelos LLM (acceso nativo)\n- [[LiteLLM proxy]] — Proxy OpenAI-compatible que unifica múltiples proveedores de modelos\n### Despliegue\n- [[OpenShift]] — Plataforma de orquestación de contenedores con Azure DevOps CI/CD\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Decisiones de diseño que motivaron la elección de cada componente\n- [[MOC - CI-CD y Despliegue]] — Cómo se construye y despliega cada componente del stack\n- [[MOC - RAG y Búsqueda Vectorial]] — Cómo se usa Milvus dentro del sistema RAG",
+        "content_ltks": "titl moc stack type moc tags coels intelligent stack tecnologi moc ali stack coels tecnolog í as coels moc stack description usar cuand necesit á s sab qu é tecnolog í a usa coels intelligent en cad cap su versi ón m í nim requer y c ó mo se configur estad vigent moc stack el stack de coels intelligent cubr tod las cap frontend backend persistent mensaj í a almacen de objet b ú squed vectorial ident y desplieg not de este clust frontend sveltekit 2 framework spa con tailwindcss ssr deshabilit m á s de 4 500 m ó dul en build backend fastapi y uvicorn servidor http asgi con python socketi par websockets persistent postgresql bas de dat relacional con sqlalchemy alembic versi ón m í nim 14 redis canal de websockets y cach distribu versi ón m í nim 7 almacen de objet mini s3 almacen compat s3 par archiv del sistem b ú squed vectorial milvus bas de dat vectorial par rag con multi tenancy versi ón m í nim 24 ident azur ad oauth proveedor oauth 20 open connect corpor ú nic medi de login model ia ollam servidor local de model llm acces nativ litellm proxy proxy openai compat que unif m ú ltipl proveedor de model desplieg openshift plataform de orquestaci ón de contenedor con azur devops ci cd mocs vecin moc arquitectur decision de dis ñ o que motiv la elecci ón de cad component moc ci cd y desplieg c ó mo se constru y desplieg cad component del stack moc rag y b ú squed vectorial c ó mo se usa milvus dentr del sistem rag",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16dfc552d33011f1a8c8134f9287b83e",
+        "document_keyword": "MOC - Stack.md",
+        "id": "e206a228bc2d9d99",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.28724476355630846,
+        "tag_kwd": [],
+        "term_similarity": 0.07479553079472638,
+        "vector_similarity": 0.78295964
+      }
+    ],
+    "total": 64
+  }
+}

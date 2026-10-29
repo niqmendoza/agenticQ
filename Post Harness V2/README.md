@@ -1,10 +1,13 @@
 # Post Harness V2
 
-Navegador documental local para el harness existente de Copilot u otros agentes. No implementa un harness nuevo, MCP, embeddings ni inferencia. La carpeta **Post Harness** original permanece intacta.
+Navegador documental local para el harness existente de Copilot u otros agentes, con un adaptador adicional para recuperar evidencia desde RAGFlow. El núcleo local no implementa un harness nuevo, MCP, embeddings ni inferencia. La carpeta **Post Harness** original permanece intacta.
 
 - `reporte-v2.html`: resumen visual de lectura completa → scripts V1 → scripts V2.
 - `EXPLICACION.md`: explicación técnica, metodología, números y límites.
 - `scripts/brain.py`: interfaz pública V2.
+- `scripts/retrieve.py`: contexto remoto compacto desde RAGFlow, con presupuesto y sesión por tarea.
+- `scripts/verify_context.py`: control de referencias, hashes y límites del contexto.
+- `GUIA-CONTEXTO-RAGFLOW.md`: uso con Copilot, contrato `qa-context/1` y límites del piloto.
 - `evidencias/`: logs, sesión, fuentes referenciadas, pruebas, contadores y entregas congeladas.
 
 ## Uso

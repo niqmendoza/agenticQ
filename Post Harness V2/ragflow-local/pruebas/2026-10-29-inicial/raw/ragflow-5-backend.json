@@ -1,0 +1,538 @@
+{
+  "request": {
+    "question": "agregar endpoint router REST autenticación errores",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"Agregar router REST\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, fastapi, routers, api]\naliases: [Agregar endpoint, Nuevo router FastAPI, New REST endpoint]\ndescription: \"Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router.\"\nestado: vigente\n---\n# Agregar router REST\n## Qué es\nGuía paso a paso para agregar un nuevo conjunto de endpoints REST al backend de COELSA.Intelligent usando el patrón de routers de FastAPI.\n## Pasos\n### 1. Crear el módulo del router\n```python\n# backend/server/routers/mi_nuevo_router.py\nfrom fastapi import APIRouter, Depends, HTTPException\nfrom server.models.users import UserModel\nfrom server.utils.auth import get_current_user\n\nrouter = APIRouter()\n\n@router.get(\"/\")\nasync def get_items(user: UserModel = Depends(get_current_user)):\n    \"\"\"Endpoint de ejemplo.\"\"\"\n    return {\"items\": []}\n\n@router.post(\"/\")\nasync def create_item(\n    data: dict,\n    user: UserModel = Depends(get_current_user)\n):\n    return {\"created\": True}\n```\n### 2. Importar el router en `main.py`\n```python\n# backend/server/main.py\nfrom server.routers import (\n    # ... routers existentes ...\n    mi_nuevo_router,  # Agregar aquí\n)\n```\n### 3. Registrar el router en la app\n```python\n# backend/server/main.py — en la función que monta los routers\napp.include_router(\n    mi_nuevo_router.router,\n    prefix=\"/api/v1/mi-recurso\",\n    tags=[\"mi-recurso\"]\n)\n```\n## Convenciones\n- Los routers usan el prefijo `/api/v1/`\n- Todos los endpoints que requieren autenticación usan `Depends(get_current_user)`\n- Los errores usan la jerarquía del [[Sistema de errores centralizado]]\n- La lógica de acceso a BD va en `backend/server/models/`; el router solo orquesta\n## Relacionado\n- [[FastAPI y uvicorn]] — El servidor donde se montan los routers\n- [[Sistema de errores centralizado]] — Las excepciones que deben usarse en los endpoints\n- [[Control de acceso a recursos]] — Cómo agregar control de acceso a nivel de endpoint",
+          "content_ltks": "titl agreg rout rest type referent tags coels intelligent desarroll backend fastapi routers api ali agreg endpoint nuev rout fastapi new rest endpoint description usar cuand necesit á s agreg un nuev grup de endpoints rest al backend de coels intelligent pas concret par cre y registr un rout estad vigent agreg rout rest qu é es gu í a pas a pas par agreg un nuev conjunt de endpoints rest al backend de coels intelligent usand el patr ón de routers de fastapi pas 1 cre el m ó dul del rout python backend serv routers mi _ nuev _ rout py from fastapi import apirout depends httpexception from serv models users import usermodel from serv utils auth import get _ current _ user rout apirout rout get async def get _ items user usermodel depends get _ current _ user endpoint de ejempl return items rout post async def creat _ item dat dict user usermodel depends get _ current _ user return creat tru 2 import el rout en main py python backend serv main py from serv routers import routers existent mi _ nuev _ rout agreg aqu í 3 registr el rout en la app python backend serv main py en la funci ón que mont los routers app includ _ rout mi _ nuev _ rout rout prefix api v1 mi recurs tags mi recurs convencion los routers usan el prefij api v1 tod los endpoints que requier autenticaci ón usan depends get _ current _ user los error usan la jerarqu í a del sistem de error centraliz la l ó gic de acces a bd va en backend serv models el rout sol orquest relacion fastapi y uvicorn el servidor dond se mont los routers sistem de error centraliz las excepcion que deb usars en los endpoints control de acces a recurs c ó mo agreg control de acces a nivel de endpoint",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16a03f7cd33011f1a8c8134f9287b83e",
+          "document_keyword": "Agregar router REST.md",
+          "id": "e3960e3b79f2f861",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.34863958865457867,
+          "tag_kwd": [],
+          "term_similarity": 0.13002897093511248,
+          "vector_similarity": 0.85873103
+        },
+        {
+          "content": "---\ntitle: \"Azure AD login exclusivo\"\ntype: decision\ntags: [coelsa-intelligent, auth, azure-ad, autenticacion]\naliases: [Solo Azure AD, Login corporativo COELSA]\ndescription: \"Usar cuando necesitás confirmar que el login local está deshabilitado o cuando configurás un nuevo entorno y necesitás saber qué variables de Azure AD son obligatorias.\"\nestado: vigente\n---\n# Azure AD login exclusivo\n## Qué es\nCOELSA.Intelligent tiene **deshabilitados** el registro de nuevos usuarios vía formulario web y el login con email/contraseña. El **único** medio de autenticación es Azure Active Directory via OAuth 2.0.\n## Qué está deshabilitado\n- Formulario de registro de usuario (el endpoint existe pero rechaza requests)\n- Login con email + contraseña\n- Auto-signup (creación automática de cuenta al primer login configurada en modo restringido)\n## Por qué esta decisión\nCOELSA es una empresa con Azure AD como directorio corporativo. Usar Azure AD:\n- Unifica la gestión de usuarios con el directorio existente\n- Elimina la necesidad de gestionar contraseñas en la aplicación\n- Permite aprovechar políticas de seguridad (MFA, Conditional Access) del tenant corporativo\n- Cumple con las políticas de seguridad de TI de COELSA\n## Variables requeridas\n```env\nOAUTH_CLIENT_ID=<azure-client-id>\nOAUTH_CLIENT_SECRET=<azure-client-secret>\nOAUTH_PROVIDER_NAME=microsoft\nOPENID_PROVIDER_URL=https://login.microsoftonline.com/<tenant-id>/v2.0/.well-known/openid-configuration\n```\n## Relacionado\n- [[Azure AD OAuth]] — Detalle técnico de la configuración OAuth\n- [[JWT y sesiones]] — El token interno que se genera después del OAuth exitoso\n- [[Roles de usuario]] — Los roles que se asignan a los usuarios una vez autenticados\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth\n- [[MOC - Decisiones]] — D-11 en el índice de decisiones",
+          "content_ltks": "titl azur ad login exclus type decision tags coels intelligent auth azur ad autent ali sol azur ad login corpor coels description usar cuand necesit á s confirm que el login local est á deshabilit o cuand configur á s un nuev entorn y necesit á s sab qu é variabl de azur ad son obligatori estad vigent azur ad login exclus qu é es coels intelligent tien deshabilit el registr de nuev usuari v í a formulari web y el login con email contr ñ a el ú nic medi de autenticaci ón es azur activ directory via oauth 20 qu é est á deshabilit formulari de registr de usuari el endpoint exist per rechaz requests login con email contr ñ a aut signup creaci ón autom á tic de cuent al prim login configur en mod restring por qu é esta decisi ón coels es una empres con azur ad com directori corpor usar azur ad unif la gesti ón de usuari con el directori existent elimin la neces de gestion contr ñ as en la aplicaci ón permit aprovech pol í tic de segur mfa conditional access del tenant corpor cumpl con las pol í tic de segur de ti de coels variabl requer env oauth _ client _ id azur client id oauth _ client _ secret azur client secret oauth _ provid _ nam microsoft open _ provid _ url https login microsoftonlin com tenant id v2 0 well known open configuration relacion azur ad oauth detall t é cnic de la configuraci ón oauth jwt y sesion el tok intern que se gener despu és del oauth exit rol de usuari los rol que se asign a los usuari una vez autentic moc autenticaci ón y permis í ndic del clust de auth moc decision d 11 en el í ndic de decision",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "167d610ad33011f1a8c8134f9287b83e",
+          "document_keyword": "Azure AD login exclusivo.md",
+          "id": "44a976b5bb1f680b",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.31811159086912366,
+          "tag_kwd": [],
+          "term_similarity": 0.12349384695589094,
+          "vector_similarity": 0.77221966
+        },
+        {
+          "content": "- [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos\n- [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+          "content_ltks": "control de acces a recurs c ó mo el rol interact ú a con el access _ control de recurs azur ad login exclus c ó mo se asign el rol inicial al prim login moc autenticaci ón y permis í ndic del clust de auth",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16884264d33011f1a8c8134f9287b83e",
+          "document_keyword": "Roles de usuario.md",
+          "id": "4bbf227fc90b9863",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3054588406628276,
+          "tag_kwd": [],
+          "term_similarity": 0.09674855808975374,
+          "vector_similarity": 0.7924495
+        },
+        {
+          "content": "<table>\n<thead>\n<tr>\n<th>Área</th>\n<th>Upstream (Open WebUI)</th>\n<th>COELSA.Intelligent</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Base de datos</td>\n<td>SQLite (default)</td>\n<td>[[PostgreSQL]]</td>\n</tr>\n<tr>\n<td>Autenticación</td>\n<td>Múltiples proveedores + registro local</td>\n<td>Solo [[Azure AD OAuth]]</td>\n</tr>\n<tr>\n<td>Almacenamiento</td>\n<td>Local (<code>data/uploads/</code>)</td>\n<td>Híbrido local + [[MinIO S3]]</td>\n</tr>\n<tr>\n<td>Búsqueda vectorial</td>\n<td>Una colección por recurso</td>\n<td>[[Milvus multi-tenancy]] (5 colecciones)</td>\n</tr>\n<tr>\n<td>Identidad visual</td>\n<td>Open WebUI branding</td>\n<td>[[ECO Design System]] COELSA</td>\n</tr>\n<tr>\n<td>Idioma por defecto</td>\n<td><code>en-US</code></td>\n<td><code>es-AR</code></td>\n</tr>\n<tr>\n<td>Despliegue</td>\n<td>Docker genérico</td>\n<td>[[OpenShift]] + Azure DevOps</td>\n</tr>\n</tbody>\n</table>\n## Por qué no se sigue el upstream\nEl upstream evoluciona rápido y no está optimizado para las restricciones corporativas de COELSA (Azure AD, OpenShift, proxy corporativo, identidad visual propia). Mantener sincronización con el upstream requeriría resolver conflictos continuamente en áreas que COELSA deliberadamente modificó. La decisión es mantener una versión estabilizada y hacer cherry-pick de mejoras puntuales cuando sea necesario.\n## Relacionado\n- [[MOC - Arquitectura]] — Índice de todas las decisiones del fork\n- [[SPA con SSR deshabilitado]] — Otra decisión de arquitectura que diverge del upstream\n- [[PostgreSQL como base de datos]] — Primera y más importante migración de infraestructura\n- [[ECO Design System]] — El rebranding visual completo que diferencia el fork",
+          "content_ltks": "the á rea upstream open webui coels intelligent the tbody bas de dat sqlit default postgresql autenticaci ón m ú ltipl proveedor registr local sol azur ad oauth almacen local cod dat uploads cod h í brid local mini s3 b ú squed vectorial una colecci ón por recurs milvus multi tenancy 5 coleccion ident visual open webui branding eco design system coels idiom por defect cod en us cod cod es ar cod desplieg dock gen é ric openshift azur devops tbody por qu é no se sig el upstream el upstream evolucion r á pid y no est á optimiz par las restriccion corpor de coels azur ad openshift proxy corpor ident visual propi manten sincronizaci ón con el upstream requer í a resolv conflict continu en á reas que coels deliber modific ó la decisi ón es manten una versi ón estabiliz y hac cherry pick de mejor puntual cuand sea necesari relacion moc arquitectur í ndic de tod las decision del fork spa con ssr deshabilit otra decisi ón de arquitectur que diverg del upstream postgresql com bas de dat primer y m á s import migraci ón de infraestructur eco design system el rebranding visual complet que diferent el fork",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "166a437cd33011f1a8c8134f9287b83e",
+          "document_keyword": "Fork de Open WebUI.md",
+          "id": "01cebf78d4c97a2c",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2986241356628276,
+          "tag_kwd": [],
+          "term_similarity": 0.09674855808975374,
+          "vector_similarity": 0.76966715
+        },
+        {
+          "content": "---\ntitle: \"MOC — Autenticación y Permisos\"\ntype: moc\ntags: [coelsa-intelligent, autenticacion, permisos, moc]\naliases: [MOC Autenticación, Auth COELSA, Permisos COELSA]\ndescription: \"Usar cuando trabajás con login, roles, grupos, tokens o control de acceso a recursos en COELSA.Intelligent.\"\nestado: vigente\n---\n# MOC — Autenticación y Permisos\nTodo acceso al sistema pasa por [[Azure AD login exclusivo]]. Los [[Roles de usuario]] y [[Grupos y permisos]] determinan qué puede hacer cada usuario dentro de la aplicación.\n## Notas de este cluster\n- [[Azure AD login exclusivo]] — Solo OAuth Azure AD; registro local y formulario de usuario deshabilitados\n- [[Roles de usuario]] — Los tres roles: `admin`, `user`, `pending`; qué puede hacer cada uno\n- [[Grupos y permisos]] — Modelo de grupos con JSON de permisos granulares; acceso por grupo o usuario\n- [[JWT y sesiones]] — Generación y validación de tokens HS256; `WEBUI_SECRET_KEY`\n- [[bcrypt para contraseñas]] — Por qué se migró de passlib a bcrypt nativo; problema de truncación UTF-8\n- [[Control de acceso a recursos]] — Campo `access_control` en Knowledge y Files; modos public/private/custom\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Decisión de usar Azure AD exclusivo como parte del diseño del fork\n- [[MOC - Seguridad]] — CSP, SSRF y otras remediaciones que complementan la autenticación\n- [[MOC - Diseño y Frontend]] — Cómo se restringen tabs de Settings solo para admin en la UI",
+          "content_ltks": "titl moc autenticaci ón y permis type moc tags coels intelligent autent permis moc ali moc autenticaci ón auth coels permis coels description usar cuand trabaj á s con login rol grup tokens o control de acces a recurs en coels intelligent estad vigent moc autenticaci ón y permis tod acces al sistem pas por azur ad login exclus los rol de usuari y grup y permis determin qu é pued hac cad usuari dentr de la aplicaci ón not de este clust azur ad login exclus sol oauth azur ad registr local y formulari de usuari deshabilit rol de usuari los tres rol admin user pending qu é pued hac cad uno grup y permis model de grup con json de permis granular acces por grup o usuari jwt y sesion generaci ón y validaci ón de tokens hs256 webui _ secret _ key bcrypt par contr ñ as por qu é se migr ó de passlib a bcrypt nativ problem de truncaci ón utf 8 control de acces a recurs camp access _ control en knowledg y fil mod public privat custom mocs vecin moc arquitectur decisi ón de usar azur ad exclus com part del dis ñ o del fork moc segur csp ssrf y otras remedi que complement la autenticaci ón moc dis ñ o y frontend c ó mo se restring tabs de settings sol par admin en la ui",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "document_keyword": "MOC - Autenticación y Permisos.md",
+          "id": "5a6727d2e1160cf2",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2980932406628276,
+          "tag_kwd": [],
+          "term_similarity": 0.09674855808975374,
+          "vector_similarity": 0.7678975
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 4,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 3,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16a03f7cd33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar router REST.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "170d40fed33011f1a8c8134f9287b83e",
+          "doc_name": "Protección SSRF.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16b74492d33011f1a8c8134f9287b83e",
+          "doc_name": "Manejo de errores frontend.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "167adbe2d33011f1a8c8134f9287b83e",
+          "doc_name": "Sistema de errores centralizado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167d610ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD login exclusivo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168b48f6d33011f1a8c8134f9287b83e",
+          "doc_name": "bcrypt para contraseñas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a5b100d33011f1a8c8134f9287b83e",
+          "doc_name": "Loguru y logging.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171f52b2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ollama.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170a9f66d33011f1a8c8134f9287b83e",
+          "doc_name": "Path Traversal.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1698681ad33011f1a8c8134f9287b83e",
+          "doc_name": "SSL corporativo en build.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17006c80d33011f1a8c8134f9287b83e",
+          "doc_name": "CSP con nonces.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169dbf04d33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar proveedor de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1674dba2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis para WebSockets.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1707eac8d33011f1a8c8134f9287b83e",
+          "doc_name": "Hardening ReDoS.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1726c2c2d33011f1a8c8134f9287b83e",
+          "doc_name": "Redis.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b467e0d33011f1a8c8134f9287b83e",
+          "doc_name": "Internacionalización i18n.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17057dd8d33011f1a8c8134f9287b83e",
+          "doc_name": "Dependencias vulnerables.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170fee94d33011f1a8c8134f9287b83e",
+          "doc_name": "Riesgos de seguridad aceptados.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "doc_name": "URLs firmadas MinIO.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17030102d33011f1a8c8134f9287b83e",
+          "doc_name": "CVE-2025-7969 markdown-it.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e24f02d33011f1a8c8134f9287b83e",
+          "doc_name": "Cadena SearXNG Context Forge.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167fe7ead33011f1a8c8134f9287b83e",
+          "doc_name": "Control de acceso a recursos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones de componentes Svelte.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a829f8d33011f1a8c8134f9287b83e",
+          "doc_name": "Migraciones Alembic.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 20869,
+  "seconds": 0.1946659170789644,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"Agregar router REST\"\ntype: referencia\ntags: [coelsa-intelligent, desarrollo, backend, fastapi, routers, api]\naliases: [Agregar endpoint, Nuevo router FastAPI, New REST endpoint]\ndescription: \"Usar cuando necesitás agregar un nuevo grupo de endpoints REST al backend de COELSA.Intelligent — pasos concretos para crear y registrar un router.\"\nestado: vigente\n---\n# Agregar router REST\n## Qué es\nGuía paso a paso para agregar un nuevo conjunto de endpoints REST al backend de COELSA.Intelligent usando el patrón de routers de FastAPI.\n## Pasos\n### 1. Crear el módulo del router\n```python\n# backend/server/routers/mi_nuevo_router.py\nfrom fastapi import APIRouter, Depends, HTTPException\nfrom server.models.users import UserModel\nfrom server.utils.auth import get_current_user\n\nrouter = APIRouter()\n\n@router.get(\"/\")\nasync def get_items(user: UserModel = Depends(get_current_user)):\n    \"\"\"Endpoint de ejemplo.\"\"\"\n    return {\"items\": []}\n\n@router.post(\"/\")\nasync def create_item(\n    data: dict,\n    user: UserModel = Depends(get_current_user)\n):\n    return {\"created\": True}\n```\n### 2. Importar el router en `main.py`\n```python\n# backend/server/main.py\nfrom server.routers import (\n    # ... routers existentes ...\n    mi_nuevo_router,  # Agregar aquí\n)\n```\n### 3. Registrar el router en la app\n```python\n# backend/server/main.py — en la función que monta los routers\napp.include_router(\n    mi_nuevo_router.router,\n    prefix=\"/api/v1/mi-recurso\",\n    tags=[\"mi-recurso\"]\n)\n```\n## Convenciones\n- Los routers usan el prefijo `/api/v1/`\n- Todos los endpoints que requieren autenticación usan `Depends(get_current_user)`\n- Los errores usan la jerarquía del [[Sistema de errores centralizado]]\n- La lógica de acceso a BD va en `backend/server/models/`; el router solo orquesta\n## Relacionado\n- [[FastAPI y uvicorn]] — El servidor donde se montan los routers\n- [[Sistema de errores centralizado]] — Las excepciones que deben usarse en los endpoints\n- [[Control de acceso a recursos]] — Cómo agregar control de acceso a nivel de endpoint",
+        "content_ltks": "titl agreg rout rest type referent tags coels intelligent desarroll backend fastapi routers api ali agreg endpoint nuev rout fastapi new rest endpoint description usar cuand necesit á s agreg un nuev grup de endpoints rest al backend de coels intelligent pas concret par cre y registr un rout estad vigent agreg rout rest qu é es gu í a pas a pas par agreg un nuev conjunt de endpoints rest al backend de coels intelligent usand el patr ón de routers de fastapi pas 1 cre el m ó dul del rout python backend serv routers mi _ nuev _ rout py from fastapi import apirout depends httpexception from serv models users import usermodel from serv utils auth import get _ current _ user rout apirout rout get async def get _ items user usermodel depends get _ current _ user endpoint de ejempl return items rout post async def creat _ item dat dict user usermodel depends get _ current _ user return creat tru 2 import el rout en main py python backend serv main py from serv routers import routers existent mi _ nuev _ rout agreg aqu í 3 registr el rout en la app python backend serv main py en la funci ón que mont los routers app includ _ rout mi _ nuev _ rout rout prefix api v1 mi recurs tags mi recurs convencion los routers usan el prefij api v1 tod los endpoints que requier autenticaci ón usan depends get _ current _ user los error usan la jerarqu í a del sistem de error centraliz la l ó gic de acces a bd va en backend serv models el rout sol orquest relacion fastapi y uvicorn el servidor dond se mont los routers sistem de error centraliz las excepcion que deb usars en los endpoints control de acces a recurs c ó mo agreg control de acces a nivel de endpoint",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16a03f7cd33011f1a8c8134f9287b83e",
+        "document_keyword": "Agregar router REST.md",
+        "id": "e3960e3b79f2f861",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.34863958865457867,
+        "tag_kwd": [],
+        "term_similarity": 0.13002897093511248,
+        "vector_similarity": 0.85873103
+      },
+      {
+        "content": "---\ntitle: \"Azure AD login exclusivo\"\ntype: decision\ntags: [coelsa-intelligent, auth, azure-ad, autenticacion]\naliases: [Solo Azure AD, Login corporativo COELSA]\ndescription: \"Usar cuando necesitás confirmar que el login local está deshabilitado o cuando configurás un nuevo entorno y necesitás saber qué variables de Azure AD son obligatorias.\"\nestado: vigente\n---\n# Azure AD login exclusivo\n## Qué es\nCOELSA.Intelligent tiene **deshabilitados** el registro de nuevos usuarios vía formulario web y el login con email/contraseña. El **único** medio de autenticación es Azure Active Directory via OAuth 2.0.\n## Qué está deshabilitado\n- Formulario de registro de usuario (el endpoint existe pero rechaza requests)\n- Login con email + contraseña\n- Auto-signup (creación automática de cuenta al primer login configurada en modo restringido)\n## Por qué esta decisión\nCOELSA es una empresa con Azure AD como directorio corporativo. Usar Azure AD:\n- Unifica la gestión de usuarios con el directorio existente\n- Elimina la necesidad de gestionar contraseñas en la aplicación\n- Permite aprovechar políticas de seguridad (MFA, Conditional Access) del tenant corporativo\n- Cumple con las políticas de seguridad de TI de COELSA\n## Variables requeridas\n```env\nOAUTH_CLIENT_ID=<azure-client-id>\nOAUTH_CLIENT_SECRET=<azure-client-secret>\nOAUTH_PROVIDER_NAME=microsoft\nOPENID_PROVIDER_URL=https://login.microsoftonline.com/<tenant-id>/v2.0/.well-known/openid-configuration\n```\n## Relacionado\n- [[Azure AD OAuth]] — Detalle técnico de la configuración OAuth\n- [[JWT y sesiones]] — El token interno que se genera después del OAuth exitoso\n- [[Roles de usuario]] — Los roles que se asignan a los usuarios una vez autenticados\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth\n- [[MOC - Decisiones]] — D-11 en el índice de decisiones",
+        "content_ltks": "titl azur ad login exclus type decision tags coels intelligent auth azur ad autent ali sol azur ad login corpor coels description usar cuand necesit á s confirm que el login local est á deshabilit o cuand configur á s un nuev entorn y necesit á s sab qu é variabl de azur ad son obligatori estad vigent azur ad login exclus qu é es coels intelligent tien deshabilit el registr de nuev usuari v í a formulari web y el login con email contr ñ a el ú nic medi de autenticaci ón es azur activ directory via oauth 20 qu é est á deshabilit formulari de registr de usuari el endpoint exist per rechaz requests login con email contr ñ a aut signup creaci ón autom á tic de cuent al prim login configur en mod restring por qu é esta decisi ón coels es una empres con azur ad com directori corpor usar azur ad unif la gesti ón de usuari con el directori existent elimin la neces de gestion contr ñ as en la aplicaci ón permit aprovech pol í tic de segur mfa conditional access del tenant corpor cumpl con las pol í tic de segur de ti de coels variabl requer env oauth _ client _ id azur client id oauth _ client _ secret azur client secret oauth _ provid _ nam microsoft open _ provid _ url https login microsoftonlin com tenant id v2 0 well known open configuration relacion azur ad oauth detall t é cnic de la configuraci ón oauth jwt y sesion el tok intern que se gener despu és del oauth exit rol de usuari los rol que se asign a los usuari una vez autentic moc autenticaci ón y permis í ndic del clust de auth moc decision d 11 en el í ndic de decision",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "167d610ad33011f1a8c8134f9287b83e",
+        "document_keyword": "Azure AD login exclusivo.md",
+        "id": "44a976b5bb1f680b",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.31811159086912366,
+        "tag_kwd": [],
+        "term_similarity": 0.12349384695589094,
+        "vector_similarity": 0.77221966
+      },
+      {
+        "content": "- [[Control de acceso a recursos]] — Cómo el rol interactúa con el access_control de recursos\n- [[Azure AD login exclusivo]] — Cómo se asigna el rol inicial al primer login\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth",
+        "content_ltks": "control de acces a recurs c ó mo el rol interact ú a con el access _ control de recurs azur ad login exclus c ó mo se asign el rol inicial al prim login moc autenticaci ón y permis í ndic del clust de auth",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16884264d33011f1a8c8134f9287b83e",
+        "document_keyword": "Roles de usuario.md",
+        "id": "4bbf227fc90b9863",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3054588406628276,
+        "tag_kwd": [],
+        "term_similarity": 0.09674855808975374,
+        "vector_similarity": 0.7924495
+      },
+      {
+        "content": "<table>\n<thead>\n<tr>\n<th>Área</th>\n<th>Upstream (Open WebUI)</th>\n<th>COELSA.Intelligent</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Base de datos</td>\n<td>SQLite (default)</td>\n<td>[[PostgreSQL]]</td>\n</tr>\n<tr>\n<td>Autenticación</td>\n<td>Múltiples proveedores + registro local</td>\n<td>Solo [[Azure AD OAuth]]</td>\n</tr>\n<tr>\n<td>Almacenamiento</td>\n<td>Local (<code>data/uploads/</code>)</td>\n<td>Híbrido local + [[MinIO S3]]</td>\n</tr>\n<tr>\n<td>Búsqueda vectorial</td>\n<td>Una colección por recurso</td>\n<td>[[Milvus multi-tenancy]] (5 colecciones)</td>\n</tr>\n<tr>\n<td>Identidad visual</td>\n<td>Open WebUI branding</td>\n<td>[[ECO Design System]] COELSA</td>\n</tr>\n<tr>\n<td>Idioma por defecto</td>\n<td><code>en-US</code></td>\n<td><code>es-AR</code></td>\n</tr>\n<tr>\n<td>Despliegue</td>\n<td>Docker genérico</td>\n<td>[[OpenShift]] + Azure DevOps</td>\n</tr>\n</tbody>\n</table>\n## Por qué no se sigue el upstream\nEl upstream evoluciona rápido y no está optimizado para las restricciones corporativas de COELSA (Azure AD, OpenShift, proxy corporativo, identidad visual propia). Mantener sincronización con el upstream requeriría resolver conflictos continuamente en áreas que COELSA deliberadamente modificó. La decisión es mantener una versión estabilizada y hacer cherry-pick de mejoras puntuales cuando sea necesario.\n## Relacionado\n- [[MOC - Arquitectura]] — Índice de todas las decisiones del fork\n- [[SPA con SSR deshabilitado]] — Otra decisión de arquitectura que diverge del upstream\n- [[PostgreSQL como base de datos]] — Primera y más importante migración de infraestructura\n- [[ECO Design System]] — El rebranding visual completo que diferencia el fork",
+        "content_ltks": "the á rea upstream open webui coels intelligent the tbody bas de dat sqlit default postgresql autenticaci ón m ú ltipl proveedor registr local sol azur ad oauth almacen local cod dat uploads cod h í brid local mini s3 b ú squed vectorial una colecci ón por recurs milvus multi tenancy 5 coleccion ident visual open webui branding eco design system coels idiom por defect cod en us cod cod es ar cod desplieg dock gen é ric openshift azur devops tbody por qu é no se sig el upstream el upstream evolucion r á pid y no est á optimiz par las restriccion corpor de coels azur ad openshift proxy corpor ident visual propi manten sincronizaci ón con el upstream requer í a resolv conflict continu en á reas que coels deliber modific ó la decisi ón es manten una versi ón estabiliz y hac cherry pick de mejor puntual cuand sea necesari relacion moc arquitectur í ndic de tod las decision del fork spa con ssr deshabilit otra decisi ón de arquitectur que diverg del upstream postgresql com bas de dat primer y m á s import migraci ón de infraestructur eco design system el rebranding visual complet que diferent el fork",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "166a437cd33011f1a8c8134f9287b83e",
+        "document_keyword": "Fork de Open WebUI.md",
+        "id": "01cebf78d4c97a2c",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2986241356628276,
+        "tag_kwd": [],
+        "term_similarity": 0.09674855808975374,
+        "vector_similarity": 0.76966715
+      },
+      {
+        "content": "---\ntitle: \"MOC — Autenticación y Permisos\"\ntype: moc\ntags: [coelsa-intelligent, autenticacion, permisos, moc]\naliases: [MOC Autenticación, Auth COELSA, Permisos COELSA]\ndescription: \"Usar cuando trabajás con login, roles, grupos, tokens o control de acceso a recursos en COELSA.Intelligent.\"\nestado: vigente\n---\n# MOC — Autenticación y Permisos\nTodo acceso al sistema pasa por [[Azure AD login exclusivo]]. Los [[Roles de usuario]] y [[Grupos y permisos]] determinan qué puede hacer cada usuario dentro de la aplicación.\n## Notas de este cluster\n- [[Azure AD login exclusivo]] — Solo OAuth Azure AD; registro local y formulario de usuario deshabilitados\n- [[Roles de usuario]] — Los tres roles: `admin`, `user`, `pending`; qué puede hacer cada uno\n- [[Grupos y permisos]] — Modelo de grupos con JSON de permisos granulares; acceso por grupo o usuario\n- [[JWT y sesiones]] — Generación y validación de tokens HS256; `WEBUI_SECRET_KEY`\n- [[bcrypt para contraseñas]] — Por qué se migró de passlib a bcrypt nativo; problema de truncación UTF-8\n- [[Control de acceso a recursos]] — Campo `access_control` en Knowledge y Files; modos public/private/custom\n## MOCs vecinos\n- [[MOC - Arquitectura]] — Decisión de usar Azure AD exclusivo como parte del diseño del fork\n- [[MOC - Seguridad]] — CSP, SSRF y otras remediaciones que complementan la autenticación\n- [[MOC - Diseño y Frontend]] — Cómo se restringen tabs de Settings solo para admin en la UI",
+        "content_ltks": "titl moc autenticaci ón y permis type moc tags coels intelligent autent permis moc ali moc autenticaci ón auth coels permis coels description usar cuand trabaj á s con login rol grup tokens o control de acces a recurs en coels intelligent estad vigent moc autenticaci ón y permis tod acces al sistem pas por azur ad login exclus los rol de usuari y grup y permis determin qu é pued hac cad usuari dentr de la aplicaci ón not de este clust azur ad login exclus sol oauth azur ad registr local y formulari de usuari deshabilit rol de usuari los tres rol admin user pending qu é pued hac cad uno grup y permis model de grup con json de permis granular acces por grup o usuari jwt y sesion generaci ón y validaci ón de tokens hs256 webui _ secret _ key bcrypt par contr ñ as por qu é se migr ó de passlib a bcrypt nativ problem de truncaci ón utf 8 control de acces a recurs camp access _ control en knowledg y fil mod public privat custom mocs vecin moc arquitectur decisi ón de usar azur ad exclus com part del dis ñ o del fork moc segur csp ssrf y otras remedi que complement la autenticaci ón moc dis ñ o y frontend c ó mo se restring tabs de settings sol par admin en la ui",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16cb37ead33011f1a8c8134f9287b83e",
+        "document_keyword": "MOC - Autenticación y Permisos.md",
+        "id": "5a6727d2e1160cf2",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.2980932406628276,
+        "tag_kwd": [],
+        "term_similarity": 0.09674855808975374,
+        "vector_similarity": 0.7678975
+      }
+    ],
+    "total": 64
+  }
+}

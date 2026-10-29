@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 1,
+  "title": "Hitos de implementación",
+  "description": "Un recorrido para construir el sistema de QA agentizada. Cada hito tiene un resultado verificable; los estados se completan según la evidencia del equipo.",
+  "phases": [
+    {
+      "id": "context",
+      "title": "01 · Preparar el conocimiento",
+      "description": "Organizar las fuentes y hacer útil su recuperación antes de generar pruebas.",
+      "milestones": [
+        {
+          "id": "knowledge-scope",
+          "title": "Elegir una aplicación para el piloto",
+          "description": "El equipo ya eligió la aplicación piloto. Su alcance detallado y las personas de referencia se precisarán durante el relevamiento.",
+          "processNodeId": "functional-change",
+          "initialStatus": "completado",
+          "initialNote": "El equipo confirmó que la aplicación piloto ya fue elegida. El nombre, el alcance detallado y las personas de referencia no se informaron en esta conversación.",
+          "criteria": [
+            "Aplicación o API piloto elegida"
+          ],
+          "confirmation": "Aplicación piloto elegida, según lo confirmado por el equipo."
+        },
+        {
+          "id": "knowledge-sources",
+          "title": "Acordar las fuentes funcionales",
+          "description": "Distinguir documentación funcional confirmada, notas de QA y preguntas abiertas del segundo cerebro.",
+          "processNodeId": "functional-documentation",
+          "criteria": [
+            "Fuentes y reglas confirmadas identificadas",
+            "Dudas separadas de los acuerdos"
+          ]
+        },
+        {
+          "id": "retrieval-scripts-v1",
+          "title": "Crear los scripts de retrieval v1",
+          "description": "Ya se crearon scripts en versión 1 para recuperar conocimiento de los segundos cerebros. Este hito registra su existencia, no su validación completa.",
+          "processNodeId": "knowledge-retrieval",
+          "initialStatus": "completado",
+          "initialNote": "Confirmado por el equipo: scripts v1 creados para el retrieval de conocimiento de los segundos cerebros. La evaluación e integración se siguen en otros hitos.",
+          "criteria": [
+            "Versión 1 de los scripts creada"
+          ],
+          "confirmation": "Informado por el equipo; fecha de creación no especificada."
+        },
+        {
+          "id": "ragflow-local-api",
+          "title": "Dejar RAGFlow local operativo por API",
+          "description": "Instancia Docker funcionando con el mismo segundo cerebro del ensayo: 80 documentos procesados y 143 fragmentos. La API permite consultar el dataset del piloto.",
+          "processNodeId": "ragflow",
+          "initialStatus": "completado",
+          "initialNote": "Hito 2 · 29/10/2026. Cinco servicios Docker saludables; 80 documentos DONE y 143 fragmentos. Consulta por API y persistencia comprobadas. Evidencia: Hito-2.html y Post Harness V2/ragflow-local/RESULTADO.md. No implica que esté definido el circuito de actualización del conocimiento en la empresa.",
+          "criteria": [
+            "Instancia local y API disponibles",
+            "Segundo cerebro cargado y procesado",
+            "Persistencia y consulta por dataset comprobadas"
+          ],
+          "confirmation": "Comprobado por API: 80 documentos y 143 fragmentos disponibles."
+        },
+        {
+          "id": "retrieval-context-v1",
+          "title": "Preparar el contexto compacto con fuentes",
+          "description": "El adaptador de RAGFlow entrega fragmentos con fuentes y hashes, aplica presupuesto y evita repetir lo emitido. Permite recuperar pendientes o volver a entregar el contexto.",
+          "processNodeId": "knowledge-retrieval",
+          "initialStatus": "completado",
+          "initialNote": "Hito 2 · qa-context/1 implementado en retrieve.py, context_packet.py y verify_context.py. Salida sin recorte: 14.724 → 8.667 tokens proxy (−41,1%), preservando los 13 fragmentos únicos. Primera entrega acotada: 8 fragmentos; continuación: 5 restantes. Guía: Post Harness V2/GUIA-CONTEXTO-RAGFLOW.md. No se registró una herramienta MCP en Copilot ni se generaron casos.",
+          "criteria": [
+            "Formato de contexto documentado con fuentes e integridad verificable",
+            "Presupuesto, duplicados y omisiones visibles",
+            "Ampliación y replay comprobados"
+          ],
+          "confirmation": "Adaptador v1 terminado; texto conservado y pendientes explícitos."
+        },
+        {
+          "id": "retrieval-technical-checks",
+          "title": "Completar las pruebas técnicas de recuperación",
+          "description": "Se comprobaron cliente HTTP, integridad, límites, sesiones y continuidad con preguntas del corpus. Este hito técnico es distinto de la validación de utilidad con QA.",
+          "processNodeId": "context-check",
+          "initialStatus": "completado",
+          "initialNote": "Hito 2 · 43 tests automatizados aprobados. Tres consultas nuevas respecto del ensayo anterior: 6/6 señales documentales en el paquete sin recorte; 4/6 en la primera entrega acotada y 6/6 al reunir la continuación. Evidencias y manifiestos conservados. El control ajeno al dominio devolvió 5 fragmentos: la pertinencia sigue necesitando revisión. Tokens reales de Copilot no medidos.",
+          "criteria": [
+            "Suite técnica y comprobación por CLI aprobadas",
+            "Texto e identidades cotejados con las respuestas nativas",
+            "Resultados, límites y evidencia conservados"
+          ],
+          "confirmation": "43 tests aprobados y ensayo por API/CLI documentado en Hito 2."
+        },
+        {
+          "id": "retrieval-quality",
+          "title": "Validar la calidad del retrieval",
+          "description": "Probar la versión 1 con preguntas de la aplicación y revisar con QA si devuelve información pertinente, vigente y suficiente.",
+          "processNodeId": "context-check",
+          "criteria": [
+            "Preguntas de referencia y resultados esperados definidos",
+            "QA revisó fuentes y respuestas",
+            "Faltantes y ajustes documentados"
+          ],
+          "initialStatus": "en-curso",
+          "initialNote": "Hito 2: la validación técnica está completada y documentada. Sigue pendiente usar el contexto con Copilot en una tarea concreta y que QA confirme pertinencia, vigencia y suficiencia. El control ajeno al tema todavía recupera resultados. Las señales documentales y la reducción del JSON no equivalen a cobertura funcional ni ahorro real de Copilot.",
+          "confirmation": "Pruebas técnicas completas; falta validación de utilidad con QA y Copilot."
+        },
+        {
+          "id": "knowledge-update",
+          "title": "Definir cómo se actualiza el conocimiento",
+          "description": "Acordar dónde se versiona, quién revisa los cambios y cómo se reflejan en RAGFlow o la fuente que se use.",
+          "processNodeId": "ragflow-sync",
+          "criteria": [
+            "Responsable y ruta de actualización definidos",
+            "Se puede identificar la revisión consultada"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design",
+      "title": "02 · Preparar el diseño de pruebas",
+      "description": "Usar el conocimiento y el catálogo existente para proponer pruebas con un alcance claro.",
+      "milestones": [
+        {
+          "id": "case-format",
+          "title": "Acordar el formato de los casos",
+          "description": "Definir qué deben contener los borradores y cómo registrar el alcance estimado de QA.",
+          "processNodeId": "case-draft",
+          "criteria": [
+            "Formato con pasos, datos y esperado",
+            "Campo o registro para el estimativo de QA"
+          ]
+        },
+        {
+          "id": "azure-inventory",
+          "title": "Leer los casos existentes en Azure",
+          "description": "Preparar una consulta del catálogo que permita comparar las propuestas con casos vigentes.",
+          "processNodeId": "case-inventory",
+          "criteria": [
+            "Casos del piloto consultables",
+            "Vínculos con requisitos identificados"
+          ]
+        },
+        {
+          "id": "generation-context",
+          "title": "Conectar el contexto con la generación",
+          "description": "Usar la salida de los scripts para preparar propuestas con fuentes y dudas visibles, conservando Copilot como ayuda actual.",
+          "processNodeId": "case-designer",
+          "criteria": [
+            "Contexto del piloto llega al generador",
+            "La propuesta identifica fuentes y supuestos"
+          ]
+        },
+        {
+          "id": "duplicate-review",
+          "title": "Validar propuestas y evitar duplicados",
+          "description": "Revisar con QA si los borradores aportan cobertura, mejoran algo existente o pueden descartarse.",
+          "processNodeId": "coverage-decision",
+          "criteria": [
+            "QA revisó un lote de propuestas",
+            "Se registró qué casos se conservan, mejoran o crean"
+          ]
+        },
+        {
+          "id": "alternative-generators",
+          "title": "Evaluar iTestFlow o TestForge",
+          "description": "Comparar si alguna alternativa ahorra trabajo respecto de Copilot y la revisión de QA. No es requisito para completar la base.",
+          "processNodeId": "design-alternatives",
+          "optional": true,
+          "criteria": [
+            "Comparación con la base actual registrada",
+            "Decisión de adoptar o descartar documentada"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "approval",
+      "title": "03 · Organizar la revisión de QA",
+      "description": "QA define el alcance estimado; desarrollo conoce la propuesta sin convertirse en una autorización adicional.",
+      "milestones": [
+        {
+          "id": "qa-estimation",
+          "title": "Registrar el estimativo de pruebas de QA",
+          "description": "Acordar cómo QA deja visible el alcance estimado, los casos que propone y sus pendientes.",
+          "processNodeId": "qa-reviewer",
+          "criteria": [
+            "Estimativo registrado con su alcance",
+            "Pendientes y versión de la propuesta visibles"
+          ]
+        },
+        {
+          "id": "development-awareness",
+          "title": "Definir cómo se informa a desarrollo",
+          "description": "Elegir el enlace, registro o aviso para compartir la propuesta con desarrollo. No se exige respuesta ni voto para avanzar.",
+          "processNodeId": "dev-informed",
+          "criteria": [
+            "Desarrollo tiene acceso a la propuesta",
+            "No hay un bloqueo por falta de autorización de desarrollo"
+          ]
+        },
+        {
+          "id": "qa-ready-rule",
+          "title": "Configurar el avance según la revisión de QA",
+          "description": "Definir cómo se identifica que QA dejó lista la propuesta y cómo se devuelven los ajustes. Mantener separada la revisión técnica del código.",
+          "processNodeId": "qa-readiness",
+          "criteria": [
+            "El estado de QA habilita la publicación de casos",
+            "Las reglas de los casos no exigen un voto de desarrollo",
+            "Los ajustes pedidos por QA vuelven al diseño"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "execution",
+      "title": "04 · Integrar y ejecutar",
+      "description": "Conectar la propuesta revisada con Test Plans, el código de prueba y el ejecutor existente.",
+      "milestones": [
+        {
+          "id": "n8n-orchestration",
+          "title": "Armar el flujo inicial en n8n",
+          "description": "Coordinar recuperación de contexto, consulta de casos, propuesta y espera del estado de QA.",
+          "processNodeId": "n8n",
+          "criteria": [
+            "Flujo del piloto reproducible",
+            "Errores y reintentos observables",
+            "No publica borradores pendientes para QA"
+          ]
+        },
+        {
+          "id": "publish-cases",
+          "title": "Crear o actualizar los casos en Test Plans",
+          "description": "Publicar sólo la versión revisada por QA y conservar la identidad de un caso cuando se mejora.",
+          "processNodeId": "publish-test-case",
+          "criteria": [
+            "Publicación del piloto comprobada",
+            "No se duplican casos al repetir el flujo"
+          ]
+        },
+        {
+          "id": "automated-code",
+          "title": "Preparar y revisar el código de prueba",
+          "description": "Convertir los casos en pruebas mantenibles con ayuda de Copilot y realizar la revisión técnica correspondiente.",
+          "processNodeId": "code-review",
+          "criteria": [
+            "Código vinculado con los casos",
+            "Revisión técnica completada"
+          ]
+        },
+        {
+          "id": "playwright-pipeline",
+          "title": "Conectar Playwright con el pipeline",
+          "description": "Usar la automatización existente para ejecutar el piloto y recuperar sus resultados.",
+          "processNodeId": "ci-pipeline",
+          "criteria": [
+            "Ejecución del piloto repetible",
+            "Versión, ambiente y resultados identificados"
+          ]
+        },
+        {
+          "id": "extra-api-coverage",
+          "title": "Probar Schemathesis si aporta cobertura",
+          "description": "Medir si encuentra problemas adicionales frente a los casos de Playwright. La ruta base funciona sin incorporarlo.",
+          "processNodeId": "schemathesis",
+          "optional": true,
+          "criteria": [
+            "Aporte nuevo medido en una API",
+            "Decisión de uso registrada"
+          ]
+        },
+        {
+          "id": "extra-agent-runs",
+          "title": "Probar Hercules en un recorrido acotado",
+          "description": "Evaluar si asiste un recorrido de prueba con un ahorro o cobertura útil. La base puede seguir con QA y Playwright.",
+          "processNodeId": "hercules",
+          "optional": true,
+          "criteria": [
+            "Recorrido reproducible evaluado por QA",
+            "Decisión de uso registrada"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evaluation",
+      "title": "05 · Revisar resultados",
+      "description": "La evidencia permite entender qué pasó antes de declarar un defecto.",
+      "milestones": [
+        {
+          "id": "collect-evidence",
+          "title": "Reunir evidencia por ejecución",
+          "description": "Guardar resultados, ambiente, versión y vínculo al caso para poder investigar o repetir la corrida.",
+          "processNodeId": "test-evidence",
+          "criteria": [
+            "La evidencia es accesible desde la ejecución",
+            "Caso, ambiente y versión identificados"
+          ]
+        },
+        {
+          "id": "classify-failures",
+          "title": "Acordar cómo QA clasifica los fallos",
+          "description": "Distinguir un defecto del producto de un problema de la prueba, del ambiente, de los datos o de una regla ambigua.",
+          "processNodeId": "qa-triage",
+          "criteria": [
+            "Criterios de clasificación documentados",
+            "QA probó el circuito de revisión"
+          ]
+        },
+        {
+          "id": "save-results",
+          "title": "Vincular los resultados con Azure",
+          "description": "Registrar el resultado y su evidencia sin dar por corregido un problema que no se volvió a probar.",
+          "processNodeId": "result-record",
+          "criteria": [
+            "Resultado vinculado al caso",
+            "La evidencia se conserva para consulta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "feedback",
+      "title": "06 · Cerrar el circuito de mejora",
+      "description": "Entregar defectos claros a desarrollo, comprobar las correcciones y aprender del piloto.",
+      "milestones": [
+        {
+          "id": "defect-markdown",
+          "title": "Generar el Markdown de defectos confirmados",
+          "description": "Preparar el archivo para desarrollo y Copilot con pasos, esperado, observado y evidencia revisados por QA.",
+          "processNodeId": "defect-markdown",
+          "criteria": [
+            "Archivo de ejemplo revisado por QA",
+            "El defecto puede reproducirse con la información disponible"
+          ]
+        },
+        {
+          "id": "fix-handoff",
+          "title": "Acordar la entrega a desarrollo",
+          "description": "Definir cómo desarrollo toma el defecto, puede apoyarse en Copilot y vincula su corrección con la prueba fallida.",
+          "processNodeId": "developer",
+          "criteria": [
+            "Responsabilidad y canal de entrega claros",
+            "Corrección vinculada con el defecto"
+          ]
+        },
+        {
+          "id": "retest-close",
+          "title": "Reejecutar y validar el cierre con QA",
+          "description": "Repetir la prueba y la regresión pertinente sobre la versión corregida antes de cerrar.",
+          "processNodeId": "regression-check",
+          "criteria": [
+            "Nueva ejecución con evidencia",
+            "QA confirma el cierre después de revisar los resultados"
+          ]
+        },
+        {
+          "id": "pilot-end-to-end",
+          "title": "Completar un piloto de punta a punta",
+          "description": "Probar el circuito completo y acordar qué está listo, qué falta ajustar y con qué límites se ampliará.",
+          "processNodeId": "feedback",
+          "criteria": [
+            "Recorrido completo demostrado con un cambio del piloto",
+            "Limitaciones y decisiones documentadas",
+            "Equipo acuerda los siguientes pasos"
+          ]
+        }
+      ]
+    }
+  ],
+  "report": {
+    "title": "Hito 2 · RAGFlow y contexto verificable",
+    "href": "./Hito-2.html"
+  }
+}

@@ -1,11 +1,12 @@
 # agenticQ
 
-Código, documentación, prototipos y evidencias del trabajo de QA agentizada. Este repositorio reúne el material elaborado hasta el 28 de octubre de 2026.
+Código, documentación, prototipos y evidencias del trabajo de QA agentizada. Este repositorio reúne el material elaborado hasta el 29 de octubre de 2026.
 
 ## Por dónde empezar
 
 | Material | Contenido |
 | --- | --- |
+| [Hito 2](Hito-2.html) | RAGFlow local, recuperación por API, contexto compacto y avance técnico registrado en el mapa. |
 | [Reporte visual V2](Post%20Harness%20V2/reporte-v2.html) | Comparación de las tres iteraciones: lectura completa, scripts V1 y scripts V2. Consumo, recuperación del contexto y cambios. |
 | [Explicación técnica V2](Post%20Harness%20V2/EXPLICACION.md) | Metodología, resultados, límites y reproducción del ensayo. |
 | [Reporte original](Post%20Harness/reporte.html) | Primera comparación y sus evidencias, conservadas sin cambios. |
@@ -28,7 +29,7 @@ open "Post Harness V2/reporte-v2.html"
 ## Scripts y ensayos
 
 - [Post Harness V1](Post%20Harness/README.md): navegador documental inicial, pruebas y ensayo congelado.
-- [Post Harness V2](Post%20Harness%20V2/README.md): consultas agrupadas, recuperación por relaciones, sesiones con deduplicación, presupuestos y validación de citas.
+- [Post Harness V2](Post%20Harness%20V2/README.md): consultas agrupadas, recuperación por relaciones, sesiones con deduplicación, presupuestos y validación de citas. Incluye el adaptador de RAGFlow y su [guía de contexto](Post%20Harness%20V2/GUIA-CONTEXTO-RAGFLOW.md).
 - Cada carpeta conserva sus scripts, pruebas, instrucciones para el agente, evidencias y manifiesto de integridad.
 - Los snapshots documentales del primer ensayo se incluyen porque respaldan sus citas y permiten revisar la comparación.
 

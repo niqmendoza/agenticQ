@@ -1,0 +1,259 @@
+{
+  "request": {
+    "question": "ECO Design System accesibilidad WCAG AA 4.5:1 3:1",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 3,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"ECO Design System\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, eco-design-system, material-design, ui]\naliases: [ECO Design, Design system COELSA, Sistema de diseño COELSA]\ndescription: \"Usar cuando necesitás entender el sistema de diseño visual de COELSA.Intelligent: principios, arquitectura de tokens y archivos canónicos.\"\nestado: vigente\n---\n# ECO Design System\n## Qué es\nEl **ECO Design System** es el sistema de diseño visual de COELSA.Intelligent, basado en **Material Design 3** y adaptado a la identidad corporativa de COELSA (Teal + Pink).\n## Principios fundamentales\n<table>\n<thead>\n<tr>\n<th>Principio</th>\n<th>Descripción</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Tokens primero</strong></td>\n<td>Nunca hardcodear hex. Usar siempre roles/tokens semánticos</td>\n</tr>\n<tr>\n<td><strong>Teal = Primary, siempre</strong></td>\n<td>Teal es el color de acción en ambos temas. Pink es acento/decorativo</td>\n</tr>\n<tr>\n<td><strong>Accesibilidad no negociable</strong></td>\n<td>WCAG AA (4.5:1 texto normal, 3:1 texto grande)</td>\n</tr>\n<tr>\n<td><strong>Jerarquía mediante surfaces</strong></td>\n<td>5 niveles de surface-container; nunca opacidad arbitraria</td>\n</tr>\n<tr>\n<td><strong>Un concepto, un lugar</strong></td>\n<td>Cada token se define una vez en <code>colors.css</code> y se expone via Tailwind</td>\n</tr>\n</tbody>\n</table>\n## Arquitectura de 3 niveles",
+          "content_ltks": "titl eco design system type concept tags coels intelligent dis ñ o eco design system material design ui ali eco design design system coels sistem de dis ñ o coels description usar cuand necesit á s entend el sistem de dis ñ o visual de coels intelligent principi arquitectur de tokens y archiv can ó nic estad vigent eco design system qu é es el eco design system es el sistem de dis ñ o visual de coels intelligent bas en material design 3 y adapt a la ident corpor de coels teal pink principi fundamental the principi descripci ón the tbody strong tokens primer strong nunc hardcod hex usar siempr rol tokens sem á ntic strong teal primary siempr strong teal es el color de acci ón en ambos tem pink es acent decor strong accesibil no negoci strong wcag aa 45 1 text normal 31 text grand strong jerarqu í a mediant surfac strong 5 nivel de surfac contain nunc opac arbitrari strong un concept un lug strong cad tok se defin una vez en cod colors css cod y se expon via tailwind tbody arquitectur de 3 nivel",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16b1000ad33011f1a8c8134f9287b83e",
+          "document_keyword": "ECO Design System.md",
+          "id": "34e2359ea7caffa6",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.4731948033835701,
+          "tag_kwd": [],
+          "term_similarity": 0.29961429054795735,
+          "vector_similarity": 0.878216
+        },
+        {
+          "content": "---\ntitle: \"COELSA.Intelligent — Home\"\ntype: home\ntags: [coelsa-intelligent, home, indice]\naliases: [Home COELSA, COELSA Intelligent Home, COELSA.Intelligent Home]\ndescription: \"Usar cuando necesitás orientarte en el vault de COELSA.Intelligent — punto de entrada a todos los MOCs y áreas del proyecto.\"\nestado: vigente\n---\n# COELSA.Intelligent — Home\nPlataforma interna de chat con IA generativa de COELSA. Fork de Open WebUI adaptado para infraestructura corporativa: autenticación Azure AD, almacenamiento MinIO/S3, búsqueda vectorial Milvus, identidad visual COELSA y despliegue en OpenShift.\n**Versión actual:** v1.3.0\n**Entornos activos:** DEV · VALIDACION · PRODUCCIÓN (OpenShift)\n**Repo base:** Fork de Open WebUI (MIT); cambios aplicados sobre versión estabilizada sin seguimiento del upstream.\n> **Para LLMs:** cada nota tiene un campo `description` tipo \"Usar cuando…\" en el frontmatter YAML. Leer ese campo es suficiente para saber si la nota es relevante antes de leer el cuerpo completo.\n> **Acceso rápido global:** [[OKF-INDEX]] para navegar por salto directo a cualquier nota del vault.\n---\n## Invariantes del proyecto (reglas que nunca se rompen)\n- La autenticación es **exclusivamente Azure AD**; el registro local y el formulario de login están deshabilitados.\n- **Teal (`#06ABB9`) es el color primario COELSA** en ambos temas (light y dark). Pink es solo acento decorativo.\n- SSR está deshabilitado (`export const ssr = false`); la app es una SPA pura.\n- No se mantiene compatibilidad directa con el upstream Open WebUI; los cambios se aplican deliberadamente.\n- Todo par texto/fondo debe cumplir WCAG AA (4.5:1 texto normal, 3:1 texto grande).\n- No hardcodear valores hex en componentes; usar siempre roles/tokens semánticos del ECO Design System.\n---\n## Mapas de Contenido (MOCs)",
+          "content_ltks": "titl coels intelligent hom type hom tags coels intelligent hom indic ali hom coels coels intelligent hom coels intelligent hom description usar cuand necesit á s orientart en el vault de coels intelligent punt de entrad a tod los mocs y á reas del proyect estad vigent coels intelligent hom plataform intern de chat con ia gener de coels fork de open webui adapt par infraestructur corpor autenticaci ón azur ad almacen mini s3 b ú squed vectorial milvus ident visual coels y desplieg en openshift versi ón actual v1 3 0 entorn activ dev valid producci ón openshift rep bas fork de open webui mit cambi aplic sobr versi ón estabiliz sin seguimient del upstream par llms cad not tien un camp description tip usar cuand en el frontmatt yaml leer ese camp es suficient par sab si la not es relev antes de leer el cuerp complet acces r á pid global okf index par naveg por salt direct a cualqui not del vault invari del proyect regl que nunc se romp la autenticaci ón es exclus azur ad el registr local y el formulari de login est á n deshabilit teal 06abb9 es el color primari coels en ambos tem light y dark pink es sol acent decor ssr est á deshabilit export const ssr fals la app es una spa pur no se mantien compatibil direct con el upstream open webui los cambi se aplic deliber tod par text fond deb cumpl wcag aa 45 1 text normal 31 text grand no hardcod valor hex en component usar siempr rol tokens sem á ntic del eco design system map de conten mocs",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "169b0340d33011f1a8c8134f9287b83e",
+          "document_keyword": "COELSA.Intelligent - Home.md",
+          "id": "617128bcbe6cd3f6",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.45337944338357017,
+          "tag_kwd": [],
+          "term_similarity": 0.29961429054795735,
+          "vector_similarity": 0.8121648
+        },
+        {
+          "content": "---\ntitle: \"Tokens primitivos de color\"\ntype: referencia\ntags: [coelsa-intelligent, diseño, colores, tokens, teal, pink, neutral]\naliases: [Color primitives, Escalas de color COELSA, Teal Pink Neutral]\ndescription: \"Usar cuando necesitás la escala de valores hex de los colores primitivos de COELSA.Intelligent (Teal, Pink, Neutral) para definir o revisar tokens semánticos.\"\nestado: vigente\n---\n# Tokens primitivos de color\n## Qué es\nLas **escalas de color primitivas** son los valores hex base del [[ECO Design System]]. Son **inmutables** (no cambian entre light y dark mode) y van de 0 (negro puro) a 100 (blanco puro). Se usan exclusivamente para **definir roles semánticos**; no deben usarse directamente en componentes.\n## Teal — Color primario COELSA\n<table>\n<thead>\n<tr>\n<th>Tono</th>\n<th>Hex</th>\n<th>Uso en roles</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>teal-40</code></td>\n<td><code>#006972</code></td>\n<td><strong>primary-light</strong> (~6.2:1 sobre blanco ✓ AA)</td>\n</tr>\n<tr>\n<td><code>teal-60</code></td>\n<td><code>#00A0AD</code></td>\n<td>Solo texto grande sobre blanco (3.2:1)</td>\n</tr>\n<tr>\n<td><code>teal-80</code></td>\n<td><code>#57D8E6</code></td>\n<td><strong>primary-dark</strong></td>\n</tr>\n<tr>\n<td><code>teal-90</code></td>\n<td><code>#90F2FE</code></td>\n<td>secondary-dark</td>\n</tr>\n</tbody>\n</table>\n> Teal-60 (#00A0AD) **no pasa WCAG AA** para texto normal sobre blanco (3.2:1). Solo texto grande (≥18px o ≥14px bold).\n## Pink — Acento decorativo",
+          "content_ltks": "titl tokens primit de color type referent tags coels intelligent dis ñ o color tokens teal pink neutral ali color primitiv escal de color coels teal pink neutral description usar cuand necesit á s la escal de valor hex de los color primit de coels intelligent teal pink neutral par defin o revis tokens sem á ntic estad vigent tokens primit de color qu é es las escal de color primit son los valor hex bas del eco design system son inmut no cambi entre light y dark mod y van de 0 negr pur a100 blanc pur se usan exclus par defin rol sem á ntic no deb usars direct en component teal color primari coels the ton hex uso en rol the tbody cod teal 40 cod cod 006972 cod strong primary light strong 6 21 sobr blanc aa cod teal 60 cod cod 00a0ad cod sol text grand sobr blanc 321 cod teal 80 cod cod 57d8e6 cod strong primary dark strong cod teal 90 cod cod 90f2fe cod secondary dark tbody teal 60 00a0ad no pas wcag aa par text normal sobr blanc 321 sol text grand 18px o 14px bold pink acent decor",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16c3d20cd33011f1a8c8134f9287b83e",
+          "document_keyword": "Tokens primitivos de color.md",
+          "id": "5f43d9fc2f9ade8e",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3420551143756983,
+          "tag_kwd": [],
+          "term_similarity": 0.143619507679569,
+          "vector_similarity": 0.80507153
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 2,
+          "doc_id": "16b1000ad33011f1a8c8134f9287b83e",
+          "doc_name": "ECO Design System.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16c3d20cd33011f1a8c8134f9287b83e",
+          "doc_name": "Tokens primitivos de color.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16beaf52d33011f1a8c8134f9287b83e",
+          "doc_name": "Surface Containers.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16bc528ed33011f1a8c8134f9287b83e",
+          "doc_name": "Roles semánticos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d61796d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Diseño y Frontend.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ae2042d33011f1a8c8134f9287b83e",
+          "doc_name": "Dark mode reglas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c11eaed33011f1a8c8134f9287b83e",
+          "doc_name": "Tipografía Saira.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e24f02d33011f1a8c8134f9287b83e",
+          "doc_name": "Cadena SearXNG Context Forge.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        }
+      ],
+      "total": 21
+    }
+  },
+  "response_bytes": 11218,
+  "seconds": 0.10698470799252391,
+  "client_output": {
+    "chunks": [
+      {
+        "content": "---\ntitle: \"ECO Design System\"\ntype: concepto\ntags: [coelsa-intelligent, diseño, eco-design-system, material-design, ui]\naliases: [ECO Design, Design system COELSA, Sistema de diseño COELSA]\ndescription: \"Usar cuando necesitás entender el sistema de diseño visual de COELSA.Intelligent: principios, arquitectura de tokens y archivos canónicos.\"\nestado: vigente\n---\n# ECO Design System\n## Qué es\nEl **ECO Design System** es el sistema de diseño visual de COELSA.Intelligent, basado en **Material Design 3** y adaptado a la identidad corporativa de COELSA (Teal + Pink).\n## Principios fundamentales\n<table>\n<thead>\n<tr>\n<th>Principio</th>\n<th>Descripción</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Tokens primero</strong></td>\n<td>Nunca hardcodear hex. Usar siempre roles/tokens semánticos</td>\n</tr>\n<tr>\n<td><strong>Teal = Primary, siempre</strong></td>\n<td>Teal es el color de acción en ambos temas. Pink es acento/decorativo</td>\n</tr>\n<tr>\n<td><strong>Accesibilidad no negociable</strong></td>\n<td>WCAG AA (4.5:1 texto normal, 3:1 texto grande)</td>\n</tr>\n<tr>\n<td><strong>Jerarquía mediante surfaces</strong></td>\n<td>5 niveles de surface-container; nunca opacidad arbitraria</td>\n</tr>\n<tr>\n<td><strong>Un concepto, un lugar</strong></td>\n<td>Cada token se define una vez en <code>colors.css</code> y se expone via Tailwind</td>\n</tr>\n</tbody>\n</table>\n## Arquitectura de 3 niveles",
+        "content_ltks": "titl eco design system type concept tags coels intelligent dis ñ o eco design system material design ui ali eco design design system coels sistem de dis ñ o coels description usar cuand necesit á s entend el sistem de dis ñ o visual de coels intelligent principi arquitectur de tokens y archiv can ó nic estad vigent eco design system qu é es el eco design system es el sistem de dis ñ o visual de coels intelligent bas en material design 3 y adapt a la ident corpor de coels teal pink principi fundamental the principi descripci ón the tbody strong tokens primer strong nunc hardcod hex usar siempr rol tokens sem á ntic strong teal primary siempr strong teal es el color de acci ón en ambos tem pink es acent decor strong accesibil no negoci strong wcag aa 45 1 text normal 31 text grand strong jerarqu í a mediant surfac strong 5 nivel de surfac contain nunc opac arbitrari strong un concept un lug strong cad tok se defin una vez en cod colors css cod y se expon via tailwind tbody arquitectur de 3 nivel",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16b1000ad33011f1a8c8134f9287b83e",
+        "document_keyword": "ECO Design System.md",
+        "id": "34e2359ea7caffa6",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.4731948033835701,
+        "tag_kwd": [],
+        "term_similarity": 0.29961429054795735,
+        "vector_similarity": 0.878216
+      },
+      {
+        "content": "---\ntitle: \"COELSA.Intelligent — Home\"\ntype: home\ntags: [coelsa-intelligent, home, indice]\naliases: [Home COELSA, COELSA Intelligent Home, COELSA.Intelligent Home]\ndescription: \"Usar cuando necesitás orientarte en el vault de COELSA.Intelligent — punto de entrada a todos los MOCs y áreas del proyecto.\"\nestado: vigente\n---\n# COELSA.Intelligent — Home\nPlataforma interna de chat con IA generativa de COELSA. Fork de Open WebUI adaptado para infraestructura corporativa: autenticación Azure AD, almacenamiento MinIO/S3, búsqueda vectorial Milvus, identidad visual COELSA y despliegue en OpenShift.\n**Versión actual:** v1.3.0\n**Entornos activos:** DEV · VALIDACION · PRODUCCIÓN (OpenShift)\n**Repo base:** Fork de Open WebUI (MIT); cambios aplicados sobre versión estabilizada sin seguimiento del upstream.\n> **Para LLMs:** cada nota tiene un campo `description` tipo \"Usar cuando…\" en el frontmatter YAML. Leer ese campo es suficiente para saber si la nota es relevante antes de leer el cuerpo completo.\n> **Acceso rápido global:** [[OKF-INDEX]] para navegar por salto directo a cualquier nota del vault.\n---\n## Invariantes del proyecto (reglas que nunca se rompen)\n- La autenticación es **exclusivamente Azure AD**; el registro local y el formulario de login están deshabilitados.\n- **Teal (`#06ABB9`) es el color primario COELSA** en ambos temas (light y dark). Pink es solo acento decorativo.\n- SSR está deshabilitado (`export const ssr = false`); la app es una SPA pura.\n- No se mantiene compatibilidad directa con el upstream Open WebUI; los cambios se aplican deliberadamente.\n- Todo par texto/fondo debe cumplir WCAG AA (4.5:1 texto normal, 3:1 texto grande).\n- No hardcodear valores hex en componentes; usar siempre roles/tokens semánticos del ECO Design System.\n---\n## Mapas de Contenido (MOCs)",
+        "content_ltks": "titl coels intelligent hom type hom tags coels intelligent hom indic ali hom coels coels intelligent hom coels intelligent hom description usar cuand necesit á s orientart en el vault de coels intelligent punt de entrad a tod los mocs y á reas del proyect estad vigent coels intelligent hom plataform intern de chat con ia gener de coels fork de open webui adapt par infraestructur corpor autenticaci ón azur ad almacen mini s3 b ú squed vectorial milvus ident visual coels y desplieg en openshift versi ón actual v1 3 0 entorn activ dev valid producci ón openshift rep bas fork de open webui mit cambi aplic sobr versi ón estabiliz sin seguimient del upstream par llms cad not tien un camp description tip usar cuand en el frontmatt yaml leer ese camp es suficient par sab si la not es relev antes de leer el cuerp complet acces r á pid global okf index par naveg por salt direct a cualqui not del vault invari del proyect regl que nunc se romp la autenticaci ón es exclus azur ad el registr local y el formulari de login est á n deshabilit teal 06abb9 es el color primari coels en ambos tem light y dark pink es sol acent decor ssr est á deshabilit export const ssr fals la app es una spa pur no se mantien compatibil direct con el upstream open webui los cambi se aplic deliber tod par text fond deb cumpl wcag aa 45 1 text normal 31 text grand no hardcod valor hex en component usar siempr rol tokens sem á ntic del eco design system map de conten mocs",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "169b0340d33011f1a8c8134f9287b83e",
+        "document_keyword": "COELSA.Intelligent - Home.md",
+        "id": "617128bcbe6cd3f6",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.45337944338357017,
+        "tag_kwd": [],
+        "term_similarity": 0.29961429054795735,
+        "vector_similarity": 0.8121648
+      },
+      {
+        "content": "---\ntitle: \"Tokens primitivos de color\"\ntype: referencia\ntags: [coelsa-intelligent, diseño, colores, tokens, teal, pink, neutral]\naliases: [Color primitives, Escalas de color COELSA, Teal Pink Neutral]\ndescription: \"Usar cuando necesitás la escala de valores hex de los colores primitivos de COELSA.Intelligent (Teal, Pink, Neutral) para definir o revisar tokens semánticos.\"\nestado: vigente\n---\n# Tokens primitivos de color\n## Qué es\nLas **escalas de color primitivas** son los valores hex base del [[ECO Design System]]. Son **inmutables** (no cambian entre light y dark mode) y van de 0 (negro puro) a 100 (blanco puro). Se usan exclusivamente para **definir roles semánticos**; no deben usarse directamente en componentes.\n## Teal — Color primario COELSA\n<table>\n<thead>\n<tr>\n<th>Tono</th>\n<th>Hex</th>\n<th>Uso en roles</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>teal-40</code></td>\n<td><code>#006972</code></td>\n<td><strong>primary-light</strong> (~6.2:1 sobre blanco ✓ AA)</td>\n</tr>\n<tr>\n<td><code>teal-60</code></td>\n<td><code>#00A0AD</code></td>\n<td>Solo texto grande sobre blanco (3.2:1)</td>\n</tr>\n<tr>\n<td><code>teal-80</code></td>\n<td><code>#57D8E6</code></td>\n<td><strong>primary-dark</strong></td>\n</tr>\n<tr>\n<td><code>teal-90</code></td>\n<td><code>#90F2FE</code></td>\n<td>secondary-dark</td>\n</tr>\n</tbody>\n</table>\n> Teal-60 (#00A0AD) **no pasa WCAG AA** para texto normal sobre blanco (3.2:1). Solo texto grande (≥18px o ≥14px bold).\n## Pink — Acento decorativo",
+        "content_ltks": "titl tokens primit de color type referent tags coels intelligent dis ñ o color tokens teal pink neutral ali color primitiv escal de color coels teal pink neutral description usar cuand necesit á s la escal de valor hex de los color primit de coels intelligent teal pink neutral par defin o revis tokens sem á ntic estad vigent tokens primit de color qu é es las escal de color primit son los valor hex bas del eco design system son inmut no cambi entre light y dark mod y van de 0 negr pur a100 blanc pur se usan exclus par defin rol sem á ntic no deb usars direct en component teal color primari coels the ton hex uso en rol the tbody cod teal 40 cod cod 006972 cod strong primary light strong 6 21 sobr blanc aa cod teal 60 cod cod 00a0ad cod sol text grand sobr blanc 321 cod teal 80 cod cod 57d8e6 cod strong primary dark strong cod teal 90 cod cod 90f2fe cod secondary dark tbody teal 60 00a0ad no pas wcag aa par text normal sobr blanc 321 sol text grand 18px o 14px bold pink acent decor",
+        "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+        "doc_type_kwd": "",
+        "document_id": "16c3d20cd33011f1a8c8134f9287b83e",
+        "document_keyword": "Tokens primitivos de color.md",
+        "id": "5f43d9fc2f9ade8e",
+        "image_id": "",
+        "important_keywords": [],
+        "mom_id": "",
+        "positions": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "row_id": null,
+        "similarity": 0.3420551143756983,
+        "tag_kwd": [],
+        "term_similarity": 0.143619507679569,
+        "vector_similarity": 0.80507153
+      }
+    ],
+    "total": 21
+  }
+}

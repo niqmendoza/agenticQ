@@ -1,0 +1,50 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { initialProgress, parseSnapshot, mergeProgress, updateMilestone, progressCounts, safeJson } from '../src/data/milestones.ts';
+const plan = JSON.parse(readFileSync(new URL('../src/data/implementation-plan.json',import.meta.url),'utf8'));
+const processModel = JSON.parse(readFileSync(new URL('../src/data/qa-process.json',import.meta.url),'utf8'));
+const processIds = new Set();
+function walk(items){for(const node of items){processIds.add(node.id);walk(node.children??[]);}}
+walk(processModel.groups);
+const items = plan.phases.flatMap(phase=>phase.milestones), ids = new Set();
+for(const phase of plan.phases){
+  assert(processIds.has(phase.id),'La etapa debe existir en el proceso.');
+  for(const item of phase.milestones){assert(!ids.has(item.id),'Hito duplicado.');ids.add(item.id);assert(processIds.has(item.processNodeId),`Referencia inválida: ${item.processNodeId}`);assert(item.criteria.length>0,'Un hito debe tener un resultado verificable.');}
+}
+const seed=initialProgress(plan);
+assert.deepEqual(items.filter(item=>seed.entries[item.id].status==='completado').map(item=>item.id),['knowledge-scope','retrieval-scripts-v1','ragflow-local-api','retrieval-context-v1','retrieval-technical-checks'],'Sólo los avances técnicos respaldados por evidencia empiezan completados.');
+assert.equal(seed.entries['knowledge-update'].status,'pendiente','La discusión del conocimiento no completa su definición.');
+assert.equal(seed.entries['retrieval-quality'].status,'en-curso','La validación técnica no completa la revisión de utilidad con QA.');
+assert.throws(()=>updateMilestone(seed,'retrieval-quality',{status:'inventado'}));
+assert.throws(()=>updateMilestone(seed,'retrieval-quality',{note:undefined}));
+assert.deepEqual(progressCounts(items,seed),{total:26,completed:5,percent:19,optional:3,optionalCompleted:0});
+const changed=updateMilestone(seed,'retrieval-quality',{status:'en-curso',note:'Comparando preguntas y fuentes.'},'2026-10-28T15:00:00.000Z');
+assert.equal(seed.entries['retrieval-quality'].status,'en-curso','La actualización no debe mutar el estado anterior.');
+assert.equal(changed.entries['retrieval-quality'].note,'Comparando preguntas y fuentes.');
+const restored=parseSnapshot(safeJson(changed),plan);assert.deepEqual(restored,changed,'El estado debe sobrevivir una exportación.');
+const other=updateMilestone(seed,'qa-estimation',{status:'bloqueado',note:'Falta acordar el formato.'},'2026-10-28T16:00:00.000Z');
+const merged=mergeProgress(plan,[changed,other]);
+assert.equal(merged.entries['retrieval-quality'].status,'en-curso','Una edición en otro hito no debe borrar un avance anterior.');
+assert.equal(merged.entries['qa-estimation'].status,'bloqueado');
+const newer=updateMilestone(changed,'retrieval-quality',{status:'completado'},'2026-10-28T17:00:00.000Z');
+assert.equal(mergeProgress(plan,[newer,changed]).entries['retrieval-quality'].status,'completado','Debe conservarse la edición más nueva por hito.');
+const optionalDone=updateMilestone(seed,'extra-agent-runs',{status:'completado'});
+assert.equal(progressCounts(items,optionalDone).completed,5,'Un opcional no incrementa la base.');
+assert.equal(progressCounts(items,optionalDone).optionalCompleted,1);
+assert.throws(()=>parseSnapshot('{"schemaVersion":1,"entries":{"retrieval-quality":{"status":"inventado","note":""}}}',plan));
+assert.throws(()=>parseSnapshot('{"schemaVersion":1,"entries":{"retrieval-quality":{"status":"pendiente","note":7}}}',plan));
+assert.equal(mergeProgress(plan,[]).entries['retrieval-scripts-v1'].status,'completado');
+const htmlSource=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const embedded=parseSnapshot(htmlSource.match(/<script id="qa-milestone-state" type="application\/json">([\s\S]*?)<\/script>/)[1],plan);
+const oldCache={schemaVersion:1,entries:{'retrieval-quality':{status:'pendiente',note:'Sin revisar.'},'knowledge-scope':{status:'pendiente',note:''},'qa-estimation':{status:'en-curso',note:'Trabajo del equipo.',updatedAt:'2026-10-28T16:00:00.000Z'}}};
+const updated=mergeProgress(plan,[embedded,oldCache]);
+assert.equal(updated.entries['knowledge-scope'].status,'completado','La confirmación nueva debe superar un estado anterior sin editar.');
+assert.equal(updated.entries['retrieval-quality'].status,'en-curso','El hito 2 debe superar una caché anterior sin editar.');
+assert.equal(updated.entries['ragflow-local-api'].status,'completado');
+assert.equal(updated.entries['retrieval-context-v1'].status,'completado');
+assert.equal(updated.entries['retrieval-technical-checks'].status,'completado');
+assert.equal(updated.entries['generation-context'].status,'pendiente','No se generaron casos con Copilot.');
+assert.equal(updated.entries['qa-estimation'].note,'Trabajo del equipo.','Actualizar el piloto no debe borrar avances de otros hitos.');
+const dangerous={note:'</script><img src=x>\u2028'};
+assert(!safeJson(dangerous).includes('</script>'));assert.deepEqual(JSON.parse(safeJson(dangerous)),dangerous);
+console.log(`Hitos válidos: ${items.length} en ${plan.phases.length} etapas. Controles de estado inicial, notas, restauración, conflictos por fecha, opcionales y JSON seguro aprobados.`);

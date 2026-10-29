@@ -1,17 +1,18 @@
 {
   "title": "QA agentizada",
-  "description": "De la documentación a las pruebas y de los resultados a una mejora. Explorá cómo colaboran QA, desarrollo y las herramientas de IA.",
-  "modelVersion": "2.0.0",
+  "description": "De la documentación a las pruebas y de los resultados a una mejora. QA define el alcance de las pruebas; desarrollo queda informado y el conocimiento se consulta con ayuda de scripts de retrieval.",
+  "modelVersion": "3.0.0",
   "scope": {
     "current": [
       "GitHub Copilot para ayudar a QA a generar casos y tests",
       "Azure Test Plans como catálogo",
       "Playwright como automatización existente",
-      "Segundo cerebro en Obsidian/RAGFlow según la aplicación"
+      "Segundo cerebro en Obsidian/RAGFlow según la aplicación",
+      "Scripts de retrieval de los segundos cerebros: versión 1 creada, validación e integración pendientes"
     ],
     "proposed": [
       "n8n como orquestador",
-      "PR de casos con aprobación obligatoria de QA y desarrollo",
+      "Propuesta de pruebas estimada y revisada por QA, con desarrollo informado",
       "Generación de Markdown para defectos confirmados"
     ],
     "optional": [
@@ -175,7 +176,7 @@
           "id": "context-sync",
           "type": "group",
           "title": "Actualizar y comprobar",
-          "description": "La información llega a RAGFlow y se comprueba que corresponde al cambio que se va a probar.",
+          "description": "Se actualiza la fuente de conocimiento y se consulta con la capa de scripts de retrieval. QA comprueba que la información recuperada sirva para el cambio que se va a probar.",
           "children": [
             {
               "id": "ragflow-sync",
@@ -213,11 +214,52 @@
               "status": "propuesto"
             },
             {
+              "id": "knowledge-retrieval",
+              "type": "tool",
+              "title": "Scripts de retrieval · versión 1",
+              "shortDescription": "V1 creada para recuperar conocimiento de los segundos cerebros.",
+              "description": "Ya se creó una versión 1 de los scripts o arneses de recuperación de conocimiento de los segundos cerebros. Esta capa ayuda a orientar las consultas; todavía hay que medir la calidad de lo recuperado y validar su integración con el flujo.",
+              "responsibilities": [
+                "Orientar la consulta al conocimiento de la aplicación",
+                "Preparar contexto para diseñar pruebas",
+                "Hacer visibles las fuentes y las dudas a validar"
+              ],
+              "inputs": [
+                "Aplicación y necesidad de prueba",
+                "Segundo cerebro o fuente configurada"
+              ],
+              "outputs": [
+                "Información recuperada para revisión",
+                "Fuentes y límites que deben comprobarse"
+              ],
+              "tools": [
+                "Scripts de retrieval v1",
+                "Segundo cerebro de la aplicación",
+                "RAGFlow si es la fuente configurada"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA valida pertinencia, vigencia y suficiencia de las respuestas; que exista la v1 no implica que ya esté validada o integrada."
+              },
+              "details": {
+                "objective": "Consultar mejor el conocimiento antes de proponer casos de prueba.",
+                "howItWorks": "Los scripts preparan o ejecutan la consulta sobre el segundo cerebro correspondiente. La versión 1 ya existe; las mediciones, los ajustes y la integración automática siguen como hitos separados.",
+                "validationCriteria": [
+                  "Identificar la aplicación y la fuente consultada",
+                  "Comprobar la pertinencia y vigencia del contexto",
+                  "Distinguir una respuesta insuficiente de una regla confirmada",
+                  "Medir la versión 1 antes de dar por cerrada su integración"
+                ]
+              },
+              "status": "actual"
+            },
+            {
               "id": "ragflow",
               "type": "tool",
               "title": "Consultar RAGFlow",
               "shortDescription": "Encontrar las reglas y sus documentos de origen.",
-              "description": "RAGFlow permite buscar el conocimiento de la aplicación. Devuelve información y sus fuentes para que la IA pueda proponer pruebas con contexto.",
+              "description": "RAGFlow es una fuente de conocimiento consultable cuando esa base está configurada para la aplicación. Los scripts de retrieval ayudan a dirigir la consulta al segundo cerebro pertinente y a preparar el contexto para diseñar pruebas.",
               "responsibilities": [
                 "Entregar fragmentos pertinentes con fuente"
               ],
@@ -238,7 +280,7 @@
               },
               "details": {
                 "objective": "Fundamentar los casos propuestos en contenido verificable.",
-                "howItWorks": "n8n consulta la base pertinente y guarda las referencias de origen.",
+                "howItWorks": "La capa de scripts consulta la fuente configurada y recupera información; la integración automática con n8n se implementa y valida por separado.",
                 "validationCriteria": [
                   "Cada regla usada tiene fuente identificable"
                 ]
@@ -255,8 +297,9 @@
                 "Verificar sincronización y consistencia"
               ],
               "inputs": [
-                "Revisión Git",
-                "Respuesta RAGFlow"
+                "Revisión del conocimiento",
+                "Contexto recuperado por los scripts",
+                "Fuentes y dudas"
               ],
               "outputs": [
                 "Contexto listo o devolución"
@@ -272,7 +315,7 @@
               },
               "details": {
                 "objective": "Evitar propuestas basadas en información incompleta.",
-                "howItWorks": "Compara la revisión esperada y las fuentes recuperadas.",
+                "howItWorks": "QA comprueba que el contexto devuelto por los scripts sea pertinente, vigente y suficiente. Si faltan reglas o fuentes, se aclara la documentación antes de generar casos.",
                 "validationCriteria": [
                   "La revisión es la esperada",
                   "No hay ambigüedad crítica sin resolver"
@@ -284,9 +327,9 @@
         }
       ],
       "milestones": [
-        "Documentación aprobada",
-        "Conocimiento en el repositorio",
-        "RAGFlow actualizado"
+        "Documentación revisada",
+        "Scripts de retrieval v1 creados",
+        "Validar contexto recuperado"
       ],
       "owner": "Funcionales + QA"
     },
@@ -307,7 +350,7 @@
               "type": "tool",
               "title": "n8n organiza el trabajo",
               "shortDescription": "Conecta las consultas y coordina cada paso.",
-              "description": "El flujo propuesto usa n8n para pedir información, invocar al agente y preparar la revisión. Las personas siguen tomando las decisiones de aprobación.",
+              "description": "El flujo propuesto usa n8n para pedir información, invocar al agente, compartir la propuesta con desarrollo y continuar cuando QA termina de revisar el alcance.",
               "responsibilities": [
                 "Activar flujos",
                 "Conservar estado y correlación",
@@ -333,7 +376,7 @@
                 "objective": "Reducir tareas repetitivas manteniendo control humano.",
                 "howItWorks": "Conecta APIs y pipelines, espera aprobaciones y vincula los documentos y resultados.",
                 "validationCriteria": [
-                  "No avanza sin ambas aprobaciones requeridas",
+                  "No publica casos antes de que QA deje lista la propuesta",
                   "Cada ejecución es trazable"
                 ]
               },
@@ -457,21 +500,23 @@
               "type": "agent",
               "title": "Propuesta: agente de diseño",
               "shortDescription": "Redacta casos con contexto y fuentes.",
-              "description": "El agente propuesto usa un modelo de IA, la documentación y los casos actuales para redactar borradores. Incluye situaciones normales, errores y valores extremos relevantes.",
+              "description": "El agente propuesto usa un modelo de IA, el contexto recuperado mediante los scripts y los casos actuales para redactar borradores. QA define el alcance estimado y revisa las propuestas antes de usarlas.",
               "responsibilities": [
                 "Generar borradores",
                 "Marcar supuestos",
                 "Evitar duplicados"
               ],
               "inputs": [
-                "Documentación aprobada",
+                "Documentación revisada",
+                "Contexto recuperado y comprobado",
                 "Mapa de cobertura"
               ],
               "outputs": [
                 "Borradores de casos"
               ],
               "tools": [
-                "RAGFlow",
+                "Scripts de retrieval v1 e integración por validar",
+                "RAGFlow o fuente configurada",
                 "Azure DevOps API"
               ],
               "agents": [],
@@ -713,24 +758,26 @@
     {
       "id": "approval",
       "type": "group",
-      "title": "03 · Aprobar en equipo",
-      "description": "QA y desarrollo revisan la propuesta. Se necesitan las dos aprobaciones.",
+      "title": "03 · Estimar y revisar con QA",
+      "description": "QA prepara el estimativo y revisa las pruebas propuestas. Desarrollo queda al tanto y puede aportar contexto; no autoriza los casos.",
       "children": [
         {
           "id": "test-proposal-pr",
           "type": "artifact",
-          "title": "Abrir una propuesta en el repo",
-          "shortDescription": "Un PR reúne los casos y los comentarios.",
-          "description": "Un PR es una solicitud de revisión en el repositorio. Contiene los borradores y el requisito para que QA y desarrollo revisen la misma versión.",
+          "title": "Compartir la propuesta de pruebas",
+          "shortDescription": "El repositorio reúne el estimativo, los casos y los comentarios.",
+          "description": "La propuesta deja registrados el requisito, el alcance estimado y los casos que QA plantea. Se comparte con desarrollo para mantenerlo informado y recibir contexto, sin exigir su autorización.",
           "responsibilities": [
-            "Abrir discusión antes de automatizar",
-            "Guardar comentarios"
+            "Registrar el alcance estimado de pruebas",
+            "Compartir la propuesta con desarrollo",
+            "Conservar comentarios y versiones"
           ],
           "inputs": [
-            "Borradores aceptables"
+            "Borradores y requisito",
+            "Estimativo de QA"
           ],
           "outputs": [
-            "Casos aprobados o correcciones"
+            "Propuesta de pruebas trazable"
           ],
           "tools": [
             "Azure Repos"
@@ -738,14 +785,15 @@
           "agents": [],
           "humanInteraction": {
             "required": true,
-            "description": "QA y desarrollo revisan en el PR."
+            "description": "QA prepara y revisa la propuesta. Desarrollo queda informado y puede comentar."
           },
           "details": {
-            "objective": "Dar un lugar común a dos equipos para acordar expectativas.",
-            "howItWorks": "n8n crea una rama y un PR; se incorporan cambios solicitados.",
+            "objective": "Hacer visible qué se propone probar y con qué alcance estimado.",
+            "howItWorks": "Se guarda la propuesta en una rama y un PR o registro equivalente. El flujo de casos no exige un voto de desarrollo.",
             "validationCriteria": [
-              "El PR enlaza requisito y fuentes",
-              "No se mezcla propuesta con código ejecutable"
+              "La propuesta enlaza requisito y fuentes",
+              "El estimativo de QA está registrado",
+              "Desarrollo dispone de la propuesta para consulta"
             ]
           },
           "status": "propuesto"
@@ -753,53 +801,21 @@
         {
           "id": "qa-reviewer",
           "type": "human",
-          "title": "QA revisa los casos",
-          "shortDescription": "Comprueba utilidad, claridad y cobertura.",
-          "description": "QA verifica que los casos sean reproducibles, tengan un resultado esperado claro y aporten algo frente a las pruebas actuales.",
+          "title": "QA estima y revisa las pruebas",
+          "shortDescription": "Define el alcance estimado y comprueba cobertura y claridad.",
+          "description": "QA prepara el estimativo de pruebas y revisa los casos, sus datos y el resultado esperado. Señala faltantes o dudas y determina cuándo la propuesta está lista para continuar.",
           "responsibilities": [
-            "Confirmar cobertura",
-            "Pedir cambios"
+            "Definir el alcance estimado de pruebas",
+            "Revisar cobertura y duplicados",
+            "Resolver o registrar dudas"
           ],
           "inputs": [
-            "PR",
-            "Casos existentes"
-          ],
-          "outputs": [
-            "Aprobación QA o comentarios"
-          ],
-          "tools": [
-            "Azure Repos"
-          ],
-          "agents": [],
-          "humanInteraction": {
-            "required": true,
-            "description": "Obligatoria."
-          },
-          "details": {
-            "objective": "Asegurar valor y mantenibilidad de la prueba.",
-            "howItWorks": "Vota y comenta sobre la propuesta.",
-            "validationCriteria": [
-              "Existe aprobación explícita de QA"
-            ]
-          },
-          "status": "propuesto"
-        },
-        {
-          "id": "dev-reviewer",
-          "type": "human",
-          "title": "Desarrollo revisa lo esperado",
-          "shortDescription": "Comprueba que se entendió la funcionalidad.",
-          "description": "Desarrollo revisa las reglas y el comportamiento esperado. Si hay una duda funcional, la resuelve con funcionales y QA antes de aprobar.",
-          "responsibilities": [
-            "Confirmar regla",
-            "Resolver ambigüedad"
-          ],
-          "inputs": [
-            "PR",
+            "Propuesta de pruebas",
+            "Casos existentes",
             "Documentación funcional"
           ],
           "outputs": [
-            "Aprobación desarrollo o comentarios"
+            "Estimativo y propuesta revisados por QA"
           ],
           "tools": [
             "Azure Repos"
@@ -807,32 +823,68 @@
           "agents": [],
           "humanInteraction": {
             "required": true,
-            "description": "Obligatoria."
+            "description": "QA es responsable del estimativo y de la revisión de los casos."
           },
           "details": {
-            "objective": "Reducir desacuerdos antes de ejecutar.",
-            "howItWorks": "Vota y comenta sobre el mismo PR.",
+            "objective": "Contar con una propuesta útil y un alcance de pruebas visible.",
+            "howItWorks": "QA revisa la propuesta, ajusta su estimativo y deja constancia de si está lista o necesita cambios.",
             "validationCriteria": [
-              "Existe aprobación explícita de desarrollo"
+              "El alcance estimado está documentado",
+              "Los casos tienen pasos y resultado esperado claros",
+              "QA identifica los pendientes antes de continuar"
             ]
           },
           "status": "propuesto"
         },
         {
-          "id": "dual-approval",
-          "type": "validation",
-          "title": "Reunir las dos aprobaciones",
-          "shortDescription": "QA y desarrollo aprueban la misma versión.",
-          "description": "Las reglas del repositorio deben exigir al menos una aprobación de QA y otra de desarrollo. Si la propuesta cambia, se vuelve a revisar.",
+          "id": "dev-informed",
+          "type": "human",
+          "title": "Desarrollo queda informado",
+          "shortDescription": "Conoce el alcance y las pruebas que QA propone.",
+          "description": "Desarrollo recibe o puede consultar la propuesta y el estimativo de QA. Puede aportar contexto y aclaraciones, pero no debe autorizar las pruebas ni emitir un voto para que continúen.",
           "responsibilities": [
-            "Bloquear publicación prematura"
+            "Tomar conocimiento del alcance de pruebas",
+            "Aportar aclaraciones si hacen falta"
           ],
           "inputs": [
-            "Votos del PR",
-            "Revisión final"
+            "Propuesta y estimativo de QA"
           ],
           "outputs": [
-            "Incorporar el cambio o pedir ajustes"
+            "Información compartida",
+            "Comentarios opcionales"
+          ],
+          "tools": [
+            "Azure Repos"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": false,
+            "description": "La respuesta de desarrollo no es un requisito para continuar el flujo de casos."
+          },
+          "details": {
+            "objective": "Mantener a desarrollo al tanto de lo que QA va a probar.",
+            "howItWorks": "Se comparte la propuesta o su enlace. No se espera un acuse ni un voto como condición de avance.",
+            "validationCriteria": [
+              "La propuesta está disponible para desarrollo",
+              "No hay una aprobación obligatoria de desarrollo sobre los casos"
+            ]
+          },
+          "status": "propuesto"
+        },
+        {
+          "id": "qa-readiness",
+          "type": "validation",
+          "title": "Dejar el alcance de QA listo",
+          "shortDescription": "El estimativo y la revisión de QA quedan registrados.",
+          "description": "QA confirma que el alcance estimado y los casos están listos para su publicación o automatización. Desarrollo está informado; no se agrega una espera por su autorización.",
+          "responsibilities": [
+            "Registrar el alcance y la versión revisada por QA"
+          ],
+          "inputs": [
+            "Estimativo y revisión de QA"
+          ],
+          "outputs": [
+            "Propuesta lista o ajustes pedidos por QA"
           ],
           "tools": [
             "Azure Repos",
@@ -841,13 +893,14 @@
           "agents": [],
           "humanInteraction": {
             "required": true,
-            "description": "Ambas aprobaciones son obligatorias."
+            "description": "QA determina si la propuesta de pruebas está lista."
           },
           "details": {
-            "objective": "Separar acuerdo humano de automatización.",
-            "howItWorks": "Se exigen revisores de los dos equipos y se reevalúan votos si cambia el borrador.",
+            "objective": "Continuar con un alcance claro y revisado por QA.",
+            "howItWorks": "El flujo consulta el estado de la revisión de QA. Compartir con desarrollo es una rama informativa y no una condición de aprobación.",
             "validationCriteria": [
-              "Ambos equipos aprobaron la última versión"
+              "QA dejó el alcance estimado y los casos revisados",
+              "La disponibilidad de desarrollo no bloquea la propuesta"
             ]
           },
           "status": "propuesto"
@@ -855,17 +908,17 @@
         {
           "id": "approval-decision",
           "type": "decision",
-          "title": "¿Ambas partes aprobaron?",
-          "shortDescription": "La propuesta avanza o vuelve con comentarios.",
-          "description": "Sólo se publica cuando las dos áreas aprobaron la versión final y el cambio se incorporó al repositorio. Si piden ajustes, vuelve a diseño.",
+          "title": "¿QA dejó la propuesta lista?",
+          "shortDescription": "Continuar con lo revisado o ajustar lo que QA pide.",
+          "description": "Si QA considera lista la propuesta, se registra o publica la versión revisada. Si QA pide ajustes, vuelve al diseño. El avance de los casos no depende de una autorización de desarrollo.",
           "responsibilities": [
-            "Elegir siguiente acción"
+            "Elegir la siguiente acción según la revisión de QA"
           ],
           "inputs": [
-            "Estado de revisión"
+            "Estado de la revisión de QA"
           ],
           "outputs": [
-            "Aprobar o pedir ajustes"
+            "Continuar o ajustar la propuesta"
           ],
           "tools": [
             "Azure Repos",
@@ -874,24 +927,25 @@
           "agents": [],
           "humanInteraction": {
             "required": true,
-            "description": "QA y desarrollo toman la decisión."
+            "description": "La decisión sobre el alcance de las pruebas corresponde a QA."
           },
           "details": {
-            "objective": "No tratar un borrador como caso oficial.",
-            "howItWorks": "n8n observa el resultado del PR y sólo sigue después de incorporar el cambio aprobado.",
+            "objective": "Evitar publicar borradores todavía pendientes para QA.",
+            "howItWorks": "Se continúa con la versión que QA revisó y dejó lista. Los comentarios de desarrollo son informativos y pueden aclarar dudas.",
             "validationCriteria": [
-              "Queda rastro de votos y versión aprobada"
+              "Se conoce la versión revisada por QA",
+              "No se exige un voto de desarrollo para avanzar"
             ]
           },
           "status": "propuesto"
         }
       ],
       "milestones": [
-        "Propuesta en el repositorio",
-        "Revisión de QA y desarrollo",
-        "Ambos aprueban la versión"
+        "Propuesta y estimativo de QA",
+        "Desarrollo informado",
+        "QA confirma que puede continuar"
       ],
-      "owner": "Personas"
+      "owner": "QA · desarrollo informado"
     },
     {
       "id": "execution",
@@ -908,15 +962,15 @@
             {
               "id": "publish-test-case",
               "type": "process",
-              "title": "Registrar el caso aprobado",
+              "title": "Registrar los casos revisados por QA",
               "shortDescription": "Crear o actualizar el caso en Test Plans.",
-              "description": "Se publica la versión aprobada. Si mejora un caso existente, se conserva su identificador y su relación con el requisito.",
+              "description": "Se publica la versión revisada por QA. Si mejora un caso existente, se conserva su identificador y su relación con el requisito. Desarrollo ya dispone de la propuesta para consulta.",
               "responsibilities": [
                 "Relacionar caso y requisito",
                 "Evitar duplicados"
               ],
               "inputs": [
-                "PR aprobado",
+                "Propuesta revisada por QA",
                 "Decisión conservar/mejorar/crear"
               ],
               "outputs": [
@@ -933,10 +987,11 @@
               },
               "details": {
                 "objective": "Mantener un catálogo oficial coherente.",
-                "howItWorks": "Se escribe después de la doble aprobación y se registra el ID resultante.",
+                "howItWorks": "Se registra el caso cuando QA deja lista la propuesta; no se espera una autorización de desarrollo sobre los casos.",
                 "validationCriteria": [
                   "Un caso lógico tiene un ID estable",
-                  "El caso se vincula al requisito"
+                  "El caso se vincula al requisito",
+                  "La revisión de QA queda vinculada"
                 ]
               },
               "status": "propuesto"
@@ -1710,7 +1765,7 @@
       "source": "approval",
       "target": "execution",
       "type": "human-approval",
-      "label": "QA + desarrollo aprueban"
+      "label": "Alcance revisado por QA"
     },
     {
       "id": "overview-execution-evaluation",
@@ -1784,10 +1839,10 @@
     },
     {
       "id": "flow-006",
-      "source": "ragflow",
+      "source": "knowledge-retrieval",
       "target": "context-check",
       "type": "data",
-      "label": "Reglas y citas"
+      "label": "Contexto y fuentes para validar"
     },
     {
       "id": "flow-007",
@@ -1826,10 +1881,10 @@
     },
     {
       "id": "flow-012",
-      "source": "ragflow",
+      "source": "knowledge-retrieval",
       "target": "case-designer",
       "type": "data",
-      "label": "Contexto citado"
+      "label": "Contexto recuperado para el diseño"
     },
     {
       "id": "flow-013",
@@ -1913,49 +1968,42 @@
       "source": "test-proposal-pr",
       "target": "qa-reviewer",
       "type": "human-approval",
-      "label": "Revisar cobertura"
+      "label": "Estimar alcance y revisar casos"
     },
     {
       "id": "flow-025",
       "source": "test-proposal-pr",
-      "target": "dev-reviewer",
-      "type": "human-approval",
-      "label": "Revisar esperado"
+      "target": "dev-informed",
+      "type": "data",
+      "label": "Compartir propuesta y estimativo"
     },
     {
       "id": "flow-026",
       "source": "qa-reviewer",
-      "target": "dual-approval",
+      "target": "qa-readiness",
       "type": "human-approval",
-      "label": "Voto QA"
-    },
-    {
-      "id": "flow-027",
-      "source": "dev-reviewer",
-      "target": "dual-approval",
-      "type": "human-approval",
-      "label": "Voto desarrollo"
+      "label": "Revisión y alcance de QA"
     },
     {
       "id": "flow-028",
-      "source": "dual-approval",
+      "source": "qa-readiness",
       "target": "approval-decision",
       "type": "normal",
-      "label": "Evaluar ambos votos"
+      "label": "Consultar estado de QA"
     },
     {
       "id": "flow-029",
       "source": "approval-decision",
       "target": "case-designer",
       "type": "feedback",
-      "label": "Una parte pide cambios"
+      "label": "QA pide ajustar la propuesta"
     },
     {
       "id": "flow-030",
       "source": "approval-decision",
       "target": "publish-test-case",
       "type": "conditional",
-      "label": "Ambas aprueban y se incorpora al repo"
+      "label": "QA deja lista la propuesta"
     },
     {
       "id": "flow-031",
@@ -2214,7 +2262,7 @@
       "source": "approval",
       "target": "design",
       "type": "feedback",
-      "label": "Cambios pedidos: ajustar propuesta"
+      "label": "Ajustes pedidos por QA"
     },
     {
       "id": "overview-evaluation-execution",
@@ -2257,6 +2305,27 @@
       "target": "case-designer",
       "type": "feedback",
       "label": "Caso esperado mal definido"
+    },
+    {
+      "id": "retrieval-query",
+      "source": "knowledge-retrieval",
+      "target": "ragflow",
+      "type": "data",
+      "label": "Consultar la fuente configurada"
+    },
+    {
+      "id": "retrieval-response",
+      "source": "ragflow",
+      "target": "knowledge-retrieval",
+      "type": "data",
+      "label": "Información recuperada"
+    },
+    {
+      "id": "retrieval-orchestration",
+      "source": "n8n",
+      "target": "knowledge-retrieval",
+      "type": "data",
+      "label": "Integración propuesta: pedir contexto"
     }
   ]
 }

@@ -1,0 +1,412 @@
+{
+  "request": {
+    "question": "¿Qué fecha tiene la coronación de la reina del reino imaginario Brumalia?",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "---\ntitle: \"Cinco colecciones Milvus\"\ntype: referencia\ntags: [coelsa-intelligent, rag, milvus, colecciones]\naliases: [Colecciones Milvus, Milvus collections COELSA]\ndescription: \"Usar cuando necesitás saber a qué colección de Milvus va un tipo específico de contenido (archivos, knowledge, memorias, web, URLs).\"\nestado: vigente\n---\n# Cinco colecciones Milvus\n## Qué es\nEn el esquema de [[Milvus multi-tenancy]], hay exactamente **5 colecciones fijas** en [[Milvus]]. Cada tipo de contenido tiene su colección designada.\n## Las colecciones\n<table>\n<thead>\n<tr>\n<th>Colección</th>\n<th>Contenido</th>\n<th>Cuándo se usa</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>_knowledge</code></td>\n<td>Chunks de bases de conocimiento</td>\n<td>Al embedir una Knowledge base</td>\n</tr>\n<tr>\n<td><code>_files</code></td>\n<td>Chunks de archivos subidos por usuarios</td>\n<td>Al embedir un archivo de chat</td>\n</tr>\n<tr>\n<td><code>_memories</code></td>\n<td>Memorias de usuario</td>\n<td>Al guardar o recuperar memorias personalizadas</td>\n</tr>\n<tr>\n<td><code>_web_search</code></td>\n<td>Resultados de búsqueda web embebidos</td>\n<td>Al indexar resultados de búsqueda para RAG</td>\n</tr>\n<tr>\n<td><code>_hash_based</code></td>\n<td>URLs: páginas web, videos YouTube</td>\n<td>Al indexar contenido de URLs</td>\n</tr>\n</tbody>\n</table>\n## Cómo se determina la colección\nLa función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` analiza el nombre o el tipo del recurso para determinar a qué colección pertenece. Usa **convenciones de prefijos** en los nombres generados por el frontend.\n**Regla crítica**: El frontend y esta función deben estar en sincronía. Si el frontend cambia cómo nombra los recursos, esta función debe actualizarse.",
+          "content_ltks": "titl cinc coleccion milvus type referent tags coels intelligent rag milvus coleccion ali coleccion milvus milvus collections coels description usar cuand necesit á s sab a qu é colecci ón de milvus va un tip espec í fic de conten archiv knowledg memori web urls estad vigent cinc coleccion milvus qu é es en el esquem de milvus multi tenancy hay exact 5 coleccion fij en milvus cad tip de conten tien su colecci ón design las coleccion the colecci ón conten cu á ndo se usa the tbody cod _ knowledg cod chunks de bas de conoc al embed una knowledg bas cod _ fil cod chunks de archiv sub por usuari al embed un archiv de chat cod _ memori cod memori de usuari al guard o recuper memori personaliz cod _ web _ search cod result de b ú squed web embeb al index result de b ú squed par rag cod _ hash _ bas cod urls p á gin web vide youtub al index conten de urls tbody c ó mo se determin la colecci ón la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py analiz el nombr o el tip del recurs par determin a qu é colecci ón pertenec usa convencion de prefij en los nombr gener por el frontend regl cr í tic el frontend y esta funci ón deb estar en sincron í a si el frontend cambi c ó mo nombr los recurs esta funci ón deb actualiz",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16f90544d33011f1a8c8134f9287b83e",
+          "document_keyword": "Cinco colecciones Milvus.md",
+          "id": "16b21425566fd2f9",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.34241810017236773,
+          "tag_kwd": [],
+          "term_similarity": 0.16290495738909677,
+          "vector_similarity": 0.7612821
+        },
+        {
+          "content": "---\ntitle: \"bcrypt para contraseñas\"\ntype: decision\ntags: [coelsa-intelligent, auth, bcrypt, seguridad, contraseñas]\naliases: [bcrypt COELSA, Migración de passlib, Hashing de contraseñas]\ndescription: \"Usar cuando necesitás entender por qué se usa bcrypt directamente en lugar de passlib y cuál era el bug que motivó el cambio.\"\nestado: vigente\n---\n# bcrypt para contraseñas\n## Qué es\nCOELSA.Intelligent usa la librería **`bcrypt`** nativa de Python para el hashing de contraseñas, en lugar de `passlib.CryptContext` que usaba el upstream.\n```python\n# backend/server/utils/auth.py\nimport bcrypt\n\ndef verify_password(plain_password, hashed_password):\n    return bcrypt.checkpw(\n        plain_password.encode('utf-8'),\n        hashed_password.encode('utf-8')\n    )\n```\n## Por qué se migró de passlib\n`passlib.CryptContext` no manejaba correctamente el **límite de 72 bytes de bcrypt** en la codificación UTF-8 interna. El problema se manifestaba al crear usuarios incluso con contraseñas cortas — el error aparecía por cómo `passlib` gestionaba internamente la codificación, no por la longitud de la contraseña.\nEl reemplazo por `bcrypt` nativo resuelve esto porque:\n1. Maneja explícitamente la codificación `utf-8` al llamar a `encode()`\n2. No tiene la capa de abstracción de `passlib` que introducía el bug\n## Contexto\nAunque COELSA.Intelligent tiene el login local deshabilitado (ver [[Azure AD login exclusivo]]), el código de autenticación por contraseña sigue existente en el backend para usos internos (API keys, etc.) y como fallback en caso de que el login local se rehabilite en el futuro.\n## Relacionado\n- [[Azure AD login exclusivo]] — El login local está deshabilitado; este código existe como fallback\n- [[JWT y sesiones]] — El token que se genera después de una autenticación exitosa\n- [[MOC - Autenticación y Permisos]] — Índice del cluster de auth\n- [[MOC - Decisiones]] — D-07 en el índice de decisiones",
+          "content_ltks": "titl bcrypt par contr ñ as type decision tags coels intelligent auth bcrypt segur contr ñ as ali bcrypt coels migraci ón de passlib hashing de contr ñ as description usar cuand necesit á s entend por qu é se usa bcrypt direct en lug de passlib y cu á l era el bug que motiv ó el cambi estad vigent bcrypt par contr ñ as qu é es coels intelligent usa la libr í a bcrypt nativ de python par el hashing de contr ñ as en lug de passlib cryptcontext que usab el upstream python backend serv utils auth py import bcrypt def verify _ password plain _ password hash _ password return bcrypt checkpw plain _ password encod utf 8 hash _ password encod utf 8 por qu é se migr ó de passlib passlib cryptcontext no manej correct el l í mit de 72 bytes de bcrypt en la codificaci ón utf 8 intern el problem se manifest al cre usuari inclus con contr ñ as cort el error aparec í a por c ó mo passlib gestion intern la codificaci ón no por la longitud de la contr ñ a el reemplaz por bcrypt nativ resuelv esto porqu 1 manej expl í cit la codificaci ón utf 8 al llam a encod 2 no tien la cap de abstracci ón de passlib que introduc í a el bug context aunqu coels intelligent tien el login local deshabilit ver azur ad login exclus el c ó dig de autenticaci ón por contr ñ a sig existent en el backend par usos intern api keys etc y com fallback en cas de que el login local se rehabilit en el futur relacion azur ad login exclus el login local est á deshabilit este c ó dig exist com fallback jwt y sesion el tok que se gener despu és de una autenticaci ón exit moc autenticaci ón y permis í ndic del clust de auth moc decision d 07 en el í ndic de decision",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "168b48f6d33011f1a8c8134f9287b83e",
+          "document_keyword": "bcrypt para contraseñas.md",
+          "id": "030f23ccf6040f20",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.33938339017236774,
+          "tag_kwd": [],
+          "term_similarity": 0.16290495738909677,
+          "vector_similarity": 0.7511664
+        },
+        {
+          "content": "---\ntitle: \"Fork de Open WebUI\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, fork, open-webui]\naliases: [Open WebUI fork, Base del fork]\ndescription: \"Usar cuando necesitás entender qué es COELSA.Intelligent, de dónde viene y por qué no se sigue el upstream Open WebUI directamente.\"\nestado: vigente\n---\n# Fork de Open WebUI\n## Qué es\nCOELSA.Intelligent es un fork interno de [Open WebUI](https://github.com/open-webui/open-webui), una plataforma de chat con IA generativa de código abierto (licencia MIT). El fork se tomó sobre una versión base estabilizada y los cambios se aplican deliberadamente sobre esa base.\n**No se mantiene compatibilidad directa con el upstream.** Esto significa que las actualizaciones del proyecto original no se incorporan automáticamente; cualquier cambio relevante del upstream debe evaluarse y portarse manualmente.\n## Qué cambia respecto al upstream",
+          "content_ltks": "titl fork de open webui type decision tags coels intelligent arquitectur fork open webui ali open webui fork bas del fork description usar cuand necesit á s entend qu é es coels intelligent de d ó nde vien y por qu é no se sig el upstream open webui direct estad vigent fork de open webui qu é es coels intelligent es un fork intern de open webui https github com open webui open webui una plataform de chat con ia gener de c ó dig abiert licenci mit el fork se tom ó sobr una versi ón bas estabiliz y los cambi se aplic deliber sobr esa bas no se mantien compatibil direct con el upstream esto signif que las actualiz del proyect original no se incorpor autom á tic cualqui cambi relev del upstream deb evalu y port manual qu é cambi respect al upstream",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "166a437cd33011f1a8c8134f9287b83e",
+          "document_keyword": "Fork de Open WebUI.md",
+          "id": "98e5ff6b2d526ded",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.32435212572292554,
+          "tag_kwd": [],
+          "term_similarity": 0.1394145653184651,
+          "vector_similarity": 0.7558731
+        },
+        {
+          "content": "---\ntitle: \"Cadena SearXNG Context Forge\"\ntype: concepto\ntags: [coelsa-intelligent, modelos-ia, searxng, mcp, busqueda-web]\naliases: [SearXNG integration, Context Forge chain, Búsqueda web MCP]\ndescription: \"Usar cuando necesitás entender cómo está implementada la búsqueda web en COELSA.Intelligent: la cadena completa desde el modelo hasta SearXNG.\"\nestado: vigente\n---\n# Cadena SearXNG Context Forge\n## Qué es\nLa integración de búsqueda web en COELSA.Intelligent usa una cadena de 4 componentes:\n```\nOpen WebUI → MCPO (puerto 8000) → Context Forge (puerto 4444) → searxng-mcp → SearXNG\n```\n## Componentes\n| Componente | Puerto | Rol |\n|-----------|--------|-----|\n| **MCPO** | 8000 | Proxy MCP → HTTP que convierte el protocolo MCP a una API HTTP/OpenAPI |\n| **Context Forge** | 4444 | Orquestador de contexto; registra herramientas MCP y las expone via OpenAPI |\n| **searxng-mcp** | — | Servidor MCP que envuelve SearXNG con el protocolo MCP |\n| **SearXNG** | — | Motor de búsqueda metasearch (privado, self-hosted) |\n## Por qué esta cadena\n- SearXNG es self-hosted para mantener privacidad (sin tracking de búsquedas)\n- MCP es el protocolo estándar para tool calling en agentes IA\n- MCPO convierte MCP a HTTP/OpenAPI, que es lo que Open WebUI entiende como tool server\n## Configuración\n```env\nTOOL_SERVER_CONNECTIONS=[\n  {\n    \"url\": \"http://host:8000/contextforge\",\n    \"path\": \"openapi.json\",\n    \"auth_type\": \"bearer\",\n    \"key\": \"tu-api-key\"\n  }\n]\n```\n## Relación con non-native function calling\nPara el modelo `gpt-oss:120b` (sin function calling nativo), la herramienta se describe en el system prompt. Ver [[MCP y tool calling]] para el detalle del JSON prompt.\n## Relacionado\n- [[MCP y tool calling]] — El mecanismo de tool calling que usa esta cadena",
+          "content_ltks": "titl caden searxng context forg type concept tags coels intelligent model ia searxng mcp busqued web ali searxng integration context forg chain b ú squed web mcp description usar cuand necesit á s entend c ó mo est á implement la b ú squed web en coels intelligent la caden complet desd el model hast searxng estad vigent caden searxng context forg qu é es la integraci ón de b ú squed web en coels intelligent usa una caden de 4 component open webui mcpo puert 8000 context forg puert 4444 searxng mcp searxng component component puert rol mcpo 8000 proxy mcp http que conviert el protocol mcp a una api http openapi context forg 4444 orquest de context registr herramient mcp y las expon via openapi searxng mcp servidor mcp que envuelv searxng con el protocol mcp searxng motor de b ú squed metasearch priv self host por qu é esta caden searxng es self host par manten privac sin tracking de b ú squed mcp es el protocol est á ndar par tool calling en agent ia mcpo conviert mcp a http openapi que es lo que open webui entiend com tool serv configuraci ón env tool _ serv _ connections url http host 8000 contextforg path openapi json auth _ type bear key tu api key relaci ón con non nativ function calling par el model gpt oss 120b sin function calling nativ la herramient se describ en el system prompt ver mcp y tool calling par el detall del json prompt relacion mcp y tool calling el mecan de tool calling que usa esta caden",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16e24f02d33011f1a8c8134f9287b83e",
+          "document_keyword": "Cadena SearXNG Context Forge.md",
+          "id": "9b0ff0978f2a6f44",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.3236847615178481,
+          "tag_kwd": [],
+          "term_similarity": 0.13986396645406876,
+          "vector_similarity": 0.75259995
+        },
+        {
+          "content": "---\ntitle: \"Borrado en cascada de archivos\"\ntype: concepto\ntags: [coelsa-intelligent, almacenamiento, cascada, archivos, chats]\naliases: [Cascade delete files, Eliminación en cascada]\ndescription: \"Usar cuando necesitás entender qué pasa con los archivos de MinIO cuando se elimina un chat en COELSA.Intelligent.\"\nestado: vigente\n---\n# Borrado en cascada de archivos\n## Qué es\nCuando un usuario **elimina una conversación (chat)**, COELSA.Intelligent elimina automáticamente todos los archivos asociados a esa conversación, tanto en la base de datos como en [[MinIO S3]].\n## Por qué existe\nSin esta funcionalidad, eliminar un chat dejaría archivos huérfanos en MinIO indefinidamente. A largo plazo, esto genera acumulación de storage sin posibilidad de recuperarlo sin una migración manual.\n## Implementación\nEl modelo `File` tiene una columna `chat_id` (con índice):\n```python\nclass File(Base):\n    chat_id = Column(String, nullable=True, index=True)\n    # Vinculación con chats para borrado en cascada\n```\nCuando el endpoint de eliminación de chat se ejecuta:\n1. Busca todos los registros `File` donde `chat_id == chat.id`\n2. Para cada archivo: llama a `StorageProvider.delete_file(file.path)`\n3. Elimina los registros de la tabla `file`\n4. Elimina el registro del chat\n## Diferencia con el Scheduler\n<table>\n<thead>\n<tr>\n<th>Mecanismo</th>\n<th>Cuándo actúa</th>\n<th>Qué elimina</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Borrado en cascada</strong></td>\n<td>Al eliminar un chat</td>\n<td>Archivos del chat eliminado</td>\n</tr>\n<tr>\n<td><strong>[[Scheduler de limpieza]]</strong></td>\n<td>Diariamente</td>\n<td>Huérfanos + archivos vencidos</td>\n</tr>\n</tbody>\n</table>\nAmbos mecanismos son complementarios.\n## Relacionado\n- [[Sistema híbrido de almacenamiento]] — El sistema del que la cascada es parte",
+          "content_ltks": "titl borr en casc de archiv type concept tags coels intelligent almacen casc archiv chats ali cascad delet fil eliminaci ón en casc description usar cuand necesit á s entend qu é pas con los archiv de mini cuand se elimin un chat en coels intelligent estad vigent borr en casc de archiv qu é es cuand un usuari elimin una conversaci ón chat coels intelligent elimin autom á tic tod los archiv asoci a esa conversaci ón tant en la bas de dat com en mini s3 por qu é exist sin esta funcional elimin un chat dej í a archiv hu é rfan en mini indefinid a larg plaz esto gener acumulaci ón de storag sin posibil de recuper sin una migraci ón manual implementaci ón el model fil tien una column chat _ id con í ndic python class fil bas chat _ id column string nullabl tru index tru vinculaci ón con chats par borr en casc cuand el endpoint de eliminaci ón de chat se ejecut 1 busc tod los registr fil dond chat _ id chat id 2 par cad archiv llam a storageprovid delet _ fil fil path 3 elimin los registr de la tabl fil 4 elimin el registr del chat diferent con el schedul the mecan cu á ndo act ú a qu é elimin the tbody strong borr en casc strong al elimin un chat archiv del chat elimin strong schedul de limpiez strong diari hu é rfan archiv venc tbody ambos mecan son complementari relacion sistem h í brid de almacen el sistem del que la casc es part",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "document_keyword": "Borrado en cascada de archivos.md",
+          "id": "a2c60faf5f05d5b1",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.321690005069928,
+          "tag_kwd": [],
+          "term_similarity": 0.12671297867132572,
+          "vector_similarity": 0.7766364
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 2,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "170fee94d33011f1a8c8134f9287b83e",
+          "doc_name": "Riesgos de seguridad aceptados.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16fdf644d33011f1a8c8134f9287b83e",
+          "doc_name": "Módulo de retrieval.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "171a4510d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168b48f6d33011f1a8c8134f9287b83e",
+          "doc_name": "bcrypt para contraseñas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e24f02d33011f1a8c8134f9287b83e",
+          "doc_name": "Cadena SearXNG Context Forge.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "167d610ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD login exclusivo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1695c72cd33011f1a8c8134f9287b83e",
+          "doc_name": "Pipelines Azure DevOps.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "doc_name": "Chats de referencia.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c8d7acd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Arquitectura.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a5b100d33011f1a8c8134f9287b83e",
+          "doc_name": "Loguru y logging.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169dbf04d33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar proveedor de almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16653742d33011f1a8c8134f9287b83e",
+          "doc_name": "Storage Dashboard.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones de componentes Svelte.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c11eaed33011f1a8c8134f9287b83e",
+          "doc_name": "Tipografía Saira.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c3d20cd33011f1a8c8134f9287b83e",
+          "doc_name": "Tokens primitivos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b1000ad33011f1a8c8134f9287b83e",
+          "doc_name": "ECO Design System.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16bc528ed33011f1a8c8134f9287b83e",
+          "doc_name": "Roles semánticos de color.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - RAG y Búsqueda Vectorial.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16beaf52d33011f1a8c8134f9287b83e",
+          "doc_name": "Surface Containers.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17057dd8d33011f1a8c8134f9287b83e",
+          "doc_name": "Dependencias vulnerables.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1667b35ad33011f1a8c8134f9287b83e",
+          "doc_name": "URLs firmadas MinIO.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17030102d33011f1a8c8134f9287b83e",
+          "doc_name": "CVE-2025-7969 markdown-it.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1707eac8d33011f1a8c8134f9287b83e",
+          "doc_name": "Hardening ReDoS.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16933d68d33011f1a8c8134f9287b83e",
+          "doc_name": "Dockerfile.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1712788ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD OAuth.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1698681ad33011f1a8c8134f9287b83e",
+          "doc_name": "SSL corporativo en build.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ae2042d33011f1a8c8134f9287b83e",
+          "doc_name": "Dark mode reglas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e7761cd33011f1a8c8134f9287b83e",
+          "doc_name": "PyTorch CPU-only.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 22862
+}

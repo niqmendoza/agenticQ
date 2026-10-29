@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "scope": "Preguntas nuevas respecto del ensayo de cinco consultas, sobre el mismo corpus conocido. Señales documentales; no equivale a casos ejecutados ni a una validación ciega de QA.",
+  "cases": [
+    {
+      "id": "grupos",
+      "question": "¿Cómo se definen los permisos granulares de un grupo y se guarda qué usuarios lo integran?",
+      "checks": [
+        {"id":"group-users","title":"Miembros del grupo","document":"Grupos y permisos.md","contains":["user_ids","Lista de IDs de usuarios"]},
+        {"id":"group-capabilities","title":"Permisos por capacidad","document":"Grupos y permisos.md","contains":["file_upload","web_search","workspace"]}
+      ]
+    },
+    {
+      "id": "migraciones",
+      "question": "¿Cuándo se aplican las migraciones de base de datos y cómo se ejecutan con Alembic?",
+      "checks": [
+        {"id":"migration-startup","title":"Migraciones al iniciar","document":"Migraciones Alembic.md","contains":["run_migrations()","config.py","automáticamente"]},
+        {"id":"migration-deploy","title":"Comando y despliegue","document":"Migraciones Alembic.md","contains":["alembic upgrade head","Después de cada deploy"]}
+      ]
+    },
+    {
+      "id": "aislamiento",
+      "question": "¿Cómo se evita que una búsqueda vectorial devuelva datos de un recurso distinto al solicitado?",
+      "checks": [
+        {"id":"isolation-field","title":"Campo de aislamiento","document":"Aislamiento por resource_id.md","contains":["resource_id","campo escalar"]},
+        {"id":"isolation-filter","title":"Filtro al buscar","document":"Aislamiento por resource_id.md","contains":["filter","collection.search","resource_id =="]}
+      ]
+    }
+  ],
+  "negative_question": "¿Cuál es el menú del restaurante de la luna ficticia Zorba-77?",
+  "page_size": 5,
+  "compact_budget": {"chars": 24000, "tokens": 6000},
+  "full_budget": {"chars": 500000, "tokens": 100000}
+}

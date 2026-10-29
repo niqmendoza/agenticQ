@@ -1,0 +1,19 @@
+{
+  "sha256": {
+    "already-delivered.compact.json": "0c68446511d67e4cb5c757edc8dab983a7ad4eece2b3a90e1b8d91a467ed224a",
+    "already-delivered.json": "323872ab4b5f2f1ef260810c80c7678ad0765e10e9086203256159020b6ce5e3",
+    "bounded.compact.json": "270488aaa8c53e3bbd469311d3483430f2cb703a594dff6be77f41b1ace1e526",
+    "bounded.json": "cb9b8590c09c80c39f1024187d0330436e13128880977e599f646ec51654db70",
+    "cli-first.json": "396f6e2be7e2663bad4a18c15967b027c8f59a1a9bb4ce0aeab45a814bd48259",
+    "cli-repeat.json": "b74ee2b4e9bf5fae8b4767478b2063d03a2c6f359859c2f7bd2011f9f48ea67c",
+    "cli-replay.json": "396f6e2be7e2663bad4a18c15967b027c8f59a1a9bb4ce0aeab45a814bd48259",
+    "full.compact.json": "13f227e32157bbbb623b4a4a03402479172e477e8a3d69b38c78c731069c3fe3",
+    "full.json": "885a063ffbec8a15fb6750bbd3992944f35736af9c487636276048d16b189448",
+    "native.json": "70ce45f15aaff43c88ca3f288df053a5e8e6b56de7d5ce7fb21a5c7e9f016692",
+    "outside-domain.json": "3bcdcb2b8a07b7fc16bf60f1b7100c21b2a73a7d0ed2c9d9a3b5279f039d9bfa",
+    "protocol.json": "0a6807b48d2ee48a68a26978026f41f754200b113680a06cc20d4cbf4d1bb2b7",
+    "replay.compact.json": "13f227e32157bbbb623b4a4a03402479172e477e8a3d69b38c78c731069c3fe3",
+    "replay.json": "885a063ffbec8a15fb6750bbd3992944f35736af9c487636276048d16b189448",
+    "summary.json": "315343a1bba906206496dce5b5722cdbaa09af7f2187a7c4aa6d87499c11efd8"
+  }
+}

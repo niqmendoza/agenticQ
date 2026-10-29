@@ -1,28 +1,32 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ArrowDown, ArrowUpRight, ChevronRight, GitBranch, Minus, Plus, RotateCcw } from 'lucide-react';
 import { ReactFlowProvider } from '@xyflow/react';
 import { isGroup, isOptional, pathTo } from '../data/model';
 import { ProcessDiagram } from './ProcessDiagram';
-import type { ModelIndex, ProcessGroup, ProcessItem, ProcessModel } from '../types/architecture';
+import type { ModelIndex, ProcessGroup, ProcessItem, ProcessLeaf, ProcessModel } from '../types/architecture';
 
 export const roadmapTitle = (title: string) => title.replace(/^\d+\s*·\s*/, '');
-function Branch({ item, expanded, selectedId, onToggle, onSelect }: {
-  item: ProcessItem; expanded: Set<string>; selectedId: string | null; onToggle: (id: string) => void; onSelect: (id: string) => void;
+function Branch({ item, expanded, selectedId, onToggle, onSelect, renderLeaf }: {
+  item: ProcessItem; expanded: Set<string>; selectedId: string | null; onToggle: (id: string) => void; onSelect: (id: string) => void; renderLeaf?: (item: ProcessLeaf) => ReactNode;
 }) {
   const group = isGroup(item), open = expanded.has(item.id);
+  if (!group && renderLeaf) return <div className="roadmap-branch milestone-branch">{renderLeaf(item)}</div>;
   return <div className={`roadmap-branch ${group ? 'branch-group' : 'branch-leaf'} ${open ? 'branch-open' : ''}`}>
     <button type="button" data-branch-id={item.id} className={`topic-button topic-${item.type} ${isOptional(item) ? 'topic-optional' : ''} ${selectedId === item.id ? 'topic-selected' : ''}`} onClick={() => { if (group) onToggle(item.id); onSelect(item.id); }} aria-expanded={group ? open : undefined}>
       <span>{roadmapTitle(item.title)}{isOptional(item) && <small className="optional-topic-label">Opcional · reemplazable</small>}</span>{group ? <span className="topic-toggle">{open ? <Minus size={13}/> : <Plus size={13}/>}</span> : <ArrowUpRight size={12}/>}
     </button>
-    {group && open && <div className="branch-children">{item.children.map(child => <Branch key={child.id} item={child} expanded={expanded} selectedId={selectedId} onToggle={onToggle} onSelect={onSelect}/>)}</div>}
+    {group && open && <div className="branch-children">{item.children.map(child => <Branch key={child.id} item={child} expanded={expanded} selectedId={selectedId} onToggle={onToggle} onSelect={onSelect} renderLeaf={renderLeaf}/>)}</div>}
   </div>;
 }
 
 type Line = { id: string; d: string; kind: 'spine' | 'branch' };
-export function Roadmap({ model, index, activeId, selectedId, expanded, onToggle, onSelect, onNavigate, connectionsGroupId, onCloseConnections }: {
+export function Roadmap({ model, index, activeId, selectedId, expanded, onToggle, onSelect, onNavigate, connectionsGroupId, onCloseConnections, renderLeaf, renderPhaseExtra, presentation }: {
   model: ProcessModel; index: ModelIndex; activeId: string | null; selectedId: string | null; expanded: Set<string>;
   onToggle: (id: string) => void; onSelect: (id: string) => void; onNavigate: (id: string) => void;
   connectionsGroupId: string | null; onCloseConnections: () => void;
+  renderLeaf?: (item: ProcessLeaf) => ReactNode;
+  renderPhaseExtra?: (group: ProcessGroup) => ReactNode;
+  presentation?: { startLabel: string; endLabel: string; endActionLabel: string; onEndAction: () => void; ariaLabel: string };
 }) {
   const canvas = useRef<HTMLDivElement>(null);
   const [lines, setLines] = useState<Line[]>([]);
@@ -65,19 +69,19 @@ export function Roadmap({ model, index, activeId, selectedId, expanded, onToggle
     root.querySelectorAll('.roadmap-row,.topic-button,.phase-main-button').forEach(el=>observer.observe(el));
     return () => observer.disconnect();
   },[model,expanded,connectionsGroupId]);
-  return <div className="roadmap-map" ref={canvas} aria-label="Mapa completo de QA con fases y subpartes">
+  return <div className="roadmap-map" ref={canvas} aria-label={presentation?.ariaLabel ?? "Mapa completo de QA con fases y subpartes"}>
     <svg className="roadmap-lines" aria-hidden="true"><defs><marker id="roadmap-direction" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#00A0AD"/></marker></defs>{lines.map(line=><path key={line.id} d={line.d} className={`roadmap-line-${line.kind}`} markerEnd={line.kind==='spine'?'url(#roadmap-direction)':undefined}/>)}</svg>
-    <div className="roadmap-start"><span>CAMBIO FUNCIONAL APROBADO</span><ArrowDown size={15}/></div>
+    <div className="roadmap-start"><span>{presentation?.startLabel ?? "CAMBIO FUNCIONAL APROBADO"}</span><ArrowDown size={15}/></div>
     {model.groups.map((group: ProcessGroup,i)=>{
       const open=expanded.has(group.id), phaseReturns=returns.filter(edge=>edge.source===group.id);
-      const branch=(side:0|1)=><div className={`roadmap-side roadmap-${side===0?'left':'right'}`}>{open && group.children.filter((_,n)=>n%2===side).map(child=><Branch key={child.id} item={child} expanded={expanded} selectedId={selectedId} onToggle={onToggle} onSelect={onSelect}/>)}</div>;
+      const branch=(side:0|1)=><div className={`roadmap-side roadmap-${side===0?'left':'right'}`}>{open && group.children.filter((_,n)=>n%2===side).map(child=><Branch key={child.id} item={child} expanded={expanded} selectedId={selectedId} onToggle={onToggle} onSelect={onSelect} renderLeaf={renderLeaf}/>)}</div>;
       return <section key={group.id} id={`phase-${group.id}`} className={`roadmap-row ${activeId===group.id?'row-active':''} ${!open?'row-collapsed':''}`} aria-label={roadmapTitle(group.title)}>
         {branch(0)}
         <div className="roadmap-phase">
           <span className="phase-sequence">FASE {String(i+1).padStart(2,'0')}</span>
           {group.entryCondition && <span className="roadmap-condition">{group.entryCondition}</span>}
           <button type="button" data-phase-id={group.id} className={`phase-main-button ${group.owner==='Personas'?'phase-is-human':''} ${selectedId===group.id?'topic-selected':''}`} onClick={()=>onSelect(group.id)}><span>{roadmapTitle(group.title)}</span><ArrowUpRight size={14}/></button>
-          <span className="roadmap-owner">{group.owner}</span>
+          <span className="roadmap-owner">{group.owner}</span>{renderPhaseExtra?.(group)}
           <button type="button" className="phase-fold" onClick={()=>onToggle(group.id)} aria-expanded={open} aria-label={`${open?'Contraer':'Desplegar'} ${roadmapTitle(group.title)}`}>{open?<Minus size={11}/>:<Plus size={11}/>} {open?'Contraer ramas':'Desplegar ramas'}</button>
         </div>
         {branch(1)}
@@ -85,7 +89,7 @@ export function Roadmap({ model, index, activeId, selectedId, expanded, onToggle
         {connectionRoot===group.id && connectionsGroupId && <div className="roadmap-relationship-view"><div className="relationship-title"><span><GitBranch size={14}/>Conexiones de {roadmapTitle(index.byId.get(connectionsGroupId)?.title??group.title)}</span><button type="button" onClick={onCloseConnections}>Cerrar <Minus size={12}/></button></div><div className="relationship-canvas"><ReactFlowProvider><ProcessDiagram model={model} index={index} activeGroupId={connectionsGroupId} selectedId={selectedId} onSelect={id=>{if(id)onSelect(id);}} onOpen={onNavigate} onOverview={onCloseConnections}/></ReactFlowProvider></div></div>}
       </section>;
     })}
-    <div className="roadmap-end"><span>LA CORRECCIÓN VUELVE A PROBARSE</span><button type="button" onClick={()=>onNavigate(model.groups.find(group=>group.id==='execution')?.id??model.groups[0].id)}><RotateCcw size={13}/>Volver a ejecutar y revisar</button></div>
+    <div className="roadmap-end"><span>{presentation?.endLabel ?? "LA CORRECCIÓN VUELVE A PROBARSE"}</span><button type="button" onClick={()=>presentation ? presentation.onEndAction() : onNavigate(model.groups.find(group=>group.id==='execution')?.id??model.groups[0].id)}><RotateCcw size={13}/>{presentation?.endActionLabel ?? "Volver a ejecutar y revisar"}</button></div>
   </div>;
 }
 

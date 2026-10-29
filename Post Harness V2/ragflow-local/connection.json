@@ -1,0 +1,9 @@
+{
+  "base_url": "http://127.0.0.1:9388",
+  "dataset_ids": [
+    "16512752d33011f1a8c8134f9287b83e"
+  ],
+  "page_size": 5,
+  "similarity_threshold": 0.2,
+  "api_key_env": "RAGFLOW_API_KEY"
+}

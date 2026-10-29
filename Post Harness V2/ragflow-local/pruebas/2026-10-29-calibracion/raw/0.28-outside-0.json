@@ -1,0 +1,25 @@
+{
+  "request": {
+    "question": "¿Cuál es el itinerario de la expedición submarina del planeta ficticio Nébula X?",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.28,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [],
+      "doc_aggs": [],
+      "total": 0
+    }
+  },
+  "response_bytes": 56
+}

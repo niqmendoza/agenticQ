@@ -1,0 +1,407 @@
+{
+  "request": {
+    "question": "¿Qué receta de pan usa el chat para fermentar masa madre?",
+    "dataset_ids": [
+      "16512752d33011f1a8c8134f9287b83e"
+    ],
+    "page": 1,
+    "page_size": 5,
+    "similarity_threshold": 0.2,
+    "highlight": false,
+    "keyword": false,
+    "use_kg": false,
+    "toc_enhance": false,
+    "include_knowledge_compilation": false
+  },
+  "response": {
+    "code": 0,
+    "data": {
+      "chunks": [
+        {
+          "content": "- [[Borrado en cascada de archivos]] — Qué pasa cuando se elimina el chat asociado\n- [[Protección SSRF]] — La sanitización de paths en el paso de recepción",
+          "content_ltks": "borr en casc de archiv qu é pas cuand se elimin el chat asoci protecci ón ssrf la sanitizaci ón de paths en el pas de recepci ón",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "165b4458d33011f1a8c8134f9287b83e",
+          "document_keyword": "Flujo de subida de archivos.md",
+          "id": "1cf19796519d8431",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.30936632624648225,
+          "tag_kwd": [],
+          "term_similarity": 0.08658265178068894,
+          "vector_similarity": 0.8291949
+        },
+        {
+          "content": "---\ntitle: \"Chats de referencia\"\ntype: concepto\ntags: [coelsa-intelligent, rag, chat, referencia, contexto]\naliases: [Reference chats, Chats adjuntos, Chat como contexto]\ndescription: \"Usar cuando necesitás entender cómo un usuario puede adjuntar una conversación previa como contexto en un nuevo mensaje en COELSA.Intelligent.\"\nestado: vigente\n---\n# Chats de referencia\n## Qué es\nLos **chats de referencia** permiten a los usuarios adjuntar conversaciones previas como contexto extendido al enviar un nuevo mensaje. El chat adjunto se recupera, se formatea y se inyecta en el prompt del modelo junto con el mensaje actual.\n## Cómo se adjunta en el cliente\nEl chat referenciado viaja como un elemento de tipo `\"chat\"` dentro del array `files` del payload del socket:\n```json\n{\n  \"files\": [\n    {\n      \"type\": \"chat\",\n      \"id\": \"chat-uuid-del-chat-referenciado\"\n    }\n  ],\n  \"content\": \"Basándote en la conversación adjunta...\"\n}\n```\n## Procesamiento en el backend\nEn `backend/server/retrieval/utils.py`:\n1. Se detecta el elemento `type == \"chat\"` en `files`\n2. Se recupera el chat por ID desde la BD (tabla `chat`)\n3. El historial del chat se formatea como bloque Markdown:\n```\n   ## Conversación de referencia\n   **Usuario**: ...\n   **Asistente**: ...\n   ```\n4. El bloque se inyecta al contexto del prompt antes del mensaje del usuario\n## Visibilidad en la UI\nLa opción de adjuntar chats de referencia aparece en el `InputMenu` y depende del permiso `chat.file_upload` (no del historial local del sidebar). El componente `InputMenu/Chats.svelte` hace su propia llamada a `getChatList` al abrirse, independientemente del estado del sidebar.\n## Relacionado\n- [[Módulo de retrieval]] — El módulo donde se procesa el chat referenciado\n- [[Grupos y permisos]] — El permiso `chat.file_upload` que controla la visibilidad\n- [[MOC - RAG y Búsqueda Vectorial]] — Índice del cluster de RAG",
+          "content_ltks": "titl chats de referent type concept tags coels intelligent rag chat referent context ali referenc chats chats adjunt chat com context description usar cuand necesit á s entend c ó mo un usuari pued adjunt una conversaci ón previ com context en un nuev mensaj en coels intelligent estad vigent chats de referent qu é es los chats de referent permit a los usuari adjunt convers previ com context extend al envi un nuev mensaj el chat adjunt se recuper se formate y se inyect en el prompt del model junt con el mensaj actual c ó mo se adjunt en el client el chat referenci viaj com un element de tip chat dentr del array fil del payl del socket json fil type chat id chat uuid del chat referenci content bas á ndot en la conversaci ón adjunt proces en el backend en backend serv retrieval utils py 1 se detect el element type chat en fil 2 se recuper el chat por id desd la bd tabl chat 3 el historial del chat se formate com bloqu markdown conversaci ón de referent usuari asistent 4 el bloqu se inyect al context del prompt antes del mensaj del usuari visibil en la ui la opci ón de adjunt chats de referent aparec en el inputmenu y depend del permis chat fil _ uplo no del historial local del sideb el component inputmenu chats svelt hac su propi llam a getchatlist al abrirs independient del estad del sideb relacion m ó dul de retrieval el m ó dul dond se proces el chat referenci grup y permis el permis chat fil _ uplo que control la visibil moc rag y b ú squed vectorial í ndic del clust de rag",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "document_keyword": "Chats de referencia.md",
+          "id": "7b5391d81f91906d",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.29328163720477296,
+          "tag_kwd": [],
+          "term_similarity": 0.060436910292532724,
+          "vector_similarity": 0.836586
+        },
+        {
+          "content": "---\ntitle: \"PostgreSQL como base de datos\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, postgresql, base-de-datos]\naliases: [Migración a PostgreSQL, PostgreSQL decision]\ndescription: \"Usar cuando necesitás entender por qué se usa PostgreSQL en lugar de SQLite y cómo se gestiona el esquema con Alembic.\"\nestado: vigente\n---\n# PostgreSQL como base de datos\n## Qué es\nEl upstream Open WebUI usa SQLite por defecto. COELSA.Intelligent **migró a PostgreSQL** para soportar múltiples workers concurrentes, backups corporativos y el modelo de despliegue en [[OpenShift]].\n## Configuración\n```env\nDATABASE_URL=postgresql://user:pass@host:5432/coelsa_intelligent\n```\nEl esquema se gestiona con **Alembic**. Las migraciones están en `backend/server/migrations/`. El servidor ejecuta `alembic upgrade head` automáticamente al arrancar (via `run_migrations()` en `config.py`).\n## Por qué PostgreSQL\n- SQLite no admite múltiples writers concurrentes; con uvicorn en múltiples workers genera errores de lock.\n- PostgreSQL tiene soporte corporativo, backup integrado con las herramientas de COELSA, y funcionalidades como JSON columns (usadas en varios modelos).\n- La versión mínima requerida es **14+** por el uso de `json_agg` y funciones de ventana.\n## Stack de acceso a datos\n- **ORM**: SQLAlchemy (con `get_db()` como context manager de sesión)\n- **Migraciones**: Alembic (ver [[Migraciones Alembic]])\n- **Modelos**: `backend/server/models/` — User, Chat, File, Knowledge, Group, Memory, etc.\n## Relacionado\n- [[PostgreSQL]] — Nota de stack con versiones y configuración de conexión\n- [[Migraciones Alembic]] — Cómo gestionar cambios de esquema\n- [[MOC - Arquitectura]] — Contexto de la decisión en el sistema\n- [[MOC - Decisiones]] — D-02 en el índice de decisiones\n- [[Redis para WebSockets]] — La otra pieza de infraestructura de persistencia del sistema",
+          "content_ltks": "titl postgresql com bas de dat type decision tags coels intelligent arquitectur postgresql bas de dat ali migraci ón a postgresql postgresql decision description usar cuand necesit á s entend por qu é se usa postgresql en lug de sqlit y c ó mo se gestion el esquem con alembic estad vigent postgresql com bas de dat qu é es el upstream open webui usa sqlit por defect coels intelligent migr ó a postgresql par soport m ú ltipl workers concurrent backups corpor y el model de desplieg en openshift configuraci ón env datab _ url postgresql user pass host 5432 coels _ intelligent el esquem se gestion con alembic las migracion est á n en backend serv migrations el servidor ejecut alembic upgrad head autom á tic al arranc via run _ migrations en config py por qu é postgresql sqlit no admit m ú ltipl writers concurrent con uvicorn en m ú ltipl workers gener error de lock postgresql tien soport corpor backup integr con las herramient de coels y funcional com json columns usad en vari model la versi ón m í nim requer es 14 por el uso de json _ agg y funcion de ventan stack de acces a dat orm sqlalchemy con get _ db com context manag de sesi ón migracion alembic ver migracion alembic model backend serv models user chat fil knowledg group memory etc relacion postgresql not de stack con version y configuraci ón de conexi ón migracion alembic c ó mo gestion cambi de esquem moc arquitectur context de la decisi ón en el sistem moc decision d 02 en el í ndic de decision redis par websockets la otra piez de infraestructur de persistent del sistem",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "document_keyword": "PostgreSQL como base de datos.md",
+          "id": "34de9ba9b4c0081e",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2901541943165572,
+          "tag_kwd": [],
+          "term_similarity": 0.07743549330936746,
+          "vector_similarity": 0.78649783
+        },
+        {
+          "content": "---\ntitle: \"Cinco colecciones Milvus\"\ntype: referencia\ntags: [coelsa-intelligent, rag, milvus, colecciones]\naliases: [Colecciones Milvus, Milvus collections COELSA]\ndescription: \"Usar cuando necesitás saber a qué colección de Milvus va un tipo específico de contenido (archivos, knowledge, memorias, web, URLs).\"\nestado: vigente\n---\n# Cinco colecciones Milvus\n## Qué es\nEn el esquema de [[Milvus multi-tenancy]], hay exactamente **5 colecciones fijas** en [[Milvus]]. Cada tipo de contenido tiene su colección designada.\n## Las colecciones\n<table>\n<thead>\n<tr>\n<th>Colección</th>\n<th>Contenido</th>\n<th>Cuándo se usa</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>_knowledge</code></td>\n<td>Chunks de bases de conocimiento</td>\n<td>Al embedir una Knowledge base</td>\n</tr>\n<tr>\n<td><code>_files</code></td>\n<td>Chunks de archivos subidos por usuarios</td>\n<td>Al embedir un archivo de chat</td>\n</tr>\n<tr>\n<td><code>_memories</code></td>\n<td>Memorias de usuario</td>\n<td>Al guardar o recuperar memorias personalizadas</td>\n</tr>\n<tr>\n<td><code>_web_search</code></td>\n<td>Resultados de búsqueda web embebidos</td>\n<td>Al indexar resultados de búsqueda para RAG</td>\n</tr>\n<tr>\n<td><code>_hash_based</code></td>\n<td>URLs: páginas web, videos YouTube</td>\n<td>Al indexar contenido de URLs</td>\n</tr>\n</tbody>\n</table>\n## Cómo se determina la colección\nLa función `_get_collection_and_resource_id()` en `milvus_multitenancy.py` analiza el nombre o el tipo del recurso para determinar a qué colección pertenece. Usa **convenciones de prefijos** en los nombres generados por el frontend.\n**Regla crítica**: El frontend y esta función deben estar en sincronía. Si el frontend cambia cómo nombra los recursos, esta función debe actualizarse.",
+          "content_ltks": "titl cinc coleccion milvus type referent tags coels intelligent rag milvus coleccion ali coleccion milvus milvus collections coels description usar cuand necesit á s sab a qu é colecci ón de milvus va un tip espec í fic de conten archiv knowledg memori web urls estad vigent cinc coleccion milvus qu é es en el esquem de milvus multi tenancy hay exact 5 coleccion fij en milvus cad tip de conten tien su colecci ón design las coleccion the colecci ón conten cu á ndo se usa the tbody cod _ knowledg cod chunks de bas de conoc al embed una knowledg bas cod _ fil cod chunks de archiv sub por usuari al embed un archiv de chat cod _ memori cod memori de usuari al guard o recuper memori personaliz cod _ web _ search cod result de b ú squed web embeb al index result de b ú squed par rag cod _ hash _ bas cod urls p á gin web vide youtub al index conten de urls tbody c ó mo se determin la colecci ón la funci ón _ get _ collection _ and _ resourc _ id en milvus _ multitenancy py analiz el nombr o el tip del recurs par determin a qu é colecci ón pertenec usa convencion de prefij en los nombr gener por el frontend regl cr í tic el frontend y esta funci ón deb estar en sincron í a si el frontend cambi c ó mo nombr los recurs esta funci ón deb actualiz",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16f90544d33011f1a8c8134f9287b83e",
+          "document_keyword": "Cinco colecciones Milvus.md",
+          "id": "16b21425566fd2f9",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2894287553165572,
+          "tag_kwd": [],
+          "term_similarity": 0.07743549330936746,
+          "vector_similarity": 0.7840797
+        },
+        {
+          "content": "---\ntitle: \"SPA con SSR deshabilitado\"\ntype: decision\ntags: [coelsa-intelligent, arquitectura, ssr, sveltekit, seguridad]\naliases: [SSR deshabilitado, SPA mode, ssr false]\ndescription: \"Usar cuando necesitás entender por qué la app es una SPA sin SSR, qué implica para seguridad, y por qué el CVE de markdown-it no aplica.\"\nestado: vigente\n---\n# SPA con SSR deshabilitado\n## Qué es\nCOELSA.Intelligent tiene el SSR (Server-Side Rendering) de [[SvelteKit 2]] **explícitamente deshabilitado**:\n```javascript\n// src/routes/+layout.js\nexport const ssr = false;\n```\nEsto convierte la aplicación en una **SPA pura**: el servidor solo sirve el HTML inicial y los assets; toda la lógica de renderizado corre en el navegador del cliente.\n## Por qué está deshabilitado\nDos razones principales:\n1. **Modelo de despliegue**: COELSA.Intelligent usa un backend FastAPI separado en otro proceso/contenedor. El SSR de SvelteKit requeriría que el propio servidor Node.js hiciera llamadas al backend durante el renderizado, complicando el modelo de despliegue en [[OpenShift]].\n2. **Seguridad (CVE-2025-7969)**: La vulnerabilidad XSS de `markdown-it` afecta únicamente contextos SSR. Al tener SSR deshabilitado, este vector de ataque no existe. Ver [[CVE-2025-7969 markdown-it]].\n## Implicaciones\n- La app **no funciona sin JavaScript** en el cliente. No es un trade-off relevante para el caso de uso (chat corporativo interno).\n- Los [[CSP con nonces|nonces CSP]] **no son compatibles** con el modo de desarrollo de SvelteKit (`npm run dev`), que genera scripts dinámicamente en el navegador. Los nonces solo se activan en OpenShift (`ENABLE_CSP_NONCES=true`).\n- El build produce assets estáticos que se sirven desde el backend FastAPI como archivos estáticos.\n## Relacionado\n- [[SvelteKit 2]] — Framework frontend donde se configura el modo SPA\n- [[CSP con nonces]] — Los nonces solo funcionan en producción por esta razón",
+          "content_ltks": "titl spa con ssr deshabilit type decision tags coels intelligent arquitectur ssr sveltekit segur ali ssr deshabilit spa mod ssr fals description usar cuand necesit á s entend por qu é la app es una spa sin ssr qu é implic par segur y por qu é el cve de markdown it no aplic estad vigent spa con ssr deshabilit qu é es coels intelligent tien el ssr serv sid rendering de sveltekit 2 expl í cit deshabilit javascript src rout layout js export const ssr fals esto conviert la aplicaci ón en una spa pur el servidor sol sirv el html inicial y los assets tod la l ó gic de renderiz corr en el naveg del client por qu é est á deshabilit dos razon principal 1 model de desplieg coels intelligent usa un backend fastapi separ en otro proces contenedor el ssr de sveltekit requer í a que el propi servidor nod js hic llam al backend durant el renderiz complic el model de desplieg en openshift 2 segur cve 2025 7969 la vulner xss de markdown it afect ú nic context ssr al ten ssr deshabilit este vector de ataqu no exist ver cve 2025 7969 markdown it implic la app no funcion sin javascript en el client no es un trad off relev par el cas de uso chat corpor intern los csp con nonc nonc csp no son compat con el mod de desarroll de sveltekit npm run dev que gener scripts din á mic en el naveg los nonc sol se activ en openshift enabl _ csp _ nonc tru el build produc assets est á tic que se sirv desd el backend fastapi com archiv est á tic relacion sveltekit 2 framework frontend dond se configur el mod spa csp con nonc los nonc sol funcion en producci ón por esta raz ón",
+          "dataset_id": "16512752d33011f1a8c8134f9287b83e",
+          "doc_type_kwd": "",
+          "document_id": "16784a94d33011f1a8c8134f9287b83e",
+          "document_keyword": "SPA con SSR deshabilitado.md",
+          "id": "f78d2a45f1000433",
+          "image_id": "",
+          "important_keywords": [],
+          "mom_id": "",
+          "positions": [
+            [
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "row_id": null,
+          "similarity": 0.2892143153165572,
+          "tag_kwd": [],
+          "term_similarity": 0.07743549330936746,
+          "vector_similarity": 0.7833649
+        }
+      ],
+      "doc_aggs": [
+        {
+          "count": 2,
+          "doc_id": "165b4458d33011f1a8c8134f9287b83e",
+          "doc_name": "Flujo de subida de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f90544d33011f1a8c8134f9287b83e",
+          "doc_name": "Cinco colecciones Milvus.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16784a94d33011f1a8c8134f9287b83e",
+          "doc_name": "SPA con SSR deshabilitado.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "1654b1e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Borrado en cascada de archivos.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166a437cd33011f1a8c8134f9287b83e",
+          "doc_name": "Fork de Open WebUI.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "166f6974d33011f1a8c8134f9287b83e",
+          "doc_name": "Idioma por defecto es-AR.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16dfc552d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Stack.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16fdf644d33011f1a8c8134f9287b83e",
+          "doc_name": "Módulo de retrieval.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e4e9b0d33011f1a8c8134f9287b83e",
+          "doc_name": "MCP y tool calling.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e9e4e2d33011f1a8c8134f9287b83e",
+          "doc_name": "Routing de modelos IA.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16e24f02d33011f1a8c8134f9287b83e",
+          "doc_name": "Cadena SearXNG Context Forge.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "171a4510d33011f1a8c8134f9287b83e",
+          "doc_name": "Milvus.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16f41d18d33011f1a8c8134f9287b83e",
+          "doc_name": "Aislamiento por resource_id.md"
+        },
+        {
+          "count": 2,
+          "doc_id": "16d0f284d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Decisiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f68fc6d33011f1a8c8134f9287b83e",
+          "doc_name": "Chats de referencia.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1671ecc6d33011f1a8c8134f9287b83e",
+          "doc_name": "PostgreSQL como base de datos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b467e0d33011f1a8c8134f9287b83e",
+          "doc_name": "Internacionalización i18n.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16884264d33011f1a8c8134f9287b83e",
+          "doc_name": "Roles de usuario.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16aafb1ad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones frontend críticos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1714fea2d33011f1a8c8134f9287b83e",
+          "doc_name": "FastAPI y uvicorn.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d87edcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Modelos IA y Routing.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17293a7ad33011f1a8c8134f9287b83e",
+          "doc_name": "SvelteKit 2.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16851378d33011f1a8c8134f9287b83e",
+          "doc_name": "JWT y sesiones.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16b9c2dad33011f1a8c8134f9287b83e",
+          "doc_name": "Patrones de componentes Svelte.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "165fd8d8d33011f1a8c8134f9287b83e",
+          "doc_name": "Scheduler de limpieza.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "168284aad33011f1a8c8134f9287b83e",
+          "doc_name": "Grupos y permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a5b100d33011f1a8c8134f9287b83e",
+          "doc_name": "Loguru y logging.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16cb37ead33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Autenticación y Permisos.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c8d7acd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Arquitectura.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "166cd38ad33011f1a8c8134f9287b83e",
+          "doc_name": "Headers de usuario COELSA.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a339f2d33011f1a8c8134f9287b83e",
+          "doc_name": "Ejecución local.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16daf63ad33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - RAG y Búsqueda Vectorial.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1721d17cd33011f1a8c8134f9287b83e",
+          "doc_name": "OpenShift.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16beaf52d33011f1a8c8134f9287b83e",
+          "doc_name": "Surface Containers.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16dd5dbcd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Seguridad.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16c66f80d33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Almacenamiento.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1695c72cd33011f1a8c8134f9287b83e",
+          "doc_name": "Pipelines Azure DevOps.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16eeea46d33011f1a8c8134f9287b83e",
+          "doc_name": "Validación de urlIdx.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "169b0340d33011f1a8c8134f9287b83e",
+          "doc_name": "COELSA.Intelligent - Home.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16d38a6cd33011f1a8c8134f9287b83e",
+          "doc_name": "MOC - Desarrollo.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16e7761cd33011f1a8c8134f9287b83e",
+          "doc_name": "PyTorch CPU-only.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "171cb944d33011f1a8c8134f9287b83e",
+          "doc_name": "MinIO S3.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17179036d33011f1a8c8134f9287b83e",
+          "doc_name": "LiteLLM proxy.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16ae2042d33011f1a8c8134f9287b83e",
+          "doc_name": "Dark mode reglas.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1707eac8d33011f1a8c8134f9287b83e",
+          "doc_name": "Hardening ReDoS.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16a03f7cd33011f1a8c8134f9287b83e",
+          "doc_name": "Agregar router REST.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "17030102d33011f1a8c8134f9287b83e",
+          "doc_name": "CVE-2025-7969 markdown-it.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "1712788ad33011f1a8c8134f9287b83e",
+          "doc_name": "Azure AD OAuth.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "170fee94d33011f1a8c8134f9287b83e",
+          "doc_name": "Riesgos de seguridad aceptados.md"
+        },
+        {
+          "count": 1,
+          "doc_id": "16f1a272d33011f1a8c8134f9287b83e",
+          "doc_name": "OKF-INDEX.md"
+        }
+      ],
+      "total": 64
+    }
+  },
+  "response_bytes": 21389
+}
