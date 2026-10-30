@@ -1,6 +1,6 @@
 # Siguiente ensayo · generación local con Saluki
 
-Preparación del 29/10/2026. **El modelo no se instaló ni se ejecutó en esta Mac.** Los archivos de esta carpeta son un perfil y una plantilla para el próximo ensayo; no constituyen una integración terminada ni casos aprobados.
+Preparación del 29/10/2026. **Saluki no se instaló ni se ejecutó en esta Mac.** Los archivos de esta carpeta son un perfil y una plantilla para el próximo ensayo; no constituyen una integración terminada ni casos aprobados.
 
 ## Decisión
 
@@ -38,3 +38,7 @@ El contexto incluye entrada y salida: para este primer perfil usar una consulta 
 6. Verificar formato, IDs y citas; QA revisa respaldo, suficiencia y correcciones. La validación humana sigue pendiente hasta completar este paso.
 
 No se ejecutaron descargas, actualizaciones, importaciones ni solicitudes generativas como parte de esta preparación.
+
+## Ensayo posterior con modelos pequeños
+
+Se instaló Qwen3.5 de 0.8B y se lo comparó con el 4B ya disponible. Ver [resultados del ensayo](RESULTADO-MODELOS-PEQUENOS.md). La ejecución de esos modelos no completa la evaluación de Saluki ni la aprobación de QA.

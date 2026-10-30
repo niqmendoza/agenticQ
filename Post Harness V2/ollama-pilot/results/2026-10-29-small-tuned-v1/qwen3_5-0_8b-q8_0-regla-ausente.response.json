@@ -1,0 +1,28 @@
+{
+  "model": "qwen3.5:0.8b-q8_0",
+  "case": "regla-ausente",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 7946550916,
+  "load_duration": 798084750,
+  "prompt_eval_count": 846,
+  "prompt_eval_duration": 548443000,
+  "eval_count": 503,
+  "eval_duration": 6593683000,
+  "content": "{\n  \"cases\": [\n    {\n      \"title\": \"Caso de prueba: ¿Se cierra la sesión del usuario pending tras inactividad?\",\n      \"preconditions\": [\n        \"El documento proporcionado (Roles de usuario.md) no contiene especificaciones sobre el tiempo de inactividad para cerrar sesiones o cierren sessions con `pending` rol.\",\n        \"La evaluación requiere un análisis de los roles y restricciones definidas en el texto.\"\n      ],\n      \"steps\": [\n        \"Se examina la tabla de capacidades principales del usuario 'pending' (Solo puede ver la pantalla de espera; no puede usar el chat).\",\n        \"Se analiza si se menciona una restrição para las funcionalidades activas o un mecanismo temporal que permita mantener sesión.\",\n        \"Se verifica la sección sobre tablas restringidas y acceso contenido en Settings.\",\n        \"Si la ausencia de restricción temporal significa una inactividad prolongada, se aplica el criterio estándar: cierre de sesión después de 15 minutos de inactividad si no hay otro há\",\n      \"\",\n      \"ejemplo_resultado_json_true_false_0\"\n    ],\n    \"expected\": \"false\",\n  \"evidence\": [\n    {\n      \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n      \"quote\": \"En la vista **Settings**, las siguientes tabs están restringidas a `admin`: \\n- **Personalization** — configuración visual de la app\\n- **Audio** — configuración de síntesis y transcripción de voz\\nLos usuarios `user` ven estas tabs pero no pueden acceder a su contenido.\\n## Funcionalidades deshabilitas\"\n    },\n    { \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n      \"quote\": \"(Un admin debe cambiar el rol a `user` para habilitar el acceso).\"\n    }\n    ]\n  }\n],\n\"open_questions\": [\n  \"¿Qué pasa en la interfaz de control (Settings) si se accede con un rol `pending` y las tablas restringidas que los deshabilitan no están activadas?\"\n]\n}",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [
+      "quote_not_literal",
+      "quote_not_literal"
+    ],
+    "semantic_validation": "not_performed",
+    "case_count": 1,
+    "open_question_count": 1
+  },
+  "seconds": 7.948,
+  "max_sampled_ollama_size_bytes": 1099935250,
+  "max_sampled_ollama_vram_bytes": 1099935250,
+  "memory_samples": 35
+}

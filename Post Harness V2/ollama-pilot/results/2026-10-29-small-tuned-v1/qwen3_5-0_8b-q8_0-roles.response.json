@@ -1,0 +1,28 @@
+{
+  "model": "qwen3.5:0.8b-q8_0",
+  "case": "roles",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 9128863584,
+  "load_duration": 1300943750,
+  "prompt_eval_count": 845,
+  "prompt_eval_duration": 527135999,
+  "eval_count": 561,
+  "eval_duration": 7286937000,
+  "content": "{\n  \"cases\": [\n    {\n      \"title\": \"Caso: Acceso al estado 'pending'\",\n      \"preconditions\": [],\n      \"steps\": [\"Usuario intenta iniciar sesión con rol `pending`\", \"Verificación de estado del JWT y campos en el contexto\"],\n      \"expected\": \"El usuario se autenticas pero muestra pantalla de espera sin ser able a usar el chat.\\nExpected UI: Tab 'Settings' visible.\",\n      \"evidence\": [\n        {\n          \"passage_id\": \",pdf_text\\\": \\\"Usar cuando necesitás saber qué puede hacer un usuario según su rol en COELSA.Intelligent o cuándo restringir acceso a una funcionalidad.\\\\nestado: vigente\\n---\\n# Roles de usuario\\n## Qué es\\nCOELSA.Intelligent define tres roles de usuario, almacenados en el campo `role` del modelo `User`:\\\\ntable{\\n<thead>\\n<tr>\\n<th>Rol</th>\\n<th>Descripción</th>\\n<th>Capacidades principales</th\\r\\n</tr>\\n</thead>\\n<tbody>\\n<tr>\\n<td><code>admin</code></td>\\n<td>Administrador del sistema</td>\\n<td>Acceso total; gestión de usuarios, grupos, modelos, configuración</td>\\n</tr>\\n<tr>\\n<td><code>user</code></td>\\n<td>Usuario activo</td>\\n<td>Chat, upload de archivos, uso de bases de conocimiento según permisos</td>\\n</tr>\\n<tr>\\n<td><code>pending</code></td>\\n<td>En espera de aprobación</td>\\n<td>Solo puede ver la pantalla de espera; no puede usar el chat</td>\\n</tr>\\n</tbody>\\n</table>\",\n          \"quote\": \"\\\"Solo puede ver la pantalla de espera\\\" en el fragmento \\\"El rol pending en COELSA.\\\" es un concepto del documento.\\\"\\n        }]\\n      ],\\n      \"\n    },\n    {\n      \"passage_id\": \"\",\"quote\": \"\\\"En la Vista de Settings, las siguientes tabs están restringidas a admin\\\".\\\",\\n      \"\n    }\n  ]\n}\n\n   \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t],\"open_questions\":[\n            \"${user} intentó usar el chat por su rol 'pending'. En vista de Settings, ¿qué tab está visible? ${admin_changes_role}, se permite que usuario verifique y use chat.\"\n          ]\n        }",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [
+      "unknown_passage",
+      "unknown_passage"
+    ],
+    "semantic_validation": "not_performed",
+    "case_count": 1,
+    "open_question_count": 1
+  },
+  "seconds": 9.13,
+  "max_sampled_ollama_size_bytes": 1099935250,
+  "max_sampled_ollama_vram_bytes": 1099935250,
+  "memory_samples": 38
+}

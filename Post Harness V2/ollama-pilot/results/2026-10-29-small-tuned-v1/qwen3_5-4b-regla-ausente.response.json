@@ -1,0 +1,25 @@
+{
+  "model": "qwen3.5:4b",
+  "case": "regla-ausente",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 7867440916,
+  "load_duration": 1844177708,
+  "prompt_eval_count": 846,
+  "prompt_eval_duration": 3290068000,
+  "eval_count": 70,
+  "eval_duration": 2704882000,
+  "content": "{\n  \"cases\": [],\n  \"open_questions\": [\n    \"Los fragmentos entregados definen el rol `pending` como un estado donde el usuario 'solo puede ver la pantalla de espera; no puede usar el chat'. Sin embargo, carece de evidencia sobre cuánto tiempo (\"\n    ]\n}",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [],
+    "semantic_validation": "not_performed",
+    "case_count": 0,
+    "open_question_count": 1
+  },
+  "seconds": 7.871,
+  "max_sampled_ollama_size_bytes": 3181547355,
+  "max_sampled_ollama_vram_bytes": 3181547355,
+  "memory_samples": 29
+}

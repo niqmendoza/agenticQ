@@ -1,0 +1,27 @@
+{
+  "model": "qwen3.5:4b",
+  "case": "url-contraejemplo",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 17807398958,
+  "load_duration": 1616557666,
+  "prompt_eval_count": 854,
+  "prompt_eval_duration": 3193264000,
+  "eval_count": 331,
+  "eval_duration": 12966688000,
+  "content": "{\n  \"cases\": [\n    {\n      \"title\": \"Caso coherente con la sugerencia\",\n      \"preconditions\": [\n        \"Existe un archivo en MinIO.\"\n      ],\n      \"steps\": [\n        \"Generar una URL firmada para el archivo.\",\n        \"Iniciar sesión en el cliente como usuario legítimo.\",\n        \"Hacer una petición HTTP GET usando la URL firmada generada (ej: `GET https://example.com/firmada`).\",\n        \"Cambiar los permisos del archivo desde 'public' a 'private' vía la interfaz de gestión o CLI anterior al envío de la segunda petición.\"\n      ],\n      \"expected\": \"El cliente recibe el objeto en respuesta HTTP (200), ya que el token fue emitido con una fecha anterior a la reutilización de los permisos.\",\"evidence\": [\n        {\n          \"passage_id\": \"P46fc513de5bdd9e207adc6eb\",\n          \"quote\": \"\\\"si [[Control de acceso a recursos|access_control]] del archivo cambia, las URLs viejas siguen siendo válidas hasta su expiración pero no se generan nuevas\\\"\"\n        }\n      ]\n    }\n  ],\n  \"open_questions\": [\n    \"La sugerencia inicial establece que la URL debe dejar de funcionar 'inmediatamente', mientras que el documento confirma explícitamente que las URLs viejas mantienen su validez basada en su expiración,\"]\n}",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [
+      "quote_not_literal"
+    ],
+    "semantic_validation": "not_performed",
+    "case_count": 1,
+    "open_question_count": 1
+  },
+  "seconds": 17.809,
+  "max_sampled_ollama_size_bytes": 3181547355,
+  "max_sampled_ollama_vram_bytes": 3181547355,
+  "memory_samples": 78
+}

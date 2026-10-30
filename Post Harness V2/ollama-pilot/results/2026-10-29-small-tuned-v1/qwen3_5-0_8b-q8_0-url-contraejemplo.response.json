@@ -1,0 +1,29 @@
+{
+  "model": "qwen3.5:0.8b-q8_0",
+  "case": "url-contraejemplo",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 12112379125,
+  "load_duration": 797389250,
+  "prompt_eval_count": 854,
+  "prompt_eval_duration": 579272000,
+  "eval_count": 838,
+  "eval_duration": 10726118000,
+  "content": "{\n  \"cases\": [\n    {\n      \"title\": \"Caso prueba: URL presigned ya emitida pierde funcionalidad ante cambio de permisos\",\n      \"preconditions\": [\n        \"{document_id} dice que las URLs firmadas MinIO no generan nuevas con cambio de control, y esto genera un problema en el caso descrito. El ejemplo en open_questions indica una URL '\"\n      ],\n      \"steps\": [\n        \"1. Analiza la descripción del documento: \\\"Las URLs firmadas ... que no requieren que el cliente tenga credenciales del bucket\\\" sugieren que los clientes nunca reciben credenciales,\"],\"expected\": \"El código Python genera una URL presigned con fecha de expiración y se entrega a `s3_client`. Esta URL puede seguir válida (con su fecha limitadora) o no depender críticamente de las credenciales. El cambio de control en el archivo modifica los atributos del objeto, lo que afecta solo la descarga; sin embargo, una url presigned con su propia expiración y firma es legible a cualquier cliente externo.\",\n        \"evidence\": [\n          {\n            \"passage_id\": \"P17d9c8b4e2c5f3a1\",\n            \"quote\": \"{document_id} dice que las URLs firmadas MinIO ... son URLs de acceso temporal a objetos en [[MinIO S3]] que no requieren que el cliente tenga credenciales del bucket. El servidor firma la URL con las credenciales S3 y establece un tiempo de expiración.\"\n          }\n        ]\n      },\n      {\"title\": \"Open Questions\",\n        \"preconditions\": [\n          \"{open_questions}\"\n        ],\n        \"steps\": [\n          \"Afirmar la premisa: 'la URL ya emitida debe dejar de funcionar inmediatamente' sin verificar si existe una lógica de revalidación basada en las credenciales del bucket. El ejemplo \"\n        ],\"expected\": \"El prompt instruye que no se inventen requisitos, aprobaciones ni resultados ejecutados. La única regla respaldada es el contexto: los documentos mencionan URLs pre-signed como un concepto de seguridad temporal sin credenciales del cliente; no establece ninguna lógica de revalidación automática cuando la clave del bucket cambia.\",\n        \"evidence\": [\n          {\n            \"passage_id\": \"P46fc513de5bdd9e207adc6eb\",\n            \"quote\": \"{document_id}: \\\"Las URLs firmadas (presigned URLs) son URLs de acceso temporal a objetos en [[MinIO S3]] que no requieren que el cliente tenga credenciales del bucket. El servidor firma la URL con las credenciales S3 y establece un tiempo de expiración.\\\"\\\"\\\"\"\n          }\n        ]\n      },\n      {\n        \"title\": \"Obras\",\n        \"preconditions\": [\n          \"{open_questions}\"\n        ],\n        \"steps\": [\n          \"El prompt se refiere a revisar con open_questions el texto de una respuesta o comentario del QA. Sin embargo, la tarea pide 'Propón un solo caso coherente' y no 'Revisar esa sugerí\"],\"expected\": \"La solicitud original dice: 'Sugirió que... debe dejar de funcionar inmediatamente' y luego solicita revisar ese ejemplo contra el documento.\",\"evidence\": [\n          {\n            \"passage_id\": \"P46fc513de5bdd9e207adc6eb\",\n            \"quote\": \"{document_id}: \\\"Conviértase en una URL presigned... con la fecha de expiración en los query params. Solo es válida hasta esa fecha y solo para el objeto específico.\\\"\\\"\\\"\"\n          }\n        ]\n      }],\"open_questions\": []}",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [
+      "unknown_passage",
+      "quote_not_literal",
+      "quote_not_literal"
+    ],
+    "semantic_validation": "not_performed",
+    "case_count": 3,
+    "open_question_count": 0
+  },
+  "seconds": 12.113,
+  "max_sampled_ollama_size_bytes": 1099935250,
+  "max_sampled_ollama_vram_bytes": 1099935250,
+  "memory_samples": 56
+}

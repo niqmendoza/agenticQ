@@ -1,0 +1,58 @@
+{
+  "reviewer": "assistant_documentary_review_not_QA",
+  "qa_approval": "pending",
+  "scope": "Tres consignas, dos modelos, dos configuraciones. Una muestra por combinación; no benchmark general.",
+  "aggregate": [
+    {
+      "profile": "Inicial",
+      "model": "qwen3.5:0.8b-q8_0",
+      "json_complete": 1,
+      "runs": 3,
+      "stopped_by_length": 2,
+      "max_sampled_ollama_gib": 1.02,
+      "missing_rule_abstention": false
+    },
+    {
+      "profile": "Inicial",
+      "model": "qwen3.5:4b",
+      "json_complete": 3,
+      "runs": 3,
+      "stopped_by_length": 0,
+      "max_sampled_ollama_gib": 2.96,
+      "missing_rule_abstention": true
+    },
+    {
+      "profile": "Ajustada",
+      "model": "qwen3.5:0.8b-q8_0",
+      "json_complete": 3,
+      "runs": 3,
+      "stopped_by_length": 0,
+      "max_sampled_ollama_gib": 1.02,
+      "missing_rule_abstention": false
+    },
+    {
+      "profile": "Ajustada",
+      "model": "qwen3.5:4b",
+      "json_complete": 3,
+      "runs": 3,
+      "stopped_by_length": 0,
+      "max_sampled_ollama_gib": 2.96,
+      "missing_rule_abstention": true
+    }
+  ],
+  "observations": {
+    "initial_0_8_roles": "JSON y citas literales correctos; precondiciones dan acceso al chat a pending y se agregan acciones de video/audio no respaldadas.",
+    "initial_0_8_url": "Repite pasos y corta por longitud. Dentro de la salida pide verificar una revocación inmediata que contradice el documento.",
+    "initial_0_8_missing": "Repite precondiciones con los quince minutos de la consigna, sin una regla que los confirme; salida cortada.",
+    "initial_4_roles": "Restricción de pending correcta. Segundo caso parte de user y no demuestra el cambio por admin; una cita sintetiza celdas en vez de copiar texto literal.",
+    "initial_4_url": "Adopta rechazo inmediato y agrega 403/404, contradiciendo la fuente y la consigna.",
+    "initial_4_missing": "Devuelve cases vacío y preguntas sobre la regla no documentada.",
+    "tuned_0_8_roles": "Inventa referencias; no cubre la transición a user y agrega verificación de JWT y Settings sin respaldo para ese caso.",
+    "tuned_0_8_url": "Devuelve tres casos cuando se pidió uno, mezcla metainstrucciones y usa referencias inexistentes o citas no literales.",
+    "tuned_0_8_missing": "No respeta cases vacío y propone aplicar quince minutos como criterio estándar sin respaldo.",
+    "tuned_4_roles": "Recupera las reglas principales, pero devuelve tres casos frente a máximo dos; uno es una pregunta abierta. Hay citas envueltas en comillas y otra abreviada, distintas causas de rechazo literal.",
+    "tuned_4_url": "Reconoce vigencia de la URL y discrepancia con la sugerencia. Agrega HTTP 200 pese a la consigna y no explicita una segunda descarga después del cambio; requiere ajustes.",
+    "tuned_4_missing": "Se abstiene y conserva una pregunta, pero la pregunta queda recortada por el límite de caracteres del esquema."
+  },
+  "decision": "0.8B funciona en esta Mac; no adoptarlo como diseñador de casos con estas configuraciones. 4B es candidato para un ensayo acotado con QA, no aprobado. Mantener validación semántica y no publicar estos borradores."
+}

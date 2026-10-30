@@ -1,0 +1,171 @@
+{
+  "started_at": "2026-10-30T00:25:21.021360+00:00",
+  "scope": "Ensayo acotado del generador con fragmentos nativos conocidos y suficientes para evaluar tres consignas. Aísla el modelo: no evalúa retrieval en vivo ni sustituye revisión de QA. Segunda configuración: parámetros de texto recomendados por Qwen y formato acotado, después de observar repeticiones en la primera. No es una comparación ciega ni aísla el efecto de cada ajuste.",
+  "protocol_sha256": "9fc54182c5c59b7a60e27712192c0ead399ca37029489c7283a98e0925cccbc5",
+  "runs": [
+    {
+      "model": "qwen3.5:0.8b-q8_0",
+      "case": "roles",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 9128863584,
+      "load_duration": 1300943750,
+      "prompt_eval_count": 845,
+      "prompt_eval_duration": 527135999,
+      "eval_count": 561,
+      "eval_duration": 7286937000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [
+          "unknown_passage",
+          "unknown_passage"
+        ],
+        "semantic_validation": "not_performed",
+        "case_count": 1,
+        "open_question_count": 1
+      },
+      "seconds": 9.13,
+      "max_sampled_ollama_size_bytes": 1099935250,
+      "max_sampled_ollama_vram_bytes": 1099935250,
+      "memory_samples": 38
+    },
+    {
+      "model": "qwen3.5:0.8b-q8_0",
+      "case": "url-contraejemplo",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 12112379125,
+      "load_duration": 797389250,
+      "prompt_eval_count": 854,
+      "prompt_eval_duration": 579272000,
+      "eval_count": 838,
+      "eval_duration": 10726118000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [
+          "unknown_passage",
+          "quote_not_literal",
+          "quote_not_literal"
+        ],
+        "semantic_validation": "not_performed",
+        "case_count": 3,
+        "open_question_count": 0
+      },
+      "seconds": 12.113,
+      "max_sampled_ollama_size_bytes": 1099935250,
+      "max_sampled_ollama_vram_bytes": 1099935250,
+      "memory_samples": 56
+    },
+    {
+      "model": "qwen3.5:0.8b-q8_0",
+      "case": "regla-ausente",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 7946550916,
+      "load_duration": 798084750,
+      "prompt_eval_count": 846,
+      "prompt_eval_duration": 548443000,
+      "eval_count": 503,
+      "eval_duration": 6593683000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [
+          "quote_not_literal",
+          "quote_not_literal"
+        ],
+        "semantic_validation": "not_performed",
+        "case_count": 1,
+        "open_question_count": 1
+      },
+      "seconds": 7.948,
+      "max_sampled_ollama_size_bytes": 1099935250,
+      "max_sampled_ollama_vram_bytes": 1099935250,
+      "memory_samples": 35
+    },
+    {
+      "model": "qwen3.5:4b",
+      "case": "roles",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 34688745542,
+      "load_duration": 2346448583,
+      "prompt_eval_count": 845,
+      "prompt_eval_duration": 3126936000,
+      "eval_count": 773,
+      "eval_duration": 29198844000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [
+          "quote_not_literal",
+          "quote_not_literal",
+          "quote_not_literal",
+          "quote_not_literal",
+          "quote_not_literal"
+        ],
+        "semantic_validation": "not_performed",
+        "case_count": 3,
+        "open_question_count": 1
+      },
+      "seconds": 34.691,
+      "max_sampled_ollama_size_bytes": 3181547355,
+      "max_sampled_ollama_vram_bytes": 3181547355,
+      "memory_samples": 156
+    },
+    {
+      "model": "qwen3.5:4b",
+      "case": "url-contraejemplo",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 17807398958,
+      "load_duration": 1616557666,
+      "prompt_eval_count": 854,
+      "prompt_eval_duration": 3193264000,
+      "eval_count": 331,
+      "eval_duration": 12966688000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [
+          "quote_not_literal"
+        ],
+        "semantic_validation": "not_performed",
+        "case_count": 1,
+        "open_question_count": 1
+      },
+      "seconds": 17.809,
+      "max_sampled_ollama_size_bytes": 3181547355,
+      "max_sampled_ollama_vram_bytes": 3181547355,
+      "memory_samples": 78
+    },
+    {
+      "model": "qwen3.5:4b",
+      "case": "regla-ausente",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 7867440916,
+      "load_duration": 1844177708,
+      "prompt_eval_count": 846,
+      "prompt_eval_duration": 3290068000,
+      "eval_count": 70,
+      "eval_duration": 2704882000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [],
+        "semantic_validation": "not_performed",
+        "case_count": 0,
+        "open_question_count": 1
+      },
+      "seconds": 7.871,
+      "max_sampled_ollama_size_bytes": 3181547355,
+      "max_sampled_ollama_vram_bytes": 3181547355,
+      "memory_samples": 29
+    }
+  ],
+  "qa_review": "pending",
+  "copilot_usage": "not_used"
+}

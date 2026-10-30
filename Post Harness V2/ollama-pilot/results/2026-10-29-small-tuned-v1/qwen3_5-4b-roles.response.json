@@ -1,0 +1,31 @@
+{
+  "model": "qwen3.5:4b",
+  "case": "roles",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 34688745542,
+  "load_duration": 2346448583,
+  "prompt_eval_count": 845,
+  "prompt_eval_duration": 3126936000,
+  "eval_count": 773,
+  "eval_duration": 29198844000,
+  "content": "{\n  \"cases\": [\n    {\n      \"title\": \"UX: Restricción funcional para rol pending\",\n      \"preconditions\": [\n        \"El usuario tiene el rol `pending`.\",\n        \"Es nuevo y no ha solicitado acceso manualmente.\"\n      ],\n      \"steps\": [\n        \"Intento acceder al chat del sistema.\",\n        \"Seleccionar una opción de chat o intentar iniciar conversación.\"\n      ],\n      \"expected\": \"La funcionalidad de chat debe aparecer deshabilitada o mostrar un mensaje indicando que el acceso requiere aprobación pendiente. No se debe permitir la ejecución real de la tarea de mensajería.\",\n      \"evidence\": [\n        {\n          \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n          \"quote\": \"\\\"Solo puede ver la pantalla de espera; no puede usar el chat\\\"\"\n        }\n      ]\n    },\n    {\n      \"title\": \"UX: Liberación de accesos al cambiar rol a user\",\n      \"preconditions\": [\n        \"El usuario tiene inicialmente el rol `pending`.\",\n        \"Se ha completado la operación de cambio de rol a `user` mediante un administrador.\"\n      ],\n      \"steps\": [\n        \"Esperar que el estado del sistema se actualice tras el cambio de rol.\",\n        \"Intento acceder al chat nuevamente.\"\n      ],\n      \"expected\": \"La funcionalidad de chat debe habilitarse completamente, permitiendo interacciones normales.\",\n      \"evidence\": [\n        {\n          \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n          \"quote\": \"\\\"El usuario `user`... Chat\\\"\"\n        },\n        {\n          \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n          \"quote\": \"\\\"Un admin debe cambiar el rol a `user` para habilitar el acceso.\\\"\"\n        }\n      ]\n    },\n    {\n      \"title\": \"Pregunta abierta: Comportamiento de la UI frente al cambio de rol no solicitado por el usuario\",\n      \"preconditions\": [\n        \"Se tiene conocimiento de que un admin puede cambiar el rol sin notificación explícita del usuario.\",\n        \"Se observa una discrepancia potencial en el comportamiento UI.\"\n      ],\n      \"steps\": [\n        \"Identificar si existe una notificación visual al cambio de rol pendiente a user.\"\n      ],\n      \"expected\": \"Definir los requisitos sobre la comunicación de cambios de estado al usuario final.\",\n      \"evidence\": [\n        {\n          \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n          \"quote\": \"\\\"Un admin debe cambiar el rol a `user` para habilitar el acceso.\\\"\"\n        },\n        {\n          \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n          \"quote\": \"\\\"Los usuarios `user` ven estas tabs pero no pueden acceder a su contenido.\\\"\"\n        }\n      ]\n    }\n  ],\"open_questions\": [\n    \"¿Debería el usuario recibir una notificación explícita cuando un admin cambia su rol de pending a user?\"\n  ]}",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [
+      "quote_not_literal",
+      "quote_not_literal",
+      "quote_not_literal",
+      "quote_not_literal",
+      "quote_not_literal"
+    ],
+    "semantic_validation": "not_performed",
+    "case_count": 3,
+    "open_question_count": 1
+  },
+  "seconds": 34.691,
+  "max_sampled_ollama_size_bytes": 3181547355,
+  "max_sampled_ollama_vram_bytes": 3181547355,
+  "memory_samples": 156
+}

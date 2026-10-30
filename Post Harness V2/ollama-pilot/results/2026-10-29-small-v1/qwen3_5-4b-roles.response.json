@@ -1,0 +1,27 @@
+{
+  "model": "qwen3.5:4b",
+  "case": "roles",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 22523885167,
+  "load_duration": 3572233000,
+  "prompt_eval_count": 845,
+  "prompt_eval_duration": 3295640000,
+  "eval_count": 448,
+  "eval_duration": 15645544000,
+  "content": "{\n  \"cases\": [\n    {\n      \"title\": \"Verificación de restricciones de chat para rol pending\",\n      \"preconditions\": [\n        \"El usuario está autenticado con rol `pending`.\",\n        \"El usuario ha iniciado sesión por primera vez y requiere aprobación manual.\"\n      ],\n      \"steps\": [\n        \"Intentar iniciar una sesión de chat.\",\n        \"Observar la interfaz de chat.\"\n      ],\n      \"expected\": \"El chat no debe ser accesible; el usuario debe ver únicamente la pantalla de espera.\",\n      \"evidence\": [\n        {\n          \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n          \"quote\": \"Solo puede ver la pantalla de espera; no puede usar el chat\"\n        }\n      ]\n    },\n    {\n      \"title\": \"Verificación de habilitación de chat tras cambio de rol a user\",\n      \"preconditions\": [\n        \"El usuario tiene rol `user`.\",\n        \"El usuario ha iniciado sesión.\"\n      ],\n      \"steps\": [\n        \"Intentar iniciar una sesión de chat.\",\n        \"Observar la interfaz de chat.\"\n      ],\n      \"expected\": \"El chat debe ser accesible y funcional.\",\n      \"evidence\": [\n        {\n          \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n          \"quote\": \"Usuario activo: Chat, upload de archivos, uso de bases de conocimiento según permisos\"\n        }\n      ]\n    }\n  ],\n  \"open_questions\": [\n    \"¿Qué sucede si un admin intenta cambiar el rol de un usuario `pending` a `user` sin que el usuario haya iniciado sesión?\",\n    \"¿Existen otros estados intermedios entre `pending` y `user` que puedan afectar el acceso al chat?\"\n  ]\n}",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [
+      "quote_not_literal"
+    ],
+    "semantic_validation": "not_performed",
+    "case_count": 2,
+    "open_question_count": 2
+  },
+  "seconds": 22.527,
+  "max_sampled_ollama_size_bytes": 3181547355,
+  "max_sampled_ollama_vram_bytes": 3181547355,
+  "memory_samples": 92
+}

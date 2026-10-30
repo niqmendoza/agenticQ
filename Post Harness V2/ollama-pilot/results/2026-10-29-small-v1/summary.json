@@ -1,0 +1,153 @@
+{
+  "started_at": "2026-10-30T00:23:42.477051+00:00",
+  "scope": "Ensayo acotado del generador con fragmentos nativos conocidos y suficientes para evaluar tres consignas. Aísla el modelo: no evalúa retrieval en vivo ni sustituye revisión de QA.",
+  "protocol_sha256": "3de04c01dc80f0702a3b7fb4cfd0e153776a105b3ee2fa213dfcedf797fddd21",
+  "runs": [
+    {
+      "model": "qwen3.5:0.8b-q8_0",
+      "case": "roles",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 14905180792,
+      "load_duration": 5217616167,
+      "prompt_eval_count": 845,
+      "prompt_eval_duration": 801795000,
+      "eval_count": 751,
+      "eval_duration": 8877996000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [],
+        "semantic_validation": "not_performed",
+        "case_count": 2,
+        "open_question_count": 3
+      },
+      "seconds": 14.907,
+      "max_sampled_ollama_size_bytes": 1099935250,
+      "max_sampled_ollama_vram_bytes": 1099935250,
+      "memory_samples": 48
+    },
+    {
+      "model": "qwen3.5:0.8b-q8_0",
+      "case": "url-contraejemplo",
+      "done": true,
+      "done_reason": "length",
+      "total_duration": 15524540292,
+      "load_duration": 807277042,
+      "prompt_eval_count": 854,
+      "prompt_eval_duration": 552257000,
+      "eval_count": 1200,
+      "eval_duration": 14157627000,
+      "checks": {
+        "json_valid": false,
+        "structure_valid": false,
+        "citation_errors": [],
+        "semantic_validation": "not_performed"
+      },
+      "seconds": 15.526,
+      "max_sampled_ollama_size_bytes": 1099935250,
+      "max_sampled_ollama_vram_bytes": 1099935250,
+      "memory_samples": 73
+    },
+    {
+      "model": "qwen3.5:0.8b-q8_0",
+      "case": "regla-ausente",
+      "done": true,
+      "done_reason": "length",
+      "total_duration": 15402383000,
+      "load_duration": 797088500,
+      "prompt_eval_count": 846,
+      "prompt_eval_duration": 552161000,
+      "eval_count": 1200,
+      "eval_duration": 14044583000,
+      "checks": {
+        "json_valid": false,
+        "structure_valid": false,
+        "citation_errors": [],
+        "semantic_validation": "not_performed"
+      },
+      "seconds": 15.403,
+      "max_sampled_ollama_size_bytes": 1099935250,
+      "max_sampled_ollama_vram_bytes": 1099935250,
+      "memory_samples": 72
+    },
+    {
+      "model": "qwen3.5:4b",
+      "case": "roles",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 22523885167,
+      "load_duration": 3572233000,
+      "prompt_eval_count": 845,
+      "prompt_eval_duration": 3295640000,
+      "eval_count": 448,
+      "eval_duration": 15645544000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [
+          "quote_not_literal"
+        ],
+        "semantic_validation": "not_performed",
+        "case_count": 2,
+        "open_question_count": 2
+      },
+      "seconds": 22.527,
+      "max_sampled_ollama_size_bytes": 3181547355,
+      "max_sampled_ollama_vram_bytes": 3181547355,
+      "memory_samples": 92
+    },
+    {
+      "model": "qwen3.5:4b",
+      "case": "url-contraejemplo",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 17923920167,
+      "load_duration": 1342524083,
+      "prompt_eval_count": 854,
+      "prompt_eval_duration": 3081377000,
+      "eval_count": 381,
+      "eval_duration": 13493985000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [
+          "quote_not_literal"
+        ],
+        "semantic_validation": "not_performed",
+        "case_count": 1,
+        "open_question_count": 1
+      },
+      "seconds": 17.926,
+      "max_sampled_ollama_size_bytes": 3181547355,
+      "max_sampled_ollama_vram_bytes": 3181547355,
+      "memory_samples": 81
+    },
+    {
+      "model": "qwen3.5:4b",
+      "case": "regla-ausente",
+      "done": true,
+      "done_reason": "stop",
+      "total_duration": 8319658333,
+      "load_duration": 1598196833,
+      "prompt_eval_count": 846,
+      "prompt_eval_duration": 3121657000,
+      "eval_count": 104,
+      "eval_duration": 3573954000,
+      "checks": {
+        "json_valid": true,
+        "structure_valid": true,
+        "citation_errors": [],
+        "semantic_validation": "not_performed",
+        "case_count": 0,
+        "open_question_count": 2
+      },
+      "seconds": 8.322,
+      "max_sampled_ollama_size_bytes": 3181547355,
+      "max_sampled_ollama_vram_bytes": 3181547355,
+      "memory_samples": 33
+    }
+  ],
+  "qa_review": "pending",
+  "copilot_usage": "not_used"
+}

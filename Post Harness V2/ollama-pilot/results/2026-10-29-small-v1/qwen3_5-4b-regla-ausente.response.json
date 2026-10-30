@@ -1,0 +1,25 @@
+{
+  "model": "qwen3.5:4b",
+  "case": "regla-ausente",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 8319658333,
+  "load_duration": 1598196833,
+  "prompt_eval_count": 846,
+  "prompt_eval_duration": 3121657000,
+  "eval_count": 104,
+  "eval_duration": 3573954000,
+  "content": "{\n  \"cases\": [],\n  \"open_questions\": [\n    \"El documento no menciona un tiempo de inactividad específico para cerrar la sesión de usuarios con rol `pending`. Se requiere evidencia sobre la política de timeout de inactividad para este rol.\",\n    \"No se especifica si la sesión de un usuario `pending` se cierra automáticamente tras 15 minutos de inactividad o si requiere una acción explícita de un administrador.\"\n  ]\n}",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [],
+    "semantic_validation": "not_performed",
+    "case_count": 0,
+    "open_question_count": 2
+  },
+  "seconds": 8.322,
+  "max_sampled_ollama_size_bytes": 3181547355,
+  "max_sampled_ollama_vram_bytes": 3181547355,
+  "memory_samples": 33
+}

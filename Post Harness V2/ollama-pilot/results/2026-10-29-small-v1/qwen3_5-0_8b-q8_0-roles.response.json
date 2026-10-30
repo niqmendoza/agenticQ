@@ -1,0 +1,25 @@
+{
+  "model": "qwen3.5:0.8b-q8_0",
+  "case": "roles",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 14905180792,
+  "load_duration": 5217616167,
+  "prompt_eval_count": 845,
+  "prompt_eval_duration": 801795000,
+  "eval_count": 751,
+  "eval_duration": 8877996000,
+  "content": "{\n  \"cases\": [\n    {\n      \"title\": \"Caso 1: Usuario pending intenta usar el chat\",\n      \"preconditions\": [\n        \"El usuario `pending` inicia sesión en el chat\",\n        \"El usuario `pending` tiene acceso a la vista de chat\",\n        \"El usuario `pending` no tiene permisos de chat habilitados\"\n      ],\n      \"steps\": [\n        \"El usuario `pending` intenta enviar un mensaje de texto\",\n        \"El usuario `pending` intenta enviar un mensaje de archivo\",\n        \"El usuario `pending` intenta enviar un mensaje de imagen\",\n        \"El usuario `pending` intenta enviar un mensaje de video\",\n        \"El usuario `pending` intenta enviar un mensaje de audio\",\n        \"El usuario `pending` intenta enviar un mensaje de texto con formato de chat\"\n      ],\n      \"expected\": \"El usuario `pending` no puede realizar ninguna de las acciones de chat. La interfaz muestra una pantalla de espera o bloquea el envío de mensajes.\",\n      \"evidence\": [\n        {\n          \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n          \"quote\": \"Un usuario recién logeado por primera vez via Azure AD puede quedar en estado `pending` si la configuración requiere aprobación manual. Un admin debe cambiar el rol a `user` para habilitar el acceso.\"\n        }\n      ]\n    },\n    {\n      \"title\": \"Caso 2: Admin cambia el rol a user\",\n      \"preconditions\": [\n        \"El usuario `pending` ya está en el chat\",\n        \"El usuario `pending` tiene acceso a la vista de chat\",\n        \"El usuario `pending` no tiene permisos de chat habilitados\"\n      ],\n      \"steps\": [\n        \"El admin cambia el rol del usuario `pending` a `user`\",\n        \"El usuario `pending` intenta enviar un mensaje de texto\",\n        \"El usuario `pending` intenta enviar un mensaje de archivo\",\n        \"El usuario `pending` intenta enviar un mensaje de imagen\",\n        \"El usuario `pending` intenta enviar un mensaje de video\",\n        \"El usuario `pending` intenta enviar un mensaje de audio\",\n        \"El usuario `pending` intenta enviar un mensaje de texto con formato de chat\"\n      ],\n      \"expected\": \"El usuario `pending` ahora puede realizar todas las acciones de chat. La interfaz muestra la pantalla de chat con los mensajes enviados.\",\n      \"evidence\": [\n        {\n          \"passage_id\": \"Pbef6e2a6f4a41e236e72a901\",\n          \"quote\": \"Un usuario recién logeado por primera vez via Azure AD puede quedar en estado `pending` si la configuración requiere aprobación manual. Un admin debe cambiar el rol a `user` para habilitar el acceso.\"\n        }\n      ]\n    }\n  ],\n  \"open_questions\": [\n    \"¿Qué acciones específicas permite el usuario `pending` en la vista de chat según el rol `pending`?\",\n    \"¿Qué funcionalidades específicas están deshabilitadas para todos los roles en el fork de la aplicación?\",\n    \"¿Cómo se determina si un usuario tiene acceso a una funcionalidad de chat según su rol en COELSA?\"\n  ]\n}",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [],
+    "semantic_validation": "not_performed",
+    "case_count": 2,
+    "open_question_count": 3
+  },
+  "seconds": 14.907,
+  "max_sampled_ollama_size_bytes": 1099935250,
+  "max_sampled_ollama_vram_bytes": 1099935250,
+  "memory_samples": 48
+}

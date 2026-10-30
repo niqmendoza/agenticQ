@@ -1,0 +1,19 @@
+{
+  "sha256": {
+    "model-identities.json": "7ab39e9d69a646d9fa4695c09438901baa5f5042a94ed080ec12b8a2a4a1ae3a",
+    "protocol.json": "9fc54182c5c59b7a60e27712192c0ead399ca37029489c7283a98e0925cccbc5",
+    "qwen3_5-0_8b-q8_0-regla-ausente.request.json": "faa2069309af93de71ac951b2080a64b97a27630d019b0fc9b0776f9c674bf32",
+    "qwen3_5-0_8b-q8_0-regla-ausente.response.json": "00b0623878c6bb76b7e1e7e812bb13f643fb58ee6571ab6a1de12da4edbf20a7",
+    "qwen3_5-0_8b-q8_0-roles.request.json": "3862c949be4b2252613600b60f8a4ea882b73ce0bc20b563df2c0981056cd6b8",
+    "qwen3_5-0_8b-q8_0-roles.response.json": "3cbe09794afcf97c4fc78a0f798ecbbdc86467bada0bf13d5169a6e78ddbd0fe",
+    "qwen3_5-0_8b-q8_0-url-contraejemplo.request.json": "d258e964ce4ecad0d4506d7d0560c3a0930b4c519a9735460ffae56926f7004a",
+    "qwen3_5-0_8b-q8_0-url-contraejemplo.response.json": "9ef6376b752dde5133d021d35ffb8ec790b516a289de2cd7ef875e9d49497dda",
+    "qwen3_5-4b-regla-ausente.request.json": "8d6915ffd99c8e49c1e58fe39c09f8f9dfd8ebc9127f6ff37e9c6f90c43288f4",
+    "qwen3_5-4b-regla-ausente.response.json": "88b45dceeaa21640edf5c15389d072fbf3c230c45e03023643ade0f2be04c1b7",
+    "qwen3_5-4b-roles.request.json": "578046cfb89a7d6e2606b03c93fe78ef8f1d30a629eef16373b80e24004e7d0e",
+    "qwen3_5-4b-roles.response.json": "91fb2fc4a20e16600962f09f2b9e4406631bb1864323f861ca925d1d043f1977",
+    "qwen3_5-4b-url-contraejemplo.request.json": "2e379c2ffa4a3dbb9492107d9f845a4d60150065e90cd837cc47349af6c22f55",
+    "qwen3_5-4b-url-contraejemplo.response.json": "d48a5f4a859554ba9f84070a39a8dc4d0861e9bf9ccd351e02eef0e1e98c5314",
+    "summary.json": "172d0c2161962499c79cb93b5289f71fd0b259bf1cca7ebfbca82bd99af417ef"
+  }
+}

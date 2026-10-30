@@ -1,0 +1,27 @@
+{
+  "model": "qwen3.5:4b",
+  "case": "url-contraejemplo",
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 17923920167,
+  "load_duration": 1342524083,
+  "prompt_eval_count": 854,
+  "prompt_eval_duration": 3081377000,
+  "eval_count": 381,
+  "eval_duration": 13493985000,
+  "content": "{\n  \"cases\": [\n    {\n      \"title\": \"Validación de URLs firmadas tras cambio de permisos\",\n      \"preconditions\": [\n        \"Generar una URL firmada para un archivo específico con un tiempo de expiración futuro.\",\n        \"Modificar los permisos de acceso al archivo (ej. cambiar de público a privado o restringir el bucket).\"\n      ],\n      \"steps\": [\n        \"Intentar acceder al archivo utilizando la URL firmada generada previamente.\",\n        \"Observar la respuesta del servidor MinIO.\"\n      ],\n      \"expected\": \"El servidor debe rechazar la solicitud de acceso (ej. devolver 403 Forbidden o 404 Not Found) indicando que el objeto no es accesible, ya que la firma no refleja el nuevo estado de control de acceso.\",\n      \"evidence\": [\n        {\n          \"passage_id\": \"P46fc513de5bdd9e207adc6eb\",\n          \"quote\": \"Control de acceso: si el [[Control de acceso a recursos|access_control]] del archivo cambia, las URLs viejas siguen siendo válidas hasta su expiración pero no se generan nuevas\"\n        }\n      ]\n    }\n  ],\n  \"open_questions\": [\n    \"El documento establece que las URLs viejas 'siguen siendo válidas' hasta su expiración tras un cambio de permisos. ¿Qué significa 'válido' en este contexto técnico? ¿Significa que el cliente puede intentar la conexión sin error, pero que MinIO rechaza la operación en el backend? ¿O significa que la firma criptográfica permite el acceso y el cambio de permisos no afecta la validez de la firma?\"\n  ]\n}",
+  "checks": {
+    "json_valid": true,
+    "structure_valid": true,
+    "citation_errors": [
+      "quote_not_literal"
+    ],
+    "semantic_validation": "not_performed",
+    "case_count": 1,
+    "open_question_count": 1
+  },
+  "seconds": 17.926,
+  "max_sampled_ollama_size_bytes": 3181547355,
+  "max_sampled_ollama_vram_bytes": 3181547355,
+  "memory_samples": 81
+}

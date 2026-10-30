@@ -1,0 +1,19 @@
+{
+  "sha256": {
+    "model-identities.json": "7ab39e9d69a646d9fa4695c09438901baa5f5042a94ed080ec12b8a2a4a1ae3a",
+    "protocol.json": "3de04c01dc80f0702a3b7fb4cfd0e153776a105b3ee2fa213dfcedf797fddd21",
+    "qwen3_5-0_8b-q8_0-regla-ausente.request.json": "b01d0ac30c6939e02233b3fca29940cb3c9e6eb126d55232f329df94d53d161f",
+    "qwen3_5-0_8b-q8_0-regla-ausente.response.json": "802e0861311c6194b56adf5d6e2b0f9ea157fef1638d15a4670677fa1a6f57a1",
+    "qwen3_5-0_8b-q8_0-roles.request.json": "417e5a2b0e2939b1997d8469bce49d93f8c1909bc17e21c7292f730b32c4b37f",
+    "qwen3_5-0_8b-q8_0-roles.response.json": "122cbd44c4075c15a7a7f45c13f6c6a2aebec95686e62a0a0470568a9de3b722",
+    "qwen3_5-0_8b-q8_0-url-contraejemplo.request.json": "ca7c5100b514fdf4635e3a38f5cfb141a72c7d614f4233aeec36d48573d598b9",
+    "qwen3_5-0_8b-q8_0-url-contraejemplo.response.json": "585c58cdfeb84d4e650fa800fa705612d51922113aa065c15b6161cc3aafb666",
+    "qwen3_5-4b-regla-ausente.request.json": "94bee0955b7202399cb13e7969b1ee9379722f8227cf5dba1e072f0b5cf1decb",
+    "qwen3_5-4b-regla-ausente.response.json": "8903bf0745c7595bf2770d4e0e509ebebed6c6ec57aee3a853d6a318187a8ce5",
+    "qwen3_5-4b-roles.request.json": "ea422bfcd2eb741116c87837cf28d3c94316fcd1e573c23c1970deddad65e19a",
+    "qwen3_5-4b-roles.response.json": "2e2b4755da914c67cf99c598afe4d653ab14067dac6942590dc9d5bbfc719f45",
+    "qwen3_5-4b-url-contraejemplo.request.json": "f929e88525a341df1c2d7d7a00ad32fd8a35c43fbe9ecb208c1a0c52d16e1baf",
+    "qwen3_5-4b-url-contraejemplo.response.json": "2346bdd711a53113949b5047518f95dbdfab776ee69dff193be0fa2fea50ed46",
+    "summary.json": "cb915209177da8a53af6e427503887f020c4215c47205f55d0d2be504dc94160"
+  }
+}
