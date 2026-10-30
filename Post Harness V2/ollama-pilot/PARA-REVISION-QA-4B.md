@@ -240,4 +240,3 @@ El resultado esperado copia una regla documental seleccionada. La relación entr
 #### Alcance de la revisión
 
 QA revisa pertinencia, vigencia, coherencia de los pasos, cobertura y duplicados. Desarrollo permanece informado, sin aprobación obligatoria de los casos. El JSON conserva los hashes y los rangos de caracteres dentro del fragmento para comprobar las fuentes.
-
