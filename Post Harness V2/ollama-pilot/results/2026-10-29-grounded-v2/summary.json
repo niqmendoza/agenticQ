@@ -1,0 +1,65 @@
+{
+  "started_at": "2026-10-30T01:33:54.992700+00:00",
+  "scope": "Piloto exploratorio de integración local RAGFlow → contexto verificado → selección de reglas → borradores. Tres consignas de regresión y una nueva para el generador. Sin aprobación de QA ni publicación en Azure.",
+  "runs": [
+    {
+      "id": "roles",
+      "status": "completed",
+      "state": "needs_information",
+      "cases": 0,
+      "questions": 1,
+      "selected_rule_ids": [
+        "E4",
+        "E5"
+      ],
+      "model_calls": 2,
+      "prompt_tokens_native": 1520,
+      "output_tokens_native": 177,
+      "qa_review": "pending"
+    },
+    {
+      "id": "url-contraejemplo",
+      "status": "completed",
+      "state": "needs_information",
+      "cases": 0,
+      "questions": 2,
+      "selected_rule_ids": [
+        "E5"
+      ],
+      "model_calls": 2,
+      "prompt_tokens_native": 1855,
+      "output_tokens_native": 195,
+      "qa_review": "pending"
+    },
+    {
+      "id": "regla-ausente",
+      "status": "completed",
+      "state": "needs_information",
+      "cases": 0,
+      "questions": 1,
+      "selected_rule_ids": [],
+      "model_calls": 1,
+      "prompt_tokens_native": 1097,
+      "output_tokens_native": 125,
+      "qa_review": "pending"
+    },
+    {
+      "id": "idioma-nuevo",
+      "status": "completed",
+      "state": "draft_for_qa",
+      "cases": 2,
+      "questions": 2,
+      "selected_rule_ids": [
+        "E1",
+        "E2",
+        "E6",
+        "E9",
+        "E15"
+      ],
+      "model_calls": 2,
+      "prompt_tokens_native": 1765,
+      "output_tokens_native": 453,
+      "qa_review": "pending"
+    }
+  ]
+}

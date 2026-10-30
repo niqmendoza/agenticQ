@@ -57,3 +57,7 @@ python3 scripts/build_report.py
 Para reproducir todos los tests con presupuesto de tokens, usar un Python con tiktoken instalado. El ensayo empleó el entorno de medición existente `../Post Harness/.venv/bin/python`, sin instalar o modificar paquetes. El informe muestra contadores nativos por respuesta/turno aparte del conteo de documentos. `extract_usage.py` y `extract_transcript.py` exportan métricas/payloads permitidos de los rollouts locales sin copiar razonamiento ni texto system/developer; el formato local no se promete estable.
 
 Los números de las iteraciones 1 y 2 son históricos, congelados; la 3 es una nueva ejecución sobre el mismo mock. No son una prueba causal aleatorizada ni predicen facturación. No se ejecutó la feature ni la aplicación.
+
+## Borradores con modelo local
+
+`scripts/draft_cases.py` conecta el contexto con Qwen 4B y entrega borradores trazables para QA. Ver la [guía de generación](GUIA-GENERACION-4B.md), los [resultados del ensayo](ollama-pilot/RESULTADO-GENERACION-4B.md) y el [primer lote para revisar](ollama-pilot/PARA-REVISION-QA-4B.md). La suite ampliada tiene 57 tests; la validación semántica de QA y la publicación en Azure siguen pendientes.

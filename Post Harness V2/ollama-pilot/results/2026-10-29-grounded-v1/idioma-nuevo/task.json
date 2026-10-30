@@ -1,0 +1,5 @@
+{
+  "title": "Idioma inicial e idioma eliminado",
+  "request": "Proponé hasta dos casos: comprobar el idioma por defecto al abrir una sesión sin preferencia previa, y comprobar que en-US ya no está entre los idiomas ofrecidos. Guiate por la documentación; no inventes nombres de menús, mensajes ni endpoints.",
+  "max_cases": 2
+}

@@ -1,0 +1,5 @@
+{
+  "title": "Vigencia de un acceso temporal ya emitido",
+  "request": "QA sugirió que cambiar los permisos de un archivo debe invalidar inmediatamente una URL firmada que ya había sido emitida. Revisá esa sugerencia contra la documentación y proponé un único caso coherente con la regla real, indicando la discrepancia como pregunta abierta. Los pasos deben incluir usar la URL después del cambio. No inventes códigos HTTP.",
+  "max_cases": 1
+}

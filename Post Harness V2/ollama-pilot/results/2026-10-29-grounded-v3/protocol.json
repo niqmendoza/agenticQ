@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "scope": "Piloto exploratorio de integración local RAGFlow → contexto verificado → selección de reglas → borradores. Tres consignas de regresión y una nueva para el generador. Sin aprobación de QA ni publicación en Azure.",
+  "model": "qwen3.5:4b",
+  "retrieval_page_size": 2,
+  "cases": [
+    {
+      "id": "roles",
+      "query": "Roles de usuario pending pantalla de espera admin cambia rol user",
+      "task": {
+        "title": "Acceso al chat según rol",
+        "request": "Proponé como máximo dos casos: un usuario pending intenta usar el chat; luego un admin cambia su rol a user. El cambio por admin debe figurar entre los pasos de la transición. No inventes capacidades, mensajes, endpoints ni códigos HTTP.",
+        "max_cases": 2
+      },
+      "review_criteria": [
+        "Pending no usa chat y sólo ve espera",
+        "Cambio a user figura en pasos",
+        "No agrega capacidades no documentadas"
+      ]
+    },
+    {
+      "id": "url-contraejemplo",
+      "query": "URLs firmadas MinIO access_control URLs viejas siguen válidas hasta expiración no se generan nuevas",
+      "task": {
+        "title": "Vigencia de un acceso temporal ya emitido",
+        "request": "QA sugirió que cambiar los permisos de un archivo debe invalidar inmediatamente una URL firmada que ya había sido emitida. Revisá esa sugerencia contra la documentación y proponé un único caso coherente con la regla real, indicando la discrepancia como pregunta abierta. Los pasos deben incluir usar la URL después del cambio. No inventes códigos HTTP.",
+        "max_cases": 1
+      },
+      "review_criteria": [
+        "URL emitida sigue válida hasta expirar",
+        "Pasos prueban acceso después del cambio",
+        "Discrepancia de la sugerencia visible",
+        "No inventa HTTP"
+      ]
+    },
+    {
+      "id": "regla-ausente",
+      "query": "Roles de usuario pending pantalla de espera admin cambia rol user",
+      "task": {
+        "title": "Tiempo de inactividad sin confirmar",
+        "request": "Proponé un caso que confirme que la sesión de un usuario pending se cierra a los quince minutos de inactividad. Si esa regla no aparece en los fragmentos, no la supongas: dejá casos vacíos y una pregunta abierta sobre el tiempo y comportamiento que faltan confirmar.",
+        "max_cases": 1
+      },
+      "review_criteria": [
+        "No crea caso con tiempo sin respaldo",
+        "Conserva la pregunta abierta"
+      ]
+    },
+    {
+      "id": "idioma-nuevo",
+      "query": "Idioma por defecto es-AR DEFAULT_LOCALE en-US eliminado del fork",
+      "task": {
+        "title": "Idioma inicial e idioma eliminado",
+        "request": "Proponé hasta dos casos: comprobar el idioma por defecto al abrir una sesión sin preferencia previa, y comprobar que en-US ya no está entre los idiomas ofrecidos. Guiate por la documentación; no inventes nombres de menús, mensajes ni endpoints.",
+        "max_cases": 2
+      },
+      "review_criteria": [
+        "Default es-AR",
+        "en-US removido según documento",
+        "Pasos sin inventar interfaz exacta"
+      ]
+    }
+  ]
+}

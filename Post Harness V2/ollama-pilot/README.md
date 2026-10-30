@@ -42,3 +42,7 @@ No se ejecutaron descargas, actualizaciones, importaciones ni solicitudes genera
 ## Ensayo posterior con modelos pequeños
 
 Se instaló Qwen3.5 de 0.8B y se lo comparó con el 4B ya disponible. Ver [resultados del ensayo](RESULTADO-MODELOS-PEQUENOS.md). La ejecución de esos modelos no completa la evaluación de Saluki ni la aprobación de QA.
+
+## Generación con contexto verificable
+
+El siguiente ensayo conecta RAGFlow con el generador 4B en dos etapas, con citas resueltas por código. Ver [resultado y límites](RESULTADO-GENERACION-4B.md), [guía de uso](../GUIA-GENERACION-4B.md) y [lote pendiente de QA](PARA-REVISION-QA-4B.md). Las pruebas de Saluki siguen sin ejecutarse.

@@ -1,0 +1,8 @@
+Suite: Post Harness V2/tests
+Command: ../Post Harness/.venv/bin/python -m unittest discover -s tests -v
+
+
+----------------------------------------------------------------------
+Ran 57 tests in 3.799s
+
+OK

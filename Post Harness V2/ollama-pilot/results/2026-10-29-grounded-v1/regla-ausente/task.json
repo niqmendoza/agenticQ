@@ -1,0 +1,5 @@
+{
+  "title": "Tiempo de inactividad sin confirmar",
+  "request": "Proponé un caso que confirme que la sesión de un usuario pending se cierra a los quince minutos de inactividad. Si esa regla no aparece en los fragmentos, no la supongas: dejá casos vacíos y una pregunta abierta sobre el tiempo y comportamiento que faltan confirmar.",
+  "max_cases": 1
+}

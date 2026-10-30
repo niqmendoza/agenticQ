@@ -1,0 +1,1 @@
+{"title":"Acceso al chat según rol","request":"Proponé como máximo dos casos: un usuario pending intenta usar el chat; luego un admin cambia su rol a user. El cambio por admin debe figurar entre los pasos de la transición. No inventes capacidades, mensajes, endpoints ni códigos HTTP.","max_cases":2}

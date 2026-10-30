@@ -1,0 +1,39 @@
+{
+  "integrity_checks": [
+    {
+      "id": "roles",
+      "integrity": "ok",
+      "cases": 2,
+      "qa_review": "pending",
+      "semantic_validation": "not_performed",
+      "state": "draft_for_qa"
+    },
+    {
+      "id": "url-contraejemplo",
+      "integrity": "ok",
+      "cases": 1,
+      "qa_review": "pending",
+      "semantic_validation": "not_performed",
+      "state": "draft_for_qa"
+    },
+    {
+      "id": "regla-ausente",
+      "integrity": "ok",
+      "cases": 0,
+      "qa_review": "pending",
+      "semantic_validation": "not_performed",
+      "state": "needs_information"
+    },
+    {
+      "id": "idioma-nuevo",
+      "integrity": "ok",
+      "cases": 2,
+      "qa_review": "pending",
+      "semantic_validation": "not_performed",
+      "state": "draft_for_qa"
+    }
+  ],
+  "semantic_validation": "not_performed",
+  "automated_suite": "57 tests passed",
+  "command": "python -m unittest discover -s tests -v"
+}

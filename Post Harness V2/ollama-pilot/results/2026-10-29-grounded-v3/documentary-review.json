@@ -1,0 +1,35 @@
+{
+  "reviewer": "assistant_not_independent_QA",
+  "qa_review": "pending",
+  "tasks": {
+    "roles": {
+      "observed": "Dos borradores; el caso negativo usa la prohibición documentada y la transición incluye el cambio por admin.",
+      "pending": [
+        "Agregar una acción de acceso al chat DESPUÉS del cambio de rol; el segundo caso hoy termina al modificarlo.",
+        "Reemplazar el paso interno “el sistema evalúa” por una observación verificable de la interfaz.",
+        "Revisar las observaciones del modelo: algunas vuelven a pedir detalles técnicos que no impiden un borrador funcional."
+      ]
+    },
+    "url-contraejemplo": {
+      "observed": "Un borrador; usa la URL después de cambiar permisos y el esperado conserva su validez hasta expirar. No agregó un código HTTP al esperado.",
+      "pending": [
+        "Confirmar que las precondiciones identifiquen una URL ya emitida y todavía vigente.",
+        "Separar, si corresponde al alcance, otro caso sobre la emisión de nuevas URLs.",
+        "QA debe resolver la discrepancia con la sugerencia utilizada en esta consigna de ensayo."
+      ]
+    },
+    "regla-ausente": {
+      "observed": "No genera caso ni inventa quince minutos; conserva la pregunta sobre el comportamiento no documentado.",
+      "pending": [
+        "Pedir la regla funcional de inactividad y su fuente antes de diseñar ese caso."
+      ]
+    },
+    "idioma-nuevo": {
+      "observed": "Dos borradores; reconoce es-AR y la exclusión de en-US con respaldo documental.",
+      "pending": [
+        "El esperado principal del caso de en-US es una frase introductoria demasiado general. Especificarlo con las reglas concretas de apoyo antes de automatizar.",
+        "Confirmar los datos y la forma real de observar el idioma inicial y la lista de opciones."
+      ]
+    }
+  }
+}
