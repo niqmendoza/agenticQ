@@ -34,3 +34,5 @@ La ruta de salida debe ser nueva. Revisá estado, omisiones y resultados no devu
 ## De casos a ejecución
 
 Pedile a Copilot que prepare borradores con fuentes, preguntas abiertas y criterios observables. Tras la revisión de QA, indicá la ruta del proyecto de aplicación, ambiente autorizado, datos de prueba y comando/framework conocidos; Copilot debe inspeccionar el proyecto, implementar pruebas adecuadas y ejecutar el comando real. Si faltan, debe solicitar la información, no adivinar ni afirmar ejecución. Guardá resultados y código de salida, distinguiendo fallas, bloqueos y pruebas no ejecutadas. `draft_cases.py` es una alternativa opcional con Ollama local para generar borradores desde `qa-context/1`; requiere modelo y servicio configurados como explica su [guía](../Post%20Harness%20V2/GUIA-GENERACION-4B.md).
+
+Para ejecutar el comando real y guardar resultados legibles por Copilot, seguí el [flujo portable](FLUJO-PORTABLE.md), que incluye un ejemplo integral.

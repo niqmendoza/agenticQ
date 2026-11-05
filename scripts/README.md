@@ -2,11 +2,13 @@
 
 Esta carpeta es el punto de entrada. Los scripts permanecen en sus carpetas originales: moverlos rompería imports, rutas, reproducción e integridad de evidencias. No hay copias adicionales. Empezá por [INICIO-COPILOT.md](INICIO-COPILOT.md) y pasale a Copilot [PROMPT-COPILOT.md](PROMPT-COPILOT.md).
 
+La [guía de flujo portable](FLUJO-PORTABLE.md) incluye configuración, ejecución con evidencia y un ejemplo integral local.
+
 ## Qué hace el flujo
 
 1. Recupera documentación local con `brain.py` o desde RAGFlow con `retrieve.py`.
 2. Copilot puede proponer casos a partir de esa evidencia; alternativamente `draft_cases.py` genera borradores con Ollama local. QA revisa los casos.
-3. Copilot puede implementar pruebas en el proyecto de la aplicación y ejecutar el comando real de su framework, en un entorno y con datos autorizados. **Ningún script de este repositorio ejecuta pruebas funcionales de la aplicación ni publica en Azure Test Plans.** Los tests de este repositorio validan sus propias herramientas. No se inventaron URL, credenciales ni comandos de Coelsa.
+3. Copilot puede implementar pruebas en el proyecto de la aplicación y ejecutar el comando real de su framework, en un entorno y con datos autorizados. **`run_tests.py` ejecuta el comando de pruebas que se le indique, pero no crea ni adapta las pruebas por sí solo.** Ningún script publica en Azure Test Plans. Los tests de este repositorio validan sus propias herramientas. No se inventaron URL, credenciales ni comandos de Coelsa.
 
 ## Inventario de scripts
 
@@ -14,6 +16,8 @@ Rutas relativas a la raíz del repositorio. Para opciones ejecutá el script con
 
 | Ruta | Uso |
 | --- | --- |
+| `scripts/run_tests.py` | Ejecuta un comando explícito en el proyecto y guarda resultado, salida y errores; ver [flujo portable](FLUJO-PORTABLE.md). |
+| `scripts/ejemplo/` y `scripts/tests/` | Aplicación y documentos sintéticos; pruebas del ejecutor y flujo integral, no de Coelsa. |
 | `Post Harness V2/scripts/brain.py` | Navegador local: `index`, `pack`, `show`, `headings`, `links`, `verify`, `status`. Ver [uso](../Post%20Harness%20V2/README.md). |
 | `Post Harness V2/scripts/document_utils.py` | Soporte interno de lectura y fragmentación de `brain.py`; no se invoca directamente. |
 | `Post Harness V2/scripts/retrieve.py` | Consulta RAGFlow y guarda contexto `qa-context/1`; ver [guía](../Post%20Harness%20V2/GUIA-CONTEXTO-RAGFLOW.md). |
