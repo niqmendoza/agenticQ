@@ -16,6 +16,9 @@ Rutas relativas a la raíz del repositorio. Para opciones ejecutá el script con
 
 | Ruta | Uso |
 | --- | --- |
+| `scripts/validar_casos.py` | Comprueba estructura y citas literales; la revisión semántica y humana sigue pendiente. |
+| `scripts/regresion.py` | Registra casos revisados y prepara planes por release sin ejecutar ni regenerar casos. |
+| `scripts/exportar.py` | Prepara CSV de Azure, CSV para Excel y trazabilidad; no importa ni infiere resultados. |
 | `scripts/run_tests.py` | Ejecuta un comando explícito en el proyecto y guarda resultado, salida y errores; ver [flujo portable](FLUJO-PORTABLE.md). |
 | `scripts/ejemplo/` y `scripts/tests/` | Aplicación y documentos sintéticos; pruebas del ejecutor y flujo integral, no de Coelsa. |
 | `Post Harness V2/scripts/brain.py` | Navegador local: `index`, `pack`, `show`, `headings`, `links`, `verify`, `status`. Ver [uso](../Post%20Harness%20V2/README.md). |
