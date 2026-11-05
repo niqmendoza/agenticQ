@@ -2,7 +2,7 @@
 
 Este flujo combina recuperación existente, razonamiento y adaptación de Copilot, revisión de QA y un ejecutor de comandos. **No convierte automáticamente texto en pruebas correctas:** Copilot debe leer el proyecto real y escribir pruebas adaptadas; QA revisa reglas y casos. No se probó Coelsa Intelligent ni se incluyen su URL, selectores, credenciales o comandos.
 
-## Requisitos y variables para otra PC
+## Requisitos y variables
 
 - Clonar el repositorio, abrirlo junto con el proyecto de aplicación en Copilot y disponer de Python 3.10+; macOS/Linux para el navegador local y RAGFlow (`fcntl`). En Windows usar WSL; el ejecutor aislado usa biblioteca estándar, pero la terminación de procesos hijos en Windows no está validada.
 - Acceso autorizado a documentación, código, entorno y datos de prueba; instalar en el proyecto de aplicación sus dependencias y framework según sus instrucciones. Usar credenciales mediante el mecanismo seguro del equipo, nunca en prompts, argumentos ni repositorio.
@@ -85,3 +85,7 @@ python3 scripts/exportar.py --registry "$QA_WORK_DIR/regresion.json" --out "$QA_
 - `registro-pruebas.csv`: UTF-8 con BOM para abrir en Excel; incluye release, aplicación, funcionalidad, ID, caso, cómo se prueba y resultado. Por defecto dice **No informado**. Para cargar resultados observados caso por caso, pasar `--results` con JSON como `{"C1":"Aprobado; evidencia: ejecución-001"}`. No se infiere el resultado de cada caso desde la salida global; QA debe verificarlo.
 
 Los CSV agregan un apóstrofo ante celdas que puedan interpretarse como fórmulas en una planilla; revisar ese contenido antes de importar. Las exportaciones pueden contener información sensible. La importación no se hizo aquí: el asistente de Azure valida permisos, valores y mapeos del proyecto. Consultar la [documentación oficial de importación masiva de Azure Test Plans](https://learn.microsoft.com/en-us/azure/devops/test/bulk-import-export-test-cases?view=azure-devops) y la [guía de preguntas frecuentes](https://learn.microsoft.com/en-us/azure/devops/test/reference-qa?view=azure-devops). El formato fue probado localmente, no contra una instancia de Azure.
+
+## Entrega de evidencia
+
+Seguí [VALIDACION-Y-EVIDENCIA.md](VALIDACION-Y-EVIDENCIA.md) para registrar la validación real, seleccionar los archivos y preparar un paquete privado verificable para revisión de Codex.

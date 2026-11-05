@@ -65,7 +65,7 @@ La pestaña **Hitos de implementación** ofrece 29 hitos: 26 para la base y 3 ev
 
 El mapa incorpora la capa de scripts de retrieval antes de diseñar los casos. QA define el alcance estimado y revisa las pruebas; desarrollo conoce la propuesta y puede aportar contexto, pero no la autoriza ni bloquea su avance. La revisión técnica del código sigue siendo un paso separado.
 
-El avance se guarda en el almacenamiento de este navegador cuando está disponible. **Descargar HTML con avances** incluye el estado y las notas dentro de un nuevo HTML autónomo para compartirlo o moverlo a otra computadora. Si el navegador bloquea el almacenamiento de archivos locales, la descarga sigue disponible. Los navegadores y dispositivos no se sincronizan entre sí; se comparte la copia descargada. El archivo original del disco no se modifica automáticamente.
+El avance se guarda en el almacenamiento de este navegador cuando está disponible. **Descargar HTML con avances** incluye el estado y las notas dentro de un nuevo HTML autónomo para compartirlo o trasladarlo. Si el navegador bloquea el almacenamiento de archivos locales, la descarga sigue disponible. Los navegadores y dispositivos no se sincronizan entre sí; se comparte la copia descargada. El archivo original del disco no se modifica automáticamente.
 
 `src/data/implementation-plan.json` define el plan; `src/data/milestones.ts` valida y combina avances; `src/data/portable.ts` carga los datos incluidos y genera la descarga autónoma; `src/components/Milestones.tsx` presenta el gráfico de hitos. Los scripts embebidos `qa-process-state` y `qa-milestone-state` permiten reabrir una copia con su modelo y avance.
 

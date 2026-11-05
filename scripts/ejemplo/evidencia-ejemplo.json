@@ -1,0 +1,15 @@
+{
+  "schema": "qa-evidence-input/1",
+  "application": "Calculadora sintética; no es Coelsa",
+  "release": "ejemplo-1",
+  "scope": "Dos pruebas unitarias sobre suma, con información inventada para el ejemplo.",
+  "environment": "Entorno local de ejemplo; sin URL ni credenciales.",
+  "versions": "Python y revisión del repositorio: completar con las versiones reales.",
+  "commands": "python3 -m unittest -v test_calculadora; comando de ejemplo sin secretos.",
+  "sources": "Regla de suma del ejemplo; conservar referencias y hashes de los fragmentos utilizados.",
+  "limitations": "Datos sintéticos; no se validó Copilot ni una aplicación real.",
+  "pending": "Revisar casos con QA; Copilot, Coelsa y Azure no se ejecutaron.",
+  "stages": {"copilot": "no_ejecutado", "coelsa": "no_ejecutado", "azure": "no_ejecutado"},
+  "cases": [{"id": "C1", "feature": "Suma", "result": "Completar según evidencia real", "traceability": "reglas.md; caso C1", "evidence": "resultado y log seleccionados; completar ruta"}],
+  "artifacts": []
+}
