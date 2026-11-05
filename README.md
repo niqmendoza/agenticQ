@@ -4,6 +4,8 @@ Código, documentación, prototipos y evidencias del trabajo de QA agentizada. E
 
 ## Usar con GitHub Copilot
 
+**[Abrir guía visual para empezar · QA](Inicio-QA.html)**
+
 Para empezar sin programar, seguí [scripts/GUIA-QA.md](scripts/GUIA-QA.md) y copiá el prompt; la configuración técnica está en [scripts/INICIO-COPILOT.md](scripts/INICIO-COPILOT.md). El [inventario de scripts](scripts/README.md) explica qué se ejecuta y dónde está; la generación de borradores y la ejecución de pruebas de la aplicación son etapas distintas.
 
 ## Por dónde empezar

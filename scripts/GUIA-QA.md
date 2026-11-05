@@ -1,5 +1,7 @@
 # Guía de inicio para QA
 
+[Ver guía visual paso a paso](../Inicio-QA.html).
+
 1. Abrí este repositorio en un entorno con Copilot habilitado. Abrí [PROMPT-COPILOT.md](PROMPT-COPILOT.md), copiá el bloque y pegalo en el chat de Copilot.
 2. Contestá las preguntas que haga. Si no sabés dónde está la documentación, el proyecto o el ambiente de prueba, decíselo: Copilot debe indicarte qué falta y no inventarlo. No compartas contraseñas en el chat.
 3. Revisá con Copilot los casos y las dudas. Primero comprobará si la documentación respalda cada caso; después, si puede implementarlo en la aplicación. Tu revisión es necesaria antes de incorporarlos o ejecutarlos.

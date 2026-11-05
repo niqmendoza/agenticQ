@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Empezar con QA agentizada</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#090d0e;color:#f4f7f7}*{box-sizing:border-box}body{margin:0}main{max-width:840px;margin:auto;padding:42px 22px 50px}.eyebrow{color:#80e0e6;font-size:.72rem;font-weight:750;letter-spacing:.12em;text-transform:uppercase}h1{font-size:clamp(1.8rem,5vw,2.7rem);letter-spacing:-.035em;margin:.35em 0 .25em}header{padding-bottom:20px;border-bottom:4px solid transparent;border-image:linear-gradient(90deg,#e11f8f,#06abb9) 1}header p{margin:0;color:#c3d0d2}.table-wrap{margin-top:24px;border:1px solid #35484b;background:#151e20}table{border-collapse:collapse;width:100%;text-align:left}th,td{padding:15px 17px;border-bottom:1px solid #35484b;vertical-align:top}thead th{color:#a9bec0;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}tbody tr:last-child td{border:0}td:first-child{width:54px;color:#80e0e6;font-weight:800}td strong{display:block;margin-bottom:3px}td p{margin:0;color:#c3d0d2;font-size:.93rem}a{color:#80e0e6;text-underline-offset:3px}a:focus-visible{outline:3px solid #e11f8f;outline-offset:3px}.note{margin-top:18px;background:#351426;border-left:4px solid #e11f8f;padding:14px 17px;color:#f3dfe9;font-size:.9rem}.note p{margin:.3em 0 0}@media(max-width:480px){main{padding:28px 14px}th,td{padding:12px 10px}td:first-child{width:38px}}@media print{:root{color-scheme:light;background:white;color:black}body{background:white}.table-wrap{background:white}td p,header p{color:#222}.note{background:#fcecf5;color:#222}a{color:#005e68}td:first-child,.eyebrow{color:#006873}}
+</style></head>
+<body><main><header><div class="eyebrow">Guía rápida · equipo QA</div><h1>Empezar con QA agentizada</h1><p>Una guía para trabajar con Copilot, paso a paso.</p></header>
+<div class="table-wrap"><table><thead><tr><th scope="col">Paso</th><th scope="col">Qué hacer</th></tr></thead><tbody>
+<tr><td>1</td><td><strong>Abrí el proyecto</strong><p>Abrí el repositorio agenticQ en tu herramienta con GitHub Copilot habilitado.</p></td></tr>
+<tr><td>2</td><td><strong>Iniciá la conversación</strong><p>Abrí <a href="scripts/PROMPT-COPILOT.md">scripts/PROMPT-COPILOT.md</a>. Copiá el texto del bloque y pegalo en el chat de Copilot; también podés indicarle que lea ese archivo.</p></td></tr>
+<tr><td>3</td><td><strong>Respondé las preguntas</strong><p>Indicá la aplicación, qué querés probar y dónde está su documentación o segundo cerebro. Copilot preguntará por los accesos y datos que falten.</p></td></tr>
+<tr><td>4</td><td><strong>Revisá los casos</strong><p>Revisá con Copilot las fuentes, los pasos, los resultados esperados y si se pueden probar en la aplicación.</p></td></tr>
+<tr><td>5</td><td><strong>Pedí ejecutar y ver resultados</strong><p>Tras tu revisión, pedile que ejecute las pruebas posibles en el ambiente autorizado y que te comparta el enlace a <strong style="display:inline">registro-pruebas.csv</strong>. Abrilo en Excel para ver qué se ejecutó y el resultado de cada caso.</p></td></tr>
+</tbody></table></div>
+<aside class="note"><strong>Si falta información</strong><p>Decile a Copilot qué no sabés y pedile que indique qué necesita. No compartas contraseñas en el chat. Si faltan accesos o configuración, algunas pruebas quedarán pendientes; «sin resultado individual» no significa que hayan aprobado.</p></aside>
+</main></body></html>
