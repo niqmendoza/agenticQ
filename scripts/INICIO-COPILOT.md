@@ -1,6 +1,6 @@
 # Inicio rápido con GitHub Copilot
 
-Abrí este repositorio y el proyecto de la aplicación en Copilot. Tené acceso autorizado al segundo cerebro, al código y al entorno de pruebas. Compartí con Copilot `scripts/PROMPT-COPILOT.md` y completá los campos; no incluyas contraseñas ni claves. El proyecto de la aplicación y su comando de pruebas dependen del equipo: no están configurados aquí.
+Abrí este repositorio y el proyecto de la aplicación en Copilot. Tené acceso autorizado al segundo cerebro, al código y al entorno de pruebas. Copiá el bloque de `scripts/PROMPT-COPILOT.md` y respondé las preguntas de Copilot; no incluyas contraseñas ni claves. El proyecto de la aplicación y su comando de pruebas dependen del equipo: no están configurados aquí.
 
 ## Opción A · Segundo cerebro como carpeta local
 

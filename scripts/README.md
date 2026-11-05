@@ -1,6 +1,6 @@
 # Guía de scripts para QA con Copilot
 
-Esta carpeta es el punto de entrada. Los scripts permanecen en sus carpetas originales: moverlos rompería imports, rutas, reproducción e integridad de evidencias. No hay copias adicionales. Empezá por [INICIO-COPILOT.md](INICIO-COPILOT.md) y pasale a Copilot [PROMPT-COPILOT.md](PROMPT-COPILOT.md).
+Esta carpeta es el punto de entrada. Los scripts permanecen en sus carpetas originales: moverlos rompería imports, rutas, reproducción e integridad de evidencias. No hay copias adicionales. Para empezar sin programar, seguí [GUIA-QA.md](GUIA-QA.md) y copiá [PROMPT-COPILOT.md](PROMPT-COPILOT.md).
 
 La [guía de flujo portable](FLUJO-PORTABLE.md) incluye configuración, ejecución con evidencia y un ejemplo integral local.
 
@@ -17,6 +17,7 @@ Rutas relativas a la raíz del repositorio. Para opciones ejecutá el script con
 | Ruta | Uso |
 | --- | --- |
 | `scripts/empaquetar_evidencia.py`, `scripts/verificar_evidencia.py` | Reúnen archivos seleccionados y verifican sus hashes; ver [guía de evidencia](VALIDACION-Y-EVIDENCIA.md). |
+| `scripts/resultados_junit.py` | Vincula resultados individuales JUnit con casos mediante un mapa explícito y revisado. |
 | `scripts/validar_casos.py` | Comprueba estructura y citas literales; la revisión semántica y humana sigue pendiente. |
 | `scripts/regresion.py` | Registra casos revisados y prepara planes por release sin ejecutar ni regenerar casos. |
 | `scripts/exportar.py` | Prepara CSV de Azure, CSV para Excel y trazabilidad; no importa ni infiere resultados. |

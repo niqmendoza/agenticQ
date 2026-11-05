@@ -73,7 +73,7 @@ class FlujoE2E(unittest.TestCase):
             self.assertEqual(rows[0]['Step Expected'], 'Devuelve siete')
             self.assertEqual(rows[0]['Title'], '[C1] Suma con cero')
             with (output / 'registro-pruebas.csv').open(encoding='utf-8-sig', newline='') as f: table = list(csv.DictReader(f))
-            self.assertEqual([row['Resultado'] for row in table], ['Aprobado con evidencia', 'No informado'])
+            self.assertEqual([row['Resultado'] for row in table], ['Aprobado con evidencia', 'Sin resultado individual'])
             trace = json.loads((output / 'trazabilidad.json').read_text())
             self.assertEqual(trace['cases'][0]['references'][0]['source'], source)
             cases['cases'][0]['references'][0]['quote'] = 'Una regla inventada'

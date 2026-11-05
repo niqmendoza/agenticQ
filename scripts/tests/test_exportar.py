@@ -26,5 +26,5 @@ class Exportar(unittest.TestCase):
             self.assertEqual(rows[1]['Step Expected'], 'Resultado\nobservable')
             self.assertEqual(rows[1]['Step Action'], "'=acción")
             with (out / 'registro-pruebas.csv').open(encoding='utf-8-sig', newline='') as f: table = list(csv.DictReader(f))
-            self.assertEqual(table[0]['Resultado'], 'No informado')
+            self.assertEqual(table[0]['Resultado'], 'Sin resultado individual')
             self.assertEqual(json.loads((out / 'trazabilidad.json').read_text())['cases'][0]['steps'][1], '=acción')

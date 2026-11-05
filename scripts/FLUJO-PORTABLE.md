@@ -82,10 +82,25 @@ python3 scripts/exportar.py --registry "$QA_WORK_DIR/regresion.json" --out "$QA_
 
 - `azure-test-cases.csv`: columnas oficiales y una fila por paso; el esperado del caso se coloca en el último paso. ID de Azure vacío crea casos nuevos; el ID local forma parte del título. La primera exportación no actualiza casos ya existentes; importar de nuevo puede duplicarlos. La asignación de IDs Azure tras importar y cualquier actualización requieren control manual. Títulos con ID de más de 128 caracteres se rechazan.
 - `trazabilidad.json`: ID local, fuentes, citas, hash de contexto y correspondencia con título; conservarlo junto al contexto y enlazar manualmente los IDs de Azure después de importar. No se carga automáticamente.
-- `registro-pruebas.csv`: UTF-8 con BOM para abrir en Excel; incluye release, aplicación, funcionalidad, ID, caso, cómo se prueba y resultado. Por defecto dice **No informado**. Para cargar resultados observados caso por caso, pasar `--results` con JSON como `{"C1":"Aprobado; evidencia: ejecución-001"}`. No se infiere el resultado de cada caso desde la salida global; QA debe verificarlo.
+- `registro-pruebas.csv`: UTF-8 con BOM para abrir en Excel; incluye release, aplicación, funcionalidad, ID, caso, cómo se prueba y resultado. Por defecto indica **Sin resultado individual**. Para cargar resultados observados caso por caso, pasar `--results` con JSON como `{"C1":"Aprobado; evidencia: ejecución-001"}`. No se infiere el resultado de cada caso desde la salida global; QA debe verificarlo.
 
 Los CSV agregan un apóstrofo ante celdas que puedan interpretarse como fórmulas en una planilla; revisar ese contenido antes de importar. Las exportaciones pueden contener información sensible. La importación no se hizo aquí: el asistente de Azure valida permisos, valores y mapeos del proyecto. Consultar la [documentación oficial de importación masiva de Azure Test Plans](https://learn.microsoft.com/en-us/azure/devops/test/bulk-import-export-test-cases?view=azure-devops) y la [guía de preguntas frecuentes](https://learn.microsoft.com/en-us/azure/devops/test/reference-qa?view=azure-devops). El formato fue probado localmente, no contra una instancia de Azure.
 
 ## Entrega de evidencia
 
 Seguí [VALIDACION-Y-EVIDENCIA.md](VALIDACION-Y-EVIDENCIA.md) para registrar la validación real, seleccionar los archivos y preparar un paquete privado verificable para revisión de Codex.
+
+## Resultados individuales para el CSV
+
+Cuando el framework produzca JUnit XML, configurá un archivo **nuevo por ejecución**, verificá que pertenezca a la ejecución y conservá el XML. Copilot debe revisar una correspondencia exacta y única entre cada ID de caso y `classname`/`name` reales del XML; el mapeo expresa una decisión humana y el programa no demuestra que la prueba cubra semánticamente el caso. Si una prueba representa varios casos o hay varios intentos, resolverlo mediante revisión y no inventar correspondencias. Ejemplo de archivo `mapa.json`:
+
+```json
+{"C1":{"classname":"modulo.Clase","name":"test_nombre"}}
+```
+
+```sh
+python3 scripts/resultados_junit.py --junit "$QA_WORK_DIR/junit.xml" --map "$QA_WORK_DIR/mapa.json" --out "$QA_WORK_DIR/individuales-001"
+python3 scripts/exportar.py --registry "$QA_WORK_DIR/regresion.json" --out "$QA_WORK_DIR/csv-001" --release "RELEASE" --results "$QA_WORK_DIR/individuales-001/resultados.json" --executed "$QA_WORK_DIR/individuales-001/ejecutadas.json" --evidence "$QA_WORK_DIR/individuales-001/evidencias.json"
+```
+
+La salida `registro-pruebas.csv` se puede crear sin datos de Azure. Cada fila incluye prueba prevista, ejecución individual, resultado y referencia al SHA-256 del XML y nombre de prueba. Si no hay coincidencia, hay más de una, el estado es desconocido o la prueba fue omitida, se informa expresamente; conservar el XML permite investigar detalles. Se admiten elementos JUnit `testcase` con `failure`, `error` o `skipped`; verificar la semántica de la variante del framework. Una correspondencia equivocada o un XML viejo pueden producir una atribución equivocada: Copilot y QA deben revisarlos. Si no hay JUnit o no hay datos individuales fiables, dejar esos campos sin resultado y adjuntar sólo evidencia verificable. Para crear además `azure-test-cases.csv`, agregar los tres parámetros `--area`, `--assigned-to` y `--state`; no se necesita Azure para el CSV de QA. No se importa nada automáticamente.
