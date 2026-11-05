@@ -2,6 +2,10 @@
 
 Código, documentación, prototipos y evidencias del trabajo de QA agentizada. Este repositorio reúne el material elaborado hasta el 29 de octubre de 2026.
 
+## Usar con GitHub Copilot
+
+Empezá por [scripts/INICIO-COPILOT.md](scripts/INICIO-COPILOT.md). El [inventario de scripts](scripts/README.md) explica qué se ejecuta y dónde está; la generación de borradores y la ejecución de pruebas de la aplicación son etapas distintas.
+
 ## Por dónde empezar
 
 | Material | Contenido |
