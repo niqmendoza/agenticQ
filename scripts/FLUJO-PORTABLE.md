@@ -32,8 +32,8 @@ export QA_BRAIN_DIR="$PWD/scripts/ejemplo/segundo-cerebro"
 export QA_APP_DIR="$PWD/scripts/ejemplo/aplicacion"
 export QA_WORK_DIR="$(mktemp -d)"
 printf '%s\n' '["sumar cero valor"]' > "$QA_WORK_DIR/preguntas.json"
-python3 "Post Harness V2/scripts/brain.py" --db "$QA_WORK_DIR/indice.sqlite" index "$QA_BRAIN_DIR"
-python3 "Post Harness V2/scripts/brain.py" --db "$QA_WORK_DIR/indice.sqlite" --session "$QA_WORK_DIR/sesion.json" pack --queries-json "$QA_WORK_DIR/preguntas.json" > "$QA_WORK_DIR/contexto.json"
+python3 "historico/Post Harness V2/scripts/brain.py" --db "$QA_WORK_DIR/indice.sqlite" index "$QA_BRAIN_DIR"
+python3 "historico/Post Harness V2/scripts/brain.py" --db "$QA_WORK_DIR/indice.sqlite" --session "$QA_WORK_DIR/sesion.json" pack --queries-json "$QA_WORK_DIR/preguntas.json" > "$QA_WORK_DIR/contexto.json"
 python3 scripts/run_tests.py --cwd "$QA_APP_DIR" --out "$QA_WORK_DIR/ejecucion" -- python3 -m unittest -v test_calculadora
 cat "$QA_WORK_DIR/ejecucion/RESUMEN.md" "$QA_WORK_DIR/ejecucion/stderr.txt"
 ```

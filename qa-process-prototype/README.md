@@ -71,4 +71,4 @@ El avance se guarda en el almacenamiento de este navegador cuando está disponib
 
 ## Reporte Hito 2
 
-`../Hito-2.html` es el reporte autónomo y editable de esta etapa. Su copia en `public/Hito-2.html` permite abrirlo desde la pestaña de hitos y Vite la incluye en `dist`. Al actualizar el reporte, mantener ambas copias iguales. El reporte conserva resultados, límites y una comparación interactiva de las entregas; no necesita servidor ni recursos externos. La copia principal del mapa es `../Mapa-QA-agentizada.html`.
+`../informes/Hito-2.html` es el reporte autónomo y editable de esta etapa. Su copia en `public/Hito-2.html` permite abrirlo desde la pestaña de hitos y Vite la incluye en `dist`. Al actualizar el reporte, mantener ambas copias iguales. El reporte conserva resultados, límites y una comparación interactiva de las entregas; no necesita servidor ni recursos externos. La copia principal del mapa es `../informes/Mapa-QA-agentizada.html`.

@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-BRAIN = ROOT / 'Post Harness V2' / 'scripts' / 'brain.py'
+BRAIN = ROOT / 'historico' / 'Post Harness V2' / 'scripts' / 'brain.py'
 RUNNER = ROOT / 'scripts' / 'run_tests.py'
 VALIDATOR = ROOT / 'scripts' / 'validar_casos.py'
 REGISTRY = ROOT / 'scripts' / 'regresion.py'

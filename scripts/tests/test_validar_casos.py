@@ -5,7 +5,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts'))
-sys.path.insert(0, str(ROOT / 'Post Harness V2' / 'scripts'))
+sys.path.insert(0, str(ROOT / 'historico' / 'Post Harness V2' / 'scripts'))
 from validar_casos import validate
 from brain import Budget
 from context_packet import build_packet

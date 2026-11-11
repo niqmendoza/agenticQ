@@ -12,7 +12,7 @@ def validate(context, cases):
         raise ValueError('Contexto sin fuentes o fragmentos válidos')
     rag = context.get('schema') == 'qa-context/1'
     if rag:
-        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'Post Harness V2' / 'scripts'))
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'historico' / 'Post Harness V2' / 'scripts'))
         from verify_context import verify
         verify(context)
     elif not (context.get('version') == '2.0.0' and context.get('revision') and context.get('line_format')):

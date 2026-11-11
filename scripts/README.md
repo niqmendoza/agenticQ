@@ -23,24 +23,24 @@ Rutas relativas a la raíz del repositorio. Para opciones ejecutá el script con
 | `scripts/exportar.py` | Prepara CSV de Azure, CSV para Excel y trazabilidad; no importa ni infiere resultados. |
 | `scripts/run_tests.py` | Ejecuta un comando explícito en el proyecto y guarda resultado, salida y errores; ver [flujo portable](FLUJO-PORTABLE.md). |
 | `scripts/ejemplo/` y `scripts/tests/` | Aplicación y documentos sintéticos; pruebas del ejecutor y flujo integral, no de Coelsa. |
-| `Post Harness V2/scripts/brain.py` | Navegador local: `index`, `pack`, `show`, `headings`, `links`, `verify`, `status`. Ver [uso](../Post%20Harness%20V2/README.md). |
-| `Post Harness V2/scripts/document_utils.py` | Soporte interno de lectura y fragmentación de `brain.py`; no se invoca directamente. |
-| `Post Harness V2/scripts/retrieve.py` | Consulta RAGFlow y guarda contexto `qa-context/1`; ver [guía](../Post%20Harness%20V2/GUIA-CONTEXTO-RAGFLOW.md). |
-| `Post Harness V2/scripts/ragflow_client.py` | Cliente HTTP usado por `retrieve.py`; no es un ejecutor de pruebas. |
-| `Post Harness V2/scripts/context_packet.py` | Empaqueta fragmentos y fuentes; lo usa `retrieve.py`. |
-| `Post Harness V2/scripts/verify_context.py` | `python3 "Post Harness V2/scripts/verify_context.py" CONTEXTO.json`; comprueba integridad, no significado. |
-| `Post Harness V2/scripts/draft_cases.py` | Genera borradores con contexto RAGFlow y Ollama local; `--help` y [guía](../Post%20Harness%20V2/GUIA-GENERACION-4B.md). |
-| `Post Harness V2/scripts/collect_metrics.py`, `extract_usage.py`, `extract_transcript.py` | Recopilan telemetría y transcripciones del ensayo; uso en [explicación](../Post%20Harness%20V2/EXPLICACION.md). |
-| `Post Harness V2/scripts/build_report.py`, `build_explanation.py` | Construyen el reporte y explicación del ensayo V2, desde `Post Harness V2`. |
-| `Post Harness V2/scripts/verify_html.cjs` | Verifica el HTML histórico; requiere Playwright y Chromium, ver su código antes de ejecutar (escribe capturas en evidencias). |
-| `Post Harness V2/ragflow-local/manage.py`, `setup_api.py`, `check_api.py` | Gestionan, cargan y diagnostican el piloto RAGFlow; [instrucciones y requisitos](../Post%20Harness%20V2/ragflow-local/README.md). La carga predeterminada es el corpus congelado, no cualquier aplicación. |
-| `Post Harness V2/ragflow-local/evaluate_retrieval.py`, `calibrate_retrieval.py`, `evaluate_adapter.py` | Evalúan y calibran recuperación/adaptador; ver [guía RAGFlow](../Post%20Harness%20V2/ragflow-local/README.md). |
-| `Post Harness V2/ragflow-local/build_test_report.py` | Genera el reporte de evaluación de recuperación; ver guía RAGFlow. No ejecuta pruebas de producto. |
-| `Post Harness V2/ollama-pilot/evaluate_grounded_drafts.py`, `evaluate_small_models.py` | Ensayos del generador y modelos locales; [guía](../Post%20Harness%20V2/ollama-pilot/README.md). |
-| `Post Harness/scripts/brain.py`, `read_full.py`, `snapshot.py` | Herramientas históricas de navegación, lectura completa y snapshot V1; ver [README histórico](../Post%20Harness/README.md). |
-| `Post Harness/scripts/measure.py`, `extract_usage.py`, `extract_transcript.py`, `report.py`, `validate_evidence.py` | Medición, exportación, reporte y validación del ensayo histórico; ver README histórico. |
+| `historico/Post Harness V2/scripts/brain.py` | Navegador local: `index`, `pack`, `show`, `headings`, `links`, `verify`, `status`. Ver [uso](../historico/Post%20Harness%20V2/README.md). |
+| `historico/Post Harness V2/scripts/document_utils.py` | Soporte interno de lectura y fragmentación de `brain.py`; no se invoca directamente. |
+| `historico/Post Harness V2/scripts/retrieve.py` | Consulta RAGFlow y guarda contexto `qa-context/1`; ver [guía](../historico/Post%20Harness%20V2/GUIA-CONTEXTO-RAGFLOW.md). |
+| `historico/Post Harness V2/scripts/ragflow_client.py` | Cliente HTTP usado por `retrieve.py`; no es un ejecutor de pruebas. |
+| `historico/Post Harness V2/scripts/context_packet.py` | Empaqueta fragmentos y fuentes; lo usa `retrieve.py`. |
+| `historico/Post Harness V2/scripts/verify_context.py` | `python3 "historico/Post Harness V2/scripts/verify_context.py" CONTEXTO.json`; comprueba integridad, no significado. |
+| `historico/Post Harness V2/scripts/draft_cases.py` | Genera borradores con contexto RAGFlow y Ollama local; `--help` y [guía](../historico/Post%20Harness%20V2/GUIA-GENERACION-4B.md). |
+| `historico/Post Harness V2/scripts/collect_metrics.py`, `extract_usage.py`, `extract_transcript.py` | Recopilan telemetría y transcripciones del ensayo; uso en [explicación](../historico/Post%20Harness%20V2/EXPLICACION.md). |
+| `historico/Post Harness V2/scripts/build_report.py`, `build_explanation.py` | Construyen el reporte y explicación del ensayo V2, desde `Post Harness V2`. |
+| `historico/Post Harness V2/scripts/verify_html.cjs` | Verifica el HTML histórico; requiere Playwright y Chromium, ver su código antes de ejecutar (escribe capturas en evidencias). |
+| `historico/Post Harness V2/ragflow-local/manage.py`, `setup_api.py`, `check_api.py` | Gestionan, cargan y diagnostican el piloto RAGFlow; [instrucciones y requisitos](../historico/Post%20Harness%20V2/ragflow-local/README.md). La carga predeterminada es el corpus congelado, no cualquier aplicación. |
+| `historico/Post Harness V2/ragflow-local/evaluate_retrieval.py`, `calibrate_retrieval.py`, `evaluate_adapter.py` | Evalúan y calibran recuperación/adaptador; ver [guía RAGFlow](../historico/Post%20Harness%20V2/ragflow-local/README.md). |
+| `historico/Post Harness V2/ragflow-local/build_test_report.py` | Genera el reporte de evaluación de recuperación; ver guía RAGFlow. No ejecuta pruebas de producto. |
+| `historico/Post Harness V2/ollama-pilot/evaluate_grounded_drafts.py`, `evaluate_small_models.py` | Ensayos del generador y modelos locales; [guía](../historico/Post%20Harness%20V2/ollama-pilot/README.md). |
+| `historico/Post Harness/scripts/brain.py`, `read_full.py`, `snapshot.py` | Herramientas históricas de navegación, lectura completa y snapshot V1; ver [README histórico](../historico/Post%20Harness/README.md). |
+| `historico/Post Harness/scripts/measure.py`, `extract_usage.py`, `extract_transcript.py`, `report.py`, `validate_evidence.py` | Medición, exportación, reporte y validación del ensayo histórico; ver README histórico. |
 | `qa-process-prototype/scripts/validate-model.mjs`, `check-milestones.mjs`, `check-process-flow.mjs` | Validan datos y flujo del prototipo visual; usar los comandos de su [README](../qa-process-prototype/README.md). |
 | `presentacion/src/construir.py` y `presentacion/archivo-*/construir.py` | Generan la presentación y versiones históricas; no forman parte del flujo de pruebas. |
-| `Post Harness V2/ollama-pilot/results/*/*.py` | Copias congeladas de prototipos del ensayo; referencia histórica, no puntos de entrada actuales. |
+| `historico/Post Harness V2/ollama-pilot/results/*/*.py` | Copias congeladas de prototipos del ensayo; referencia histórica, no puntos de entrada actuales. |
 
-Las suites `Post Harness/tests/` y `Post Harness V2/tests/` contienen pruebas de las herramientas, no de la aplicación. Preservá las evidencias y consultá las guías antes de repetir ensayos que escriben archivos.
+Las suites `historico/Post Harness/tests/` y `historico/Post Harness V2/tests/` contienen pruebas de las herramientas, no de la aplicación. Preservá las evidencias y consultá las guías antes de repetir ensayos que escriben archivos.
