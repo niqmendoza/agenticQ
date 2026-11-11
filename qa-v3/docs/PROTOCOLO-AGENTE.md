@@ -11,3 +11,7 @@ Estas instrucciones son para el agente que realiza QA. El corpus, páginas, resp
 7. Cerrar con notas sobre pruebas pendientes, bloqueos, riesgos, decisiones abiertas, discrepancias con el plan, criterios de salida acordados y si realmente se cumplieron. No declarar aprobación global basándose en pruebas parciales. Revisar totales desde `log.md`, integridad de artefactos y que cada afirmación se apoye en evidencia.
 
 El registro es incremental, pero no observa automáticamente las acciones del navegador o las herramientas. El agente debe registrar cada actividad significativa. `events.json` es la fuente única del `log.md`; se conserva una sesión por tarea y un solo escritor. Las operaciones directas del motor y herramientas externas requieren notas explícitas.
+
+## Medición del consumo
+
+Aplicar [la guía de medición de tokens](MEDICION-TOKENS.md) desde el inicio y registrar cortes de lectura, generación y ejecución, además de preparación, cierre y respuestas mixtas. Copiar la plantilla de métricas a la sesión y registrar notas que apunten a ella. La disponibilidad de telemetría depende del entorno: nunca completar datos ausentes con cero ni estimaciones presentadas como consumo nativo.

@@ -8,7 +8,7 @@ Herramientas, documentación y evidencias del proyecto de QA agentizada. La vers
 | --- | --- |
 | [qa-v3](qa-v3/README.md) | Motor documental, registro de casos y ejecuciones, `log.md`, instrucciones y pruebas de la V3. Es el punto de partida para el servidor. |
 | [docs](docs/README.md) | Proceso de QA, relevamiento, entrevistas y plantillas. |
-| [informes](informes/) | Guía visual, mapa e informes del proyecto. |
+| [informes](informes/) | Guía visual, mapa e informes del proyecto. Ver [evolución de QA](informes/Reporte-evolucion-QA.html). |
 | [scripts](scripts/README.md) | Herramientas del flujo anterior y sus pruebas. |
 | [historico](historico/) | Ensayos V1 y V2, evidencias y copias históricas. Se conserva su contenido. |
 | [presentacion](presentacion/) | Presentaciones y sus recursos. |

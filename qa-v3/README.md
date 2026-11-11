@@ -17,7 +17,7 @@ Python 3.10+ y biblioteca estándar en Linux o macOS. El corpus debe ser un **di
 
 ## Prompt para ejecutar la iteración
 
-Abrí [PROMPT-MAESTRO.md](PROMPT-MAESTRO.md), completá las variables y pegalo en Copilot. No es obligatorio ubicarse en `qa-v3`: el prompt usa la ruta absoluta del script. La sesión genera `casos.csv` con el plan y último estado, y `ejecuciones.csv` con todos los intentos. Ambos se regeneran desde los eventos; no editarlos manualmente.
+Abrí [PROMPT-MAESTRO.md](PROMPT-MAESTRO.md), completá las variables y pegalo en Copilot. No es obligatorio ubicarse en `qa-v3`: el prompt usa la ruta absoluta del script. La [guía de medición](docs/MEDICION-TOKENS.md) define cómo registrar consumo por etapa cuando el entorno lo exponga. La sesión genera `casos.csv` con el plan y último estado, y `ejecuciones.csv` con todos los intentos. Ambos se regeneran desde los eventos; no editarlos manualmente.
 
 ## Inicio en el servidor
 
