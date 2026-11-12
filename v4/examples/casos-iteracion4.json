@@ -1,0 +1,37 @@
+[
+  {
+    "kind": "case",
+    "id": "API-01",
+    "title": "La API informa que está disponible",
+    "feature": "Disponibilidad",
+    "requirement": "REQ-HEALTH",
+    "priority": "high",
+    "level": "api",
+    "oracle_status": "documented",
+    "sources": [{"path": "openapi.json", "locator": "GET /health → responses/200"}],
+    "expected": "Respuesta 200 en JSON con status=ok.",
+    "steps": ["Solicitar GET /health.", "Verificar código, tipo de contenido y campo status."],
+    "http": {"method": "GET", "path": "/health"},
+    "criteria": [
+      {"id": "status", "expected": "HTTP 200.", "check": {"type": "status", "equals": 200}},
+      {"id": "json", "expected": "El tipo de contenido es JSON.", "check": {"type": "content_type", "equals": "application/json"}},
+      {"id": "ready", "expected": "El campo status es ok.", "check": {"type": "json_equals", "path": ["status"], "equals": "ok"}}
+    ]
+  },
+  {
+    "kind": "case",
+    "id": "UI-01",
+    "title": "Swagger UI muestra la operación de salud",
+    "feature": "Documentación interactiva",
+    "requirement": "REQ-DOCS",
+    "oracle_status": "documented",
+    "sources": [{"path": "openapi.json", "locator": "paths /health"}],
+    "expected": "La ruta de documentación abre y muestra /health.",
+    "steps": ["Abrir /docs.", "Comprobar que aparece /health."],
+    "browser_path": "/docs",
+    "criteria": [
+      {"id": "status", "expected": "HTTP 200.", "check": {"type": "status", "equals": 200}},
+      {"id": "route", "expected": "La ruta /health es visible.", "check": {"type": "visible_text", "equals": "/health"}}
+    ]
+  }
+]

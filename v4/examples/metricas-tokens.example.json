@@ -1,0 +1,13 @@
+{
+  "schema": "qa-token-metrics/1-draft",
+  "aviso": "Plantilla manual; null significa no disponible, no cero. No contiene mediciones reales.",
+  "etapas": [
+    {"etapa": "lectura_analisis", "estado": "no_disponible", "inicio": null, "fin": null, "modelo": null, "fuente": null, "alcance": null, "evidencia": null, "entrada": null, "salida": null, "entrada_cacheada": null, "razonamiento": null, "total": null, "semantica": null},
+    {"etapa": "generacion_casos", "estado": "no_disponible", "inicio": null, "fin": null, "modelo": null, "fuente": null, "alcance": null, "evidencia": null, "entrada": null, "salida": null, "entrada_cacheada": null, "razonamiento": null, "total": null, "semantica": null},
+    {"etapa": "ejecucion_pruebas", "estado": "no_disponible", "inicio": null, "fin": null, "modelo": null, "fuente": null, "alcance": null, "evidencia": null, "entrada": null, "salida": null, "entrada_cacheada": null, "razonamiento": null, "total": null, "semantica": null},
+    {"etapa": "otras_o_mixtas", "estado": "no_disponible", "inicio": null, "fin": null, "modelo": null, "fuente": null, "alcance": null, "evidencia": null, "entrada": null, "salida": null, "entrada_cacheada": null, "razonamiento": null, "total": null, "semantica": null}
+  ],
+  "total_iteracion": {"estado": "no_disponible", "entrada": null, "salida": null, "total": null, "fuente": null, "alcance": null, "limitaciones": "No hay telemetría registrada en esta plantilla."},
+  "uso_modelos_aplicacion": {"estado": "no_disponible", "detalle": null},
+  "estimacion_documental": {"estado": "no_disponible", "tokens_proxy": null, "tokenizer_y_version": null, "alcance": null}
+}

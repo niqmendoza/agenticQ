@@ -1,0 +1,22 @@
+[
+  {
+    "case": "PAPPU-LIVE",
+    "via": "http"
+  },
+  {
+    "case": "PAPPU-READY",
+    "via": "http"
+  },
+  {
+    "case": "PAPPU-OPENAPI",
+    "via": "http"
+  },
+  {
+    "case": "PAPPU-SWAGGER",
+    "via": "playwright"
+  },
+  {
+    "case": "PAPPU-SWAGGER-RECORRIDO",
+    "via": "playwright"
+  }
+]

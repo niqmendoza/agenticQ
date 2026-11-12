@@ -1,0 +1,34 @@
+{
+  "base_url": "http://127.0.0.1:8080",
+  "http_operations": [
+    {
+      "method": "GET",
+      "path": "/api/health/live",
+      "probe": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/health/ready",
+      "probe": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/openapi.json",
+      "probe": true
+    }
+  ],
+  "browser_paths": [
+    "/api/docs"
+  ],
+  "browser_channel": "chrome",
+  "browser_assets": [
+    "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css",
+    "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"
+  ],
+  "db_sources": [
+    "qa-postgres.health+alembic_revisions"
+  ],
+  "browser_controls": {
+    "liveness": ".opblock:has(.opblock-summary-path[data-path='/api/health/live']) .opblock-summary-control"
+  }
+}

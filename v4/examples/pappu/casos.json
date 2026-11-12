@@ -1,0 +1,327 @@
+[
+  {
+    "kind": "case",
+    "id": "PAPPU-LIVE",
+    "requirement": "PAPPU-HEALTH-LIVE",
+    "title": "Liveness de API",
+    "feature": "PappU API local",
+    "priority": "high",
+    "oracle_status": "documented",
+    "sources": [
+      {
+        "path": "backend-foundation.md",
+        "locator": "Línea 86, proceso API vivo"
+      },
+      {
+        "path": "backend/src/pappu/main.py",
+        "locator": "handler live"
+      }
+    ],
+    "expected": "El proceso informa alive en JSON",
+    "steps": [
+      "Consultar /api/health/live"
+    ],
+    "criteria": [
+      {
+        "id": "status",
+        "expected": "HTTP 200",
+        "check": {
+          "type": "status",
+          "equals": 200
+        }
+      },
+      {
+        "id": "media",
+        "expected": "La respuesta tiene tipo JSON",
+        "check": {
+          "type": "content_type",
+          "equals": "application/json"
+        }
+      },
+      {
+        "id": "body",
+        "expected": "status igual a alive",
+        "check": {
+          "type": "json_equals",
+          "equals": "alive",
+          "path": [
+            "status"
+          ]
+        }
+      }
+    ],
+    "http": {
+      "method": "GET",
+      "path": "/api/health/live"
+    }
+  },
+  {
+    "kind": "case",
+    "id": "PAPPU-READY",
+    "requirement": "PAPPU-HEALTH-READY",
+    "title": "Readiness de API",
+    "feature": "PappU API local",
+    "priority": "high",
+    "oracle_status": "documented",
+    "sources": [
+      {
+        "path": "backend-foundation.md",
+        "locator": "Línea 102, contrato de readiness"
+      }
+    ],
+    "expected": "Con dependencias listas la API informa ready",
+    "steps": [
+      "Consultar /api/health/ready"
+    ],
+    "criteria": [
+      {
+        "id": "status",
+        "expected": "HTTP 200",
+        "check": {
+          "type": "status",
+          "equals": 200
+        }
+      },
+      {
+        "id": "media",
+        "expected": "La respuesta tiene tipo JSON",
+        "check": {
+          "type": "content_type",
+          "equals": "application/json"
+        }
+      },
+      {
+        "id": "body",
+        "expected": "status igual a ready",
+        "check": {
+          "type": "json_equals",
+          "equals": "ready",
+          "path": [
+            "status"
+          ]
+        }
+      }
+    ],
+    "http": {
+      "method": "GET",
+      "path": "/api/health/ready"
+    }
+  },
+  {
+    "kind": "case",
+    "id": "PAPPU-OPENAPI",
+    "requirement": "PAPPU-OPENAPI",
+    "title": "Especificación OpenAPI local",
+    "feature": "PappU API local",
+    "priority": "high",
+    "oracle_status": "documented",
+    "sources": [
+      {
+        "path": "backend-foundation.md",
+        "locator": "Línea 89, OpenAPI de desarrollo/test"
+      },
+      {
+        "path": "backend/src/pappu/main.py",
+        "locator": "FastAPI(title, openapi_url)"
+      }
+    ],
+    "expected": "La especificación se entrega en JSON e identifica PappU API",
+    "steps": [
+      "Consultar /api/openapi.json"
+    ],
+    "criteria": [
+      {
+        "id": "status",
+        "expected": "HTTP 200",
+        "check": {
+          "type": "status",
+          "equals": 200
+        }
+      },
+      {
+        "id": "media",
+        "expected": "La respuesta tiene tipo JSON",
+        "check": {
+          "type": "content_type",
+          "equals": "application/json"
+        }
+      },
+      {
+        "id": "title",
+        "expected": "Título de la API",
+        "check": {
+          "type": "json_equals",
+          "equals": "PappU API",
+          "path": [
+            "info",
+            "title"
+          ]
+        }
+      }
+    ],
+    "http": {
+      "method": "GET",
+      "path": "/api/openapi.json"
+    }
+  },
+  {
+    "kind": "case",
+    "id": "PAPPU-SWAGGER",
+    "requirement": "PAPPU-SWAGGER",
+    "title": "Swagger renderiza una operación real",
+    "feature": "PappU API local",
+    "priority": "high",
+    "oracle_status": "documented",
+    "sources": [
+      {
+        "path": "backend-foundation.md",
+        "locator": "Línea 89, documentación interactiva"
+      }
+    ],
+    "expected": "La UI abre y muestra la ruta /api/health/live",
+    "steps": [
+      "Abrir /api/docs y buscar la operación de liveness"
+    ],
+    "criteria": [
+      {
+        "id": "status",
+        "expected": "HTTP 200",
+        "check": {
+          "type": "status",
+          "equals": 200
+        }
+      },
+      {
+        "id": "operation",
+        "expected": "Operación de liveness visible",
+        "check": {
+          "type": "visible_text",
+          "equals": "/api/health/live"
+        }
+      }
+    ],
+    "browser_path": "/api/docs"
+  },
+  {
+    "kind": "case",
+    "id": "PAPPU-POSTGRES",
+    "title": "PostgreSQL responde y registra migraciones",
+    "requirement": "PAPPU-POSTGRES-SMOKE",
+    "feature": "Persistencia local",
+    "priority": "high",
+    "level": "integration",
+    "oracle_status": "inferred",
+    "sources": [
+      {
+        "path": "backend-foundation.md",
+        "locator": "Readiness y PostgreSQL"
+      }
+    ],
+    "expected": "Conexión real en transacción de solo lectura y al menos una revisión Alembic.",
+    "steps": [
+      "Invocar health vía MCP.",
+      "Consultar los identificadores de revisión vía MCP."
+    ],
+    "criteria": [
+      {
+        "id": "connection",
+        "expected": "La sonda confirma conexión en transacción de solo lectura."
+      },
+      {
+        "id": "migration_revision",
+        "expected": "La tabla de revisiones devuelve al menos una revisión."
+      }
+    ]
+  },
+  {
+    "kind": "case",
+    "id": "PAPPU-SWAGGER-RECORRIDO",
+    "title": "Swagger conserva la operación ante acciones en distinto orden",
+    "feature": "Documentación interactiva",
+    "requirement": "PAPPU-SWAGGER-RECORRIDO",
+    "priority": "medium",
+    "level": "ui",
+    "oracle_status": "inferred",
+    "sources": [
+      {
+        "path": "backend-foundation.md",
+        "locator": "Swagger de desarrollo/test"
+      }
+    ],
+    "expected": "La operación sigue visible al cambiar la ventana, abrir o cerrar el detalle, desplazar y recargar.",
+    "steps": [
+      "Cargar Swagger y ejecutar todas las acciones de la ronda en orden reproducible.",
+      "Comprobar la operación y errores de JavaScript después de las acciones."
+    ],
+    "browser_path": "/api/docs",
+    "browser_walk": {
+      "seed": 41,
+      "rounds": 1,
+      "actions": [
+        {
+          "id": "compacto",
+          "type": "resize",
+          "width": 390,
+          "height": 740
+        },
+        {
+          "id": "ancho",
+          "type": "resize",
+          "width": 1280,
+          "height": 800
+        },
+        {
+          "id": "detalle",
+          "type": "click",
+          "control": "liveness"
+        },
+        {
+          "id": "doble-detalle",
+          "type": "double_click",
+          "control": "liveness"
+        },
+        {
+          "id": "desplazar",
+          "type": "scroll",
+          "pixels": 700
+        },
+        {
+          "id": "recargar",
+          "type": "reload"
+        }
+      ]
+    },
+    "criteria": [
+      {
+        "id": "status",
+        "expected": "HTTP 200 en cada navegación",
+        "check": {
+          "type": "status",
+          "equals": 200
+        }
+      },
+      {
+        "id": "operation",
+        "expected": "La operación de liveness es visible en cada punto",
+        "check": {
+          "type": "visible_text",
+          "equals": "/api/health/live"
+        }
+      },
+      {
+        "id": "walk",
+        "expected": "Se completa toda la secuencia",
+        "check": {
+          "type": "walk_completed"
+        }
+      },
+      {
+        "id": "js",
+        "expected": "El recorrido no emite excepciones JavaScript sin capturar",
+        "check": {
+          "type": "no_page_errors"
+        }
+      }
+    ]
+  }
+]

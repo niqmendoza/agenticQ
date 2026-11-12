@@ -1,0 +1,7 @@
+{
+  "base_url": "http://127.0.0.1:8080",
+  "http_operations": [{"method": "GET", "path": "/health"}],
+  "browser_paths": ["/docs"],
+  "db_sources": ["qa-db.read_fixture_summary"],
+  "bearer_env": "QA_TEST_BEARER"
+}

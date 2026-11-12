@@ -1,12 +1,14 @@
 # QA agentizada
 
-Herramientas, documentación y evidencias del proyecto de QA agentizada. La versión de trabajo actual es **V3**.
+[Framework V4 y piloto local con PappU](v4/README.md)
+
+Herramientas, documentación y evidencias del proyecto de QA agentizada. La versión de trabajo actual es **V4**.
 
 ## Dónde está cada cosa
 
 | Carpeta | Contenido |
 | --- | --- |
-| [qa-v3](qa-v3/README.md) | Motor documental, registro de casos y ejecuciones, `log.md`, instrucciones y pruebas de la V3. Es el punto de partida para el servidor. |
+| [qa-v3](qa-v3/README.md) | Motor documental, registro de casos y ejecuciones, `log.md`, instrucciones y pruebas de la V3. Versión anterior y sus instrucciones. |
 | [docs](docs/README.md) | Proceso de QA, relevamiento, entrevistas y plantillas. |
 | [informes](informes/) | Guía visual, mapa e informes del proyecto. Ver [evolución de QA](informes/Reporte-evolucion-QA.html). |
 | [scripts](scripts/README.md) | Herramientas del flujo anterior y sus pruebas. |

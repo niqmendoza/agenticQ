@@ -1,0 +1,19 @@
+{
+  "kind": "case",
+  "id": "TIPO-01",
+  "title": "Rechaza un entero en el campo name",
+  "feature": "Validación de entrada",
+  "requirement": "REQ-NAME-STRING",
+  "oracle_status": "documented",
+  "sources": [{"path": "openapi.json", "locator": "POST /validate · name string · response 422"}],
+  "expected": "Devuelve 422 JSON con código invalid_type y el campo name.",
+  "steps": ["Partir de un fixture válido y reemplazar name por un entero.", "Enviar al endpoint de validación y verificar el error."],
+  "http": {"method": "POST", "path": "/validate"},
+  "criteria": [
+    {"id": "status", "expected": "HTTP 422", "check": {"type": "status", "equals": 422}},
+    {"id": "json", "expected": "Respuesta JSON", "check": {"type": "content_type", "equals": "application/json"}},
+    {"id": "type", "expected": "El campo error es un objeto", "check": {"type": "json_type", "path": ["error"], "equals": "object"}},
+    {"id": "code", "expected": "Código invalid_type", "check": {"type": "json_equals", "path": ["error", "code"], "equals": "invalid_type"}},
+    {"id": "field", "expected": "El error identifica name", "check": {"type": "json_equals", "path": ["error", "field"], "equals": "name"}}
+  ]
+}
