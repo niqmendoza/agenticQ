@@ -371,7 +371,7 @@ def browser_request(profile, path, checks, config=None, plan=None, workflow=None
         responses = []
         blocked_requests = []
         if workflow is not None:
-            operation, _ = workflow
+            flow_kind, operation, steps = workflow
 
             def observe_response(response):
                 request = response.request
@@ -482,7 +482,8 @@ def browser_request(profile, path, checks, config=None, plan=None, workflow=None
         if workflow is not None:
             from playwright.sync_api import expect
 
-            _, steps = workflow
+            if flow_kind == "swagger_ui" and (status is None or status >= 400):
+                raise Unavailable("Swagger UI no está disponible en la ruta declarada.")
             verified, actions = perform_steps(
                 page,
                 steps,
@@ -492,13 +493,21 @@ def browser_request(profile, path, checks, config=None, plan=None, workflow=None
                 Error,
                 expect,
             )
-            if blocked_requests and not all(verified.values()):
-                raise Unavailable(blocked_requests[0], "runner")
-            return verified, {
+            metadata = {
                 "http_status": status,
                 "browser_steps": actions,
                 "operation_statuses": responses,
             }
+            if flow_kind == "swagger_ui" and not responses:
+                reason = (
+                    blocked_requests[0]
+                    if blocked_requests
+                    else "Playwright no observó la ejecución de la operación desde Swagger."
+                )
+                return None, {**metadata, "blocked_reason": reason}
+            if blocked_requests and not all(verified.values()):
+                return None, {**metadata, "blocked_reason": blocked_requests[0]}
+            return verified, metadata
         if config is not None:
             return run_walk(
                 page,
@@ -637,6 +646,7 @@ def run_case(args):
     try:
         if browser_flow:
             workflow = (
+                browser_flow,
                 browser_operation(case, profile, checks),
                 prepare_steps(case, profile, run, checks),
             )
@@ -662,6 +672,8 @@ def run_case(args):
             None,
             {"blocked_reason": "La conexión o lectura del entorno no se completó."},
         )
+    if verdicts is None and blocked_class is None:
+        blocked_class = "inconclusive"
     finished = timestamp()
     duration = round((perf_counter() - tick) * 1000)
     results = [
@@ -719,7 +731,9 @@ def run_case(args):
             "duration_ms": duration,
         },
     )
-    if method == "playwright" and blocked_class == "runner":
+    if method == "playwright" and (
+        browser_flow and status == "blocked" or blocked_class == "runner"
+    ):
         append(
             run,
             {

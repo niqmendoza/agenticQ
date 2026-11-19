@@ -878,6 +878,64 @@ class PortableHarnessTests(unittest.TestCase):
             "HTTP de la operación observada en el navegador · 201", swagger_evidence
         )
 
+    @unittest.skipUnless(os.environ.get("QA_V5_TEST_BROWSER"), "Playwright opcional")
+    def test_suite_stops_when_swagger_is_unavailable(self):
+        with application() as base_url:
+            operation = {
+                "method": "GET",
+                "path": "/records/demo",
+                "actors": ["operator"],
+            }
+            profile = self.workspace / "profile.json"
+            profile.write_text(
+                json.dumps(
+                    {
+                        "base_url": base_url,
+                        "browser_channel": os.environ["QA_V5_TEST_BROWSER"],
+                        "browser_paths": ["/swagger-ausente"],
+                        "browser_controls": {"execute": "#execute"},
+                        "http_operations": [operation],
+                        "credentials": {"operator": "V5_TEST_OPERATOR"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.cli("init", "--title", "Swagger ausente", "--profile", str(profile))
+            self.cli("preflight", "--browser")
+            swagger = self.browser_case("SWAGGER-01")
+            swagger.update(
+                browser_flow="swagger_ui",
+                browser_path="/swagger-ausente",
+                browser_operation={"method": "GET", "path": "/records/demo"},
+                browser_steps=[
+                    {"id": "execute", "type": "click", "control": "execute"}
+                ],
+                criteria=swagger["criteria"]
+                + [
+                    {
+                        "id": "status",
+                        "expected": "HTTP 200",
+                        "check": {"type": "network_status", "equals": 200},
+                    }
+                ],
+            )
+            self.cli("record", data=[swagger, self.case()])
+            self.cli("freeze-plan", "--browser-flow", "swagger_ui")
+            manifest = self.run_dir / "suite.json"
+            manifest.write_text(
+                '[{"case":"SWAGGER-01","via":"playwright"},{"case":"REC-01","via":"http"}]',
+                encoding="utf-8",
+            )
+            output = self.cli("suite", "--manifest", str(manifest), code=3)
+            self.assertIn("El lote se detuvo", output.stdout)
+            self.assertEqual(RecordsHandler.attempts, 0)
+            self.assertFalse(list((self.run_dir / "evidencias").glob("REC-01-*.md")))
+            self.cli("publish", "--zip", code=3)
+            self.assertIn(
+                "Swagger UI",
+                (self.delivery / "informe final.md").read_text(encoding="utf-8"),
+            )
+
     def test_blocked_run_publishes_without_profile_or_plan(self):
         self.cli("init", "--title", "Entorno sin acceso")
         self.cli(
