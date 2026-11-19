@@ -1,0 +1,16 @@
+[
+  {
+    "case": "CHAT-UI",
+    "via": "playwright"
+  },
+  {
+    "case": "CHAT-API",
+    "via": "api",
+    "body": "fixtures/existe.json"
+  },
+  {
+    "case": "CHAT-AUSENTE",
+    "via": "api",
+    "body": "fixtures/ausente.json"
+  }
+]

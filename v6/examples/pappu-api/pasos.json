@@ -1,0 +1,10 @@
+[
+  {
+    "case": "PAPPU-LIVE",
+    "via": "api"
+  },
+  {
+    "case": "PAPPU-READY",
+    "via": "api"
+  }
+]

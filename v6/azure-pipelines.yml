@@ -1,0 +1,44 @@
+# Plantilla de jobs. El pipeline del producto provee el paquete y el catálogo.
+parameters:
+- name: suite
+  type: string
+- name: framework
+  type: string
+  default: v6
+- name: environment
+  type: string
+  default: QA
+- name: buildUnderTest
+  type: string
+- name: browser
+  type: boolean
+  default: true
+jobs:
+- job: AgenticQC
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.12'
+  - script: python -m pip install "${{ parameters.framework }}[api,postgres]"
+    displayName: Instalar Agentic QC
+  - ${{ if eq(parameters.browser, true) }}:
+    - script: python -m playwright install --with-deps chromium
+      displayName: Preparar navegador
+  - script: qc run --id release --suite "$QA_SUITE" --env "$QA_ENVIRONMENT" --build "$QA_BUILD"
+    displayName: Verificar release
+    env:
+      QC_WORKSPACE: $(Agent.TempDirectory)/agentic-qc-$(System.JobId)-$(System.JobAttempt)
+      QA_SUITE: ${{ parameters.suite }}
+      QA_ENVIRONMENT: ${{ parameters.environment }}
+      QA_BUILD: ${{ parameters.buildUnderTest }}
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: '$(Agent.TempDirectory)/agentic-qc-$(System.JobId)-$(System.JobAttempt)/resultados/release/junit.xml'
+      failTaskOnMissingResultsFile: true
+  - publish: $(Agent.TempDirectory)/agentic-qc-$(System.JobId)-$(System.JobAttempt)/resultados
+    condition: succeededOrFailed()
+    artifact: qc-$(System.JobId)-$(System.JobAttempt)

@@ -1,0 +1,7 @@
+{
+  "schema": "agentic-qc/suite-1",
+  "app": "pappu",
+  "profile": "perfil.json",
+  "cases": "casos.json",
+  "manifest": "pasos.json"
+}

@@ -1,0 +1,185 @@
+[
+  {
+    "kind": "case",
+    "id": "CHAT-UI",
+    "title": "El cliente ve el estado y la fuente",
+    "feature": "Consulta de trámites",
+    "requirement": "CONS-01",
+    "priority": "high",
+    "level": "web",
+    "scenario": "Usuario de QA en el chatbot de trámites",
+    "preconditions": [
+      "Catálogo de trámites sintéticos cargado."
+    ],
+    "steps": [
+      "Ingresar QA-17 y consultar.",
+      "Leer la respuesta y la referencia."
+    ],
+    "expected": "El estado y la fuente son visibles.",
+    "oracle_status": "documented",
+    "sources": [
+      {
+        "path": "reglas.md",
+        "locator": "REG-17"
+      }
+    ],
+    "criteria": [
+      {
+        "id": "mensaje",
+        "expected": "Menciona en revisión",
+        "check": {
+          "type": "control_contains",
+          "equals": "en revisión",
+          "control": "mensaje"
+        }
+      },
+      {
+        "id": "fuente",
+        "expected": "Fuente REG-17",
+        "check": {
+          "type": "control_text",
+          "equals": "REG-17",
+          "control": "fuente"
+        }
+      }
+    ],
+    "browser_path": "/",
+    "browser_flow": "web_ui",
+    "browser_steps": [
+      {
+        "id": "numero",
+        "type": "fill",
+        "control": "tramite",
+        "value": "QA-17"
+      },
+      {
+        "id": "consultar",
+        "type": "click",
+        "control": "enviar"
+      }
+    ]
+  },
+  {
+    "kind": "case",
+    "id": "CHAT-API",
+    "title": "El servicio informa el estado registrado",
+    "feature": "Consulta de trámites",
+    "requirement": "CONS-01",
+    "priority": "high",
+    "level": "api",
+    "scenario": "Usuario de QA en el chatbot de trámites",
+    "preconditions": [
+      "Catálogo de trámites sintéticos cargado."
+    ],
+    "steps": [
+      "Consultar el trámite QA-17."
+    ],
+    "expected": "Responde 200, en revisión y con la fuente REG-17.",
+    "oracle_status": "documented",
+    "sources": [
+      {
+        "path": "reglas.md",
+        "locator": "REG-17"
+      }
+    ],
+    "criteria": [
+      {
+        "id": "http",
+        "expected": "HTTP 200",
+        "check": {
+          "type": "status",
+          "equals": 200
+        }
+      },
+      {
+        "id": "estado",
+        "expected": "Estado en revisión",
+        "check": {
+          "type": "json_equals",
+          "equals": "en revisión",
+          "path": [
+            "estado"
+          ],
+          "report_values": [
+            "en revisión",
+            "cerrado"
+          ]
+        }
+      },
+      {
+        "id": "fuente",
+        "expected": "REG-17",
+        "check": {
+          "type": "json_equals",
+          "equals": "REG-17",
+          "path": [
+            "fuente"
+          ]
+        }
+      },
+      {
+        "id": "estructura",
+        "expected": "Respuesta del contrato OpenAPI",
+        "check": {
+          "type": "response_schema",
+          "status": 200
+        }
+      }
+    ],
+    "http": {
+      "method": "POST",
+      "path": "/consulta"
+    },
+    "operation_id": "consultarTramite"
+  },
+  {
+    "kind": "case",
+    "id": "CHAT-AUSENTE",
+    "title": "Trámite sin registrar",
+    "feature": "Consulta de trámites",
+    "requirement": "CONS-02",
+    "priority": "high",
+    "level": "api",
+    "scenario": "Usuario de QA en el chatbot de trámites",
+    "preconditions": [
+      "Catálogo de trámites sintéticos cargado."
+    ],
+    "steps": [
+      "Consultar un identificador sintético inexistente."
+    ],
+    "expected": "La consulta devuelve 404 y ofrece consultar otro número.",
+    "oracle_status": "documented",
+    "sources": [
+      {
+        "path": "reglas.md",
+        "locator": "trámite inexistente"
+      }
+    ],
+    "criteria": [
+      {
+        "id": "http",
+        "expected": "HTTP 404",
+        "check": {
+          "type": "status",
+          "equals": 404
+        }
+      },
+      {
+        "id": "ayuda",
+        "expected": "Ofrece otro número",
+        "check": {
+          "type": "json_equals",
+          "equals": "Podés consultar otro número de trámite.",
+          "path": [
+            "respuesta"
+          ]
+        }
+      }
+    ],
+    "http": {
+      "method": "POST",
+      "path": "/consulta"
+    },
+    "operation_id": "consultarTramite"
+  }
+]

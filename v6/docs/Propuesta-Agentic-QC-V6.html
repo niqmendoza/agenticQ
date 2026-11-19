@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es-AR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agentic QC V6 · Propuesta para gerencia</title>
+<style>
+*{box-sizing:border-box}html{color-scheme:light}body{margin:0;background:#f3f2eb;color:#1f302d;font:17px/1.48 "Source Sans 3",system-ui,sans-serif}main{max-width:960px;margin:32px auto;background:#fffef8;box-shadow:0 8px 32px #24312e14}header{background:#173c38;color:#fffef8;padding:34px 46px 36px;border-bottom:6px solid #a7d9b6}header p{max-width:67ch;margin:.6em 0 0}.meta{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#c6e5cd}h1,h2{line-height:1.12;letter-spacing:-.03em}h1{font:500 clamp(2.1rem,6vw,3.6rem)/1.04 Georgia,serif;margin:18px 0}h2{font:500 1.8rem/1.15 Georgia,serif;margin:0 0 14px}.content{padding:30px 46px 34px}section+section{border-top:1px solid #cbd5c9;padding-top:21px;margin-top:22px}p{margin:0}ol{list-style:none;counter-reset:paso;padding:0;margin:0}li{counter-increment:paso;display:grid;grid-template-columns:2rem 1fr;gap:10px;padding:7px 0}li:before{content:counter(paso);border:1px solid #799989;border-radius:50%;width:1.7rem;height:1.7rem;display:grid;place-items:center;color:#214b40;font-weight:650}.pilot{background:#edf4e9;padding:16px 20px;border-left:4px solid #50795c;margin-top:21px}.pilot strong{display:block;margin-bottom:4px} @media(max-width:640px){main{margin:0}header,.content{padding:24px}h2{font-size:1.55rem}}@media print{@page{size:A4;margin:12mm}body{font-size:11pt;background:white}main{box-shadow:none;margin:0;max-width:100%}header{print-color-adjust:exact;padding:16px 24px}.content{padding:18px 24px}h1{font-size:32pt}h2{font-size:17pt}section,li,.pilot{break-inside:avoid}section+section{margin-top:12px;padding-top:12px}}
+@media print{
+ @page{size:A4;margin:12mm 14mm}
+ body{font:10pt/1.31 "Source Sans 3",Arial,sans-serif}
+ header{padding:14px 20px 16px;border-width:4px}
+ h1{font-size:26pt;margin:10px 0}
+ h2{font-size:15pt;margin:0 0 8px}
+ .content{padding:14px 20px}
+ section+section{padding-top:10px;margin-top:12px}
+ li{padding:4px 0;gap:6px}
+ li:before{width:1.4rem;height:1.4rem}
+ .pilot{margin-top:12px;padding:10px 14px}
+}
+</style></head><body><main>
+<header><p class="meta">Agentic QC · Propuesta V6 · Noviembre de 2026</p>
+<h1>Qué sabemos antes de liberar una versión</h1>
+<p>Con V6 proponemos que cada prueba aprobada quede disponible para la próxima entrega. Gerencia podrá ver qué funciones se comprobaron, cuáles fallaron y cuáles siguen pendientes.</p></header>
+<div class="content"><section><h2>Por qué cambiar</h2>
+<p>Hoy V5 ayuda a diseñar y ejecutar pruebas en una sesión. En la siguiente entrega, el equipo todavía tiene que preparar cómo repetirlas. V6 busca reducir ese trabajo y darle a desarrollo los pasos y la evidencia para reproducir cada falla.</p></section>
+<section><h2>Un día de trabajo del analista de QC</h2>
+<ol>
+<li><div><strong>Elige qué importa.</strong> Abre el proyecto en su computadora, indica la versión a probar y selecciona un recorrido crítico. Por ejemplo, que un cliente pueda consultar un trámite desde el chatbot.</div></li>
+<li><div><strong>Revisa las pruebas.</strong> El agente lee la documentación y propone casos nuevos. El analista confirma con negocio qué respuesta corresponde, aprueba los casos y reutiliza los ya acordados.</div></li>
+<li><div><strong>Ejecuta y revisa.</strong> La herramienta prueba la pantalla, el servicio o los datos que correspondan. Si falta un acceso, muestra qué quedó pendiente y continúa con las pruebas independientes.</div></li>
+<li><div><strong>Entrega y verifica.</strong> Si el trámite aparece con un estado incorrecto, el analista comparte una ficha con el esperado, lo observado y cómo repetirlo. Desarrollo corrige y QC vuelve a correr el mismo caso en la nueva versión.</div></li>
+</ol></section>
+<section><h2>Qué recibe cada equipo</h2>
+<p><strong>Gerencia</strong> recibe una recomendación de salida con sus motivos. <strong>Desarrollo</strong> recibe fallas reproducibles. <strong>QC</strong> conserva las pruebas y puede seguir usando Azure Test Plans para las validaciones manuales y las aprobaciones que el equipo ya gestiona allí.</p></section>
+<aside class="pilot"><strong>Cómo sabremos si conviene adoptarlo</strong>Probar V5 y V6 sobre la misma versión del chatbot, con los mismos casos y datos. Medir cuánto tarda QC en repetir la suite, cuántas fallas conocidas detecta y cuántas puede reproducir desarrollo. Después, repetir el piloto con otra aplicación de la compañía.</aside>
+</div></main></body></html>

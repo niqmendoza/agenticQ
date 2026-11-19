@@ -1,0 +1,13 @@
+/.trabajo/
+/resultados/*
+!/resultados/README.md
+/azure/*.csv
+/reportes/*.html
+/SDD fixes/*
+!/SDD fixes/README.md
+/evaluate-llm/resultados/
+
+/build/
+/dist/
+*.egg-info/
+.agentic-qc/

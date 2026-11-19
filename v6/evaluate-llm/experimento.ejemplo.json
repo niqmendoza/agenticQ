@@ -1,0 +1,15 @@
+{
+  "app": "chat-tramites",
+  "environment": "local",
+  "healthy_build": "demo-sano",
+  "regressions": {"estado": {"build": "demo-con-falla"}},
+  "trials": [{
+    "id": "repeticion-1",
+    "model": "ID_OBSERVADO_DEL_MODELO",
+    "results": {
+      "healthy": "../.agentic-qc/resultados/sano/resultado.json",
+      "estado": "../.agentic-qc/resultados/con-falla/resultado.json"
+    },
+    "reviewed_cases": {"estado": ["CHAT-API", "CHAT-UI"]}
+  }]
+}

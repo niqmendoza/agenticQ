@@ -1,0 +1,31 @@
+openapi: 3.1.0
+info: {title: Chatbot de trámites, version: '1'}
+paths:
+  /consulta:
+    post:
+      operationId: consultarTramite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tramite]
+              properties: {tramite: {type: string}}
+      responses:
+        '200':
+          description: Trámite encontrado
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Consulta'}
+        '404':
+          description: Trámite ausente
+components:
+  schemas:
+    Consulta:
+      type: object
+      required: [estado, respuesta, fuente]
+      properties:
+        estado: {type: string}
+        respuesta: {type: string}
+        fuente: {type: string}

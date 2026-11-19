@@ -1,13 +1,14 @@
 # QA agentizada
 
-[Framework portable V5 y prompt para Copilot](v5/README.md)
+[Agentic QC V6 · instalación y piloto](v6/README.md) · [Propuesta ejecutiva](v6/docs/Propuesta-Agentic-QC-V6.html) · [Guía V5](v5/README.md)
 
-Herramientas, documentación y evidencias del proyecto de QA agentizada. La versión de trabajo actual es **V5**.
+Herramientas, documentación y evidencias del proyecto de QA agentizada. V6 incorpora catálogos reutilizables, regresión por release y comparación con las corridas de V5.
 
 ## Dónde está cada cosa
 
 | Carpeta | Contenido |
 | --- | --- |
+| [v6](v6/README.md) | Framework de regresión por aplicación y release. |
 | [v5](v5/README.md) | Harness autocontenido para Copilot, con entregas Markdown para Obsidian. |
 | [v4](v4/README.md) | Versión anterior del framework y piloto local con PappU. |
 | [qa-v3](qa-v3/README.md) | Motor documental, registro de casos y ejecuciones, `log.md`, instrucciones y pruebas de la V3. Versión anterior y sus instrucciones. |
@@ -19,9 +20,9 @@ Herramientas, documentación y evidencias del proyecto de QA agentizada. La vers
 | [qa-process-prototype](qa-process-prototype/README.md) | Prototipo interactivo del proceso. |
 | [Plantilla-diagramas](Plantilla-diagramas/) | Plantilla y kit de arquitectura. |
 
-## Empezar con V5
+## Empezar con V6
 
-Abrí la carpeta `v5` en Copilot y completá el [prompt maestro](v5/PROMPT-MAESTRO.md) con la aplicación, el entorno y el alcance autorizado. Cada corrida publica sus notas en [v5/resultados](v5/resultados/).
+Abrí la carpeta `v6` en Copilot, seguí la [guía de instalación y piloto](v6/README.md) y adjuntá el [prompt maestro](v6/PROMPT-MAESTRO.md) con los datos de la aplicación. La guía incluye el procedimiento para repetir casos de V5 y comparar las dos corridas.
 
 ## Material anterior
 

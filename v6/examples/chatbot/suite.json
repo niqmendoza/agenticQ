@@ -1,0 +1,10 @@
+{
+  "schema": "agentic-qc/suite-1",
+  "app": "chat-tramites",
+  "cases": "casos.json",
+  "manifest": "pasos.json",
+  "profile": "perfil.json",
+  "corpus": "docs",
+  "requirements": "requisitos.json",
+  "openapi": "openapi.yaml"
+}

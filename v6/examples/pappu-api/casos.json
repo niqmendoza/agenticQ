@@ -1,0 +1,116 @@
+[
+  {
+    "kind": "case",
+    "id": "PAPPU-LIVE",
+    "requirement": "PAPPU-HEALTH-LIVE",
+    "title": "Liveness de API",
+    "feature": "PappU API local",
+    "priority": "high",
+    "oracle_status": "documented",
+    "sources": [
+      {
+        "path": "backend-foundation.md",
+        "locator": "/api/health/live"
+      }
+    ],
+    "expected": "El proceso informa alive en JSON",
+    "steps": [
+      "Consultar /api/health/live"
+    ],
+    "criteria": [
+      {
+        "id": "status",
+        "expected": "HTTP 200",
+        "check": {
+          "type": "status",
+          "equals": 200
+        }
+      },
+      {
+        "id": "media",
+        "expected": "La respuesta tiene tipo JSON",
+        "check": {
+          "type": "content_type",
+          "equals": "application/json"
+        }
+      },
+      {
+        "id": "body",
+        "expected": "status igual a alive",
+        "check": {
+          "type": "json_equals",
+          "equals": "alive",
+          "path": [
+            "status"
+          ]
+        }
+      }
+    ],
+    "http": {
+      "method": "GET",
+      "path": "/api/health/live"
+    },
+    "level": "api",
+    "scenario": "Entorno local de QA de PappU",
+    "preconditions": [
+      "Stack del ambiente de prueba iniciado."
+    ]
+  },
+  {
+    "kind": "case",
+    "id": "PAPPU-READY",
+    "requirement": "PAPPU-HEALTH-READY",
+    "title": "Readiness de API",
+    "feature": "PappU API local",
+    "priority": "high",
+    "oracle_status": "documented",
+    "sources": [
+      {
+        "path": "backend-foundation.md",
+        "locator": "/api/health/ready"
+      }
+    ],
+    "expected": "Con dependencias listas la API informa ready",
+    "steps": [
+      "Consultar /api/health/ready"
+    ],
+    "criteria": [
+      {
+        "id": "status",
+        "expected": "HTTP 200",
+        "check": {
+          "type": "status",
+          "equals": 200
+        }
+      },
+      {
+        "id": "media",
+        "expected": "La respuesta tiene tipo JSON",
+        "check": {
+          "type": "content_type",
+          "equals": "application/json"
+        }
+      },
+      {
+        "id": "body",
+        "expected": "status igual a ready",
+        "check": {
+          "type": "json_equals",
+          "equals": "ready",
+          "path": [
+            "status"
+          ]
+        }
+      }
+    ],
+    "http": {
+      "method": "GET",
+      "path": "/api/health/ready"
+    },
+    "level": "api",
+    "scenario": "Entorno local de QA de PappU",
+    "preconditions": [
+      "Stack del ambiente de prueba iniciado."
+    ]
+  }
+]
