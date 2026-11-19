@@ -1,13 +1,15 @@
 # QA agentizada
 
-[Framework V4 y piloto local con PappU](v4/README.md)
+[Framework portable V5 y prompt para Copilot](v5/README.md)
 
-Herramientas, documentación y evidencias del proyecto de QA agentizada. La versión de trabajo actual es **V4**.
+Herramientas, documentación y evidencias del proyecto de QA agentizada. La versión de trabajo actual es **V5**.
 
 ## Dónde está cada cosa
 
 | Carpeta | Contenido |
 | --- | --- |
+| [v5](v5/README.md) | Harness autocontenido para Copilot, con entregas Markdown para Obsidian. |
+| [v4](v4/README.md) | Versión anterior del framework y piloto local con PappU. |
 | [qa-v3](qa-v3/README.md) | Motor documental, registro de casos y ejecuciones, `log.md`, instrucciones y pruebas de la V3. Versión anterior y sus instrucciones. |
 | [docs](docs/README.md) | Proceso de QA, relevamiento, entrevistas y plantillas. |
 | [informes](informes/) | Guía visual, mapa e informes del proyecto. Ver [evolución de QA](informes/Reporte-evolucion-QA.html). |
@@ -17,16 +19,9 @@ Herramientas, documentación y evidencias del proyecto de QA agentizada. La vers
 | [qa-process-prototype](qa-process-prototype/README.md) | Prototipo interactivo del proceso. |
 | [Plantilla-diagramas](Plantilla-diagramas/) | Plantilla y kit de arquitectura. |
 
-## Empezar con V3
+## Empezar con V5
 
-Leer la [guía de V3](qa-v3/README.md) y el [protocolo del agente](qa-v3/docs/PROTOCOLO-AGENTE.md). Se necesita Python 3.10+, una carpeta local de documentos del segundo cerebro y un directorio de trabajo fuera de ese corpus. El agente debe tener acceso autorizado a la aplicación y a las herramientas de prueba para ejecutar el recorrido real.
-
-```sh
-cd qa-v3
-python3 -m unittest discover -s tests -v
-```
-
-La generación de casos, su revisión semántica y las pruebas de producto requieren un agente; indexar o recuperar documentos no demuestra cobertura ni aprobación de una release.
+Abrí la carpeta `v5` en Copilot y completá el [prompt maestro](v5/PROMPT-MAESTRO.md) con la aplicación, el entorno y el alcance autorizado. Cada corrida publica sus notas en [v5/resultados](v5/resultados/).
 
 ## Material anterior
 

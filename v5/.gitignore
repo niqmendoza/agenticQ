@@ -1,0 +1,7 @@
+/.trabajo/
+/resultados/*
+!/resultados/README.md
+/azure/*.csv
+/reportes/*.html
+/SDD fixes/*
+!/SDD fixes/README.md
