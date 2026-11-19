@@ -5,7 +5,8 @@ from collections import Counter
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from audit import STATES, inspect
+from audit import STATES, inspect, publication_code
+from contracts import BROWSER_FLOWS
 from markdown import inline, source_label, table, write_markdown
 from session import RESULTS, TEMPLATES, load, run_id
 
@@ -18,6 +19,7 @@ def evidence_link(reference, notes):
 
 def case_details(case):
     sources = [source_label(source) for source in case["sources"]]
+    browser_flow = BROWSER_FLOWS.get(case.get("browser_flow"))
     criteria = [
         f"- {inline(item['id'])} · {inline(item['expected'])}"
         for item in case["criteria"]
@@ -35,6 +37,7 @@ def case_details(case):
         f"- Funcionalidad y requisito · {inline(case['feature'])} / {inline(case['requirement'])}",
         f"- Prioridad y nivel · {inline(case['priority'])} / {inline(case['level'])}",
         f"- Escenario · {inline(case['scenario'])}",
+        *([f"- Recorrido Playwright · {browser_flow}"] if browser_flow else []),
         *([f"- Motivo · {inline(case['rationale'])}"] if case.get("rationale") else []),
         f"- Resultado esperado · {inline(case['expected'])}",
         f"- Oráculo · {inline(case['oracle_status'])}"
@@ -195,6 +198,13 @@ def final_report(meta, report):
             f"- Evidencia · {evidence_link(item.get('evidence'), report['evidence'])}",
             "",
         ]
+    if report["browser_blocked"]:
+        lines += ["**Playwright bloqueado. Ver preflight y log.**", ""]
+    if report["missing_browser_flows"]:
+        missing = ", ".join(
+            BROWSER_FLOWS[key] for key in report["missing_browser_flows"]
+        )
+        lines += [f"**Verificación Playwright pendiente · {missing}.**", ""]
     lines += ["## Trazabilidad de requisitos", ""]
     catalog = report["catalog"]
     groups = report["groups"]
@@ -275,6 +285,9 @@ def publish(args):
         raise ValueError("resultados debe ser una carpeta local a V5.")
     if target.exists() or target.is_symlink():
         raise ValueError("La entrega ya existe. Usá --name para publicar una revisión.")
+    archive = target.with_suffix(".zip")
+    if args.zip and (archive.exists() or archive.is_symlink()):
+        raise ValueError("El ZIP ya existe. Usá --name para publicar una revisión.")
     RESULTS.mkdir(exist_ok=True)
 
     def input_lines(name):
@@ -284,7 +297,7 @@ def publish(args):
         return source.read_text(encoding="utf-8").splitlines()
 
     with TemporaryDirectory(dir=run) as temporary:
-        output = Path(temporary) / "entrega"
+        output = Path(temporary) / target.name
         output.mkdir()
         for name, lines in {
             "plan casos.md": render_plan(report),
@@ -303,6 +316,15 @@ def publish(args):
             destination = output / relative
             destination.parent.mkdir(exist_ok=True)
             shutil.copyfile(source, destination)
+        if args.zip:
+            bundle = shutil.make_archive(
+                str(Path(temporary) / "evidencias"),
+                "zip",
+                root_dir=temporary,
+                base_dir=output.name,
+            )
         output.rename(target)
-    print(target)
-    return 1 if report["issues"] else 0
+        if args.zip:
+            Path(bundle).rename(archive)
+    print(archive if args.zip else target)
+    return publication_code(report)

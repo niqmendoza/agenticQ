@@ -11,11 +11,25 @@ from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 from uuid import uuid4
 
+from browser_steps import BrowserDataUnavailable, perform_steps, prepare_steps
 from contracts import criteria_by_id, derive_status
+from database_runner import (
+    DatabaseUnavailable,
+    query_arguments,
+    read_rows,
+    validate_database,
+)
 from json_tools import JSON_TYPES, json_at, valid_path
 from markdown import inline, table, write_markdown
 from records import store_records
-from session import load, read_json, timestamp
+from session import (
+    append,
+    load,
+    pending_browser_flows,
+    read_json,
+    require_browser_ready,
+    timestamp,
+)
 from ui_walk import inspect_page, run_walk, walk_plan
 
 HTTP_METHODS = ("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
@@ -122,6 +136,8 @@ def validate_profile(profile):
     if type(timeout) is not int or not 1 <= timeout <= 120:
         raise ValueError("timeout_seconds debe ser un entero entre 1 y 120.")
     validate_browser_and_db(profile)
+    if "database" in profile:
+        validate_database(profile["database"])
 
 
 def validate_origin(base_url):
@@ -185,15 +201,31 @@ def checks_for(case, method):
         if not isinstance(check, dict):
             raise ValueError(f"Falta check ejecutable para {identifier}.")
         kind, expected = check.get("type"), check.get("equals")
+        if case.get("browser_flow") and method == "playwright":
+            valid = (
+                kind in ("visible_text", "control_text", "control_contains")
+                and isinstance(expected, str)
+                and bool(expected)
+                or kind == "network_status"
+                and type(expected) is int
+                and 100 <= expected <= 599
+            )
+            if not valid:
+                raise ValueError(
+                    f"Comprobación interactiva inválida para {identifier}."
+                )
+            checks[identifier] = check
+            continue
         valid = (
             kind == "status"
+            and method in ("http", "playwright")
             and type(expected) is int
             and 100 <= expected <= 599
             or method == "http"
             and kind == "content_type"
             and isinstance(expected, str)
             and bool(expected)
-            or method == "http"
+            or method in ("http", "db")
             and kind in ("json_equals", "json_type")
             and "equals" in check
             and valid_path(check.get("path"))
@@ -202,6 +234,10 @@ def checks_for(case, method):
                 or isinstance(expected, str)
                 and expected in JSON_TYPES
             )
+            or method == "db"
+            and kind == "row_count"
+            and type(expected) is int
+            and 0 <= expected <= 100
             or method == "playwright"
             and kind in ("walk_completed", "no_page_errors")
             and "browser_walk" in case
@@ -267,18 +303,32 @@ def http_request(profile, operation, checks, fixture, actor):
         elif kind == "content_type":
             results[identifier] = media_type == check["equals"]
         else:
-            try:
-                value = json_at(data, check["path"])
-            except (KeyError, IndexError):
-                results[identifier] = False
-            else:
-                results[identifier] = (
-                    type(value) in JSON_TYPES[check["equals"]]
-                    if kind == "json_type"
-                    else type(value) is type(check["equals"])
-                    and value == check["equals"]
-                )
+            results[identifier] = json_result(data, check)
     return results, {"http_status": status, "content_type": media_type}
+
+
+def json_result(data, check):
+    try:
+        value = json_at(data, check["path"])
+    except (KeyError, IndexError):
+        return False
+    expected = check["equals"]
+    if check["type"] == "json_type":
+        return type(value) in JSON_TYPES[expected]
+    return type(value) is type(expected) and value == expected
+
+
+def database_request(profile, case, checks):
+    database, query, values = query_arguments(profile, case)
+    rows = read_rows(database, query, values)
+    data = [dict(zip(query["columns"], row)) for row in rows[:100]]
+    verdicts = {
+        identifier: len(rows) == check["equals"]
+        if check["type"] == "row_count"
+        else json_result(data, check)
+        for identifier, check in checks.items()
+    }
+    return verdicts, {"rows_observed": len(data), "rows_truncated": len(rows) > 100}
 
 
 @contextmanager
@@ -313,17 +363,44 @@ def playwright_browser(profile):
             browser.close()
 
 
-def browser_request(profile, path, checks, config=None, plan=None):
+def browser_request(profile, path, checks, config=None, plan=None, workflow=None):
     target = origin(profile["base_url"])
     with playwright_browser(profile) as (browser, Error, PlaywrightTimeout):
         page = browser.new_page(service_workers="block")
         errors = []
+        responses = []
+        blocked_requests = []
+        if workflow is not None:
+            operation, _ = workflow
+
+            def observe_response(response):
+                request = response.request
+                if (
+                    operation
+                    and origin(request.url) == target
+                    and request.method == operation["method"]
+                    and browser_url_path(request.url) == operation["path"]
+                ):
+                    responses.append(response.status)
+
+            page.on("response", observe_response)
         if config is not None:
             page.on("pageerror", lambda _: errors.append(True))
 
         def route_request(route):
             request = route.request
             same_origin = origin(request.url) == target
+            if (
+                workflow is not None
+                and request.is_navigation_request()
+                and (
+                    not same_origin
+                    or browser_url_path(request.url)
+                    not in profile.get("browser_paths", [])
+                )
+            ):
+                route.abort()
+                return
             if config is not None and request.is_navigation_request():
                 location = urlsplit(request.url)
                 expected = urlsplit(path)
@@ -336,7 +413,20 @@ def browser_request(profile, path, checks, config=None, plan=None):
             approved_asset = request.url in profile.get(
                 "browser_assets", []
             ) and request.resource_type in ("script", "stylesheet")
-            if request.method in ("GET", "HEAD") and (same_origin or approved_asset):
+            allowed_mutation = (
+                workflow is not None
+                and same_origin
+                and any(
+                    operation["method"] == request.method
+                    and operation["path"] == browser_url_path(request.url)
+                    for operation in profile.get("http_operations", [])
+                )
+            )
+            if (
+                allowed_mutation
+                or request.method in ("GET", "HEAD")
+                and (same_origin or approved_asset)
+            ):
                 # Playwright puede continuar una redirección sin volver a llamar al handler.
                 try:
                     headers = (
@@ -349,16 +439,32 @@ def browser_request(profile, path, checks, config=None, plan=None):
                         }
                     )
                     fetched = route.fetch(
-                        headers=headers, max_redirects=0, timeout=15000
+                        headers=headers,
+                        max_redirects=0,
+                        timeout=60000 if workflow else 15000,
                     )
                 except Error:
                     route.abort()
                     return
                 if 300 <= fetched.status < 400:
+                    if workflow is not None and (
+                        request.is_navigation_request() or allowed_mutation
+                    ):
+                        blocked_requests.append(
+                            "La navegación u operación redirigió a otra ruta."
+                        )
                     route.abort()
                 else:
                     route.fulfill(response=fetched)
             else:
+                if (
+                    workflow is not None
+                    and same_origin
+                    and request.method not in ("GET", "HEAD")
+                ):
+                    blocked_requests.append(
+                        "El recorrido intentó una operación no declarada en el perfil."
+                    )
                 route.abort()
 
         page.context.route("**/*", route_request)
@@ -373,6 +479,26 @@ def browser_request(profile, path, checks, config=None, plan=None):
                 "Playwright no pudo cargar la página del perfil."
             ) from None
         status = response.status if response else None
+        if workflow is not None:
+            from playwright.sync_api import expect
+
+            _, steps = workflow
+            verified, actions = perform_steps(
+                page,
+                steps,
+                checks,
+                profile.get("browser_controls", {}),
+                responses,
+                Error,
+                expect,
+            )
+            if blocked_requests and not all(verified.values()):
+                raise Unavailable(blocked_requests[0], "runner")
+            return verified, {
+                "http_status": status,
+                "browser_steps": actions,
+                "operation_statuses": responses,
+            }
         if config is not None:
             return run_walk(
                 page,
@@ -391,10 +517,37 @@ def browser_request(profile, path, checks, config=None, plan=None):
         }
 
 
+def browser_url_path(url):
+    parts = urlsplit(url)
+    return parts.path + (f"?{parts.query}" if parts.query else "")
+
+
+def browser_operation(case, profile, checks):
+    operation = case.get("browser_operation")
+    needs_response = any(check["type"] == "network_status" for check in checks.values())
+    if case["browser_flow"] == "swagger_ui" and not needs_response:
+        raise ValueError(
+            "Swagger requiere observar el estado de la operación ejecutada en el navegador."
+        )
+    if operation is None and not needs_response:
+        return None
+    if not isinstance(operation, dict) or not any(
+        allowed["method"] == operation.get("method")
+        and allowed["path"] == operation.get("path")
+        for allowed in profile.get("http_operations", [])
+    ):
+        raise ValueError(
+            "La operación observada debe estar autorizada en http_operations."
+        )
+    return operation
+
+
 def run_case(args):
     run, meta, events = load(args.run)
-    if not (run / "plan.json").is_file():
+    plan_file = run / "plan.json"
+    if not plan_file.is_file():
         raise ValueError("Congelá el plan antes de ejecutar un caso.")
+    release_plan = read_json(plan_file)
     profile = meta["profile"]
     case = next(
         (
@@ -407,6 +560,19 @@ def run_case(args):
     if not case:
         raise ValueError("Caso no registrado.")
     method = args.via
+    browser_flow = case.get("browser_flow")
+    if browser_flow and method != "playwright":
+        raise ValueError("El recorrido interactivo requiere Playwright.")
+    if method in ("http", "playwright") and not release_plan.get("browser_flows"):
+        raise ValueError(
+            "Creá un plan que incluya el recorrido Playwright de la web o Swagger."
+        )
+    if release_plan.get("browser_flows"):
+        require_browser_ready(events)
+        if not browser_flow and pending_browser_flows(release_plan, events):
+            raise ValueError(
+                "Ejecutá primero los recorridos Playwright exigidos por el plan."
+            )
     checks = checks_for(case, method)
     fixture = None
     config = case.get("browser_walk")
@@ -452,6 +618,9 @@ def run_case(args):
             if len(fixture) > MAX_BODY:
                 raise ValueError("El fixture JSON supera el límite.")
             json.loads(fixture)
+    elif method == "db":
+        if args.body:
+            raise ValueError("Usá db.parameters para los valores de consulta.")
     else:
         path = target_path(case.get("browser_path"))
         if path not in profile.get("browser_paths", []) or args.body:
@@ -464,12 +633,26 @@ def run_case(args):
     started, tick = timestamp(), perf_counter()
     evidence_path = f"evidencias/{args.case}-{uuid4().hex}.md"
     blocked_class = None
+    workflow = None
     try:
-        verdicts, metadata = (
-            http_request(profile, operation, checks, fixture, actor)
-            if method == "http"
-            else browser_request(profile, path, checks, config, plan)
-        )
+        if browser_flow:
+            workflow = (
+                browser_operation(case, profile, checks),
+                prepare_steps(case, profile, run, checks),
+            )
+        if method == "db":
+            verdicts, metadata = database_request(profile, case, checks)
+        elif method == "http":
+            verdicts, metadata = http_request(
+                profile, operation, checks, fixture, actor
+            )
+        else:
+            verdicts, metadata = browser_request(
+                profile, path, checks, config, plan, workflow
+            )
+    except (BrowserDataUnavailable, DatabaseUnavailable) as error:
+        blocked_class = "environment"
+        verdicts, metadata = None, {"blocked_reason": str(error)}
     except Unavailable as error:
         blocked_class = error.classification
         verdicts, metadata = None, {"blocked_reason": str(error)}
@@ -505,7 +688,8 @@ def run_case(args):
     status = derive_status(results)
     observation = metadata.get("blocked_reason")
     if observation is None:
-        status_code = metadata.get("http_status")
+        statuses = metadata.get("operation_statuses", [])
+        status_code = statuses[-1] if statuses else metadata.get("http_status")
         count = sum(result["status"] == "passed" for result in results)
         observation = (
             f"{count} de {len(results)} comprobaciones coincidieron con lo esperado."
@@ -535,6 +719,16 @@ def run_case(args):
             "duration_ms": duration,
         },
     )
+    if method == "playwright" and blocked_class == "runner":
+        append(
+            run,
+            {
+                "kind": "note",
+                "phase": "playwright",
+                "observation": metadata["blocked_reason"],
+                "browser_ready": False,
+            },
+        )
     print(run / evidence_path)
     return {"passed": 0, "failed": 1, "blocked": 3}[status]
 
@@ -549,8 +743,11 @@ def execution_evidence(case, method, status, results, metadata, duration):
     ]
     if "blocked_reason" in metadata:
         lines.append(f"- Bloqueo · {inline(metadata['blocked_reason'])}")
-    else:
+    elif "http_status" in metadata:
         lines.append(f"- Estado HTTP observado · {inline(metadata.get('http_status'))}")
+    if "rows_observed" in metadata:
+        suffix = " o más" if metadata["rows_truncated"] else ""
+        lines.append(f"- Filas observadas · {metadata['rows_observed']}{suffix}")
     if "content_type" in metadata:
         lines.append(f"- Tipo de contenido · {inline(metadata['content_type'])}")
     if "seed" in metadata:
@@ -572,6 +769,27 @@ def execution_evidence(case, method, status, results, metadata, duration):
                 ),
             ),
         ]
+    if "browser_steps" in metadata:
+        lines += [
+            "",
+            *table(
+                ("Paso", "Interacción", "Resultado", "Duración en ms"),
+                (
+                    (
+                        inline(step["id"]),
+                        step["type"],
+                        step["outcome"],
+                        step["duration_ms"],
+                    )
+                    for step in metadata["browser_steps"]
+                ),
+            ),
+        ]
+        statuses = metadata["operation_statuses"]
+        if statuses:
+            lines.append(
+                f"- HTTP de la operación observada en el navegador · {', '.join(map(str, statuses))}"
+            )
     expected = {
         criterion["id"]: criterion["expected"] for criterion in case["criteria"]
     }

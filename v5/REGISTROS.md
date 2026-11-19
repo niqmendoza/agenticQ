@@ -22,7 +22,7 @@ Adaptá este ejemplo al alcance aprobado. El ejemplo usa rutas ficticias.
 
 El origen se declara sin ruta ni credenciales. Las rutas HTTP son exactas, incluyendo query cuando corresponda. `probe` es opcional en GET/HEAD y admite estado y tipo de contenido esperados. Su actor predeterminado es `anonymous`. Los actores distintos de `anonymous` reciben el bearer desde su variable de entorno. El runner HTTP no sigue redirecciones.
 
-El runner Playwright hace un smoke de lectura. `browser_channel` puede indicar `chrome`, `msedge` o `chromium`. `browser_assets` admite URLs HTTPS exactas de scripts y estilos necesarios para ese smoke. Si se declara `browser_walk`, el caso registra semilla, rondas y acciones con controles aprobados en `browser_controls`. Para login, flujos con estado, interacciones complejas y otros sistemas usá la herramienta autorizada que corresponda y registrá el intento.
+El runner Playwright hace un smoke de lectura. `browser_channel` puede indicar `chrome`, `msedge` o `chromium`. `browser_assets` admite URLs HTTPS exactas de scripts y estilos necesarios para ese smoke. Si se declara `browser_walk`, el caso registra semilla, rondas y acciones con controles aprobados en `browser_controls`. Para recorridos funcionales con interacción, definí `browser_flow` y `browser_steps`.
 
 `openapi --spec ARCHIVO` inventaría operaciones de un OpenAPI/Swagger JSON local sin enviar peticiones. `fixture-variant --help` genera una variación de tipo sobre un fixture JSON de prueba. Ninguno autoriza rutas o acciones nuevas.
 
@@ -55,8 +55,58 @@ El runner Playwright hace un smoke de lectura. `browser_channel` puede indicar `
 - Los oráculos `inferred` requieren `oracle_rationale`. Los `pending` requieren `oracle_pending_reason` y quedan sin veredicto mientras la expectativa esté abierta. Para `documented`, cada fuente incluye `path` y `locator` o `start`/`end`. Podés agregar `revision`.
 - Los `check` solo son necesarios para `execute`. HTTP admite `status`, `content_type`, `json_equals` y `json_type`. Playwright admite `status`, `visible_text` y, con recorrido configurado, `walk_completed` y `no_page_errors`.
 - Los recorridos declaran `browser_path` y, cuando aplica, `browser_walk` con `seed`, `rounds` (1 a 3) y 2 a 8 acciones. Cada acción tiene `id` y `type`. Tipos disponibles · `click`/`double_click` con `control` declarado, `resize` con `width` y `height`, `scroll` con `pixels` o `reload`. Ejecutá solo controles de lectura. El runner restringe HTTP del navegador a la carga de lectura del origen y recursos exactos declarados. Para una semilla alternativa se puede usar `--seed`.
-- Para un lote, la entrada es una lista como `[{"case":"REC-01","via":"http"}]`. Un cuerpo JSON opcional se indica en `body`, relativo al manifiesto, o con `execute --body ARCHIVO`. La salida del runner usa 0 para aprobado, 1 para fallido, 2 para configuración/entrada inválida y 3 para bloqueado.
+- Para un lote, la entrada es una lista en orden de ejecución como `[{"case":"WEB-01","via":"playwright"},{"case":"REC-01","via":"http"}]`. Un cuerpo JSON opcional se indica en `body`, relativo al manifiesto, o con `execute --body ARCHIVO`. La salida del runner usa 0 para aprobado, 1 para fallido, 2 para configuración/entrada inválida y 3 para bloqueado.
 - Congelá el plan antes del primer intento. `freeze-plan --requirements ARCHIVO` acepta una lista independiente de IDs, por ejemplo `["REQ-REC-READ","REQ-REC-EDIT"]`.
+
+## Recorridos de navegador
+
+- `browser_flow: "web_ui"` identifica una tarea con controles del producto y una comprobación visible.
+- `browser_flow: "swagger_ui"` identifica una operación ejecutada desde Swagger UI. Declarala en `browser_operation` con `method` y `path` de `http_operations`. Agregá una comprobación `network_status` de esa operación y una aserción del resultado mostrado.
+- En el perfil, `browser_paths` declara las páginas a visitar. `browser_controls` asocia nombres con selectores de Playwright. Las solicitudes de escritura iniciadas por la página requieren método y ruta exactos en `http_operations`. El runner limita los recorridos declarativos al origen del perfil y no sigue redirecciones.
+- `browser_steps` admite `click`, `fill`, `press`, `select`, `upload` y `wait_visible`. Cada acción lleva `id`, `type` y `control`. Usá `value` para rellenar, pulsar una tecla o elegir una opción. Para credenciales usá `value_env` con `fill`. Para `upload`, `value` es la ruta relativa a `fixtures/` dentro de la corrida. Las evidencias guardan los pasos sin los valores ingresados.
+- `visible_text` comprueba un texto visible. `control_text` y `control_contains` comprueban `equals` en el control declarado. `network_status` compara el HTTP capturado desde el navegador con el entero `equals`.
+
+Ejemplo de campos de un caso Swagger. En el perfil, los controles `try`, `execute` y `status` apuntan a los elementos reales de Swagger.
+
+```json
+{
+  "browser_flow": "swagger_ui",
+  "browser_path": "/docs",
+  "browser_operation": {"method": "GET", "path": "/records/demo"},
+  "browser_steps": [
+    {"id": "try", "type": "click", "control": "try"},
+    {"id": "execute", "type": "click", "control": "execute"}
+  ],
+  "criteria": [
+    {"id": "visible", "expected": "Swagger muestra 200", "check": {"type": "control_text", "control": "status", "equals": "200"}},
+    {"id": "network", "expected": "La operación responde 200", "check": {"type": "network_status", "equals": 200}}
+  ]
+}
+```
+
+Ejecutá con `execute --run ID --case ID --via playwright` o `suite`. Si el recorrido necesita Playwright fuera del runner, registralo mediante `record` con `execution_method: "playwright"` y evidencia de las acciones y el resultado. Los casos HTTP y de base de datos van después de los recorridos exigidos. Si Playwright o su acceso quedan bloqueados, detené el lote y avisá al usuario.
+
+## Consultas de base de datos
+
+`execute --via db` usa las consultas declaradas en el perfil y aplica filtros parametrizados. Las comprobaciones admiten `row_count`, `json_equals` y `json_type` sobre las filas proyectadas. El runner registra el conteo y los veredictos. PostgreSQL requiere instalar `requirements-postgres.txt` y un acceso de solo lectura mediante `dsn_env`. Para SQLite, usá `driver: "sqlite"` y una `path` absoluta.
+
+```json
+{
+  "database": {
+    "driver": "postgres",
+    "dsn_env": "QA_READONLY_DSN",
+    "queries": {
+      "record": {"table": "qa.records", "columns": ["status"], "where": ["id"]}
+    }
+  }
+}
+```
+
+En el caso, `"db": {"query": "record", "parameters": {"id": "QA-1"}}` elige la consulta y su filtro. Un criterio puede usar `{"type": "json_equals", "path": [0, "status"], "equals": "ready"}`.
+
+## Datos sintéticos
+
+`mock-data --run ID --spec ESQUEMA.json --name demo --seed 42` escribe `fixtures/demo.json` en el área de trabajo. Usá `--count` para generar una lista de registros. Los generadores son `constant`, `choice`, `integer`, `boolean`, `uuid` y `sequence`. El esquema describe datos de prueba, por ejemplo `{"id": {"type": "sequence"}, "status": {"type": "choice", "values": ["ready", "pending"]}}`.
 
 ## Datos de un caso para Azure
 
@@ -99,7 +149,7 @@ Prepará una nota sanitizada en `.trabajo/<id>/evidencias/REC-01-intento-1.md`. 
 }
 ```
 
-`execution_method` admite `http`, `playwright`, `mcp_db`, `cli`, `suite`, `manual` y `other`. Para resultados observados mediante MCP agregá `db_source` declarado en el perfil. `executor` admite `runner`, `agent` y `human`. Cuando corresponda, agregá `classification` con `product`, `environment`, `runner` o `inconclusive`.
+`execution_method` admite `http`, `playwright`, `db`, `mcp_db`, `cli`, `suite`, `manual` y `other`. Para resultados observados mediante MCP agregá `db_source` declarado en el perfil. `executor` admite `runner`, `agent` y `human`. Cuando corresponda, agregá `classification` con `product`, `environment`, `runner` o `inconclusive`.
 
 Un criterio admite `passed`, `failed`, `blocked` o `not_run`. Registrá duración como `null` si no se observó. El caso falla si falla un criterio. Es parcial si combina aprobados con bloqueos o pendientes. Cada reintento crea otro evento con el mismo ID. Usá IDs distintos cuando cambie el escenario.
 

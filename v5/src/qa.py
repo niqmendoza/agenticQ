@@ -11,8 +11,10 @@ import sys
 from pathlib import Path
 
 from azure_export import export_azure
+from contracts import BROWSER_FLOWS
 from json_tools import fixture_variant
 from management_report import export_html
+from mock_data import generate_mock_data
 from publication import publish
 from records import record
 from runners import inventory, run_case, validate_profile
@@ -208,7 +210,7 @@ def main():
     execute = sub.add_parser("execute", help="Ejecutar un caso funcional del perfil")
     execute.add_argument("--run", required=True)
     execute.add_argument("--case", required=True)
-    execute.add_argument("--via", choices=("http", "playwright"), required=True)
+    execute.add_argument("--via", choices=("http", "playwright", "db"), required=True)
     execute.add_argument("--body", help="Fixture JSON para la petición HTTP")
     execute.add_argument(
         "--seed", type=int, help="Semilla alternativa para un recorrido Playwright"
@@ -235,6 +237,9 @@ def main():
             command.add_argument("--manifest", required=True)
         if name == "freeze-plan":
             command.add_argument(
+                "--browser-flow", action="append", choices=BROWSER_FLOWS
+            )
+            command.add_argument(
                 "--requirements", help="Lista JSON de IDs del catálogo independiente"
             )
     publication = sub.add_parser(
@@ -242,6 +247,9 @@ def main():
     )
     publication.add_argument("--run", required=True)
     publication.add_argument("--name", help="ID alternativo de publicación")
+    publication.add_argument(
+        "--zip", action="store_true", help="Empaquetar notas y evidencias de la corrida"
+    )
     publication.set_defaults(workflow_handler=publish)
     for name, help_text, handler in (
         ("export-html", "Generar el reporte gerencial HTML", export_html),
@@ -268,6 +276,15 @@ def main():
     azure.add_argument("--state", default="Design", help="Estado inicial de los casos")
     azure.add_argument("--name", help="ID alternativo de exportación")
     azure.set_defaults(workflow_handler=export_azure)
+    mock = sub.add_parser("mock-data", help="Generar datos sintéticos reproducibles")
+    mock.add_argument("--run", required=True)
+    mock.add_argument(
+        "--spec", required=True, help="Esquema JSON de los datos de prueba"
+    )
+    mock.add_argument("--name", required=True, help="Nombre del fixture generado")
+    mock.add_argument("--seed", type=int, required=True)
+    mock.add_argument("--count", type=int, default=1)
+    mock.set_defaults(workflow_handler=generate_mock_data)
     variant = sub.add_parser(
         "fixture-variant", help="Cambiar el tipo de un campo de un fixture JSON"
     )

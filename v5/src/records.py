@@ -11,7 +11,16 @@ from contracts import (
     validate_case,
     validate_execution,
 )
-from session import evidence_file, load, read_json, run_id, timestamp, write_json
+from session import (
+    evidence_file,
+    load,
+    pending_browser_flows,
+    read_json,
+    require_browser_ready,
+    run_id,
+    timestamp,
+    write_json,
+)
 
 
 def validate_finding(run, event, cases):
@@ -61,8 +70,8 @@ def store_records(run, meta, events, data):
             raise ValueError(
                 "Cada registro requiere kind: case, execution, finding o note."
             )
-        if "time_utc" in item:
-            raise ValueError("time_utc lo asigna el sistema.")
+        if any(field in item for field in ("time_utc", "browser_ready", "python")):
+            raise ValueError("El sistema asigna time_utc y los campos de preflight.")
         kind = item["kind"]
         if kind == "case":
             identifier = run_id(required_text(item, "id"))
@@ -78,6 +87,22 @@ def store_records(run, meta, events, data):
             if not (run / "plan.json").is_file():
                 raise ValueError("Congelá el plan antes de registrar un intento.")
             validate_execution(run, meta["profile"], cases[identifier], item)
+            if item["status"] in ("passed", "failed", "partial"):
+                plan = read_json(run / "plan.json")
+                if item["execution_method"] in ("http", "playwright") and not plan.get(
+                    "browser_flows"
+                ):
+                    raise ValueError(
+                        "Creá un plan que incluya el recorrido Playwright de la web o Swagger."
+                    )
+                if plan.get("browser_flows"):
+                    require_browser_ready(events)
+                    if not cases[identifier].get(
+                        "browser_flow"
+                    ) and pending_browser_flows(plan, events + pending):
+                        raise ValueError(
+                            "Registrá primero los recorridos Playwright exigidos por el plan."
+                        )
         elif kind == "finding":
             identifier = run_id(required_text(item, "id"))
             if identifier in findings:

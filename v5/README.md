@@ -10,7 +10,7 @@ V5 es un harness autocontenido para que Copilot descubra el alcance de una aplic
 
 El CLI requiere Python 3.10 o superior. HTTP y recuperación documental usan la biblioteca estándar. Para recorridos web, prepará Playwright antes de congelar el plan. Los casos complejos se registran desde las herramientas autorizadas de Copilot. MCP es opcional y puede usarse como fuente de lectura si ya está conectado.
 
-## Preparar Playwright para pruebas web
+## Preparar Playwright para la web y Swagger
 
 Desde `v5/`, si el entorno autoriza la instalación, prepará un entorno virtual.
 
@@ -20,7 +20,7 @@ python3 -m venv .venv
 .venv/bin/python -m playwright install chromium
 ```
 
-Usá ese mismo Python para inicializar y ejecutar el CLI. Una vez creada la corrida, `.venv/bin/python src/qa.py preflight --run release-prueba --browser` comprueba que el navegador se puede iniciar y guarda el resultado en evidencias. Si la instalación o el arranque quedan bloqueados, registrá los casos web afectados con su motivo y seguí con las pruebas independientes. Para login y flujos con estado, registrá un recorrido Playwright externo autorizado cuando el runner de lectura no lo cubra.
+Usá ese mismo Python para inicializar y ejecutar el CLI. Una vez creada la corrida, `.venv/bin/python src/qa.py preflight --run release-prueba --browser` comprueba que el navegador se puede iniciar y guarda el resultado en evidencias. Si Playwright queda bloqueado, avisá al usuario, adjuntá el preflight y detené la corrida web o de API. Ejecutá los recorridos interactivos de la web y Swagger UI con el runner Playwright. La guía de registros explica cómo conservar la evidencia de ambos recorridos. [Recorridos de navegador](REGISTROS.md#recorridos-de-navegador)
 
 ## Operación
 
@@ -28,24 +28,38 @@ Desde `v5/`, corré `python3 src/qa.py --help`. Cada comando con `--run` recibe 
 
 ```sh
 python3 src/qa.py init --run release-prueba --title "QA de release" --environment QA --version "build-42"
-python3 src/qa.py preflight --run release-prueba
+python3 src/qa.py preflight --run release-prueba --browser
 # Registrar casos con record y preparar el catálogo independiente si existe.
-python3 src/qa.py freeze-plan --run release-prueba
-# Ejecutar o registrar los intentos y completar las tres notas internas.
-python3 src/qa.py publish --run release-prueba
+python3 src/qa.py freeze-plan --run release-prueba --browser-flow web_ui
+# Declarar también --browser-flow swagger_ui si la API está dentro del alcance.
+python3 src/qa.py suite --run release-prueba --manifest .trabajo/release-prueba/suite.json
+# Completar las tres notas internas.
+python3 src/qa.py publish --run release-prueba --zip
 python3 src/qa.py export-html --run release-prueba
 python3 src/qa.py export-fixes --run release-prueba
 ```
 
-- Pasá `--profile` con el perfil del entorno para declarar sondas HTTP, rutas, actores o fuentes MCP. `preflight` comprueba las sondas declaradas, presencia de variables y del paquete Playwright. El agente verifica las herramientas, los accesos y las dependencias pertinentes para el alcance.
+- Pasá `--profile` con el perfil del entorno para declarar sondas HTTP, rutas, actores o fuentes MCP. `preflight --browser` comprueba el arranque del navegador antes de las sondas declaradas. El agente verifica las herramientas, los accesos y las dependencias pertinentes para el alcance.
 - Pasá `--corpus` a `init` para un directorio textual. Usá `index`, luego `pack --queries ARCHIVO` con una lista JSON de preguntas. `show`, `headings` y `links` amplían el material. El CLI devuelve la ruta del artefacto interno que hay que leer. Si cambia la revisión del corpus, creá una corrida nueva.
 - Usá `record --json ARCHIVO` o `record` con JSON por entrada estándar para casos, intentos, hallazgos y notas. El plan previo a la ejecución se conserva con `freeze-plan`. Si existe un alcance numerado independiente, pasá `--requirements CATALOGO` al congelarlo.
 - Usá `execute --case ID --via http` o `--via playwright` para registrar una ejecución declarativa. `suite --manifest ARCHIVO` ejecuta un lote. Ver [contratos de registro y ejemplos](REGISTROS.md).
 - Completá `analisis.md`, `metricas.md` y `evaluacion.md` en la carpeta interna antes de publicar. Citá las notas de evidencia mediante rutas relativas a la raíz de la entrega.
 
+## Herramientas del harness
+
+| Herramienta | Uso |
+| --- | --- |
+| `execute --via playwright` | Recorre la interfaz web o ejecuta una operación a través de Swagger. Guarda acciones y veredictos. |
+| `execute --via http` | Comprueba una operación declarada, como complemento de los recorridos requeridos. |
+| `execute --via db` | Verifica datos mediante consultas declaradas de solo lectura en SQLite o PostgreSQL. |
+| `mock-data` | Genera fixtures JSON reproducibles según esquema y semilla. |
+| `suite` | Ejecuta las herramientas en el orden del manifiesto. En planes web o de API los recorridos Playwright requeridos van primero. |
+
+Copilot define los casos, prepara el manifiesto y usa los veredictos de los scripts para armar el informe. La guía de registros describe los parámetros y los resultados. [Contratos de cada herramienta](REGISTROS.md)
+
 ## Entrega
 
-`publish` genera los siete Markdown en `resultados/<id>/` y copia las notas Markdown de evidencia referenciadas. Conserva plan inicial, casos vigentes, intentos, hallazgos y conteos del primer y último estado. Un fallo funcional aparece en el informe. El código de publicación indica si hubo problemas estructurales de evidencia, no si el producto aprobó. Una publicación anterior se conserva. Usá `--name <id-revision>` si hace falta exportar una versión corregida.
+`publish --zip` genera el archivo `resultados/<id>.zip` con los siete Markdown, preflight y evidencias enlazadas. También conserva las notas en `resultados/<id>/` y copia las notas Markdown de evidencia referenciadas. Conserva plan inicial, casos vigentes, intentos, hallazgos y conteos del primer y último estado. Un fallo funcional aparece en el informe. La publicación devuelve 3 si Playwright está bloqueado o falta un recorrido exigido, y 1 si hay problemas estructurales de evidencia. Una publicación anterior se conserva. Usá `--name <id-revision>` si hace falta exportar una versión corregida.
 
 La revisión comprueba que la evidencia compartible exista y esté enlazada. La pertinencia, exactitud y sanitización requieren revisión del agente. El alcance, los efectos autorizados y el dictamen dependen de la aplicación y del usuario. Los resultados quedan ignorados por Git y disponibles como archivos locales.
 

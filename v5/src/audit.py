@@ -4,7 +4,7 @@ from collections import Counter
 
 from contracts import validate_execution
 from records import validate_finding
-from session import evidence_file, read_json
+from session import evidence_file, pending_browser_flows, read_json
 
 STATES = (
     "passed",
@@ -75,7 +75,17 @@ def inspect(run, meta, events):
     plan_path = run / "plan.json"
     plan = read_json(plan_path) if plan_path.is_file() else None
     catalog = plan["catalog"] if plan is not None else None
+    browser_ready = next(
+        (
+            event["browser_ready"]
+            for event in reversed(events)
+            if "browser_ready" in event
+        ),
+        None,
+    )
     return {
+        "browser_blocked": browser_ready is False,
+        "missing_browser_flows": pending_browser_flows(plan or {}, events, latest),
         "cases": cases,
         "attempts": attempts,
         "findings": findings,
@@ -91,3 +101,9 @@ def inspect(run, meta, events):
         "plan": plan,
         "catalog": catalog,
     }
+
+
+def publication_code(report):
+    if report["issues"]:
+        return 1
+    return 3 if report["browser_blocked"] or report["missing_browser_flows"] else 0

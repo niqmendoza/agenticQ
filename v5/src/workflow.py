@@ -2,21 +2,50 @@
 
 import importlib.util
 import os
+import sys
 from http.client import HTTPException
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import uuid4
 
+from contracts import BROWSER_FLOWS
 from markdown import inline, table, write_markdown
 from runners import Unavailable, http_request, playwright_browser, run_case
-from session import append, load, read_json, timestamp, write_json
+from session import (
+    append,
+    load,
+    read_json,
+    require_browser_ready,
+    timestamp,
+    write_json,
+)
 
 
 def preflight(args):
     run, meta, _ = load(args.run)
     profile = meta["profile"]
+    playwright_installed = importlib.util.find_spec("playwright") is not None
+    browser_blocked = False
+    browser_message = None
+    check_browser = args.browser or bool(profile.get("base_url"))
+    if check_browser:
+        try:
+            with playwright_browser(profile):
+                pass
+        except (Unavailable, OSError) as error:
+            browser_blocked = True
+            reason = (
+                str(error)
+                if isinstance(error, Unavailable)
+                else "El proceso de Playwright no pudo iniciarse."
+            )
+            browser_message = f"Navegador · Bloqueado · {reason}"
+        else:
+            channel = profile.get("browser_channel", "Chromium administrado")
+            browser_message = f"Navegador · Listo · {channel}"
     probes = []
-    for operation in profile.get("http_operations", []):
+    operations = [] if browser_blocked else profile.get("http_operations", [])
+    for operation in operations:
         expectations = operation.get("probe")
         if expectations is None:
             continue
@@ -45,24 +74,6 @@ def preflight(args):
             }
         )
 
-    playwright_installed = importlib.util.find_spec("playwright") is not None
-    browser_blocked = False
-    browser_message = None
-    if args.browser:
-        try:
-            with playwright_browser(profile):
-                pass
-        except (Unavailable, OSError) as error:
-            browser_blocked = True
-            reason = (
-                str(error)
-                if isinstance(error, Unavailable)
-                else "El proceso de Playwright no pudo iniciarse."
-            )
-            browser_message = f"Navegador · Bloqueado · {reason}"
-        else:
-            channel = profile.get("browser_channel", "Chromium administrado")
-            browser_message = f"Navegador · Listo · {channel}"
     reference = f"evidencias/preflight-{uuid4().hex}.md"
     write_markdown(
         run / reference,
@@ -93,7 +104,11 @@ def preflight(args):
         ],
     )
     ready_count = sum(probe["state"] == "ready" for probe in probes)
-    observation = f"Sondas HTTP listas: {ready_count} de {len(probes)}."
+    observation = (
+        "Sondas HTTP omitidas por el bloqueo de Playwright."
+        if browser_blocked
+        else f"Sondas HTTP listas: {ready_count} de {len(probes)}."
+    )
     if browser_message:
         observation += f" {browser_message}"
     append(
@@ -102,10 +117,20 @@ def preflight(args):
             "kind": "note",
             "phase": "preflight",
             "observation": observation,
+            **(
+                {"browser_ready": not browser_blocked, "python": sys.executable}
+                if check_browser
+                else {}
+            ),
             "evidence": reference,
         },
     )
     print(run / reference)
+    if browser_blocked:
+        print(
+            "Playwright bloqueado. Avisá al usuario y detené la corrida.",
+            file=sys.stderr,
+        )
     return 3 if browser_blocked or ready_count != len(probes) else 0
 
 
@@ -117,6 +142,25 @@ def freeze_plan(args):
     target = run / "plan.json"
     if target.exists():
         raise ValueError("El plan ya está congelado.")
+    planned_flows = {case["browser_flow"] for case in cases if case.get("browser_flow")}
+    required = planned_flows | set(args.browser_flow or [])
+    if required - planned_flows:
+        missing = ", ".join(
+            BROWSER_FLOWS[key] for key in sorted(required - planned_flows)
+        )
+        raise ValueError(
+            f"Registrá un recorrido Playwright para {missing} antes de congelar el plan."
+        )
+    if not required and any(
+        any(field in case for field in ("http", "browser_path", "browser_walk"))
+        or case["level"].strip().casefold() in {"api", "http", "web", "swagger"}
+        for case in cases
+    ):
+        raise ValueError(
+            "El plan web o API necesita un recorrido browser_flow web_ui o swagger_ui."
+        )
+    if required:
+        require_browser_ready(events)
     catalog = None
     if args.requirements:
         catalog = read_json(args.requirements)
@@ -127,7 +171,15 @@ def freeze_plan(args):
             or len(set(catalog)) != len(catalog)
         ):
             raise ValueError("El catálogo debe ser una lista de IDs únicos no vacíos.")
-    write_json(target, {"frozen_at": timestamp(), "catalog": catalog, "cases": cases})
+    write_json(
+        target,
+        {
+            "frozen_at": timestamp(),
+            "catalog": catalog,
+            "cases": cases,
+            "browser_flows": sorted(required),
+        },
+    )
     append(
         run,
         {
@@ -145,12 +197,12 @@ def suite(args):
     items = read_json(manifest)
     if not isinstance(items, list) or not items:
         raise ValueError("El manifiesto debe ser una lista de casos.")
-    known_cases = {event["id"] for event in events if event["kind"] == "case"}
+    known_cases = {event["id"]: event for event in events if event["kind"] == "case"}
     if not all(
         isinstance(item, dict)
         and isinstance(item.get("case"), str)
         and item["case"] in known_cases
-        and item.get("via") in ("http", "playwright")
+        and item.get("via") in ("http", "playwright", "db")
         and ("body" not in item or isinstance(item["body"], str))
         and (
             "seed" not in item
@@ -160,7 +212,7 @@ def suite(args):
         for item in items
     ):
         raise ValueError(
-            "Cada entrada necesita un caso registrado y un canal http o playwright."
+            "Cada entrada necesita un caso registrado y un canal playwright, http o db."
         )
     results = []
     for item in items:
@@ -179,6 +231,11 @@ def suite(args):
             print(f"{item['case']}: {error}")
             code = 2
         results.append({"case": item["case"], "via": item["via"], "exit_code": code})
+        if code in (2, 3) and item["via"] == "playwright":
+            print(
+                "Playwright no pudo completar el recorrido. Avisá al usuario. El lote se detuvo."
+            )
+            break
     summary = ", ".join(f"{row['case']}={row['exit_code']}" for row in results)
     append(
         run,

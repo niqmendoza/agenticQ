@@ -5,6 +5,7 @@ import json
 import os
 import re
 import shutil
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -14,6 +15,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
 from urllib.parse import unquote
+from zipfile import ZipFile
 
 HARNESS = Path(__file__).resolve().parents[1]
 REPORTS = {
@@ -29,6 +31,7 @@ REPORTS = {
 
 class RecordsHandler(BaseHTTPRequestHandler):
     attempts = 0
+    workflow_calls = []
     secret = "synthetic-bearer-canary"
 
     def log_message(self, *_):
@@ -39,7 +42,44 @@ class RecordsHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
-            self.wfile.write(b"<p>Workspace ready</p><button>Expand</button>")
+            self.wfile.write(
+                b"""<p>Workspace ready</p><button onclick="document.getElementById('result').textContent='Opened'">Expand</button><p id="result"></p>"""
+            )
+            return
+        if self.path in ("/chat-fixture", "/swagger-fixture"):
+            swagger = self.path == "/swagger-fixture"
+            lead = (
+                '<button id="try">Try it out</button><form id="flow" hidden>'
+                if swagger
+                else '<form id="flow">'
+            )
+            button = "Execute" if swagger else "Send"
+            html = (
+                lead
+                + f"""
+                <input id="message"><button id="send">{button}</button></form>
+                <p id="status"></p><pre id="result"></pre>
+                <script>
+                const form = document.querySelector("#flow");
+                const toggle = document.querySelector("#try");
+                if (toggle) toggle.onclick = () => form.hidden = false;
+                form.onsubmit = async (event) => {{
+                    event.preventDefault();
+                    const message = document.querySelector("#message").value;
+                    const response = await fetch("/fixture-operation", {{
+                        method: "POST", headers: {{"Content-Type": "application/json"}},
+                        body: JSON.stringify({{message}})
+                    }});
+                    document.querySelector("#status").innerText = response.status;
+                    document.querySelector("#result").innerText = (await response.json()).message;
+                }};
+                </script>
+            """
+            )
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(html.encode())
             return
         if self.path == "/availability":
             self.send_response(204)
@@ -57,10 +97,22 @@ class RecordsHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps({"id": "demo", "private": self.secret}).encode())
 
+    def do_POST(self):
+        if self.path != "/fixture-operation":
+            self.send_error(404)
+            return
+        incoming = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+        type(self).workflow_calls.append(incoming["message"])
+        self.send_response(201)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(incoming).encode())
+
 
 @contextmanager
 def application():
     RecordsHandler.attempts = 0
+    RecordsHandler.workflow_calls = []
     server = ThreadingHTTPServer(("127.0.0.1", 0), RecordsHandler)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -103,7 +155,7 @@ class PortableHarnessTests(unittest.TestCase):
             capture_output=True,
             text=True,
             env={**os.environ, "V5_TEST_OPERATOR": RecordsHandler.secret},
-            timeout=15,
+            timeout=90,
         )
         self.assertEqual(result.returncode, code, result.stdout + result.stderr)
         return result
@@ -138,6 +190,31 @@ class PortableHarnessTests(unittest.TestCase):
             ],
         }
 
+    def offline_case(self, identifier="REC-01"):
+        case = self.case(identifier)
+        del case["http"]
+        case["level"] = "integration"
+        return case
+
+    def browser_case(self, identifier="WEB-01"):
+        case = self.offline_case(identifier)
+        case.update(
+            title="Abrir el elemento desde la pantalla",
+            level="web",
+            browser_flow="web_ui",
+            browser_path="/interface",
+            browser_steps=[{"id": "expand", "type": "click", "control": "expand"}],
+            criteria=[
+                {
+                    "id": "opened",
+                    "expected": "Opened visible",
+                    "check": {"type": "visible_text", "equals": "Opened"},
+                }
+            ],
+        )
+        return case
+
+    @unittest.skipUnless(os.environ.get("QA_V5_TEST_BROWSER"), "Playwright opcional")
     def test_publish_preserves_retry_and_copies_only_markdown(self):
         with application() as base_url:
             profile = self.workspace / "profile.json"
@@ -145,6 +222,9 @@ class PortableHarnessTests(unittest.TestCase):
                 json.dumps(
                     {
                         "base_url": base_url,
+                        "browser_channel": os.environ["QA_V5_TEST_BROWSER"],
+                        "browser_paths": ["/interface"],
+                        "browser_controls": {"expand": "button"},
                         "credentials": {
                             "operator": "V5_TEST_OPERATOR",
                             "viewer": "V5_TEST_VIEWER",
@@ -181,7 +261,7 @@ class PortableHarnessTests(unittest.TestCase):
                 "--corpus",
                 str(corpus),
             )
-            self.cli("preflight")
+            self.cli("preflight", "--browser")
             self.cli("index")
             queries = self.run_dir / "queries.json"
             queries.write_text('["lectura registros"]', encoding="utf-8")
@@ -189,13 +269,16 @@ class PortableHarnessTests(unittest.TestCase):
             self.assertTrue(
                 json.loads(artifact.read_text(encoding="utf-8"))["passages"]
             )
-            self.cli("record", data=self.case())
+            self.cli("record", data=[self.case(), self.browser_case()])
             self.cli("execute", "--case", "REC-01", "--via", "http", code=2)
             self.assertEqual(RecordsHandler.attempts, 0)
 
             catalog = self.run_dir / "requirements.json"
             catalog.write_text('["REQ-READ","REQ-WRITE"]', encoding="utf-8")
             self.cli("freeze-plan", "--requirements", str(catalog))
+            self.cli("execute", "--case", "REC-01", "--via", "http", code=2)
+            self.assertEqual(RecordsHandler.attempts, 0)
+            self.cli("execute", "--case", "WEB-01", "--via", "playwright")
             invalid_actor = self.case("REC-02")
             invalid_actor["http"]["actor"] = "viewer"
             self.cli("record", data=invalid_actor)
@@ -227,7 +310,7 @@ class PortableHarnessTests(unittest.TestCase):
         self.cli("publish")
         self.assertEqual({path.name for path in self.delivery.glob("*.md")}, REPORTS)
         all_files = [path for path in self.delivery.rglob("*") if path.is_file()]
-        self.assertEqual(len(all_files), 10)
+        self.assertEqual(len(all_files), 11)
         self.assertTrue(all(path.suffix == ".md" for path in all_files))
         self.assertFalse(
             any(
@@ -237,7 +320,7 @@ class PortableHarnessTests(unittest.TestCase):
         )
         final = (self.delivery / "informe final.md").read_text(encoding="utf-8")
         self.assertIn("| failed | 1 | 0 |", final)
-        self.assertIn("| passed | 0 | 1 |", final)
+        self.assertIn("| passed | 1 | 2 |", final)
         self.assertIn("REQ-WRITE", final)
         self.assertIn("F-01", final)
         self.assertNotIn(
@@ -314,8 +397,9 @@ class PortableHarnessTests(unittest.TestCase):
                     "check": {"type": "no_page_errors"},
                 },
             ]
-            self.cli("record", data=case)
+            self.cli("record", data=[case, self.browser_case()])
             self.cli("freeze-plan")
+            self.cli("execute", "--case", "WEB-01", "--via", "playwright")
             self.cli(
                 "execute", "--case", "REC-01", "--via", "playwright", "--seed", "25"
             )
@@ -335,7 +419,7 @@ class PortableHarnessTests(unittest.TestCase):
             "--version",
             "build-fixture",
         )
-        case = self.case()
+        case = self.offline_case()
         case["rationale"] = (
             "Confirmar la lectura antes de habilitar el flujo siguiente."
         )
@@ -343,7 +427,7 @@ class PortableHarnessTests(unittest.TestCase):
             "record",
             data=[
                 case,
-                self.case("REC-02"),
+                self.offline_case("REC-02"),
                 {
                     "kind": "note",
                     "phase": "resumen-gerencial",
@@ -360,7 +444,7 @@ class PortableHarnessTests(unittest.TestCase):
             "case_id": "REC-01",
             "status": "failed",
             "executor": "agent",
-            "execution_method": "http",
+            "execution_method": "cli",
             "observation": "HTTP 400 al consultar un registro existente.",
             "started_at": "2026-01-15T10:00:00-03:00",
             "finished_at": "2026-01-15T10:00:01-03:00",
@@ -460,7 +544,7 @@ class PortableHarnessTests(unittest.TestCase):
 
     def test_export_azure_keeps_case_steps_and_metadata(self):
         self.cli("init", "--title", "Casos de Azure")
-        batch = self.case()
+        batch = self.offline_case()
         batch.update(
             title="Lote de altas, un titular",
             preconditions=["Worker disponible.", "Fixture sintético preparado."],
@@ -476,7 +560,7 @@ class PortableHarnessTests(unittest.TestCase):
                 "type": "Functional",
             },
         )
-        login = self.case("REC-02")
+        login = self.offline_case("REC-02")
         login.update(
             title="Verificar inicio de sesión",
             preconditions=[],
@@ -581,6 +665,219 @@ class PortableHarnessTests(unittest.TestCase):
         self.assertIn("Título de Azure duplicado", result.stderr)
         self.assertFalse((self.harness / "azure" / "demo.csv").exists())
 
+    def test_api_only_plan_and_browser_preflight_stop_without_playwright(self):
+        with application() as base_url:
+            profile = self.workspace / "preflight.json"
+            profile.write_text(
+                json.dumps(
+                    {
+                        "base_url": base_url,
+                        "http_operations": [
+                            {
+                                "method": "GET",
+                                "path": "/availability",
+                                "probe": {"status": 204},
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.cli("init", "--title", "API", "--profile", str(profile))
+            self.cli("record", data=self.case())
+            self.assertIn(
+                "necesita un recorrido", self.cli("freeze-plan", code=2).stderr
+            )
+            self.cli("record", data=self.browser_case())
+            blocked = subprocess.run(
+                [
+                    sys.executable,
+                    "-S",
+                    str(self.harness / "src" / "qa.py"),
+                    "preflight",
+                    "--run",
+                    "demo",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=15,
+            )
+            self.assertEqual(blocked.returncode, 3, blocked.stderr)
+            evidence = Path(blocked.stdout.strip()).read_text(encoding="utf-8")
+            self.assertIn("Navegador · Bloqueado", evidence)
+            self.assertNotIn("/availability", evidence)
+            self.assertIn("detené la corrida", self.cli("freeze-plan", code=2).stderr)
+            self.assertFalse((self.run_dir / "plan.json").exists())
+        report = self.cli("publish", "--zip", code=3)
+        self.assertTrue(Path(report.stdout.strip()).is_file())
+        self.assertIn(
+            "Playwright bloqueado",
+            (self.delivery / "informe final.md").read_text(encoding="utf-8"),
+        )
+
+    @unittest.skipUnless(os.environ.get("QA_V5_TEST_BROWSER"), "Playwright opcional")
+    def test_orchestrates_web_swagger_database_fixtures_and_evidence(self):
+        with application() as base_url:
+            database = self.workspace / "qa.sqlite"
+            with sqlite3.connect(database) as connection:
+                connection.executescript(
+                    "CREATE TABLE records (id TEXT, status TEXT); INSERT INTO records VALUES ('QA-1', 'ready');"
+                )
+            profile = self.workspace / "profile.json"
+            operation = {"method": "POST", "path": "/fixture-operation"}
+            profile.write_text(
+                json.dumps(
+                    {
+                        "base_url": base_url,
+                        "browser_channel": os.environ["QA_V5_TEST_BROWSER"],
+                        "browser_paths": ["/chat-fixture", "/swagger-fixture"],
+                        "browser_controls": {
+                            "try": "#try",
+                            "input": "#message",
+                            "send": "#send",
+                            "result": "#result",
+                        },
+                        "http_operations": [operation],
+                        "database": {
+                            "driver": "sqlite",
+                            "path": str(database.resolve()),
+                            "queries": {
+                                "record": {
+                                    "table": "records",
+                                    "columns": ["status"],
+                                    "where": ["id"],
+                                },
+                            },
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.cli("init", "--title", "Orquestación", "--profile", str(profile))
+            self.cli("preflight", "--browser")
+
+            spec = self.workspace / "mock.json"
+            spec.write_text(
+                '{"id":{"type":"sequence"},"number":{"type":"integer","min":3,"max":9}}',
+                encoding="utf-8",
+            )
+            for name in ("fixture-a", "fixture-b"):
+                self.cli(
+                    "mock-data", "--name", name, "--spec", str(spec), "--seed", "38"
+                )
+            a = (self.run_dir / "fixtures" / "fixture-a.json").read_bytes()
+            b = (self.run_dir / "fixtures" / "fixture-b.json").read_bytes()
+            self.assertEqual(a, b)
+
+            cases = []
+            for name, field, path, message in (
+                ("WEB-01", "web_ui", "/chat-fixture", "QA web"),
+                ("SWAGGER-01", "swagger_ui", "/swagger-fixture", "QA Swagger"),
+            ):
+                swagger = field == "swagger_ui"
+                case = self.browser_case(name)
+                case.update(
+                    browser_flow=field,
+                    browser_path=path,
+                    browser_operation=operation,
+                    browser_steps=[
+                        *(
+                            [{"id": "try", "type": "click", "control": "try"}]
+                            if swagger
+                            else []
+                        ),
+                        {
+                            "id": "write",
+                            "type": "fill",
+                            "control": "input",
+                            "value": message,
+                        },
+                        {"id": "send", "type": "click", "control": "send"},
+                    ],
+                    criteria=[
+                        {
+                            "id": "visible",
+                            "expected": "Resultado visible",
+                            "check": {
+                                "type": "control_text",
+                                "control": "result",
+                                "equals": message,
+                            },
+                        },
+                        {
+                            "id": "http",
+                            "expected": "HTTP 201",
+                            "check": {"type": "network_status", "equals": 201},
+                        },
+                    ],
+                )
+                cases.append(case)
+            db_case = self.offline_case("DB-01")
+            db_case.update(
+                db={"query": "record", "parameters": {"id": "QA-1"}},
+                criteria=[
+                    {
+                        "id": "rows",
+                        "expected": "Una fila",
+                        "check": {"type": "row_count", "equals": 1},
+                    },
+                    {
+                        "id": "status",
+                        "expected": "Estado ready",
+                        "check": {
+                            "type": "json_equals",
+                            "path": [0, "status"],
+                            "equals": "ready",
+                        },
+                    },
+                ],
+            )
+            self.cli("record", data=[*cases, db_case])
+            self.cli(
+                "freeze-plan",
+                "--browser-flow",
+                "web_ui",
+                "--browser-flow",
+                "swagger_ui",
+            )
+            self.cli("execute", "--case", "DB-01", "--via", "db", code=2)
+            manifest = self.run_dir / "orquestacion.json"
+            manifest.write_text(
+                json.dumps(
+                    [
+                        {"case": "WEB-01", "via": "playwright"},
+                        {"case": "SWAGGER-01", "via": "playwright"},
+                        {"case": "DB-01", "via": "db"},
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            self.cli("suite", "--manifest", str(manifest))
+            self.assertEqual(RecordsHandler.workflow_calls, ["QA web", "QA Swagger"])
+
+        archive = Path(self.cli("publish", "--zip").stdout.strip())
+        with ZipFile(archive) as bundle:
+            self.assertIsNone(bundle.testzip())
+            for report in REPORTS:
+                self.assertIn(f"demo/{report}", bundle.namelist())
+            for prefix in ("WEB-01", "SWAGGER-01", "DB-01", "preflight"):
+                self.assertTrue(
+                    any(
+                        name.startswith(f"demo/evidencias/{prefix}-")
+                        for name in bundle.namelist()
+                    )
+                )
+        db_evidence = next((self.delivery / "evidencias").glob("DB-01-*.md"))
+        self.assertIn("Filas observadas · 1", db_evidence.read_text(encoding="utf-8"))
+        swagger_evidence = next(
+            (self.delivery / "evidencias").glob("SWAGGER-01-*.md")
+        ).read_text(encoding="utf-8")
+        self.assertIn("| try | click | observed |", swagger_evidence)
+        self.assertIn(
+            "HTTP de la operación observada en el navegador · 201", swagger_evidence
+        )
+
     def test_blocked_run_publishes_without_profile_or_plan(self):
         self.cli("init", "--title", "Entorno sin acceso")
         self.cli(
@@ -604,10 +901,10 @@ class PortableHarnessTests(unittest.TestCase):
 
     def test_pending_oracle_and_generic_case_validation(self):
         self.cli("init", "--title", "Contrato pendiente")
-        incomplete = self.case()
+        incomplete = self.offline_case()
         del incomplete["priority"]
         self.cli("record", data=incomplete, code=2)
-        pending = self.case()
+        pending = self.offline_case()
         pending.update(
             oracle_status="pending",
             oracle_pending_reason="El contrato debe confirmarse.",

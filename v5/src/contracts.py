@@ -5,6 +5,7 @@ from datetime import datetime
 from session import evidence_file
 
 ATTEMPT_CLASSES = ("product", "environment", "runner", "inconclusive")
+BROWSER_FLOWS = {"web_ui": "Interfaz web", "swagger_ui": "Swagger UI"}
 
 
 def required_text(data, key):
@@ -62,6 +63,8 @@ def validate_case(case):
     if case.get("priority") not in ("critical", "high", "medium", "low"):
         raise ValueError("priority debe ser critical, high, medium o low.")
     string_list(case, "preconditions", allow_empty=True)
+    if "browser_flow" in case and case["browser_flow"] not in tuple(BROWSER_FLOWS):
+        raise ValueError("browser_flow debe ser web_ui o swagger_ui.")
     steps = string_list(case, "steps")
     if "rationale" in case:
         required_text(case, "rationale")
@@ -126,6 +129,7 @@ def validate_execution(run, profile, case, event):
         "http",
         "playwright",
         "mcp_db",
+        "db",
         "cli",
         "suite",
         "manual",
@@ -137,6 +141,11 @@ def validate_execution(run, profile, case, event):
     if "classification" in event and event["classification"] not in ATTEMPT_CLASSES:
         raise ValueError("classification inválida.")
     observed = any(r.get("status") in ("passed", "failed") for r in results.values())
+    if observed and case.get("browser_flow") and method != "playwright":
+        raise ValueError(
+            "El recorrido requiere una ejecución interactiva de Playwright."
+        )
+
     if (
         observed
         and method == "mcp_db"

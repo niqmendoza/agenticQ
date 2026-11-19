@@ -2,6 +2,7 @@
 
 import json
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -69,3 +70,38 @@ def evidence_file(run, reference):
     ):
         raise ValueError(f"Evidencia ausente o vacía: {reference}.")
     return source
+
+
+def require_browser_ready(events):
+    latest = next(
+        (event for event in reversed(events) if "browser_ready" in event),
+        {},
+    )
+    if (
+        latest.get("browser_ready") is not True
+        or latest.get("python") != sys.executable
+    ):
+        raise ValueError(
+            "Playwright requiere preflight --browser exitoso con este Python. Avisá al usuario y detené la corrida."
+        )
+
+
+def pending_browser_flows(plan, events, latest=None):
+    required = set(plan.get("browser_flows", []))
+    cases = {
+        event["id"]: event.get("browser_flow")
+        for event in events
+        if event["kind"] == "case"
+    }
+    if latest is None:
+        latest = {
+            event["case_id"]: event["status"]
+            for event in events
+            if event["kind"] == "execution"
+        }
+    exercised = {
+        cases[key]
+        for key, status in latest.items()
+        if status in ("passed", "failed", "partial")
+    }
+    return sorted(required - exercised)

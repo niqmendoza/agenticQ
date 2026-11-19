@@ -6,7 +6,8 @@ from pathlib import Path
 from string import Template
 from tempfile import TemporaryDirectory
 
-from audit import STATES, inspect
+from audit import STATES, inspect, publication_code
+from contracts import BROWSER_FLOWS
 from session import ROOT, TEMPLATES, load, run_id
 
 REPORTS = ROOT / "reportes"
@@ -91,9 +92,13 @@ def render_cases(report):
             observation = attempts[-1][1]["observation"]
         else:
             observation = "No se registró un intento para este caso."
+        label = f"{case_id} · {case['feature']}"
+        browser_flow = BROWSER_FLOWS.get(case.get("browser_flow"))
+        if browser_flow:
+            label += f" · {browser_flow}"
         cases.append(
             f'<article class="record case" id="case-{text(case_id)}">'
-            f'<div><span class="label">{text(case_id)} · {text(case["feature"])}</span>'
+            f'<div><span class="label">{text(label)}</span>'
             f"<h3>{text(case['title'])}</h3></div>"
             f'<div><span class="label">Por qué se incluyó</span><p>{text(reason)}</p></div>'
             f'<div><span class="label">Último resultado</span>'
@@ -145,6 +150,13 @@ def render_findings(report):
 
 def render_scope(report):
     notes = []
+    if report["browser_blocked"]:
+        notes.append("Playwright bloqueado. Ver preflight y log.")
+    if report["missing_browser_flows"]:
+        missing = ", ".join(
+            BROWSER_FLOWS[key] for key in report["missing_browser_flows"]
+        )
+        notes.append(f"Verificación Playwright pendiente · {missing}.")
     if report["catalog"] is None:
         notes.append(
             "La cobertura total queda indeterminada sin un catálogo de requisitos."
@@ -210,4 +222,4 @@ def export_html(args):
         draft.write_text(html, encoding="utf-8")
         draft.rename(target)
     print(target)
-    return 1 if report["issues"] else 0
+    return publication_code(report)
