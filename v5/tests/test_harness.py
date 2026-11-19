@@ -993,6 +993,8 @@ class PortableHarnessTests(unittest.TestCase):
                     **({"gen_ai.conversation.id": session} if session else {}),
                     "gen_ai.usage.input_tokens": inputs,
                     "gen_ai.usage.output_tokens": outputs,
+                    "gen_ai.request.model": "requested-alias",
+                    "gen_ai.response.model": "resolved-test-model",
                     "gen_ai.input.messages": "Canary private input.",
                 },
             }
@@ -1017,6 +1019,8 @@ class PortableHarnessTests(unittest.TestCase):
             self.assertNotIn("native-request", evidence)
             self.assertNotIn("Canary private input.", evidence)
             self.assertNotIn("otel.jsonl", evidence)
+            self.assertIn("resolved-test-model", evidence)
+            self.assertNotIn("requested-alias", evidence)
 
         emit([span("t4", "missing-output", "qa-a", 10, None)])
         self.cli("publish", "--name", "parcial", code=3)
@@ -1025,6 +1029,245 @@ class PortableHarnessTests(unittest.TestCase):
         )
         self.assertIn("1 llamada(s) sin contador completo", incomplete)
         self.assertIn("Subtotal observado · 121", incomplete)
+
+    def test_evaluates_models_with_frozen_inputs_and_independent_review(self):
+        shutil.copytree(
+            HARNESS / "evaluate-llm",
+            self.harness / "evaluate-llm",
+            ignore=shutil.ignore_patterns("__pycache__", "resultados"),
+        )
+        evaluator = self.harness / "evaluate-llm" / "evaluate.py"
+
+        def evaluate(command, *options, code=0):
+            result = subprocess.run(
+                [sys.executable, evaluator, command, *options],
+                capture_output=True,
+                text=True,
+                timeout=25,
+            )
+            self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+            return result
+
+        corpus = self.workspace / "corpus"
+        corpus.mkdir()
+        (corpus / "contrato.md").write_text(
+            "# Registros\n\nEl operador puede consultar el registro demo.",
+            encoding="utf-8",
+        )
+        self.cli(
+            "init",
+            "--title",
+            "Evaluación",
+            "--version",
+            "build-01",
+            "--environment",
+            "qa-fixture",
+            "--corpus",
+            str(corpus),
+            metered=False,
+        )
+        index = self.cli("index")
+        revision = json.loads(Path(index.stdout.strip()).read_text())["revision"]
+        # Se obtiene la revisión antes de iniciar la sesión que se va a evaluar.
+        shutil.rmtree(self.run_dir)
+        self.cli(
+            "init",
+            "--title",
+            "Evaluación",
+            "--version",
+            "build-01",
+            "--environment",
+            "qa-fixture",
+            "--corpus",
+            str(corpus),
+            metered=False,
+        )
+        model = "resolved-model/v1"
+        source = self.workspace / "native.jsonl"
+
+        def call(identifier, observed=model):
+            now = datetime.now(timezone.utc)
+            row = {
+                "id": identifier,
+                "scope": "private-benchmark-conversation",
+                "start": (now - timedelta(milliseconds=1)).isoformat(),
+                "end": now.isoformat(),
+                "input": 100,
+                "output": 20,
+                "model": observed,
+                "message": "private-prompt-canary",
+            }
+            with source.open("a", encoding="utf-8") as stream:
+                stream.write(json.dumps(row) + "\n")
+
+        config = self.workspace / "benchmark.json"
+        task = self.workspace / "consigna.md"
+        task.write_text("Validar el flujo de registros.\n", encoding="utf-8")
+        spec = json.loads(
+            (self.harness / "evaluate-llm" / "benchmark.ejemplo.json").read_text()
+        )
+        spec.update(
+            id="comparacion",
+            version="build-01",
+            environment="qa-fixture",
+            corpus_revision=revision,
+            browser_flows=[],
+        )
+        config.write_text(json.dumps(spec))
+        evaluate("congelar", "--config", config, "--consigna", task)
+        call("private-first")
+        self.cli("tokens-check", "--format", "native", "--file", str(source))
+        prepare = (
+            "--benchmark",
+            "comparacion",
+            "--run",
+            self.run_dir,
+            "--modelo",
+            "Qwen",
+        )
+        self.assertIn(
+            "no confirma",
+            evaluate(
+                "preparar",
+                *prepare[:-1],
+                "Alias",
+                "--modelo-esperado",
+                "gui-label",
+                code=2,
+            ).stderr,
+        )
+        (self.run_dir / "evaluate-llm.json").unlink()
+        evaluate("preparar", *prepare, "--modelo-esperado", model)
+        self.cli("tokens-stage", "--stage", "analisis")
+        self.cli("index")
+        queries = self.workspace / "queries.json"
+        queries.write_text('["operador registro demo"]')
+        self.cli("pack", "--queries", str(queries))
+        call("analysis")
+        self.cli("tokens-stage", "--stage", "diseno")
+        self.cli("record", data=self.offline_case())
+        self.cli("freeze-plan")
+        call("design")
+        self.cli("tokens-stage", "--stage", "ejecucion")
+        evidence = "evidencias/record-observed.md"
+        (self.run_dir / evidence).write_text(
+            "El contrato respondió con el registro demo.\n"
+        )
+        observed_at = datetime.now(timezone.utc).isoformat()
+        self.cli(
+            "record",
+            data={
+                "kind": "execution",
+                "case_id": "REC-01",
+                "status": "failed",
+                "executor": "agent",
+                "execution_method": "cli",
+                "started_at": observed_at,
+                "finished_at": observed_at,
+                "observation": "Se observó una diferencia esperada por el fixture.",
+                "results": [
+                    {
+                        "id": item["id"],
+                        "status": "failed",
+                        "evidence": evidence,
+                        "observation": "Resultado observado.",
+                    }
+                    for item in self.offline_case()["criteria"]
+                ],
+            },
+        )
+        call("execution")
+        self.cli("tokens-stage", "--stage", "cierre")
+        evaluate("finalizar", "--run", "demo")
+        self.assertIn(
+            "no alcanza el cierre",
+            evaluate("archivar", "--run", self.run_dir, code=2).stderr,
+        )
+        call("closure")
+        archived = Path(evaluate("archivar", "--run", self.run_dir).stdout.strip())
+        self.assertEqual(
+            archived.parts[-4:], ("comparacion", "modelos", "Qwen", "demo")
+        )
+        summary = json.loads((archived / "medicion.json").read_text())
+        self.assertEqual(summary["issues"], [])
+        self.assertEqual(summary["total_input"], 500)
+        self.assertEqual(summary["stages"]["ejecucion"]["output"], 20)
+        self.assertEqual(summary["cases"][0]["result"], "failed")
+        self.assertTrue((archived / "reporte gerencial.html").is_file())
+        self.assertNotIn("private-", (archived / "medicion.json").read_text())
+
+        review = self.workspace / "review.json"
+        reviewed = {
+            "reviewer": "QA independiente",
+            "checks": {
+                "A1": {
+                    "met": True,
+                    "reason": "Fuente",
+                    "evidence": ["analisis segundo cerebro.md"],
+                    "cases": [],
+                },
+                "D1": {
+                    "met": True,
+                    "reason": "Caso",
+                    "evidence": ["casos.md"],
+                    "cases": ["REC-01"],
+                },
+                "E1": {
+                    "met": True,
+                    "reason": "Evidencia",
+                    "evidence": ["ejecuciones.md"],
+                    "cases": ["REC-01"],
+                },
+            },
+        }
+        review.write_text(json.dumps(reviewed))
+        review_args = (
+            "--benchmark",
+            "comparacion",
+            "--modelo",
+            "Qwen",
+            "--id",
+            "demo",
+            "--archivo",
+            review,
+        )
+        evaluate("revisar", *review_args, code=2)
+        reviewed["checks"]["E1"]["evidence"] = [evidence]
+        review.write_text(json.dumps(reviewed))
+        evaluate("revisar", *review_args)
+        chart = Path(evaluate("comparar", "--benchmark", "comparacion").stdout.strip())
+        self.assertIn("600.0", chart.read_text())
+        self.assertIn("100.0%", chart.read_text())
+        self.assertIn("120.0 (n=1)", chart.with_suffix(".md").read_text())
+
+        # Un segundo resultado portable con una conversación e identidad distintas.
+        second = archived.parent.parent / "Sonnet" / "sonnet-01"
+        second.mkdir(parents=True)
+        alternate = {
+            **summary,
+            "run": "sonnet-01",
+            "label": "Sonnet",
+            "expected_model": "another-resolved-model",
+            "conversation_sha256": "2" * 64,
+            "total_input": 700,
+        }
+        (second / "medicion.json").write_text(json.dumps(alternate))
+        evaluate("comparar", "--benchmark", "comparacion")
+        self.assertIn("Sonnet · another-resolved-model", chart.read_text())
+        self.assertIn("800.0", chart.read_text())
+
+        call("another-model", "foreign-model")
+        mixed_run = self.run_dir.with_name("mixta")
+        shutil.copytree(self.run_dir, mixed_run)
+        self.assertIn(
+            "distinta o mezclada",
+            evaluate("archivar", "--run", mixed_run, code=2).stderr,
+        )
+        evaluate("archivar", "--run", mixed_run, "--incompleta")
+        evaluate("comparar", "--benchmark", "comparacion")
+        self.assertIn("misma conversación", chart.read_text())
+        self.assertNotIn("Qwen · resolved-model/v1", chart.read_text())
+        self.assertIn("Sin datos para este gráfico.", chart.read_text())
 
     def test_blocked_run_publishes_without_profile_or_plan(self):
         self.cli("init", "--title", "Entorno sin acceso", metered=False)

@@ -184,15 +184,7 @@ def render_scope(report):
     return listing(notes, "notes")
 
 
-def export_html(args):
-    run, meta, events = load(args.run)
-    report = inspect(run, meta, events)
-    name = run_id(args.name or run.name)
-    target = REPORTS / f"{name}.html"
-    if REPORTS.is_symlink():
-        raise ValueError("reportes debe ser una carpeta local a V5.")
-    if target.exists() or target.is_symlink():
-        raise ValueError("El HTML ya existe. Usá --name para exportar una revisión.")
+def render_html(run, meta, events, report):
     summary = next(
         (
             event["observation"]
@@ -204,7 +196,7 @@ def export_html(args):
     template = Template(
         (TEMPLATES / "reporte-gerencial.html").read_text(encoding="utf-8")
     )
-    html = template.substitute(
+    return template.substitute(
         title=text(meta["title"]),
         run=text(run.name),
         environment=text(meta["environment"]),
@@ -218,6 +210,18 @@ def export_html(args):
         findings=render_findings(report),
         scope=render_scope(report),
     )
+
+
+def export_html(args):
+    run, meta, events = load(args.run)
+    report = inspect(run, meta, events)
+    name = run_id(args.name or run.name)
+    target = REPORTS / f"{name}.html"
+    if REPORTS.is_symlink():
+        raise ValueError("reportes debe ser una carpeta local a V5.")
+    if target.exists() or target.is_symlink():
+        raise ValueError("El HTML ya existe. Usá --name para exportar una revisión.")
+    html = render_html(run, meta, events, report)
     REPORTS.mkdir(exist_ok=True)
     with TemporaryDirectory(dir=REPORTS) as temporary:
         draft = Path(temporary) / target.name

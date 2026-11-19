@@ -31,12 +31,14 @@ Si el equipo ya dispone de un registro del proveedor, exportá solo las llamadas
 Para importar otra exportación, prepará un JSONL normalizado con un objeto por llamada. `id` debe ser el identificador de la llamada en la fuente. `scope` identifica la conversación. `start` y `end` son horarios ISO 8601 con zona. `input` y `output` son los contadores nativos. Usá `null` para un contador faltante.
 
 ```json
-{"scope":"qa-release-prueba","id":"id-de-la-fuente","start":"2026-11-19T12:00:00Z","end":"2026-11-19T12:00:01Z","input":120,"output":15}
+{"scope":"qa-release-prueba","id":"id-de-la-fuente","start":"2026-11-19T12:00:00Z","end":"2026-11-19T12:00:01Z","input":120,"output":15,"model":"id-devuelto-por-el-proveedor"}
 ```
 
 ```sh
 python3 src/qa.py tokens-check --run release-prueba --format native --file .trabajo/uso-agente.jsonl --scope qa-release-prueba
 ```
+
+El campo `model` es opcional en QA V5 y se exige para [comparar modelos](evaluate-llm/README.md). Copiá el modelo devuelto para esa llamada. En OpenTelemetry se lee `gen_ai.response.model`.
 
 ## Etapas y cierre
 

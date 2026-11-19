@@ -283,6 +283,52 @@ def metric_summary(report):
     ]
 
 
+def write_delivery(run, meta, events, report, output):
+    output.mkdir()
+
+    def input_lines(name):
+        source = run / name
+        if not source.is_file():
+            source = TEMPLATES / name
+        return source.read_text(encoding="utf-8").splitlines()
+
+    tokens = report["tokens"]
+    token_summary = token_lines(tokens)
+    if tokens and "entries" in tokens:
+        reference = "evidencias/consumo-tokens-v5.md"
+        if reference in report["evidence"]:
+            raise ValueError(
+                "La referencia consumo-tokens-v5.md está reservada para V5."
+            )
+        (output / "evidencias").mkdir()
+        write_token_evidence(output / reference, tokens)
+        token_summary += [f"[Detalle por llamada]({reference})", ""]
+    for name, lines in {
+        "plan casos.md": render_plan(report),
+        "casos.md": render_cases(report),
+        "ejecuciones.md": render_attempts(events, report),
+        "log.md": render_log(meta, events, report),
+        "analisis segundo cerebro.md": input_lines("analisis.md"),
+        "metricas.md": [
+            "# Métricas de la corrida",
+            "",
+            *token_summary,
+            *input_lines("metricas.md"),
+            "",
+            *metric_summary(report),
+        ],
+        "informe final.md": [
+            *final_report(meta, report),
+            *input_lines("evaluacion.md"),
+        ],
+    }.items():
+        write_markdown(output / name, lines)
+    for relative, source in report["evidence"].items():
+        destination = output / relative
+        destination.parent.mkdir(exist_ok=True)
+        shutil.copyfile(source, destination)
+
+
 def publish(args):
     run, meta, events = load(args.run)
     report = inspect(run, meta, events)
@@ -296,50 +342,9 @@ def publish(args):
         raise ValueError("El ZIP ya existe. Usá --name para publicar una revisión.")
     RESULTS.mkdir(exist_ok=True)
 
-    def input_lines(name):
-        source = run / name
-        if not source.is_file():
-            source = TEMPLATES / name
-        return source.read_text(encoding="utf-8").splitlines()
-
     with TemporaryDirectory(dir=run) as temporary:
         output = Path(temporary) / target.name
-        output.mkdir()
-        tokens = report["tokens"]
-        token_summary = token_lines(tokens)
-        if tokens and "entries" in tokens:
-            reference = "evidencias/consumo-tokens-v5.md"
-            if reference in report["evidence"]:
-                raise ValueError(
-                    "La referencia consumo-tokens-v5.md está reservada para V5."
-                )
-            (output / "evidencias").mkdir()
-            write_token_evidence(output / reference, tokens)
-            token_summary += [f"[Detalle por llamada]({reference})", ""]
-        for name, lines in {
-            "plan casos.md": render_plan(report),
-            "casos.md": render_cases(report),
-            "ejecuciones.md": render_attempts(events, report),
-            "log.md": render_log(meta, events, report),
-            "analisis segundo cerebro.md": input_lines("analisis.md"),
-            "metricas.md": [
-                "# Métricas de la corrida",
-                "",
-                *token_summary,
-                *input_lines("metricas.md"),
-                "",
-                *metric_summary(report),
-            ],
-            "informe final.md": [
-                *final_report(meta, report),
-                *input_lines("evaluacion.md"),
-            ],
-        }.items():
-            write_markdown(output / name, lines)
-        for relative, source in report["evidence"].items():
-            destination = output / relative
-            destination.parent.mkdir(exist_ok=True)
-            shutil.copyfile(source, destination)
+        write_delivery(run, meta, events, report, output)
         if args.zip:
             bundle = shutil.make_archive(
                 str(Path(temporary) / "evidencias"),

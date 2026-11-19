@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 import sys
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
@@ -54,6 +55,14 @@ def text_field(value):
     return value if isinstance(value, str) and value else None
 
 
+def model_id(value):
+    if isinstance(value, str) and re.fullmatch(
+        r"[A-Za-z0-9][A-Za-z0-9._:/@+~-]{0,199}", value
+    ):
+        return value
+    return None
+
+
 def otel_time(value):
     if (
         isinstance(value, list)
@@ -94,10 +103,11 @@ def otel_rows(rows):
                     row.get("endTime"),
                     attributes.get("gen_ai.usage.input_tokens"),
                     attributes.get("gen_ai.usage.output_tokens"),
+                    attributes.get("gen_ai.response.model"),
                 )
             )
 
-    for trace, span, session, start, end, inputs, outputs in spans:
+    for trace, span, session, start, end, inputs, outputs, model in spans:
         assigned = roots.get(trace, set())
         if len(assigned) == 1:
             session = next(iter(assigned))
@@ -110,6 +120,7 @@ def otel_rows(rows):
             "end": end,
             "input": inputs,
             "output": outputs,
+            "model": model,
         }
 
 
@@ -118,7 +129,7 @@ def native_rows(rows):
         if text_field(row.get("scope")):
             yield {
                 key: row.get(key)
-                for key in ("scope", "id", "start", "end", "input", "output")
+                for key in ("scope", "id", "start", "end", "input", "output", "model")
             }
 
 
@@ -162,7 +173,7 @@ def select_usage(path, format_name, scope=None):
             value if type(value) is int and value >= 0 else None
             for value in (row["input"], row["output"])
         )
-        call = (start, end, *counts)
+        call = (start, end, *counts, model_id(row["model"]))
         if identifier in calls and calls[identifier] != call:
             raise TokensUnavailable(
                 "La fuente tiene registros contradictorios para una misma llamada."
@@ -194,7 +205,7 @@ def require_usage_ready(run, meta, *, verify=False):
             raise TokensUnavailable(
                 "No se pudo leer la fuente de tokens nativos."
             ) from None
-        if any(None in call[2:] for call in calls.values()):
+        if any(None in call[2:4] for call in calls.values()):
             raise TokensUnavailable("Hay llamadas sin contador de entrada o salida.")
         if set(config["baseline"]) - calls.keys():
             raise TokensUnavailable(
@@ -218,7 +229,7 @@ def check_tokens(args):
         scope, calls = select_usage(
             file, args.format, config["scope"] if config else args.scope
         )
-        complete = [count for _, _, *count in calls.values() if None not in count]
+        complete = [call[2:4] for call in calls.values() if None not in call[2:4]]
         if len(complete) != len(calls):
             raise TokensUnavailable("Hay llamadas sin contador de entrada o salida.")
         if not any(sum(count) for count in complete):
@@ -286,7 +297,7 @@ def token_report(run, meta, events):
     entries = []
     totals = defaultdict(lambda: [0, 0, 0])
     incomplete = 0
-    for identifier, (start, end, input_count, output_count) in sorted(
+    for identifier, (start, end, input_count, output_count, model) in sorted(
         calls.items(), key=lambda item: item[1][0]
     ):
         stage = "preparacion"
@@ -312,6 +323,7 @@ def token_report(run, meta, events):
                 end.isoformat(),
                 input_count,
                 output_count,
+                model,
             )
         )
     latest = max(call[1] for call in calls.values())
@@ -321,11 +333,12 @@ def token_report(run, meta, events):
         if event["kind"] == "execution" and event.get("finished_at")
     ]
     reason = ""
+    baseline_only = not (calls.keys() - baseline)
     if baseline - calls.keys():
         reason = "La fuente perdió llamadas que aparecían en la comprobación inicial."
     elif incomplete:
         reason = f"Hay {incomplete} llamada(s) sin contador completo."
-    elif not calls.keys() - baseline:
+    elif baseline_only:
         reason = (
             "Todavía no se exportaron llamadas posteriores a la comprobación inicial."
         )
@@ -333,6 +346,9 @@ def token_report(run, meta, events):
         reason = "La última llamada exportada es anterior al último intento registrado."
     return {
         "blocked": bool(reason),
+        "baseline_only": baseline_only
+        and not incomplete
+        and not (baseline - calls.keys()),
         "reason": reason,
         "source": SOURCES[config["format"]],
         "totals": totals,
@@ -392,10 +408,21 @@ def write_token_evidence(path, report):
                     "Fin UTC",
                     "Entrada",
                     "Salida",
+                    "Modelo observado",
                 ),
                 (
-                    (key, label, start, end, inline(inputs), inline(outputs))
-                    for key, label, start, end, inputs, outputs in report["entries"]
+                    (
+                        key,
+                        label,
+                        start,
+                        end,
+                        inline(inputs),
+                        inline(outputs),
+                        inline(model),
+                    )
+                    for key, label, start, end, inputs, outputs, model in report[
+                        "entries"
+                    ]
                 ),
             ),
         ],

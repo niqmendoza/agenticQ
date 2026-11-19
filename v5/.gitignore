@@ -5,3 +5,4 @@
 /reportes/*.html
 /SDD fixes/*
 !/SDD fixes/README.md
+/evaluate-llm/resultados/

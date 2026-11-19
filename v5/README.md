@@ -1,5 +1,7 @@
 # QA agentizada · V5
 
+Para comparar el rendimiento de varios modelos de Copilot con el mismo encargo, usá el [modo de evaluación de modelos](evaluate-llm/README.md).
+
 V5 es un harness autocontenido para que Copilot descubra el alcance de una aplicación, diseñe pruebas trazables, ejecute los casos factibles y publique una entrega portable a Obsidian. El prompt guía la selección de casos y herramientas a partir del objetivo, los contratos y las superficies que expone cada aplicación.
 
 ## Inicio
