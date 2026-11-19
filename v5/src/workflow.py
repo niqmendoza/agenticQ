@@ -8,7 +8,7 @@ from types import SimpleNamespace
 from uuid import uuid4
 
 from markdown import inline, table, write_markdown
-from runners import Unavailable, http_request, run_case
+from runners import Unavailable, http_request, playwright_browser, run_case
 from session import append, load, read_json, timestamp, write_json
 
 
@@ -46,6 +46,23 @@ def preflight(args):
         )
 
     playwright_installed = importlib.util.find_spec("playwright") is not None
+    browser_blocked = False
+    browser_message = None
+    if args.browser:
+        try:
+            with playwright_browser(profile):
+                pass
+        except (Unavailable, OSError) as error:
+            browser_blocked = True
+            reason = (
+                str(error)
+                if isinstance(error, Unavailable)
+                else "El proceso de Playwright no pudo iniciarse."
+            )
+            browser_message = f"Navegador · Bloqueado · {reason}"
+        else:
+            channel = profile.get("browser_channel", "Chromium administrado")
+            browser_message = f"Navegador · Listo · {channel}"
     reference = f"evidencias/preflight-{uuid4().hex}.md"
     write_markdown(
         run / reference,
@@ -54,6 +71,7 @@ def preflight(args):
             "",
             f"- Hora UTC · {timestamp()}",
             f"- Paquete Playwright · {'Presente' if playwright_installed else 'Ausente'}",
+            *([f"- {inline(browser_message)}"] if browser_message else []),
             *[
                 f"- Credencial para {inline(actor)} · {'Presente' if os.environ.get(env) else 'Ausente'}"
                 for actor, env in profile.get("credentials", {}).items()
@@ -75,17 +93,20 @@ def preflight(args):
         ],
     )
     ready_count = sum(probe["state"] == "ready" for probe in probes)
+    observation = f"Sondas HTTP listas: {ready_count} de {len(probes)}."
+    if browser_message:
+        observation += f" {browser_message}"
     append(
         run,
         {
             "kind": "note",
             "phase": "preflight",
-            "observation": f"Sondas HTTP listas: {ready_count} de {len(probes)}.",
+            "observation": observation,
             "evidence": reference,
         },
     )
     print(run / reference)
-    return 3 if any(probe["state"] != "ready" for probe in probes) else 0
+    return 3 if browser_blocked or ready_count != len(probes) else 0
 
 
 def freeze_plan(args):

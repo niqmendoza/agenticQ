@@ -282,6 +282,11 @@ class PortableHarnessTests(unittest.TestCase):
                 encoding="utf-8",
             )
             self.cli("init", "--title", "Interfaz", "--profile", str(profile))
+            preflight = Path(self.cli("preflight", "--browser").stdout.strip())
+            channel = os.environ["QA_V5_TEST_BROWSER"]
+            self.assertIn(
+                f"Navegador · Listo · {channel}", preflight.read_text(encoding="utf-8")
+            )
             case = self.case()
             case["level"] = "ui"
             case["browser_path"] = "/interface"

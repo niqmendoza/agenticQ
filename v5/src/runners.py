@@ -2,6 +2,7 @@
 
 import json
 import os
+from contextlib import contextmanager
 from http.client import HTTPException
 from pathlib import Path
 from time import perf_counter
@@ -280,7 +281,8 @@ def http_request(profile, operation, checks, fixture, actor):
     return results, {"http_status": status, "content_type": media_type}
 
 
-def browser_request(profile, path, checks, config=None, plan=None):
+@contextmanager
+def playwright_browser(profile):
     try:
         from playwright.sync_api import (
             Error,
@@ -293,7 +295,6 @@ def browser_request(profile, path, checks, config=None, plan=None):
         raise Unavailable(
             "Playwright para Python no está instalado.", "runner"
         ) from None
-    target = origin(profile["base_url"])
     with sync_playwright() as playwright:
         try:
             options = (
@@ -307,83 +308,87 @@ def browser_request(profile, path, checks, config=None, plan=None):
                 "Chromium de Playwright no pudo iniciarse.", "runner"
             ) from None
         try:
-            page = browser.new_page(service_workers="block")
-            errors = []
-            if config is not None:
-                page.on("pageerror", lambda _: errors.append(True))
-
-            def route_request(route):
-                request = route.request
-                same_origin = origin(request.url) == target
-                if config is not None and request.is_navigation_request():
-                    location = urlsplit(request.url)
-                    expected = urlsplit(path)
-                    if not same_origin or (location.path, location.query) != (
-                        expected.path,
-                        expected.query,
-                    ):
-                        route.abort()
-                        return
-                approved_asset = request.url in profile.get(
-                    "browser_assets", []
-                ) and request.resource_type in ("script", "stylesheet")
-                if request.method in ("GET", "HEAD") and (
-                    same_origin or approved_asset
-                ):
-                    # Playwright puede continuar una redirección sin volver a llamar al handler.
-                    try:
-                        headers = (
-                            None
-                            if same_origin
-                            else {
-                                key: value
-                                for key, value in request.headers.items()
-                                if key.lower() in ("accept", "user-agent")
-                            }
-                        )
-                        fetched = route.fetch(
-                            headers=headers, max_redirects=0, timeout=15000
-                        )
-                    except Error:
-                        route.abort()
-                        return
-                    if 300 <= fetched.status < 400:
-                        route.abort()
-                    else:
-                        route.fulfill(response=fetched)
-                else:
-                    route.abort()
-
-            page.context.route("**/*", route_request)
-            try:
-                response = page.goto(
-                    profile["base_url"].rstrip("/") + path,
-                    wait_until="domcontentloaded",
-                    timeout=15000,
-                )
-            except Error:
-                raise Unavailable(
-                    "Playwright no pudo cargar la página del perfil."
-                ) from None
-            status = response.status if response else None
-            if config is not None:
-                return run_walk(
-                    page,
-                    profile,
-                    path,
-                    status,
-                    checks,
-                    config,
-                    plan,
-                    errors,
-                    Error,
-                    PlaywrightTimeout,
-                )
-            return inspect_page(page, status, checks, PlaywrightTimeout), {
-                "http_status": status
-            }
+            yield browser, Error, PlaywrightTimeout
         finally:
             browser.close()
+
+
+def browser_request(profile, path, checks, config=None, plan=None):
+    target = origin(profile["base_url"])
+    with playwright_browser(profile) as (browser, Error, PlaywrightTimeout):
+        page = browser.new_page(service_workers="block")
+        errors = []
+        if config is not None:
+            page.on("pageerror", lambda _: errors.append(True))
+
+        def route_request(route):
+            request = route.request
+            same_origin = origin(request.url) == target
+            if config is not None and request.is_navigation_request():
+                location = urlsplit(request.url)
+                expected = urlsplit(path)
+                if not same_origin or (location.path, location.query) != (
+                    expected.path,
+                    expected.query,
+                ):
+                    route.abort()
+                    return
+            approved_asset = request.url in profile.get(
+                "browser_assets", []
+            ) and request.resource_type in ("script", "stylesheet")
+            if request.method in ("GET", "HEAD") and (same_origin or approved_asset):
+                # Playwright puede continuar una redirección sin volver a llamar al handler.
+                try:
+                    headers = (
+                        None
+                        if same_origin
+                        else {
+                            key: value
+                            for key, value in request.headers.items()
+                            if key.lower() in ("accept", "user-agent")
+                        }
+                    )
+                    fetched = route.fetch(
+                        headers=headers, max_redirects=0, timeout=15000
+                    )
+                except Error:
+                    route.abort()
+                    return
+                if 300 <= fetched.status < 400:
+                    route.abort()
+                else:
+                    route.fulfill(response=fetched)
+            else:
+                route.abort()
+
+        page.context.route("**/*", route_request)
+        try:
+            response = page.goto(
+                profile["base_url"].rstrip("/") + path,
+                wait_until="domcontentloaded",
+                timeout=15000,
+            )
+        except Error:
+            raise Unavailable(
+                "Playwright no pudo cargar la página del perfil."
+            ) from None
+        status = response.status if response else None
+        if config is not None:
+            return run_walk(
+                page,
+                profile,
+                path,
+                status,
+                checks,
+                config,
+                plan,
+                errors,
+                Error,
+                PlaywrightTimeout,
+            )
+        return inspect_page(page, status, checks, PlaywrightTimeout), {
+            "http_status": status
+        }
 
 
 def run_case(args):

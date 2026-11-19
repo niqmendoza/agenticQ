@@ -225,6 +225,12 @@ def main():
         command = sub.add_parser(name)
         command.add_argument("--run", required=True)
         command.set_defaults(workflow_handler=handler)
+        if name == "preflight":
+            command.add_argument(
+                "--browser",
+                action="store_true",
+                help="Comprobar que Playwright puede abrir el navegador",
+            )
         if name == "suite":
             command.add_argument("--manifest", required=True)
         if name == "freeze-plan":

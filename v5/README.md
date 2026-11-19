@@ -8,7 +8,19 @@ V5 es un harness autocontenido para que Copilot descubra el alcance de una aplic
 2. Completá el [prompt maestro](PROMPT-MAESTRO.md) con el objetivo, entorno, alcance y accesos autorizados.
 3. Copiá la subcarpeta de [resultados](resultados/) a Obsidian y compartí el HTML y las propuestas SDD con sus destinatarios.
 
-El CLI requiere Python 3.10 o superior. HTTP y recuperación documental usan la biblioteca estándar. El runner de navegador requiere Playwright y Chromium o un canal compatible ya disponible. Instalá la dependencia opcional con `python3 -m pip install -r requirements-playwright.txt` en el entorno de QA. Los casos complejos se registran desde las herramientas autorizadas de Copilot. MCP es opcional y puede usarse como fuente de lectura si ya está conectado.
+El CLI requiere Python 3.10 o superior. HTTP y recuperación documental usan la biblioteca estándar. Para recorridos web, prepará Playwright antes de congelar el plan. Los casos complejos se registran desde las herramientas autorizadas de Copilot. MCP es opcional y puede usarse como fuente de lectura si ya está conectado.
+
+## Preparar Playwright para pruebas web
+
+Desde `v5/`, si el entorno autoriza la instalación, prepará un entorno virtual.
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements-playwright.txt
+.venv/bin/python -m playwright install chromium
+```
+
+Usá ese mismo Python para inicializar y ejecutar el CLI. Una vez creada la corrida, `.venv/bin/python src/qa.py preflight --run release-prueba --browser` comprueba que el navegador se puede iniciar y guarda el resultado en evidencias. Si la instalación o el arranque quedan bloqueados, registrá los casos web afectados con su motivo y seguí con las pruebas independientes. Para login y flujos con estado, registrá un recorrido Playwright externo autorizado cuando el runner de lectura no lo cubra.
 
 ## Operación
 
