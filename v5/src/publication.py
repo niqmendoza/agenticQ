@@ -9,6 +9,7 @@ from audit import STATES, inspect, publication_code
 from contracts import BROWSER_FLOWS
 from markdown import inline, source_label, table, write_markdown
 from session import RESULTS, TEMPLATES, load, run_id
+from token_meter import token_lines, write_token_evidence
 
 
 def evidence_link(reference, notes):
@@ -198,6 +199,11 @@ def final_report(meta, report):
             f"- Evidencia · {evidence_link(item.get('evidence'), report['evidence'])}",
             "",
         ]
+    if report["tokens"] and report["tokens"]["blocked"]:
+        lines += [
+            f"**Medición de tokens pendiente · {inline(report['tokens']['reason'])}**",
+            "",
+        ]
     if report["browser_blocked"]:
         lines += ["**Playwright bloqueado. Ver preflight y log.**", ""]
     if report["missing_browser_flows"]:
@@ -299,13 +305,31 @@ def publish(args):
     with TemporaryDirectory(dir=run) as temporary:
         output = Path(temporary) / target.name
         output.mkdir()
+        tokens = report["tokens"]
+        token_summary = token_lines(tokens)
+        if tokens and "entries" in tokens:
+            reference = "evidencias/consumo-tokens-v5.md"
+            if reference in report["evidence"]:
+                raise ValueError(
+                    "La referencia consumo-tokens-v5.md está reservada para V5."
+                )
+            (output / "evidencias").mkdir()
+            write_token_evidence(output / reference, tokens)
+            token_summary += [f"[Detalle por llamada]({reference})", ""]
         for name, lines in {
             "plan casos.md": render_plan(report),
             "casos.md": render_cases(report),
             "ejecuciones.md": render_attempts(events, report),
             "log.md": render_log(meta, events, report),
             "analisis segundo cerebro.md": input_lines("analisis.md"),
-            "metricas.md": [*input_lines("metricas.md"), "", *metric_summary(report)],
+            "metricas.md": [
+                "# Métricas de la corrida",
+                "",
+                *token_summary,
+                *input_lines("metricas.md"),
+                "",
+                *metric_summary(report),
+            ],
             "informe final.md": [
                 *final_report(meta, report),
                 *input_lines("evaluacion.md"),

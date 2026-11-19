@@ -5,6 +5,7 @@ from collections import Counter
 from contracts import validate_execution
 from records import validate_finding
 from session import evidence_file, pending_browser_flows, read_json
+from token_meter import token_report
 
 STATES = (
     "passed",
@@ -85,6 +86,7 @@ def inspect(run, meta, events):
     )
     return {
         "browser_blocked": browser_ready is False,
+        "tokens": token_report(run, meta, events),
         "missing_browser_flows": pending_browser_flows(plan or {}, events, latest),
         "cases": cases,
         "attempts": attempts,
@@ -106,4 +108,11 @@ def inspect(run, meta, events):
 def publication_code(report):
     if report["issues"]:
         return 1
-    return 3 if report["browser_blocked"] or report["missing_browser_flows"] else 0
+    tokens_blocked = report["tokens"] and report["tokens"]["blocked"]
+    return (
+        3
+        if report["browser_blocked"]
+        or report["missing_browser_flows"]
+        or tokens_blocked
+        else 0
+    )

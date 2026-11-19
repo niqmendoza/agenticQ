@@ -21,6 +21,7 @@ from session import (
     timestamp,
     write_json,
 )
+from token_meter import require_usage_ready
 
 
 def validate_finding(run, event, cases):
@@ -70,7 +71,10 @@ def store_records(run, meta, events, data):
             raise ValueError(
                 "Cada registro requiere kind: case, execution, finding o note."
             )
-        if any(field in item for field in ("time_utc", "browser_ready", "python")):
+        if any(
+            field in item
+            for field in ("time_utc", "browser_ready", "python", "token_stage")
+        ):
             raise ValueError("El sistema asigna time_utc y los campos de preflight.")
         kind = item["kind"]
         if kind == "case":
@@ -88,6 +92,7 @@ def store_records(run, meta, events, data):
                 raise ValueError("Congelá el plan antes de registrar un intento.")
             validate_execution(run, meta["profile"], cases[identifier], item)
             if item["status"] in ("passed", "failed", "partial"):
+                require_usage_ready(run, meta)
                 plan = read_json(run / "plan.json")
                 if item["execution_method"] in ("http", "playwright") and not plan.get(
                     "browser_flows"

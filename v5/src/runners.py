@@ -30,6 +30,7 @@ from session import (
     require_browser_ready,
     timestamp,
 )
+from token_meter import require_usage_ready
 from ui_walk import inspect_page, run_walk, walk_plan
 
 HTTP_METHODS = ("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
@@ -553,6 +554,7 @@ def browser_operation(case, profile, checks):
 
 def run_case(args):
     run, meta, events = load(args.run)
+    require_usage_ready(run, meta)
     plan_file = run / "plan.json"
     if not plan_file.is_file():
         raise ValueError("Congelá el plan antes de ejecutar un caso.")

@@ -11,6 +11,7 @@ import sys
 import tempfile
 import unittest
 from contextlib import contextmanager
+from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
@@ -139,7 +140,30 @@ class PortableHarnessTests(unittest.TestCase):
         self.run_dir = self.harness / ".trabajo" / "demo"
         self.delivery = self.harness / "resultados" / "demo"
 
-    def cli(self, command, *args, data=None, code=0):
+    def simulate_model_call(self, identifier):
+        now = datetime.now(timezone.utc)
+        with self.token_source.open("a", encoding="utf-8") as stream:
+            stream.write(
+                json.dumps(
+                    {
+                        "scope": "qa-fixture",
+                        "id": identifier,
+                        "input": 30,
+                        "output": 5,
+                        "start": (now - timedelta(milliseconds=1)).isoformat(),
+                        "end": now.isoformat(),
+                    }
+                )
+                + "\n"
+            )
+
+    def cli(self, command, *args, data=None, code=0, metered=True):
+        if (
+            metered
+            and command in ("publish", "export-html")
+            and hasattr(self, "token_source")
+        ):
+            self.simulate_model_call("corte-" + str(self.token_source.stat().st_size))
         result = subprocess.run(
             [
                 sys.executable,
@@ -158,6 +182,12 @@ class PortableHarnessTests(unittest.TestCase):
             timeout=90,
         )
         self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+        if metered and command == "init" and code == 0:
+            self.token_source = self.workspace / "native-usage-fixture.jsonl"
+            self.simulate_model_call("primera-llamada")
+            self.cli(
+                "tokens-check", "--file", str(self.token_source), "--format", "native"
+            )
         return result
 
     def case(self, case_id="REC-01"):
@@ -310,7 +340,7 @@ class PortableHarnessTests(unittest.TestCase):
         self.cli("publish")
         self.assertEqual({path.name for path in self.delivery.glob("*.md")}, REPORTS)
         all_files = [path for path in self.delivery.rglob("*") if path.is_file()]
-        self.assertEqual(len(all_files), 11)
+        self.assertEqual(len(all_files), 12)
         self.assertTrue(all(path.suffix == ".md" for path in all_files))
         self.assertFalse(
             any(
@@ -936,8 +966,68 @@ class PortableHarnessTests(unittest.TestCase):
                 (self.delivery / "informe final.md").read_text(encoding="utf-8"),
             )
 
+    def test_requires_native_tokens_and_reports_only_the_selected_otel_calls(self):
+        self.cli("init", "--title", "Medición", metered=False)
+        self.assertIn(
+            "fuente de tokens verificada", self.cli("preflight", code=3).stderr
+        )
+        self.cli("record", data=self.offline_case())
+        self.cli("freeze-plan", code=2)
+        file = self.workspace / "otel.jsonl"
+
+        def emit(rows):
+            with file.open("a", encoding="utf-8") as stream:
+                for row in rows:
+                    stream.write(json.dumps(row) + "\n")
+
+        def span(trace, identifier, session, inputs, outputs, operation="chat"):
+            now = datetime.now(timezone.utc)
+            return {
+                "type": "span",
+                "traceId": trace,
+                "spanId": identifier,
+                "startTime": (now - timedelta(milliseconds=1)).isoformat(),
+                "endTime": now.isoformat(),
+                "attributes": {
+                    "gen_ai.operation.name": operation,
+                    **({"gen_ai.conversation.id": session} if session else {}),
+                    "gen_ai.usage.input_tokens": inputs,
+                    "gen_ai.usage.output_tokens": outputs,
+                    "gen_ai.input.messages": "Canary private input.",
+                },
+            }
+
+        first = span("t1", "native-request-1", "qa-a", 50, 5)
+        emit([first, first, span("t2", "other", "qa-b", 6000, 6000)])
+        self.cli("tokens-check", "--file", str(file), code=3)
+        self.cli("tokens-check", "--file", str(file), "--scope", "qa-a")
+        self.cli("preflight")
+        self.cli("freeze-plan")
+        stale = self.cli("publish", "--zip", "--name", "incompleto", code=3)
+        self.assertTrue(Path(stale.stdout.strip()).is_file())
+        self.cli("tokens-stage", "--stage", "analisis")
+        second = span("t3", "native-request-2", None, 60, 6)
+        emit([second, span("t3", "root", "qa-a", 999, 999, "invoke_agent")])
+        archive = Path(self.cli("publish", "--zip").stdout.strip())
+        with ZipFile(archive) as bundle:
+            metrics = bundle.read("demo/metricas.md").decode()
+            evidence = bundle.read("demo/evidencias/consumo-tokens-v5.md").decode()
+            self.assertIn("Total observado · 121", metrics)
+            self.assertIn("| Lectura y análisis | 1 | 60 | 6 | 66 |", metrics)
+            self.assertNotIn("native-request", evidence)
+            self.assertNotIn("Canary private input.", evidence)
+            self.assertNotIn("otel.jsonl", evidence)
+
+        emit([span("t4", "missing-output", "qa-a", 10, None)])
+        self.cli("publish", "--name", "parcial", code=3)
+        incomplete = (self.delivery.parent / "parcial" / "metricas.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("1 llamada(s) sin contador completo", incomplete)
+        self.assertIn("Subtotal observado · 121", incomplete)
+
     def test_blocked_run_publishes_without_profile_or_plan(self):
-        self.cli("init", "--title", "Entorno sin acceso")
+        self.cli("init", "--title", "Entorno sin acceso", metered=False)
         self.cli(
             "record",
             data={
@@ -946,7 +1036,7 @@ class PortableHarnessTests(unittest.TestCase):
                 "observation": "El entorno no está disponible.",
             },
         )
-        self.cli("publish")
+        self.cli("publish", code=3)
         self.assertEqual({path.name for path in self.delivery.iterdir()}, REPORTS)
         self.assertIn(
             "El entorno no está disponible.",

@@ -150,6 +150,8 @@ def render_findings(report):
 
 def render_scope(report):
     notes = []
+    if report["tokens"] and report["tokens"]["blocked"]:
+        notes.append(f"Medición de tokens pendiente · {report['tokens']['reason']}")
     if report["browser_blocked"]:
         notes.append("Playwright bloqueado. Ver preflight y log.")
     if report["missing_browser_flows"]:

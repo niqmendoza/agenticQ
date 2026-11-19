@@ -19,10 +19,17 @@ from session import (
     timestamp,
     write_json,
 )
+from token_meter import TokensUnavailable, require_usage_ready
 
 
 def preflight(args):
     run, meta, _ = load(args.run)
+    try:
+        require_usage_ready(run, meta, verify=True)
+    except TokensUnavailable as error:
+        append(run, {"kind": "note", "phase": "preflight", "observation": str(error)})
+        print(f"Preflight bloqueado · {error}", file=sys.stderr)
+        return 3
     profile = meta["profile"]
     playwright_installed = importlib.util.find_spec("playwright") is not None
     browser_blocked = False
@@ -135,7 +142,8 @@ def preflight(args):
 
 
 def freeze_plan(args):
-    run, _, events = load(args.run)
+    run, meta, events = load(args.run)
+    require_usage_ready(run, meta)
     cases = [event for event in events if event["kind"] == "case"]
     if not cases:
         raise ValueError("Registrá los casos antes de congelar el plan.")

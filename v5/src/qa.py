@@ -30,6 +30,7 @@ from session import (
     timestamp,
     write_json,
 )
+from token_meter import SOURCES, STAGES, check_tokens, mark_stage
 from workflow import freeze_plan, preflight, suite
 
 ENGINE = ROOT / "src" / "engine" / "brain.py"
@@ -53,6 +54,7 @@ def initialize(args):
         run / "run.json",
         {
             "schema": "qa-run/3",
+            "tokens_required": True,
             "profile": profile,
             "title": args.title,
             "environment": args.environment,
@@ -242,6 +244,24 @@ def main():
             command.add_argument(
                 "--requirements", help="Lista JSON de IDs del catálogo independiente"
             )
+    tokens = sub.add_parser(
+        "tokens-check", help="Comprobar una fuente de contadores nativos"
+    )
+    tokens.add_argument("--run", required=True)
+    tokens.add_argument(
+        "--file", required=True, help="Archivo JSONL de contadores autorizado"
+    )
+    tokens.add_argument("--format", choices=SOURCES, default="otel")
+    tokens.add_argument(
+        "--scope", help="Identificador de conversación si el archivo contiene varias"
+    )
+    tokens.set_defaults(workflow_handler=check_tokens)
+    tokens_stage = sub.add_parser(
+        "tokens-stage", help="Marcar un corte entre etapas de la corrida"
+    )
+    tokens_stage.add_argument("--run", required=True)
+    tokens_stage.add_argument("--stage", required=True, choices=tuple(STAGES)[:-1])
+    tokens_stage.set_defaults(workflow_handler=mark_stage)
     publication = sub.add_parser(
         "publish", help="Exportar la entrega Markdown a resultados/"
     )

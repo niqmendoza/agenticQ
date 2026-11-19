@@ -10,6 +10,10 @@ V5 es un harness autocontenido para que Copilot descubra el alcance de una aplic
 
 El CLI requiere Python 3.10 o superior. HTTP y recuperación documental usan la biblioteca estándar. Para recorridos web, prepará Playwright antes de congelar el plan. Los casos complejos se registran desde las herramientas autorizadas de Copilot. MCP es opcional y puede usarse como fuente de lectura si ya está conectado.
 
+## Preparar la medición de tokens
+
+Las corridas nuevas requieren una fuente nativa del agente antes del preflight. Habilitá la exportación en el cliente que ejecuta Copilot, usá una conversación exclusiva de QA y comprobá los contadores con `tokens-check`. Los reportes distinguen el consumo observado hasta el último registro exportado. [Configuración e importación](MEDICION-TOKENS.md)
+
 ## Preparar Playwright para la web y Swagger
 
 Desde `v5/`, si el entorno autoriza la instalación, prepará un entorno virtual.
@@ -28,6 +32,7 @@ Desde `v5/`, corré `python3 src/qa.py --help`. Cada comando con `--run` recibe 
 
 ```sh
 python3 src/qa.py init --run release-prueba --title "QA de release" --environment QA --version "build-42"
+python3 src/qa.py tokens-check --run release-prueba --file .trabajo/copilot-qa.jsonl
 python3 src/qa.py preflight --run release-prueba --browser
 # Registrar casos con record y preparar el catálogo independiente si existe.
 python3 src/qa.py freeze-plan --run release-prueba --browser-flow web_ui
@@ -59,7 +64,7 @@ Copilot define los casos, prepara el manifiesto y usa los veredictos de los scri
 
 ## Entrega
 
-`publish --zip` genera el archivo `resultados/<id>.zip` con los siete Markdown, preflight y evidencias enlazadas. También conserva las notas en `resultados/<id>/` y copia las notas Markdown de evidencia referenciadas. Conserva plan inicial, casos vigentes, intentos, hallazgos y conteos del primer y último estado. Un fallo funcional aparece en el informe. La publicación devuelve 3 si Playwright está bloqueado o falta un recorrido exigido, y 1 si hay problemas estructurales de evidencia. Una publicación anterior se conserva. Usá `--name <id-revision>` si hace falta exportar una versión corregida.
+`publish --zip` genera el archivo `resultados/<id>.zip` con los siete Markdown, preflight y evidencias enlazadas. También conserva las notas en `resultados/<id>/` y copia las notas Markdown de evidencia referenciadas. Conserva plan inicial, casos vigentes, intentos, hallazgos y conteos del primer y último estado. Un fallo funcional aparece en el informe. La publicación devuelve 3 si falta la medición de tokens, Playwright está bloqueado o falta un recorrido exigido, y 1 si hay problemas estructurales de evidencia. Una publicación anterior se conserva. Usá `--name <id-revision>` si hace falta exportar una versión corregida.
 
 La revisión comprueba que la evidencia compartible exista y esté enlazada. La pertinencia, exactitud y sanitización requieren revisión del agente. El alcance, los efectos autorizados y el dictamen dependen de la aplicación y del usuario. Los resultados quedan ignorados por Git y disponibles como archivos locales.
 
