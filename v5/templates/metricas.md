@@ -2,7 +2,7 @@
 
 ## Agente de QA
 
-Completar con duraciones medidas y uso nativo cuando esté disponible. En fuente y alcance indicar modelo verificado, intervalo de observación y procedencia. Conservar los cortes al inicio y fin de cada etapa.
+Completar con duraciones medidas y uso nativo cuando esté disponible. En fuente y alcance indicar procedencia, intervalo de observación y configuración relevante para comparar. Conservar los cortes al inicio y fin de cada etapa.
 
 | Etapa | Inicio y fin con zona | Duración | Entrada | Salida | Total nativo | Fuente y alcance |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -19,5 +19,5 @@ Completar con duraciones medidas y uso nativo cuando esté disponible. En fuente
 
 ## Aplicación y herramientas
 
-- Uso nativo de modelos de la aplicación · No disponible.
+- Mediciones del sistema bajo prueba, cuando correspondan · No disponible.
 - Incidencias del runner, tiempos de herramientas y datos comparables con la corrida anterior · No registrado.

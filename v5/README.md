@@ -1,11 +1,11 @@
 # QA agentizada · V5
 
-V5 es un harness autocontenido para que Copilot descubra el alcance de una aplicación, diseñe pruebas trazables, ejecute los casos factibles y publique una entrega portable a Obsidian. Puede empezar con una UI, una API, un CLI, el código, un segundo cerebro o los contratos que estén disponibles. El prompt fija **GPT-5.6 Sol** para Copilot y para los casos que invoquen inferencia en la aplicación.
+V5 es un harness autocontenido para que Copilot descubra el alcance de una aplicación, diseñe pruebas trazables, ejecute los casos factibles y publique una entrega portable a Obsidian. El prompt guía la selección de casos y herramientas a partir del objetivo, los contratos y las superficies que expone cada aplicación.
 
 ## Inicio
 
 1. Copiá esta carpeta completa al servidor donde vayas a trabajar y abrila como workspace en Copilot.
-2. Elegí GPT-5.6 Sol. Completá el [prompt maestro](PROMPT-MAESTRO.md) con el objetivo, entorno, alcance y accesos autorizados.
+2. Completá el [prompt maestro](PROMPT-MAESTRO.md) con el objetivo, entorno, alcance y accesos autorizados.
 3. Copiá la subcarpeta de [resultados](resultados/) a Obsidian y compartí el HTML y las propuestas SDD con sus destinatarios.
 
 El CLI requiere Python 3.10 o superior. HTTP y recuperación documental usan la biblioteca estándar. El runner de navegador requiere Playwright y Chromium o un canal compatible ya disponible. Instalá la dependencia opcional con `python3 -m pip install -r requirements-playwright.txt` en el entorno de QA. Los casos complejos se registran desde las herramientas autorizadas de Copilot. MCP es opcional y puede usarse como fuente de lectura si ya está conectado.
@@ -25,7 +25,7 @@ python3 src/qa.py export-html --run release-prueba
 python3 src/qa.py export-fixes --run release-prueba
 ```
 
-- Pasá `--profile` con el perfil del entorno para declarar sondas HTTP, rutas, actores o fuentes MCP. `preflight` comprueba las sondas declaradas, presencia de variables y del paquete Playwright. El agente comprueba el navegador, las sesiones, el modelo, MCP y la telemetría.
+- Pasá `--profile` con el perfil del entorno para declarar sondas HTTP, rutas, actores o fuentes MCP. `preflight` comprueba las sondas declaradas, presencia de variables y del paquete Playwright. El agente verifica las herramientas, los accesos y las dependencias pertinentes para el alcance.
 - Pasá `--corpus` a `init` para un directorio textual. Usá `index`, luego `pack --queries ARCHIVO` con una lista JSON de preguntas. `show`, `headings` y `links` amplían el material. El CLI devuelve la ruta del artefacto interno que hay que leer. Si cambia la revisión del corpus, creá una corrida nueva.
 - Usá `record --json ARCHIVO` o `record` con JSON por entrada estándar para casos, intentos, hallazgos y notas. El plan previo a la ejecución se conserva con `freeze-plan`. Si existe un alcance numerado independiente, pasá `--requirements CATALOGO` al congelarlo.
 - Usá `execute --case ID --via http` o `--via playwright` para registrar una ejecución declarativa. `suite --manifest ARCHIVO` ejecuta un lote. Ver [contratos de registro y ejemplos](REGISTROS.md).
