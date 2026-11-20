@@ -82,11 +82,27 @@ def inspect(run, meta, events):
     plan_path = run / "plan.json"
     plan = read_json(plan_path) if plan_path.is_file() else None
     catalog = plan["catalog"] if plan is not None else None
+    planned_cases = [case["id"] for case in plan["cases"]] if plan is not None else []
+    planned_unobserved = [
+        key
+        for key in planned_cases
+        if not any(
+            state(item) in ("passed", "failed", "partial") for item in attempts[key]
+        )
+    ]
     browser_ready = next(
         (
             event["browser_ready"]
             for event in reversed(events)
             if "browser_ready" in event
+        ),
+        None,
+    )
+    summary = next(
+        (
+            event["observation"]
+            for event in reversed(events)
+            if event["kind"] == "note" and event["phase"] == "resumen-gerencial"
         ),
         None,
     )
@@ -107,7 +123,10 @@ def inspect(run, meta, events):
         "evidence": evidence,
         "groups": groups,
         "plan": plan,
+        "planned_count": len(planned_cases),
+        "planned_unobserved": planned_unobserved,
         "catalog": catalog,
+        "summary": summary,
     }
 
 

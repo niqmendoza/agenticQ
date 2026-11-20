@@ -16,4 +16,8 @@ assert.deepEqual(incoming('defect-markdown'), ['result-decision'], 'El Markdown 
 assert(has('fix-pr','retest-request') && has('retest-request','ci-pipeline'), 'Una corrección dispara una ejecución nueva.');
 assert(!has('fix-pr','regression-check') && has('result-decision','regression-check') && has('regression-check','result-record'), 'El cierre requiere evaluar resultados nuevos, no sólo incorporar código.');
 assert(has('approval','design','feedback') && has('evaluation','execution','feedback') && has('feedback','execution','feedback'), 'El mapa maestro debe conservar los retornos principales.');
-console.log('13 controles de flujo aprobados: alcance de QA, desarrollo informado sin bloqueo, retrieval, publicación, duplicados, conocimiento, fallos, corrección y cierre.');
+assert(has('approval-decision','v6-catalog','conditional') && has('v6-catalog','v6-release-run','data'), 'V6 ejecuta una suite versionada después de la revisión de QA.');
+assert(has('v6-release-run','v6-release-result','data') && has('v6-release-result','qa-triage','data') && has('v6-release-result','v5-v6-comparison','data'), 'El dictamen alimenta el triage y el contraste con V5.');
+assert(has('qc-typescript-framework','v6-release-run','data'), 'La estructura TypeScript de QA se incorpora al flujo V6.');
+assert(has('application','qc-coelsa-coverage','conditional') && has('qc-coelsa-coverage','v6-catalog','feedback'), 'La cobertura completa sigue a la prueba de release y aporta casos al catálogo.');
+console.log('17 controles de flujo aprobados: alcance de QA, desarrollo informado sin bloqueo, retrieval, publicación, duplicados, conocimiento, fallos, corrección y cierre.');

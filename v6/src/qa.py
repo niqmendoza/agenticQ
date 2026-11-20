@@ -19,7 +19,7 @@ from management_report import export_html
 from mock_data import generate_mock_data
 from publication import publish
 from records import record
-from runners import inventory, run_case, validate_profile
+from runners import inventory, profile_for_run, run_case
 from sdd_export import export_fixes
 from session import (
     PACKAGE,
@@ -40,8 +40,10 @@ ENGINE = PACKAGE / "src" / "engine" / "brain.py"
 
 
 def initialize(args):
-    profile = read_json(args.profile) if args.profile else {}
-    validate_profile(profile)
+    profile = profile_for_run(
+        read_json(args.profile) if args.profile else {},
+        chrome_visible=getattr(args, "chrome_visible", False),
+    )
     corpus = Path(args.corpus).resolve() if args.corpus else None
     run = args.run.resolve()
     if corpus is not None and not corpus.is_dir():
@@ -188,6 +190,9 @@ def main():
     )
     init.add_argument("--corpus")
     init.add_argument("--profile", help="Perfil interno de HTTP, navegador o MCP")
+    init.add_argument(
+        "--chrome-visible", action="store_true", help="Usar el Chrome instalado con ventana"
+    )
     init.add_argument("--title", required=True)
     init.add_argument("--environment", default="No informado")
     init.add_argument("--version", default="No verificada")

@@ -4,6 +4,7 @@ import hashlib
 import json
 import shlex
 import sys
+from dataclasses import dataclass
 from time import sleep
 from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version
@@ -19,9 +20,22 @@ from bindings import TOKEN
 from markdown import inline, write_markdown
 from openapi_contract import operation_for, read_spec, response_schema
 from records import store_records
-from runners import checks_for, run_case, validate_profile
+from runners import checks_for, profile_for_run, run_case
 from session import RESULTS, WORK, load, read_json, run_id, write_json
 from workflow import freeze_plan
+
+
+@dataclass
+class LoadedSuite:
+    profile: dict
+    corpus: Path | None
+    cases: list
+    manifest: list
+    bodies: dict
+    uploads: dict
+    requirements: list | None
+    provenance: dict
+    contracts: dict
 
 
 def digest(value):
@@ -83,8 +97,9 @@ def load_suite(args):
         if args.profile
         else inside(root, config["profile"])
     )
-    profile = read_json(profile_file)
-    validate_profile(profile)
+    profile = profile_for_run(
+        read_json(profile_file), chrome_visible=args.chrome_visible
+    )
     corpus = (
         Path(args.corpus).resolve()
         if args.corpus
@@ -117,6 +132,7 @@ def load_suite(args):
     definitions = {}
     fixtures = {}
     uploads = {}
+    contracts = {}
     spec_file = inside(root, config["openapi"]) if config.get("openapi") else None
     spec = read_spec(spec_file) if spec_file else None
     producers = {"RUN_ID": None}
@@ -184,6 +200,7 @@ def load_suite(args):
             raise ValueError(f"{key}: resolvé el esperado antes de promover el caso.")
         if spec and channel in ("api", "http"):
             operation_for(spec, case)
+            contracts[key] = str(spec_file)
         for criterion in case["criteria"]:
             check = criterion.get("check", {})
             if check.get("type") == "response_schema":
@@ -200,8 +217,10 @@ def load_suite(args):
         for step in case.get("browser_steps", []):
             if step["type"] == "upload":
                 name = step["value"]
-                data = inside(root / "fixtures", name).read_bytes()
-                uploads[name] = data
+                fixture_root = (root / "fixtures").resolve()
+                fixture_file = inside(fixture_root, name)
+                data = fixture_file.read_bytes()
+                uploads[fixture_file.relative_to(fixture_root).as_posix()] = data
                 hashes[name] = hashlib.sha256(data).hexdigest()
         used = set(TOKEN.findall(json.dumps(case))) | set(
             TOKEN.findall(fixtures.get(key, b"").decode())
@@ -256,7 +275,10 @@ def load_suite(args):
         "dependencies": dependencies,
         "contract": digest(spec) if spec else None,
     }
-    return config, profile, corpus, selected, manifest, fixtures, uploads, provenance
+    return LoadedSuite(
+        profile, corpus, selected, manifest, fixtures, uploads, requirements, provenance,
+        contracts,
+    )
 
 
 def verdict(run, meta, events):
@@ -383,12 +405,18 @@ def replay(args):
     from qa import initialize
     from management_report import export_html
     from publication import publish
+    from regressions import load_application
 
-    config, profile, corpus, cases, manifest, bodies, uploads, provenance = load_suite(
-        args
-    )
+    if args.suite and (args.regressions or args.new_suite):
+        raise ValueError("--regressions y --new-suite requieren --app.")
+    if args.suite:
+        suite, batch_by_case = load_suite(args), {}
+    else:
+        suite, batch_by_case = load_application(args)
+    provenance = suite.provenance
+    app = provenance["app"]
     if args.action == "validate":
-        print(f"{config['app']} · {len(cases)} casos · {provenance['suite']}")
+        print(f"{app} · {len(suite.cases)} casos · {provenance['suite']}")
         return
     identifier = run_id(
         args.id
@@ -399,11 +427,11 @@ def replay(args):
         raise ValueError("Usá una carpeta local y un ID nuevo.")
     params = SimpleNamespace(
         run=run,
-        title=config["app"],
+        title=app,
         environment=args.env,
         version=args.build,
         profile=None,
-        corpus=corpus,
+        corpus=suite.corpus,
         benchmark=False,
         requirements=None,
         browser_flow=None,
@@ -415,33 +443,44 @@ def replay(args):
     cmd = [
         "qc",
         "run",
-        "--suite",
-        str(Path(args.suite)),
         "--env",
         args.env,
         "--build",
         args.build,
     ]
-    for flag in ("profile", "corpus"):
+    for flag in ("suite", "app", "regressions", "new_suite", "profile", "corpus"):
         if getattr(args, flag):
-            cmd += ["--" + flag, str(getattr(args, flag))]
-    meta.update(profile=profile, provenance=provenance, replay=shlex.join(cmd))
+            cmd += ["--" + flag.replace("_", "-"), str(getattr(args, flag))]
+    if args.chrome_visible:
+        cmd.append("--chrome-visible")
+    meta.update(
+        profile=suite.profile,
+        provenance=provenance,
+        replay=shlex.join(cmd),
+        contracts=suite.contracts,
+    )
     write_json(run / "run.json", meta)
-    for name, data in uploads.items():
+    for name, data in suite.uploads.items():
         path = run / "fixtures" / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
-    for key, data in bodies.items():
+    for key, data in suite.bodies.items():
         (run / "artifacts" / f"{key}.json").write_bytes(data)
-    store_records(run, meta, events, cases)
-    if config.get("requirements"):
-        params.requirements = inside(
-            Path(args.suite).resolve().parent, config["requirements"]
-        )
+    manifest_snapshot = [
+        {**item, "body": f"artifacts/{item['case']}.json"}
+        if item["case"] in suite.bodies
+        else item
+        for item in suite.manifest
+    ]
+    write_json(run / "suite.json", manifest_snapshot)
+    store_records(run, meta, events, suite.cases)
+    if suite.requirements:
+        params.requirements = run / "artifacts" / "requisitos.json"
+        write_json(params.requirements, suite.requirements)
     freeze_plan(params)
     completed = {}
-    variables = {"RUN_ID": identifier}
-    for case, item in zip(cases, manifest):
+    bindings = {}
+    for case, item in zip(suite.cases, suite.manifest):
         key = case["id"]
         failed_dependencies = [
             dep for dep in item.get("depends_on", []) if completed[dep] != 0
@@ -460,9 +499,9 @@ def replay(args):
                 case=key,
                 via=item["via"],
                 seed=item.get("seed"),
-                bindings=variables,
+                bindings=bindings.setdefault(batch_by_case.get(key), {"RUN_ID": identifier}),
                 capture=item.get("capture"),
-                body=run / "artifacts" / f"{key}.json" if key in bodies else None,
+                body=run / "artifacts" / f"{key}.json" if key in suite.bodies else None,
             )
             poll = item.get("poll", {})
             for attempt in range(poll.get("attempts", 1)):

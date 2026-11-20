@@ -22,6 +22,7 @@ export interface ImplementationPlan {
   description: string;
   phases: MilestonePhase[];
   report?: { title: string; href: string };
+  latestUpdate?: { date: string; summary: string; references: { title: string; href: string }[] };
 }
 export interface MilestoneEntry {
   status: MilestoneStatus;

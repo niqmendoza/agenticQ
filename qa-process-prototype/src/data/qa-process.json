@@ -1,19 +1,22 @@
 {
   "title": "QA agentizada",
-  "description": "De la documentación a las pruebas y de los resultados a una mejora. QA define el alcance de las pruebas; desarrollo queda informado y el conocimiento se consulta con ayuda de scripts de retrieval.",
-  "modelVersion": "3.0.0",
+  "description": "QA revisa el alcance y conserva los casos reutilizables. Agentic QC V6 ejecuta una suite por build, registra evidencia y conserva el vínculo con el retest.",
+  "modelVersion": "3.2.0",
   "scope": {
     "current": [
-      "GitHub Copilot para ayudar a QA a generar casos y tests",
-      "Azure Test Plans como catálogo",
-      "Playwright como automatización existente",
-      "Segundo cerebro en Obsidian/RAGFlow según la aplicación",
-      "Scripts de retrieval de los segundos cerebros: versión 1 creada, validación e integración pendientes"
+      "Copilot y fuentes de la aplicación para proponer casos",
+      "V5 verificada con 15 pruebas del harness, incluidas UI, Swagger simulado y SQLite",
+      "Agentic QC V6 disponible para pilotos locales con suites versionadas y dictamen por release",
+      "Playwright para navegador y API directa, SQLite y PostgreSQL para consultas de lectura",
+      "Azure Test Plans como catálogo de los equipos que lo utilizan"
     ],
     "proposed": [
-      "n8n como orquestador",
-      "Propuesta de pruebas estimada y revisada por QA, con desarrollo informado",
-      "Generación de Markdown para defectos confirmados"
+      "Repetir el piloto real en V6 y contrastar su resultado con la corrida V5 en curso",
+      "Validar el pipeline y el vínculo entre resultados y casos en Azure corporativo",
+      "Evaluar n8n como orquestador de equipo",
+      "Proyecto dedicado a los segundos cerebros de QC en Azure Repos, con conexión a RAGFlow en desarrollo",
+      "Alinear Agentic QC con el repositorio de pruebas TypeScript de QA",
+      "Revisar el código y ampliar la cobertura de COELSA.Intelligent después de cerrar las pruebas de la nueva release"
     ],
     "optional": [
       "Schemathesis",
@@ -105,9 +108,9 @@
             {
               "id": "knowledge-repository",
               "type": "external-system",
-              "title": "Guardar el conocimiento",
-              "shortDescription": "El repositorio conserva la versión aprobada.",
-              "description": "La documentación y las notas revisadas se guardan con historial por aplicación. Los cambios se revisan antes de incorporarlos.",
+              "title": "Versionar los segundos cerebros en Azure Repos",
+              "shortDescription": "Proyecto exclusivo para los segundos cerebros de QC. Creación solicitada.",
+              "description": "Se pidió un proyecto dedicado en Azure Repos. Una vez habilitado, los analistas de QC podrán cargar los segundos cerebros, recuperar su versión vigente y publicar actualizaciones.",
               "responsibilities": [
                 "Versionar documentación",
                 "Registrar cambios por PR"
@@ -120,7 +123,8 @@
                 "Revisión aprobada"
               ],
               "tools": [
-                "Git / Azure Repos"
+                "Azure Repos",
+                "Git"
               ],
               "agents": [],
               "humanInteraction": {
@@ -129,13 +133,13 @@
               },
               "details": {
                 "objective": "Mantener una fuente de conocimiento editable y auditable.",
-                "howItWorks": "Cada cambio se propone en rama, se comenta y se incorpora a la rama principal.",
+                "howItWorks": "El analista sube el segundo cerebro al crearlo, hace pull antes de usarlo para diseñar casos y publica las actualizaciones con push a main.",
                 "validationCriteria": [
                   "Se conoce la revisión utilizada",
                   "El contenido publicado fue aprobado"
                 ]
               },
-              "status": "actual"
+              "status": "propuesto"
             },
             {
               "id": "qa-notes",
@@ -181,9 +185,9 @@
             {
               "id": "ragflow-sync",
               "type": "process",
-              "title": "Actualizar RAGFlow",
-              "shortDescription": "Incorporar la última documentación aprobada.",
-              "description": "Después de actualizar el repositorio, RAGFlow procesa los documentos. Antes de generar casos, se comprueba que la nueva versión esté disponible.",
+              "title": "Sincronizar Azure Repos con RAGFlow",
+              "shortDescription": "En curso la conexión que publica en RAGFlow el contenido de main.",
+              "description": "Se está construyendo la integración para que RAGFlow aloje, indexe y permita consultar los segundos cerebros versionados en Azure Repos.",
               "responsibilities": [
                 "Sincronizar cambios",
                 "Retirar información obsoleta"
@@ -195,8 +199,8 @@
                 "Índice consultable"
               ],
               "tools": [
-                "RAGFlow",
-                "Conector o API"
+                "Azure Repos",
+                "RAGFlow"
               ],
               "agents": [],
               "humanInteraction": {
@@ -205,7 +209,7 @@
               },
               "details": {
                 "objective": "Evitar que las propuestas usen reglas viejas.",
-                "howItWorks": "Se toma la rama principal y se comprueba que los documentos modificados estén procesados.",
+                "howItWorks": "La integración debe tomar la revisión publicada en main y reflejarla en el segundo cerebro correspondiente en RAGFlow.",
                 "validationCriteria": [
                   "La revisión consultable coincide con la aprobada",
                   "No quedan versiones contradictorias activas"
@@ -667,6 +671,41 @@
                 ]
               },
               "status": "propuesto"
+            },
+            {
+              "id": "v6-catalog",
+              "type": "artifact",
+              "title": "Versionar la suite de regresión · V6",
+              "shortDescription": "Conservar los casos aprobados y sus datos junto a la aplicación.",
+              "description": "Un catálogo reúne casos, orden de ejecución, requisitos, perfil y fixtures. Un manifiesto V5 permite promover los casos declarativos con sus IDs originales.",
+              "responsibilities": [
+                "Volver a usar una prueba en cada release."
+              ],
+              "inputs": [
+                "Casos revisados por QA",
+                "Fuentes y datos de prueba"
+              ],
+              "outputs": [
+                "Suite versionada y validada"
+              ],
+              "tools": [
+                "Git",
+                "Agentic QC V6"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA aprueba el catálogo."
+              },
+              "details": {
+                "objective": "Volver a usar una prueba en cada release.",
+                "howItWorks": "QA revisa las fuentes y los esperados. qc validate comprueba el catálogo antes de ejecutarlo.",
+                "validationCriteria": [
+                  "Los casos tienen identificadores estables",
+                  "Los datos y las fuentes se pueden localizar"
+                ]
+              },
+              "status": "actual"
             }
           ]
         },
@@ -963,8 +1002,8 @@
               "id": "publish-test-case",
               "type": "process",
               "title": "Registrar los casos revisados por QA",
-              "shortDescription": "Crear o actualizar el caso en Test Plans.",
-              "description": "Se publica la versión revisada por QA. Si mejora un caso existente, se conserva su identificador y su relación con el requisito. Desarrollo ya dispone de la propuesta para consulta.",
+              "shortDescription": "Conservar el ID del caso en el catálogo que usa el equipo.",
+              "description": "QA puede conservar el caso en su catálogo Git y exportar el diseño seleccionado a Azure Test Plans. V6 mantiene el identificador de Azure cuando está informado. La asociación en el entorno corporativo sigue pendiente.",
               "responsibilities": [
                 "Relacionar caso y requisito",
                 "Evitar duplicados"
@@ -974,11 +1013,13 @@
                 "Decisión conservar/mejorar/crear"
               ],
               "outputs": [
-                "Caso oficial en Azure"
+                "Caso versionado",
+                "CSV de diseño para Azure, si corresponde"
               ],
               "tools": [
-                "Azure DevOps API",
-                "n8n"
+                "Git",
+                "Agentic QC V6",
+                "Azure Test Plans"
               ],
               "agents": [],
               "humanInteraction": {
@@ -987,7 +1028,7 @@
               },
               "details": {
                 "objective": "Mantener un catálogo oficial coherente.",
-                "howItWorks": "Se registra el caso cuando QA deja lista la propuesta; no se espera una autorización de desarrollo sobre los casos.",
+                "howItWorks": "QC exporta los casos seleccionados con qc export-azure y revisa el mapeo antes de importarlos al catálogo corporativo.",
                 "validationCriteria": [
                   "Un caso lógico tiene un ID estable",
                   "El caso se vincula al requisito",
@@ -1097,6 +1138,44 @@
                 ]
               },
               "status": "propuesto"
+            },
+            {
+              "id": "qc-typescript-framework",
+              "type": "process",
+              "title": "Alinear con la estructura TypeScript de QA",
+              "shortDescription": "Mantener la forma de trabajo del equipo al incorporar Agentic QC.",
+              "description": "En una próxima iteración se comparará Agentic QC con el repositorio de scripts TypeScript que QA usa para sus pruebas.",
+              "responsibilities": [
+                "Reutilizar la estructura de pruebas que usa QA."
+              ],
+              "inputs": [
+                "Repositorio de pruebas TypeScript de QA",
+                "Catálogo y flujo de Agentic QC"
+              ],
+              "outputs": [
+                "Estructura y adaptaciones acordadas",
+                "Caso existente verificado"
+              ],
+              "tools": [
+                "Git",
+                "TypeScript",
+                "Agentic QC"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA revisa y aprueba el resultado de esta etapa."
+              },
+              "details": {
+                "objective": "Reutilizar la estructura de pruebas que usa QA.",
+                "howItWorks": "El objetivo es ajustar Agentic QC para que el equipo pueda seguir trabajando con su estructura de pruebas. Se revisarán convenciones, fixtures, ejecución y resultados con un caso existente de QA.",
+                "validationCriteria": [
+                  "Inventario y contraste de ambas estructuras",
+                  "Adaptación acordada con QA",
+                  "Un caso TypeScript existente ejecutado con el flujo acordado"
+                ]
+              },
+              "status": "propuesto"
             }
           ]
         },
@@ -1145,7 +1224,7 @@
               "type": "tool",
               "title": "Playwright · pruebas habituales",
               "shortDescription": "Ejecuta las pruebas que mantiene el equipo.",
-              "description": "Es la herramienta que ya usan para probar las APIs a partir de Swagger y los escenarios que el equipo programe. Los resultados dependen de las comprobaciones escritas.",
+              "description": "Playwright ejecuta tareas en la interfaz. En V6 también envía peticiones directas a endpoints sin abrir Chromium. Swagger UI se prueba cuando forma parte del recorrido.",
               "responsibilities": [
                 "Ejecutar casos versionados"
               ],
@@ -1250,7 +1329,7 @@
               "type": "external-system",
               "title": "Aplicación que se prueba",
               "shortDescription": "La versión y el ambiente quedan identificados.",
-              "description": "La aplicación o API se prueba en un ambiente controlado, con datos adecuados y una versión conocida para poder repetir el resultado.",
+              "description": "El primer piloto es COELSA.Intelligent. La iteración B5 está finalizando las pruebas del alcance de la nueva release. Después se ampliará la cobertura al conjunto de la aplicación con una revisión de su código.",
               "responsibilities": [
                 "Responder a acciones de prueba"
               ],
@@ -1310,6 +1389,43 @@
                 ]
               },
               "status": "propuesto"
+            },
+            {
+              "id": "v6-release-run",
+              "type": "process",
+              "title": "Ejecutar la suite por build · V6",
+              "shortDescription": "Correr el mismo conjunto desde el CLI o desde CI.",
+              "description": "La suite puede combinar tareas de navegador, peticiones directas a la API y consultas de lectura. Los casos independientes pueden continuar si otro canal se bloquea.",
+              "responsibilities": [
+                "Ejecutar una regresión reproducible."
+              ],
+              "inputs": [
+                "Suite aprobada",
+                "Build y entorno de QA"
+              ],
+              "outputs": [
+                "Intentos por caso",
+                "Evidencia por criterio"
+              ],
+              "tools": [
+                "Agentic QC V6",
+                "Playwright",
+                "SQLite / PostgreSQL"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": false,
+                "description": ""
+              },
+              "details": {
+                "objective": "Ejecutar una regresión reproducible.",
+                "howItWorks": "qc run toma la suite, el perfil, el entorno y el build. La plantilla de Azure Pipelines permite llevar la misma ejecución a CI.",
+                "validationCriteria": [
+                  "Cada intento identifica build y caso",
+                  "Se registran bloqueos y reintentos"
+                ]
+              },
+              "status": "actual"
             }
           ]
         }
@@ -1332,7 +1448,7 @@
           "type": "artifact",
           "title": "Reunir resultados y evidencia",
           "shortDescription": "Guardar qué pasó y cómo reproducirlo.",
-          "description": "Cada ejecución conserva su resultado, registros y otras evidencias, junto con el caso, la versión de la aplicación y el ambiente.",
+          "description": "V5 y V6 conservan el resultado y la evidencia de los intentos. V6 entrega JSON, JUnit, HTML y un ZIP vinculados a la revisión de la suite, la versión y el ambiente.",
           "responsibilities": [
             "Permitir análisis reproducible"
           ],
@@ -1343,8 +1459,8 @@
             "Paquete de evidencia"
           ],
           "tools": [
-            "Azure Pipelines",
-            "Azure Test Plans"
+            "Agentic QC V6",
+            "Azure Pipelines"
           ],
           "agents": [],
           "humanInteraction": {
@@ -1353,7 +1469,7 @@
           },
           "details": {
             "objective": "Evitar conclusiones basadas sólo en un estado rojo.",
-            "howItWorks": "n8n reúne reportes y los vincula con caso y requisito.",
+            "howItWorks": "El CLI publica la evidencia local. La plantilla de CI conserva artefactos aunque haya pruebas fallidas.",
             "validationCriteria": [
               "Se conoce qué versión de aplicación y test corrió",
               "La evidencia se puede abrir"
@@ -1461,6 +1577,42 @@
             ]
           },
           "status": "propuesto"
+        },
+        {
+          "id": "v6-release-result",
+          "type": "output",
+          "title": "Emitir el dictamen de release · V6",
+          "shortDescription": "Informar si la release está aprobada, rechazada o inconclusa.",
+          "description": "El dictamen toma los casos obligatorios del plan congelado. El informe muestra pruebas fallidas, bloqueadas o pendientes y adjunta evidencia.",
+          "responsibilities": [
+            "Distinguir un fallo observado de una comprobación pendiente."
+          ],
+          "inputs": [
+            "Intentos",
+            "Casos obligatorios y requisitos"
+          ],
+          "outputs": [
+            "Resultado JSON",
+            "JUnit",
+            "Informe HTML y ZIP"
+          ],
+          "tools": [
+            "Agentic QC V6"
+          ],
+          "agents": [],
+          "humanInteraction": {
+            "required": true,
+            "description": "QA revisa el dictamen."
+          },
+          "details": {
+            "objective": "Distinguir un fallo observado de una comprobación pendiente.",
+            "howItWorks": "Se puede publicar el informe aunque falle una prueba. QA revisa la evidencia antes de confirmar un defecto.",
+            "validationCriteria": [
+              "Un fallo obligatorio rechaza la release",
+              "La evidencia insuficiente deja un dictamen inconcluso"
+            ]
+          },
+          "status": "actual"
         }
       ],
       "milestones": [
@@ -1499,7 +1651,7 @@
                 "Archivo Markdown vinculado"
               ],
               "tools": [
-                "n8n",
+                "Agentic QC V6",
                 "Repositorio Git"
               ],
               "agents": [],
@@ -1509,7 +1661,7 @@
               },
               "details": {
                 "objective": "Reducir trabajo repetido al explicar el problema con pruebas.",
-                "howItWorks": "Se crea a partir de los resultados de ejecución y la clasificación de QA, sin secretos ni diagnóstico inventado.",
+                "howItWorks": "QA revisa la ficha de triage y registra el defecto confirmado. qc export-fixes prepara la ficha Markdown para desarrollo.",
                 "validationCriteria": [
                   "El defecto se reproduce",
                   "El archivo enlaza la evidencia y el caso"
@@ -1691,7 +1843,7 @@
               },
               "details": {
                 "objective": "Confirmar la solución con resultados nuevos y revisados.",
-                "howItWorks": "Se compara con el fallo original y se registran resultados.",
+                "howItWorks": "QA repite la suite sobre el build corregido. qc verify-fix vincula el intento aprobado al fallo original.",
                 "validationCriteria": [
                   "El caso antes fallido pasa",
                   "La regresión pertinente pasa"
@@ -1729,6 +1881,78 @@
                 "howItWorks": "Se abre PR documental y se sincroniza RAGFlow después de incorporar el cambio aprobado.",
                 "validationCriteria": [
                   "La nueva regla tiene responsable y fuente"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "v5-v6-comparison",
+              "type": "validation",
+              "title": "Comparar la corrida real de V5 y V6",
+              "shortDescription": "Contrastar ambas ejecuciones sobre el mismo build y alcance.",
+              "description": "El comparador ya se comprobó con una corrida de prueba generada por V5. La comparación del piloto real depende del cierre de B5 y de repetir en V6 los casos equivalentes.",
+              "responsibilities": [
+                "Identificar diferencias de ejecución y de cobertura."
+              ],
+              "inputs": [
+                "ZIP o carpeta de trabajo de V5",
+                "Resultado de V6"
+              ],
+              "outputs": [
+                "Comparación Markdown por caso"
+              ],
+              "tools": [
+                "Agentic QC V6"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA revisa el contraste."
+              },
+              "details": {
+                "objective": "Identificar diferencias de ejecución y de cobertura.",
+                "howItWorks": "qc compare empareja por ID y muestra primer y último estado. Si están las definiciones permite cotejar sus huellas.",
+                "validationCriteria": [
+                  "El build, entorno y datos corresponden al mismo piloto",
+                  "Los casos sin equivalente quedan identificados"
+                ]
+              },
+              "status": "propuesto"
+            },
+            {
+              "id": "qc-coelsa-coverage",
+              "type": "process",
+              "title": "Ampliar la cobertura de COELSA.Intelligent",
+              "shortDescription": "Revisar el código completo y conservar pruebas de regresión para próximas releases.",
+              "description": "Después de cerrar las pruebas de la nueva release, revisar el código completo de COELSA.Intelligent y planificar pruebas para toda la aplicación.",
+              "responsibilities": [
+                "Dejar pruebas que se puedan volver a ejecutar sobre futuras releases."
+              ],
+              "inputs": [
+                "Resultado de las pruebas de la nueva release",
+                "Código de la aplicación",
+                "Reglas y casos existentes"
+              ],
+              "outputs": [
+                "Inventario de cobertura",
+                "Suite de regresión versionada"
+              ],
+              "tools": [
+                "Git",
+                "Agentic QC"
+              ],
+              "agents": [],
+              "humanInteraction": {
+                "required": true,
+                "description": "QA revisa y aprueba el resultado de esta etapa."
+              },
+              "details": {
+                "objective": "Dejar pruebas que se puedan volver a ejecutar sobre futuras releases.",
+                "howItWorks": "Inventariar módulos y flujos a partir del código, vincularlos con casos verificables y guardar las pruebas aprobadas en una suite de regresión para futuras iteraciones y releases.",
+                "validationCriteria": [
+                  "Módulos y flujos de la aplicación inventariados a partir del código",
+                  "Casos ejecutados con evidencia y cobertura registrada",
+                  "Suite de regresión versionada y lista para volver a ejecutar"
                 ]
               },
               "status": "propuesto"
@@ -2326,6 +2550,62 @@
       "target": "knowledge-retrieval",
       "type": "data",
       "label": "Integración propuesta: pedir contexto"
+    },
+    {
+      "id": "v6-flow-approved-suite",
+      "source": "approval-decision",
+      "target": "v6-catalog",
+      "type": "conditional",
+      "label": "Casos revisados para regresión"
+    },
+    {
+      "id": "v6-flow-run-suite",
+      "source": "v6-catalog",
+      "target": "v6-release-run",
+      "type": "data",
+      "label": "Suite aprobada y versionada"
+    },
+    {
+      "id": "v6-flow-release-result",
+      "source": "v6-release-run",
+      "target": "v6-release-result",
+      "type": "data",
+      "label": "Resultados y evidencia por caso"
+    },
+    {
+      "id": "v6-flow-triage",
+      "source": "v6-release-result",
+      "target": "qa-triage",
+      "type": "data",
+      "label": "QA revisa el dictamen y los intentos"
+    },
+    {
+      "id": "v6-flow-compare",
+      "source": "v6-release-result",
+      "target": "v5-v6-comparison",
+      "type": "data",
+      "label": "Resultado V6 para contrastar con V5"
+    },
+    {
+      "id": "qc-typescript-to-run",
+      "source": "qc-typescript-framework",
+      "target": "v6-release-run",
+      "type": "data",
+      "label": "Estructura de QA para incorporar a Agentic QC"
+    },
+    {
+      "id": "qc-coelsa-after-release",
+      "source": "application",
+      "target": "qc-coelsa-coverage",
+      "type": "conditional",
+      "label": "Después de terminar las pruebas de la nueva release"
+    },
+    {
+      "id": "qc-coelsa-regression-catalog",
+      "source": "qc-coelsa-coverage",
+      "target": "v6-catalog",
+      "type": "feedback",
+      "label": "Guardar casos aprobados para futuras releases"
     }
   ]
 }

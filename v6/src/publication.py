@@ -165,6 +165,8 @@ def render_log(meta, events, report):
 
 
 def final_report(meta, report):
+    summary = report["summary"]
+    regressions = meta.get("provenance", {}).get("regressions")
     lines = [
         f"# Informe final · {inline(meta['title'])}",
         "",
@@ -173,7 +175,17 @@ def final_report(meta, report):
         f"- Inicio UTC · {inline(meta['started_utc'])}",
         f"- Casos registrados · {len(report['cases'])}",
         f"- Intentos registrados · {sum(map(len, report['attempts'].values()))}",
+        "- [Abrir el resumen y el detalle de las pruebas en HTML](reporte%20gerencial.html)",
+        *(
+            [
+                f"- Casos del catálogo · {len(regressions['saved'])}",
+                f"- Casos nuevos · {len(regressions['new'])}",
+            ]
+            if regressions is not None
+            else []
+        ),
         "",
+        *(["## Resumen de cobertura", "", inline(summary), ""] if summary else []),
         *table(
             ("Estado", "Primer intento por caso", "Último estado por caso"),
             (
@@ -212,6 +224,14 @@ def final_report(meta, report):
         )
         lines += [f"**Verificación Playwright pendiente · {missing}.**", ""]
     lines += ["## Trazabilidad de requisitos", ""]
+    if report["plan"] is not None:
+        planned = report["planned_count"]
+        unobserved = report["planned_unobserved"]
+        lines += [
+            f"- Casos del plan con ejecución observada · {planned - len(unobserved)} de {planned}",
+            f"- Casos del plan sin ejecución observada · {inline(', '.join(unobserved))}",
+            "",
+        ]
     catalog = report["catalog"]
     groups = report["groups"]
     if catalog is None:
@@ -285,16 +305,16 @@ def metric_summary(report):
 
 def write_delivery(run, meta, events, report, output):
     output.mkdir()
+    from management_report import render_html
     from release import verdict, write_ci
 
     result = verdict(run, meta, events)
     write_ci(output, result)
-    if meta.get("replay"):
-        from management_report import render_html
+    (output / "reporte gerencial.html").write_text(
+        render_html(run, meta, events, report), encoding="utf-8"
+    )
 
-        (output / "reporte gerencial.html").write_text(
-            render_html(run, meta, events, report), encoding="utf-8"
-        )
+    if meta.get("replay"):
         for row in result["cases"]:
             if row["status"] != "failed":
                 continue

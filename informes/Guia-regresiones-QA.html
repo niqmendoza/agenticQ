@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Cómo repetir las pruebas en cada release · Framework de QA</title>
+<style>
+  :root{font-family:system-ui,sans-serif;background:#e9f4f3;color:#102e31;line-height:1.55;--teal:#00676d;--deep:#052f33;--muted:#3e6265;--line:#bdd7d8}
+  *{box-sizing:border-box}
+  body{margin:0}
+  main{max-width:980px;margin:auto;padding:clamp(16px,4vw,44px)}
+  header{background:radial-gradient(ellipse at 100% 0%,#006b73,transparent 75%),var(--deep);color:#effffd;padding:clamp(24px,5.5vw,60px);border-radius:20px}
+  header small{font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#a4e8e6}
+  h1,h2,h3,p,ol{margin:0}
+  h1{font-size:clamp(2.05rem,5.4vw,3.6rem);line-height:1.04;letter-spacing:-.05em;margin:12px 0 17px;max-width:660px;text-wrap:balance}
+  h2{font-size:1.4rem;margin-bottom:12px;letter-spacing:-.025em}
+  h3{font-size:1.12rem;margin-bottom:6px}
+  header p{font-size:1.12rem;max-width:610px;color:#c8eded}
+  section{margin-top:30px}
+  .team,.steps{display:grid;gap:12px}
+  .team{grid-template-columns:repeat(3,1fr)}
+  .team div,.steps li{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .team p,.steps p,.result p{color:var(--muted)}
+  .start{display:flex;gap:15px;align-items:baseline;padding:16px 18px;border-left:4px solid #00888e;background:#d9eceb;border-radius:7px}
+  .start strong{flex:none}
+  .steps{padding:0;list-style:none;counter-reset:paso}
+  .steps li{display:grid;grid-template-columns:36px 1fr;gap:14px;counter-increment:paso}
+  .steps li::before{content:counter(paso);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--teal);color:white;font-weight:700}
+  .steps p+p{margin-top:6px}
+  .result{padding:16px 18px;background:#d9eceb;border-radius:12px}
+  footer{margin-top:22px;color:var(--muted);font-size:.9rem}
+  @media(max-width:635px){.team{grid-template-columns:1fr}.start{display:block}.start strong{display:block;margin-bottom:4px}}
+  @media print{main{padding:0}header,.team div,.steps li,.result{break-inside:avoid}section{margin-top:18px}*{print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <small>Framework de QA · Guía de equipo</small>
+  <h1>Cómo repetir las pruebas en cada release</h1>
+  <p>El equipo comparte un catálogo por aplicación. Cada release suma pruebas nuevas y vuelve a correr las aprobadas contra la versión nueva.</p>
+</header>
+<section aria-labelledby="donde">
+  <h2 id="donde">Dónde va cada cosa</h2>
+  <div class="team">
+    <div><h3>Repo de segundos cerebros</h3><p>Documentación y reglas que el agente consulta para preparar las pruebas.</p></div>
+    <div><h3>Repo de regresiones</h3><p>Pruebas reutilizables, con pasos, datos de prueba y resultados esperados. Una carpeta por aplicación.</p></div>
+    <div><h3>Resultados de cada corrida</h3><p>Informe HTML, Markdown y evidencias de lo que pasó en un build concreto.</p></div>
+  </div>
+</section>
+<section class="start" aria-label="Primera vez">
+  <strong>La primera vez</strong>
+  <p>Cloná el repo compartido como carpeta <strong>regresiones</strong> al lado del framework o dentro de él. Si la aplicación todavía no tiene catálogo, la primera corrida deja la base con los casos que QA aprueba para repetir.</p>
+</section>
+<section aria-labelledby="flujo">
+  <h2 id="flujo">Cada vez que sale una release</h2>
+  <ol class="steps">
+    <li><div><h3>Traé lo que ya existe</h3><p>Hacé <strong>pull</strong> del repo de regresiones para traer la última suite aprobada. Indicá al framework cuál es la aplicación y qué cambió en la release.</p></div></li>
+    <li><div><h3>Corré lo anterior y lo nuevo</h3><p>El agente prepara los casos de los cambios. El framework corre los casos guardados y los nuevos contra la misma versión de QA. Playwright ejecuta los pasos de navegador.</p></div></li>
+    <li><div><h3>Revisá el reporte y guardá las pruebas aprobadas</h3><p>El HTML muestra qué se ejecutó, qué falló y qué quedó pendiente. QA decide qué casos nuevos son reutilizables. El framework los incorpora al catálogo local de la aplicación.</p></div></li>
+    <li><div><h3>Compartí el catálogo actualizado</h3><p>Revisá el cambio, hacé <strong>commit</strong> y <strong>push</strong> en el repo de regresiones. La próxima persona recibe la suite actualizada con otro pull.</p></div></li>
+  </ol>
+</section>
+<section class="result" aria-labelledby="ejemplo">
+  <h2 id="ejemplo">Un ejemplo</h2>
+  <p>Si la aplicación tiene 100 pruebas guardadas y la release trae 5 nuevas, se pueden correr las 105 juntas. Si QA aprueba las 5 para el catálogo, la próxima release arranca con esas 105 como base.</p>
+</section>
+<footer>Framework de QA · Versión 6</footer>
+</main>
+</body>
+</html>

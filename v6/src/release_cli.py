@@ -10,9 +10,18 @@ from retest import verify_fix
 def register_commands(sub):
     for name in ("validate", "run"):
         parser = sub.add_parser(name, help="Validar o ejecutar el catálogo versionado")
-        parser.add_argument("--suite", required=True)
+        selection = parser.add_mutually_exclusive_group(required=True)
+        selection.add_argument("--suite")
+        selection.add_argument("--app", help="ID de la aplicación en el repo de regresiones")
+        parser.add_argument("--regressions", help="Ruta local al repo de regresiones")
+        parser.add_argument("--new-suite", help="Casos nuevos para probar junto al catálogo")
         parser.add_argument("--profile")
         parser.add_argument("--corpus")
+        parser.add_argument(
+            "--chrome-visible",
+            action="store_true",
+            help="Usar el Chrome instalado con ventana",
+        )
         if name == "run":
             parser.add_argument("--env", required=True)
             parser.add_argument("--build", required=True)
@@ -43,7 +52,13 @@ def register_commands(sub):
     parser.add_argument("--from-run", required=True)
     parser.add_argument("--manifest")
     parser.add_argument("--app", required=True)
-    parser.add_argument("--out", required=True)
+    destination = parser.add_mutually_exclusive_group(required=True)
+    destination.add_argument("--out")
+    destination.add_argument("--regressions", help="Incorporar al repo de regresiones")
+    parser.add_argument("--case", action="append", help="ID aprobado para incorporar")
+    parser.add_argument("--corpus", help="Fuentes para validar el catálogo")
+    parser.add_argument("--profile", help="Perfil común para validar el catálogo")
+    parser.add_argument("--openapi", help="Contrato de los casos seleccionados")
     parser.set_defaults(workflow_handler=promote)
     parser = sub.add_parser(
         "score-models", help="Medir detección en versiones con fallos conocidos"

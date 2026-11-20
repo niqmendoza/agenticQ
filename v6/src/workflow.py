@@ -10,7 +10,13 @@ from uuid import uuid4
 
 from contracts import BROWSER_FLOWS
 from markdown import inline, table, write_markdown
-from runners import Unavailable, http_request, playwright_browser, run_case
+from runners import (
+    Unavailable,
+    browser_description,
+    http_request,
+    playwright_browser,
+    run_case,
+)
 from session import (
     append,
     load,
@@ -47,8 +53,7 @@ def preflight(args):
             )
             browser_message = f"Navegador · Bloqueado · {reason}"
         else:
-            channel = profile.get("browser_channel", "Chromium administrado")
-            browser_message = f"Navegador · Listo · {channel}"
+            browser_message = f"Navegador · Listo · {browser_description(profile)}"
     probes = []
     operations = profile.get("http_operations", [])
     for operation in operations:

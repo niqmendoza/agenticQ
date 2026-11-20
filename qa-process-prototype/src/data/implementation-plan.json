@@ -107,6 +107,32 @@
             "Responsable y ruta de actualización definidos",
             "Se puede identificar la revisión consultada"
           ]
+        },
+        {
+          "id": "qc-azure-repos-request",
+          "title": "Solicitar el proyecto Azure Repos para segundos cerebros",
+          "description": "Ya se solicitó un proyecto de Azure Repos dedicado exclusivamente a los segundos cerebros de QC. Queda pendiente la habilitación del proyecto y de los repositorios.",
+          "processNodeId": "knowledge-repository",
+          "initialStatus": "completado",
+          "initialNote": "Cada analista de QC podrá subir un segundo cerebro cuando lo cree, hacer pull de la versión vigente para diseñar casos de prueba y publicar actualizaciones con push a main.",
+          "criteria": [
+            "Pedido de creación del proyecto enviado",
+            "Alcance del proyecto definido para los segundos cerebros de QC"
+          ],
+          "confirmation": "Pedido enviado. El proyecto y los repositorios están pendientes de habilitación."
+        },
+        {
+          "id": "qc-ragflow-connection",
+          "title": "Conectar Azure Repos con RAGFlow",
+          "description": "Se está construyendo la conexión para alojar e indexar en RAGFlow los segundos cerebros que mantienen los analistas en Azure Repos.",
+          "processNodeId": "ragflow-sync",
+          "initialStatus": "en-curso",
+          "initialNote": "El repositorio conserva la versión de los documentos. RAGFlow recibe e indexa el contenido publicado en main para usarlo como fuente al diseñar casos.",
+          "criteria": [
+            "Conexión disponible entre ambos sistemas",
+            "Una actualización publicada en main se refleja en RAGFlow",
+            "QC puede consultar la revisión incorporada"
+          ]
         }
       ]
     },
@@ -165,6 +191,19 @@
             "Comparación con la base actual registrada",
             "Decisión de adoptar o descartar documentada"
           ]
+        },
+        {
+          "id": "v6-suite-catalog",
+          "title": "V6 · Catálogo de regresión reutilizable",
+          "description": "Conservar requisitos, casos aprobados, datos y perfil para ejecutar la misma suite en cada release.",
+          "processNodeId": "v6-catalog",
+          "initialStatus": "completado",
+          "initialNote": "El catálogo se valida con qc validate. La promoción de un manifiesto V5 mantiene los IDs declarativos. V6 incluye ejemplos de chatbot y API de PappU.",
+          "criteria": [
+            "Suite y datos versionados",
+            "Validación ejecutable desde el CLI"
+          ],
+          "confirmation": "Catálogo declarativo y comando de validación disponibles."
         }
       ]
     },
@@ -230,7 +269,8 @@
           "criteria": [
             "Publicación del piloto comprobada",
             "No se duplican casos al repetir el flujo"
-          ]
+          ],
+          "initialNote": "V6 ya exporta CSV con un ID de Azure si está registrado. Falta validar la importación y el vínculo con casos vigentes en el proyecto corporativo."
         },
         {
           "id": "automated-code",
@@ -250,7 +290,8 @@
           "criteria": [
             "Ejecución del piloto repetible",
             "Versión, ambiente y resultados identificados"
-          ]
+          ],
+          "initialNote": "V6 incluye una plantilla de Azure Pipelines con publicación JUnit y artefactos. Falta comprobarla con los accesos y el ambiente corporativos."
         },
         {
           "id": "extra-api-coverage",
@@ -272,6 +313,59 @@
           "criteria": [
             "Recorrido reproducible evaluado por QA",
             "Decisión de uso registrada"
+          ]
+        },
+        {
+          "id": "v5-harness-verified",
+          "title": "V5 · Verificar el harness con Chrome",
+          "description": "Comprobar el harness con una aplicación de prueba controlada.",
+          "processNodeId": "playwright",
+          "initialStatus": "completado",
+          "initialNote": "15/15 pruebas pasaron con Playwright y Chrome. La verificación incluyó UI, Swagger simulado, SQLite y publicación de evidencia. El análisis técnico de V5 documenta las limitaciones. V5 incluye evaluación de modelos; el repositorio aún no tiene corridas comparativas archivadas que permitan declarar un ganador.",
+          "criteria": [
+            "Verificación con navegador y servicios de prueba",
+            "Resultados documentados"
+          ],
+          "confirmation": "15 de 15 pruebas técnicas aprobadas con Chrome."
+        },
+        {
+          "id": "v5-current-pilot",
+          "title": "V5 · Finalizar las pruebas de la nueva release de COELSA.Intelligent",
+          "description": "El equipo está finalizando las pruebas de la nueva release de COELSA.Intelligent, la primera aplicación piloto. La corrida B5 está en curso.",
+          "processNodeId": "application",
+          "initialStatus": "en-curso",
+          "initialNote": "El alcance actual corresponde a la nueva release. Al 19/11/2026 la entrega de B5 y sus veredictos por caso todavía están pendientes de publicación.",
+          "criteria": [
+            "Pruebas del alcance de la release terminadas",
+            "Build y entorno registrados",
+            "Resultado por caso publicado con su evidencia"
+          ]
+        },
+        {
+          "id": "v6-demo-execution",
+          "title": "V6 · Comprobar la ejecución por release",
+          "description": "Validar la suite con navegador, API directa y una regresión introducida en el chatbot de demostración.",
+          "processNodeId": "v6-release-run",
+          "initialStatus": "completado",
+          "initialNote": "19/19 pruebas del framework pasaron. En el chatbot de demostración, el build sano tuvo 3 de 3 casos aprobados. En el build con una regresión de estado fallaron la interfaz y la API. El caso independiente pasó.",
+          "criteria": [
+            "Instalación desde el ZIP de V6 verificada",
+            "El build sano pasa",
+            "El build con regresión produce dos fallos y conserva el resultado independiente"
+          ],
+          "confirmation": "19/19 pruebas del framework. Demo sana 3/3. Demo con regresión 2 fallos y 1 aprobación."
+        },
+        {
+          "id": "qc-typescript-alignment",
+          "title": "Alinear Agentic QC con las pruebas TypeScript de QA",
+          "description": "En una próxima iteración se comparará Agentic QC con el repositorio de scripts TypeScript que QA usa para sus pruebas.",
+          "processNodeId": "qc-typescript-framework",
+          "initialStatus": "pendiente",
+          "initialNote": "El objetivo es ajustar Agentic QC para que el equipo pueda seguir trabajando con su estructura de pruebas. Se revisarán convenciones, fixtures, ejecución y resultados con un caso existente de QA.",
+          "criteria": [
+            "Inventario y contraste de ambas estructuras",
+            "Adaptación acordada con QA",
+            "Un caso TypeScript existente ejecutado con el flujo acordado"
           ]
         }
       ]
@@ -310,6 +404,19 @@
             "Resultado vinculado al caso",
             "La evidencia se conserva para consulta"
           ]
+        },
+        {
+          "id": "v6-release-evidence",
+          "title": "V6 · Publicar dictamen y evidencia por caso",
+          "description": "Entregar un dictamen de release y artefactos que pueda revisar el equipo.",
+          "processNodeId": "v6-release-result",
+          "initialStatus": "completado",
+          "initialNote": "La demo sana produjo un dictamen aprobado. La demo con regresión produjo un dictamen rechazado. V6 genera JSON, JUnit, HTML, ZIP y fichas de triage en Markdown. El dictamen inconcluso contempla alcance o evidencia insuficiente.",
+          "criteria": [
+            "Dictamen identificado por build",
+            "Evidencia por criterio disponible en ambos resultados"
+          ],
+          "confirmation": "JSON, JUnit, HTML y ZIP disponibles para la suite."
         }
       ]
     },
@@ -357,6 +464,59 @@
             "Recorrido completo demostrado con un cambio del piloto",
             "Limitaciones y decisiones documentadas",
             "Equipo acuerda los siguientes pasos"
+          ],
+          "initialNote": "Se verificó el recorrido local con el chatbot de demostración. El seguimiento del chatbot real continúa en la corrida B5 y en el contraste posterior con V6."
+        },
+        {
+          "id": "v6-retest-workflow",
+          "title": "V6 · Vincular el retest al defecto",
+          "description": "Entregar a desarrollo el defecto reproducible y comprobar el arreglo con una ejecución del build corregido.",
+          "processNodeId": "regression-check",
+          "initialStatus": "completado",
+          "initialNote": "El flujo local verificado exige evidencia de un caso equivalente aprobado. QC confirma el hallazgo, genera la ficha de desarrollo y vincula el retest con verify-fix.",
+          "criteria": [
+            "Ficha Markdown con observado, esperado y evidencia",
+            "Retest aprobado vinculado al fallo original"
+          ],
+          "confirmation": "El cierre se comprobó con evidencia en una prueba local."
+        },
+        {
+          "id": "v6-compatibility",
+          "title": "V6 · Verificar el intercambio con V5",
+          "description": "Comprobar la comparación por ID usando una salida generada por el CLI de V5.",
+          "processNodeId": "v5-v6-comparison",
+          "initialStatus": "completado",
+          "initialNote": "El ZIP permitió cotejar el estado de ambos casos. Con la carpeta de trabajo se comprobó, además, que las definiciones coincidían. El ejercicio usó datos controlados.",
+          "criteria": [
+            "Se leen estados e intentos desde el ZIP V5",
+            "La carpeta de trabajo permite cotejar el diseño"
+          ],
+          "confirmation": "Compatibilidad comprobada con una corrida de prueba creada por V5."
+        },
+        {
+          "id": "v6-pilot-comparison",
+          "title": "V6 · Repetir el piloto y contrastar con B5",
+          "description": "Ejecutar en V6 los casos equivalentes del chatbot cuando termine B5.",
+          "processNodeId": "v5-v6-comparison",
+          "initialStatus": "pendiente",
+          "initialNote": "V6 se publicó el 19/11/2026 en la rama v6, commit 3af60bb. El README y el prompt maestro quedaron listos para el piloto.",
+          "criteria": [
+            "Resultado B5 cerrado",
+            "Suite repetida en V6 con build, entorno y datos equivalentes",
+            "Diferencias de resultado, alcance y diseño revisadas por QA"
+          ]
+        },
+        {
+          "id": "qc-coelsa-full-coverage",
+          "title": "Probar COELSA.Intelligent de punta a punta",
+          "description": "Después de cerrar las pruebas de la nueva release, revisar el código completo de COELSA.Intelligent y planificar pruebas para toda la aplicación.",
+          "processNodeId": "qc-coelsa-coverage",
+          "initialStatus": "pendiente",
+          "initialNote": "Inventariar módulos y flujos a partir del código, vincularlos con casos verificables y guardar las pruebas aprobadas en una suite de regresión para futuras iteraciones y releases.",
+          "criteria": [
+            "Módulos y flujos de la aplicación inventariados a partir del código",
+            "Casos ejecutados con evidencia y cobertura registrada",
+            "Suite de regresión versionada y lista para volver a ejecutar"
           ]
         }
       ]
@@ -365,5 +525,19 @@
   "report": {
     "title": "Hito 2 · RAGFlow y contexto verificable",
     "href": "./Hito-2.html"
+  },
+  "latestUpdate": {
+    "date": "19/11/2026",
+    "summary": "V5 aprobó 15 pruebas técnicas. B5 está en la etapa final de pruebas de la nueva release de COELSA.Intelligent. V6 se publicó con 19 pruebas aprobadas y detectó la regresión de la demo en pantalla y API. Se solicitó el proyecto de Azure Repos para segundos cerebros y está en curso su conexión con RAGFlow.",
+    "references": [
+      {
+        "title": "Análisis técnico de V5",
+        "href": "https://github.com/niqmendoza/agenticQ/blob/3af60bb/v6/docs/Analisis-V5-framework-QA.md"
+      },
+      {
+        "title": "Guía y piloto de V6",
+        "href": "https://github.com/niqmendoza/agenticQ/blob/3af60bb/v6/README.md"
+      }
+    ]
   }
 }

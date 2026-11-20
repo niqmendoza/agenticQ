@@ -11,3 +11,6 @@
 /dist/
 *.egg-info/
 .agentic-qc/
+
+# Clon local del repo compartido de pruebas.
+/regresiones/

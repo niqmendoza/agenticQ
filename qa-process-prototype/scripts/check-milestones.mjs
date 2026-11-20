@@ -12,12 +12,12 @@ for(const phase of plan.phases){
   for(const item of phase.milestones){assert(!ids.has(item.id),'Hito duplicado.');ids.add(item.id);assert(processIds.has(item.processNodeId),`Referencia inválida: ${item.processNodeId}`);assert(item.criteria.length>0,'Un hito debe tener un resultado verificable.');}
 }
 const seed=initialProgress(plan);
-assert.deepEqual(items.filter(item=>seed.entries[item.id].status==='completado').map(item=>item.id),['knowledge-scope','retrieval-scripts-v1','ragflow-local-api','retrieval-context-v1','retrieval-technical-checks'],'Sólo los avances técnicos respaldados por evidencia empiezan completados.');
+assert.deepEqual(items.filter(item=>seed.entries[item.id].status==='completado').map(item=>item.id),['knowledge-scope','retrieval-scripts-v1','ragflow-local-api','retrieval-context-v1','retrieval-technical-checks','qc-azure-repos-request','v6-suite-catalog','v5-harness-verified','v6-demo-execution','v6-release-evidence','v6-retest-workflow','v6-compatibility'],'Los hitos completados requieren evidencia.');
 assert.equal(seed.entries['knowledge-update'].status,'pendiente','La discusión del conocimiento no completa su definición.');
 assert.equal(seed.entries['retrieval-quality'].status,'en-curso','La validación técnica no completa la revisión de utilidad con QA.');
 assert.throws(()=>updateMilestone(seed,'retrieval-quality',{status:'inventado'}));
 assert.throws(()=>updateMilestone(seed,'retrieval-quality',{note:undefined}));
-assert.deepEqual(progressCounts(items,seed),{total:26,completed:5,percent:19,optional:3,optionalCompleted:0});
+assert.deepEqual(progressCounts(items,seed),{total:38,completed:12,percent:32,optional:3,optionalCompleted:0});
 const changed=updateMilestone(seed,'retrieval-quality',{status:'en-curso',note:'Comparando preguntas y fuentes.'},'2026-10-28T15:00:00.000Z');
 assert.equal(seed.entries['retrieval-quality'].status,'en-curso','La actualización no debe mutar el estado anterior.');
 assert.equal(changed.entries['retrieval-quality'].note,'Comparando preguntas y fuentes.');
@@ -29,7 +29,7 @@ assert.equal(merged.entries['qa-estimation'].status,'bloqueado');
 const newer=updateMilestone(changed,'retrieval-quality',{status:'completado'},'2026-10-28T17:00:00.000Z');
 assert.equal(mergeProgress(plan,[newer,changed]).entries['retrieval-quality'].status,'completado','Debe conservarse la edición más nueva por hito.');
 const optionalDone=updateMilestone(seed,'extra-agent-runs',{status:'completado'});
-assert.equal(progressCounts(items,optionalDone).completed,5,'Un opcional no incrementa la base.');
+assert.equal(progressCounts(items,optionalDone).completed,12,'Un opcional no incrementa la base.');
 assert.equal(progressCounts(items,optionalDone).optionalCompleted,1);
 assert.throws(()=>parseSnapshot('{"schemaVersion":1,"entries":{"retrieval-quality":{"status":"inventado","note":""}}}',plan));
 assert.throws(()=>parseSnapshot('{"schemaVersion":1,"entries":{"retrieval-quality":{"status":"pendiente","note":7}}}',plan));
@@ -44,6 +44,13 @@ assert.equal(updated.entries['ragflow-local-api'].status,'completado');
 assert.equal(updated.entries['retrieval-context-v1'].status,'completado');
 assert.equal(updated.entries['retrieval-technical-checks'].status,'completado');
 assert.equal(updated.entries['generation-context'].status,'pendiente','No se generaron casos con Copilot.');
+assert.equal(updated.entries['qc-azure-repos-request'].status,'completado','Se completó el pedido del proyecto.');
+assert.equal(updated.entries['qc-ragflow-connection'].status,'en-curso','La integración corporativa está en desarrollo.');
+assert.equal(updated.entries['qc-typescript-alignment'].status,'pendiente','La adaptación de TypeScript corresponde a la próxima iteración.');
+assert.equal(updated.entries['qc-coelsa-full-coverage'].status,'pendiente','La cobertura completa sigue al cierre de la release.');
+assert.equal(updated.entries['v5-current-pilot'].status,'en-curso','B5 requiere un resultado publicado antes del cierre.');
+assert.equal(updated.entries['v6-pilot-comparison'].status,'pendiente','El ensayo controlado no completa el contraste del piloto.');
+assert.equal(updated.entries['v6-demo-execution'].status,'completado','Una copia anterior conserva los hitos nuevos.');
 assert.equal(updated.entries['qa-estimation'].note,'Trabajo del equipo.','Actualizar el piloto no debe borrar avances de otros hitos.');
 const dangerous={note:'</script><img src=x>\u2028'};
 assert(!safeJson(dangerous).includes('</script>'));assert.deepEqual(JSON.parse(safeJson(dangerous)),dangerous);

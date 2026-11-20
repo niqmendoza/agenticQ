@@ -8,6 +8,7 @@ from tempfile import TemporaryDirectory
 
 from audit import STATES, inspect, publication_code
 from contracts import BROWSER_FLOWS
+from markdown import source_label
 from session import ROOT, TEMPLATES, load, run_id
 
 REPORTS = ROOT / "reportes"
@@ -42,8 +43,21 @@ def listing(items, css_class=""):
     )
 
 
-def render_counts(report):
+def render_counts(report, regressions):
     counts = [("Casos registrados", len(report["cases"]))]
+    if regressions is not None:
+        counts.extend(
+            [
+                ("Casos del catálogo", len(regressions["saved"])),
+                ("Casos nuevos", len(regressions["new"])),
+            ]
+        )
+    if report["plan"] is not None:
+        planned = report["planned_count"]
+        observed = planned - len(report["planned_unobserved"])
+        counts.append(
+            ("Casos del plan con ejecución observada", f"{observed} de {planned}")
+        )
     counts.extend(
         (STATUS[state], report["latest_counts"][state])
         for state in STATES
@@ -69,7 +83,9 @@ def attempts_details(case, report):
             if event_number in report["invalid_attempts"]
             else event["status"]
         )
-        details.append(f"Intento {index} · {STATUS[state]} · {event['observation']}")
+        details.append(
+            f"Intento {index} · {event['execution_method']} · {STATUS[state]} · {event['observation']}"
+        )
         details.extend(
             f"{criteria[result['id']]} · {STATUS[result['status']]} · {result['observation']}"
             for result in event["results"]
@@ -96,6 +112,9 @@ def render_cases(report):
         browser_flow = BROWSER_FLOWS.get(case.get("browser_flow"))
         if browser_flow:
             label += f" · {browser_flow}"
+        steps = "".join(f"<li>{text(step)}</li>" for step in case["steps"])
+        sources = listing([source_label(source) for source in case["sources"]])
+        source_details = f"<p>Fuentes documentales</p>{sources}" if sources else ""
         cases.append(
             f'<article class="record case" id="case-{text(case_id)}">'
             f'<div><span class="label">{text(label)}</span>'
@@ -103,6 +122,11 @@ def render_cases(report):
             f'<div><span class="label">Por qué se incluyó</span><p>{text(reason)}</p></div>'
             f'<div><span class="label">Último resultado</span>'
             f'<p class="status {state}">{STATUS[state]}</p><p>{text(observation)}</p></div>'
+            f"<details><summary>Escenario y pasos</summary><p>{text(case['scenario'])}</p>"
+            f"<ol>{steps}</ol>"
+            f"<p>Resultado esperado · {text(case['expected'])}</p>"
+            f"<p>Requisito · {text(case['requirement'])}</p>"
+            f"{source_details}</details>"
             f"{attempts_details(case, report)}</article>"
         )
     return (
@@ -150,6 +174,11 @@ def render_findings(report):
 
 def render_scope(report):
     notes = []
+    if report["plan"] is None:
+        notes.append("Plan de casos pendiente de congelar.")
+    elif report["planned_unobserved"]:
+        missing = ", ".join(report["planned_unobserved"])
+        notes.append(f"Casos del plan sin ejecución observada · {missing}.")
     if report["tokens"] and report["tokens"]["blocked"]:
         notes.append(f"Medición de tokens pendiente · {report['tokens']['reason']}")
     if report["browser_blocked"]:
@@ -185,17 +214,10 @@ def render_scope(report):
 
 
 def render_html(run, meta, events, report):
-    summary = next(
-        (
-            event["observation"]
-            for event in reversed(events)
-            if event["kind"] == "note" and event["phase"] == "resumen-gerencial"
-        ),
-        None,
-    )
     from release import verdict
 
     decision = verdict(run, meta, events)["decision"]
+    summary = report["summary"]
     summary = f"Recomendación para la release · {decision}." + (
         f" {summary}" if summary else ""
     )
@@ -211,7 +233,7 @@ def render_html(run, meta, events, report):
             "%d/%m/%Y %H:%M UTC"
         ),
         summary=f"<p>{text(summary)}</p>" if summary else "",
-        counts=render_counts(report),
+        counts=render_counts(report, meta.get("provenance", {}).get("regressions")),
         cases=render_cases(report),
         findings=render_findings(report),
         scope=render_scope(report),

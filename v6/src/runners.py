@@ -65,6 +65,13 @@ def target_path(path):
     return path
 
 
+def profile_for_run(profile, *, chrome_visible=False):
+    validate_profile(profile)
+    if chrome_visible:
+        return {**profile, "browser_channel": "chrome", "browser_headless": False}
+    return profile
+
+
 def validate_profile(profile):
     if not isinstance(profile, dict):
         raise ValueError("El perfil debe ser un objeto.")
@@ -80,6 +87,8 @@ def validate_profile(profile):
         "chromium",
     ):
         raise ValueError("browser_channel debe ser chrome, msedge o chromium.")
+    if type(profile.get("browser_headless", True)) is not bool:
+        raise ValueError("browser_headless debe ser true o false.")
     for key in ("http_operations", "browser_paths", "db_sources"):
         if not isinstance(profile.get(key, []), list):
             raise ValueError(f"{key} debe ser una lista.")
@@ -201,7 +210,11 @@ def checks_for(case, method):
         kind, expected = check.get("type"), check.get("equals")
         if case.get("browser_flow") and method == "playwright":
             valid = (
-                kind in ("visible_text", "control_text", "control_contains")
+                kind == "control_visible"
+                and isinstance(check.get("control"), str)
+                and bool(check["control"].strip())
+                and "equals" not in check
+                or kind in ("visible_text", "control_text", "control_contains")
                 and isinstance(expected, str)
                 and bool(expected)
                 or kind == "network_status"
@@ -451,6 +464,12 @@ def database_request(profile, case, checks):
     }
 
 
+def browser_description(profile):
+    channel = profile.get("browser_channel", "Chromium administrado")
+    mode = "sin ventana" if profile.get("browser_headless", True) else "ventana visible"
+    return f"{channel} · {mode}"
+
+
 @contextmanager
 def playwright_browser(profile):
     try:
@@ -472,10 +491,13 @@ def playwright_browser(profile):
                 if "browser_channel" in profile
                 else {}
             )
-            browser = playwright.chromium.launch(**options)
+            browser = playwright.chromium.launch(
+                headless=profile.get("browser_headless", True), **options
+            )
         except Error:
             raise Unavailable(
-                "Chromium de Playwright no pudo iniciarse.", "runner"
+                f"No se pudo iniciar el navegador solicitado ({browser_description(profile)}).",
+                "runner",
             ) from None
         try:
             yield browser, Error, PlaywrightTimeout
@@ -795,6 +817,7 @@ def run_case(args):
             verdicts, metadata = browser_request(
                 profile, path, checks, config, plan, workflow
             )
+            metadata["browser"] = browser_description(profile)
     except (BrowserDataUnavailable, DatabaseUnavailable) as error:
         blocked_class = "environment"
         verdicts, metadata = None, {"blocked_reason": str(error)}
@@ -883,6 +906,8 @@ def execution_evidence(case, method, status, results, metadata, duration):
         f"- Método y resultado · {method} / {status}",
         f"- Duración en ms · {duration}",
     ]
+    if "browser" in metadata:
+        lines.append(f"- Navegador · {inline(metadata['browser'])}")
     if "blocked_reason" in metadata:
         lines.append(f"- Bloqueo · {inline(metadata['blocked_reason'])}")
     elif "http_status" in metadata:

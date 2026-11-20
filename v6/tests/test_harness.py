@@ -39,6 +39,25 @@ class RecordsHandler(BaseHTTPRequestHandler):
         pass
 
     def do_GET(self):
+        labels = {
+            "/chat-en": "New Chat",
+            "/chat-es": "Nuevo Chat",
+            "/chat-hidden": "Nuevo Chat",
+        }
+        if self.path in labels:
+            hidden_after_login = json.dumps(self.path == "/chat-hidden")
+            html = (
+                '<button id="login">Login</button>'
+                f'<button id="new-chat" hidden>{labels[self.path]}</button>'
+                '<script>document.querySelector("#login").onclick = () => {'
+                f'document.querySelector("#new-chat").hidden = {hidden_after_login};'
+                '};</script>'
+            )
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(html.encode("utf-8"))
+            return
         if self.path == "/interface":
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -245,7 +264,51 @@ class PortableHarnessTests(unittest.TestCase):
         return case
 
     @unittest.skipUnless(os.environ.get("QA_V6_TEST_BROWSER"), "Playwright opcional")
-    def test_publish_preserves_retry_and_copies_only_markdown(self):
+    def test_functional_ui_checks_visibility_independently_of_language(self):
+        scenarios = [
+            ("LOGIN-EN", "/chat-en", 0),
+            ("LOGIN-ES", "/chat-es", 0),
+            ("LOGIN-HIDDEN", "/chat-hidden", 1),
+        ]
+        with application() as base_url:
+            profile = self.workspace / "profile.json"
+            profile.write_text(
+                json.dumps(
+                    {
+                        "base_url": base_url,
+                        "browser_channel": os.environ["QA_V6_TEST_BROWSER"],
+                        "browser_paths": [path for _, path, _ in scenarios],
+                        "browser_controls": {"login": "#login", "new-chat": "#new-chat"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.cli("init", "--title", "Login localizado", "--profile", str(profile))
+            cases = []
+            for identifier, path, _ in scenarios:
+                case = self.browser_case(identifier)
+                case.update(
+                    browser_path=path,
+                    browser_steps=[{"id": "login", "type": "click", "control": "login"}],
+                    criteria=[
+                        {
+                            "id": "new-chat",
+                            "expected": "El control para iniciar un chat está visible.",
+                            "check": {"type": "control_visible", "control": "new-chat"},
+                        }
+                    ],
+                )
+                cases.append(case)
+            self.cli("record", data=cases)
+            self.cli("freeze-plan")
+            for identifier, _, code in scenarios:
+                with self.subTest(case=identifier):
+                    self.cli(
+                        "execute", "--case", identifier, "--via", "playwright", code=code
+                    )
+
+    @unittest.skipUnless(os.environ.get("QA_V6_TEST_BROWSER"), "Playwright opcional")
+    def test_publish_preserves_retry_and_sanitizes_artifacts(self):
         with application() as base_url:
             profile = self.workspace / "profile.json"
             profile.write_text(
@@ -339,9 +402,9 @@ class PortableHarnessTests(unittest.TestCase):
         self.cli("publish")
         self.assertEqual({path.name for path in self.delivery.glob("*.md")}, REPORTS)
         all_files = [path for path in self.delivery.rglob("*") if path.is_file()]
-        self.assertEqual(len(all_files), 14)
+        self.assertEqual(len(all_files), 15)
         self.assertTrue(
-            all(path.suffix in {".md", ".xml", ".json"} for path in all_files)
+            all(path.suffix in {".md", ".xml", ".json", ".html"} for path in all_files)
         )
         self.assertFalse(
             any(
@@ -541,9 +604,17 @@ class PortableHarnessTests(unittest.TestCase):
         self.assertIn("HTTP 400 al consultar un registro existente.", report)
         self.assertIn("Intentos y criterios (1)", report)
         self.assertIn("No se registró un intento para este caso.", report)
+        self.assertIn("Casos del plan con ejecución observada</dt><dd>1 de 2", report)
+        self.assertIn("Casos del plan sin ejecución observada · REC-02", report)
+        self.assertIn("contrato.md · líneas 1–2", report)
         self.assertIn("Se probó la consulta. Queda pendiente", report)
         self.assertIn('<a href="#case-REC-01">REC-01</a>', report)
         self.assertIn("build-fixture", report)
+        self.cli("publish")
+        final = (self.delivery / "informe final.md").read_text(encoding="utf-8")
+        self.assertIn("Se probó la consulta. Queda pendiente", final)
+        self.assertIn("Casos del plan con ejecución observada · 1 de 2", final)
+        self.assertIn("Casos del plan sin ejecución observada · REC-02", final)
 
         fixes = Path(self.cli("export-fixes").stdout.strip())
         self.assertEqual(fixes, (self.harness / "SDD fixes" / "demo").resolve())
@@ -576,7 +647,9 @@ class PortableHarnessTests(unittest.TestCase):
         reviewed_report = Path(
             self.cli("export-html", "--name", "revisado", code=1).stdout.strip()
         )
-        self.assertIn("Evidencia inválida", reviewed_report.read_text(encoding="utf-8"))
+        reviewed_html = reviewed_report.read_text(encoding="utf-8")
+        self.assertIn("Evidencia inválida", reviewed_html)
+        self.assertIn("Casos del plan con ejecución observada</dt><dd>0 de 2", reviewed_html)
 
     def test_export_azure_keeps_case_steps_and_metadata(self):
         self.cli("init", "--title", "Casos de Azure")
@@ -870,6 +943,11 @@ class PortableHarnessTests(unittest.TestCase):
             self.assertIsNone(bundle.testzip())
             for report in REPORTS:
                 self.assertIn(f"demo/{report}", bundle.namelist())
+            html = bundle.read("demo/reporte gerencial.html").decode("utf-8")
+            for fragment in (
+                "Resumen", "WEB-01", "SWAGGER-01", "DB-01", "Escenario y pasos"
+            ):
+                self.assertIn(fragment, html)
             for prefix in ("WEB-01", "SWAGGER-01", "DB-01", "preflight"):
                 self.assertTrue(
                     any(
@@ -1260,8 +1338,10 @@ class PortableHarnessTests(unittest.TestCase):
         self.cli("publish", code=3)
         self.assertEqual(
             {path.name for path in self.delivery.iterdir()},
-            REPORTS | {"junit.xml", "resultado.json"},
+            REPORTS | {"junit.xml", "resultado.json", "reporte gerencial.html"},
         )
+        html = (self.delivery / "reporte gerencial.html").read_text(encoding="utf-8")
+        self.assertIn("Recomendación para la release · inconclusa", html)
         self.assertIn(
             "El entorno no está disponible.",
             (self.delivery / "log.md").read_text(encoding="utf-8"),

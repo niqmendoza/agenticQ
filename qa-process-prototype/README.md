@@ -13,26 +13,26 @@ Abrí `dist/index.html`. El archivo incluye su código y estilos; no necesita un
 - Al seleccionar una actividad se abre su explicación a la derecha; en móvil aparece abajo.
 - **Ver conexiones de esta parte** abre el flujo de dependencias en el mismo recorrido, con React Flow y posiciones calculadas por ELK. Se pueden seleccionar conexiones para leer su significado.
 - La búsqueda abre los grupos necesarios y lleva a la actividad elegida.
-- **Expandir todo** revela las 44 actividades; **Contraer todo** conserva las seis fases conectadas.
+- **Expandir todo** revela las 51 actividades; **Contraer todo** conserva las seis fases conectadas.
 - **Guía de términos** explica conceptos como caso de prueba, PR, cobertura, pipeline y regresión.
-- Los recuadros amarillos indican herramientas opcionales o reemplazables. Cada una explica cómo cubrir hoy la tarea sin incorporarla. El bloque **La base de hoy** resume el proceso actual.
+- Los recuadros amarillos indican herramientas opcionales o reemplazables. Cada una explica cómo cubrir hoy la tarea sin incorporarla. El bloque **El recorrido con Agentic QC V6** resume el proceso verificado localmente.
 
 ## Proceso revisado
 
-1. Documentación aprobada → repositorio con historial → actualización de RAGFlow → comprobar que el contexto esté listo.
-2. Comparar casos actuales → proponer borradores → crear o mejorar sólo si hace falta. Un caso suficiente puede conservarse sin duplicarlo.
-3. Propuesta de casos y estimativo de QA → revisión de QA → desarrollo informado, sin autorización obligatoria sobre los casos → registrar la versión lista. Los ajustes pedidos por QA vuelven a diseño.
-4. Registrar el caso → escribir el test con ayuda de Copilot → revisar el código → ejecutar Playwright. Schemathesis y Hercules son opciones adicionales.
-5. QA interpreta los resultados: registrar una prueba conforme, corregir una prueba o su ambiente, aclarar una regla o confirmar un defecto del producto.
-6. Defecto confirmado → Markdown para desarrollo → propuesta de corrección → revisión del código → nueva ejecución → QA confirma el cierre con evidencia nueva.
+1. Reunir documentación, reglas y fuentes de la aplicación. Versionar los segundos cerebros de QC en el proyecto solicitado de Azure Repos. Está en curso la conexión con RAGFlow para consultar lo publicado en main.
+2. Comparar los casos existentes y decidir qué conservar, ajustar o crear.
+3. QA revisa alcance y resultados esperados. Los casos reutilizables pasan al catálogo versionado de V6.
+4. Ejecutar la suite sobre un build identificado con Playwright para interfaz y API directa, o con consultas de lectura para persistencia.
+5. Revisar el dictamen, la evidencia y los casos pendientes. V6 conserva los resultados en JSON, JUnit, HTML y ZIP.
+6. Entregar la ficha Markdown del defecto confirmado, repetir el caso en el build corregido y registrar el retest. Usar el resultado de V5 cuando esté disponible para comparar ambas corridas.
 
-Las nuevas reglas vuelven a documentación y pasan por el repositorio antes de actualizar RAGFlow. Un problema de datos o ambiente se corrige antes de repetir una ejecución.
+La importación y la asociación con casos de Azure Test Plans quedan pendientes de validación en el entorno corporativo. n8n figura como propuesta de coordinación.
 
 El fondo incluye una trama de hexágonos turquesa conectados. Cerca del cursor se iluminan en fucsia con una respiración suave; el resplandor se desvanece al salir. El dibujo no captura clics, respeta la preferencia de movimiento reducido y detiene la animación cuando no está activa.
 
 ## Fuente y componentes
 
-`src/data/qa-process.json` contiene 6 fases, 45 actividades, 83 relaciones y 16 retornos entre niveles. No contiene coordenadas ni estilos. Los campos opcionales `owner`, `milestones` y `entryCondition` expresan responsables, resúmenes y condiciones del proceso.
+`src/data/qa-process.json` contiene seis fases, 51 actividades y 91 relaciones. No contiene coordenadas ni estilos. Los campos opcionales `owner`, `milestones` y `entryCondition` expresan responsables, resúmenes y condiciones del proceso.
 
 - `src/components/Roadmap.tsx`: recorrido, ramas anidadas, conectores medidos sobre el diseño y guía persistente.
 - `src/components/DetailsPanel.tsx`: explicación, entradas, salidas, intervención humana y conexiones.
@@ -55,15 +55,16 @@ pnpm check:milestones
 pnpm build
 ```
 
-Se revisaron el modelo sin coordenadas, diez controles del proceso y la compilación TypeScript/Vite. En la vista de desarrollo se comprobaron las ramas, expansión y contracción completas, búsqueda, explicación lateral, conexiones internas y ausencia de desbordamiento horizontal en 1440 × 1000 y 390 × 844.
-
-Este mapa documenta el diseño. El Hito 2 comprobó una instancia local de RAGFlow y su consulta mediante scripts; la conexión con el entorno del equipo, Copilot, n8n, Azure y los ejecutores requiere los siguientes ensayos.
+Se revisaron el modelo sin coordenadas, diecisiete controles del proceso y la compilación TypeScript/Vite. En la vista de desarrollo se comprobaron las ramas, expansión y contracción completas, búsqueda, explicación lateral, conexiones internas y ausencia de desbordamiento horizontal en 1440 × 1000 y 390 × 844.
 
 ## Hitos de implementación y archivo compartible
 
-La pestaña **Hitos de implementación** ofrece 29 hitos: 26 para la base y 3 evaluaciones opcionales. Se pueden marcar como pendientes, en curso, completados o bloqueados, y agregar notas o evidencia. Empiezan completados la elección del piloto y los scripts iniciales, más tres avances técnicos del **Hito 2**: RAGFlow local operativo por API, contexto compacto con fuentes y pruebas técnicas de recuperación. Son **5 de 26 hitos de base (19%)**. La calidad del retrieval queda en curso hasta la revisión de utilidad con QA y Copilot. No se marcaron como hechas la generación de casos, las integraciones con Azure o la actualización del conocimiento.
+La pestaña **Hitos de implementación** conserva los avances del Hito 2 y añade la verificación técnica de V5 y los hitos de V6. La línea de base muestra **12 de 38 hitos requeridos (32%)** y tres evaluaciones opcionales. Los hitos distinguen las pruebas técnicas de los ensayos con la aplicación real.
 
-El mapa incorpora la capa de scripts de retrieval antes de diseñar los casos. QA define el alcance estimado y revisa las pruebas; desarrollo conoce la propuesta y puede aportar contexto, pero no la autoriza ni bloquea su avance. La revisión técnica del código sigue siendo un paso separado.
+- **V5** aprobó 15 de 15 pruebas del harness con Playwright y Chrome. La corrida B5 está finalizando las pruebas del alcance de la nueva release de COELSA.Intelligent. Queda pendiente publicar el resultado por caso.
+- **V6** aprobó 19 de 19 pruebas. En el chatbot de demostración pasaron los tres casos del build sano. En el build con la regresión de estado fallaron la interfaz y la API y aprobó el caso independiente.
+- **Próximas iteraciones.** Alinear Agentic QC con la estructura TypeScript de QA y ampliar la cobertura de COELSA.Intelligent a toda la aplicación a partir de su código.
+- **Próximo contraste.** Repetir en V6 los casos equivalentes del piloto bajo las mismas condiciones y comparar el resultado por ID de caso.
 
 El avance se guarda en el almacenamiento de este navegador cuando está disponible. **Descargar HTML con avances** incluye el estado y las notas dentro de un nuevo HTML autónomo para compartirlo o trasladarlo. Si el navegador bloquea el almacenamiento de archivos locales, la descarga sigue disponible. Los navegadores y dispositivos no se sincronizan entre sí; se comparte la copia descargada. El archivo original del disco no se modifica automáticamente.
 
@@ -72,3 +73,5 @@ El avance se guarda en el almacenamiento de este navegador cuando está disponib
 ## Reporte Hito 2
 
 `../informes/Hito-2.html` es el reporte autónomo y editable de esta etapa. Su copia en `public/Hito-2.html` permite abrirlo desde la pestaña de hitos y Vite la incluye en `dist`. Al actualizar el reporte, mantener ambas copias iguales. El reporte conserva resultados, límites y una comparación interactiva de las entregas; no necesita servidor ni recursos externos. La copia principal del mapa es `../informes/Mapa-QA-agentizada.html`.
+
+Para actualizar el HTML compartible después de modificar las fuentes, ejecutá `pnpm build` y copiá `dist/index.html` a `../informes/Mapa-QA-agentizada.html`. Las dos copias abren directamente en el navegador.

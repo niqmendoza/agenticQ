@@ -25,3 +25,6 @@ Thumbs.db
 
 # Los HTML compilados, capturas, PDF, ZIP y SQLite de evidencias
 # se conservan deliberadamente como parte de la entrega.
+
+# Clon local del repo compartido de pruebas.
+/regresiones/

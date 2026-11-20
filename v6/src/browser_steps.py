@@ -74,11 +74,12 @@ def prepare_steps(case, profile, run, checks):
         kind in ("click", "press", "upload", "select") for _, kind, _, _ in prepared
     ):
         raise ValueError("El recorrido necesita una interacción que ejecute la tarea.")
-    visible_checks = {"visible_text", "control_text", "control_contains"}
+    control_checks = {"control_visible", "control_text", "control_contains"}
+    visible_checks = control_checks | {"visible_text"}
     if not any(check["type"] in visible_checks for check in checks.values()):
         raise ValueError("El recorrido necesita comprobar un resultado visible.")
     for check in checks.values():
-        if check["type"] in ("control_text", "control_contains") and (
+        if check["type"] in control_checks and (
             not isinstance(check.get("control"), str)
             or check["control"] not in controls
         ):
@@ -126,7 +127,7 @@ def perform_steps(page, steps, checks, controls, responses, browser_error, expec
             verified[identifier] = False
             continue
         kind = check["type"]
-        expected = check["equals"]
+        expected = check.get("equals")
         if kind == "network_status":
             verified[identifier] = bool(responses) and responses[-1] == expected
             continue
@@ -140,7 +141,7 @@ def perform_steps(page, steps, checks, controls, responses, browser_error, expec
                 expect(locator).to_be_visible(timeout=15000)
                 if kind == "control_text":
                     expect(locator).to_have_text(expected, timeout=15000)
-                else:
+                elif kind == "control_contains":
                     expect(locator).to_contain_text(expected, timeout=15000)
         except (AssertionError, browser_error):
             verified[identifier] = False

@@ -230,6 +230,81 @@ class ReleaseTests(unittest.TestCase):
         )
         self.cli("validate", "--suite", target / "suite.json", "--corpus", self.catalog)
 
+    def test_regression_repo_runs_saved_and_new_cases_then_repeats_approved_catalog(self):
+        with sqlite3.connect(self.db) as db:
+            db.execute("UPDATE registros SET estado = 'listo'")
+        repo = self.root / "regresiones"
+        suite = self.catalog / "suite.json"
+
+        def run_release(build, *extra, code=0):
+            self.cli(
+                "run", "--app", "solicitudes", "--regressions", repo, "--corpus",
+                self.catalog, "--env", "QA", "--build", build, "--id", build,
+                *extra, code=code,
+            )
+            return self.root / "qc/resultados" / build
+
+        def save(build, case, code=0):
+            self.cli(
+                "promote", "--app", "solicitudes", "--regressions", repo,
+                "--from-run", self.root / "qc/.trabajo" / build, "--case", case,
+                code=code,
+            )
+
+        run_release("primera", "--new-suite", suite)
+        self.cli(
+            "promote", "--app", "otra-aplicacion", "--regressions", repo,
+            "--from-run", self.root / "qc/.trabajo/primera", "--case", "REG-01", code=2,
+        )
+        save("primera", "REG-01")
+        save("primera", "REG-01")  # Un reintento conserva el catálogo.
+        lots = repo / "solicitudes/lotes"
+        first = (lots / "primera/casos.json").read_bytes()
+        self.cli(
+            "validate", "--app", "solicitudes", "--regressions", repo,
+            "--corpus", self.catalog, "--new-suite", suite, code=2,
+        )
+        with sqlite3.connect(self.db) as db:
+            db.execute("INSERT INTO registros VALUES ('QA-2', 'pendiente')")
+        case = {
+            **self.case,
+            "id": "REG-02",
+            "title": "Caso de la nueva release",
+            "expected": "Estado archivado",
+            "db": {"query": "registro", "parameters": {"id": "QA-2"}},
+        }
+        case["criteria"] = [
+            {
+                "id": "estado",
+                "expected": "archivado",
+                "check": {
+                    "type": "json_equals", "path": [0, "estado"], "equals": "archivado"
+                },
+            }
+        ]
+        self.put("casos", [case])
+        self.put("pasos", [{"case": "REG-02", "via": "db"}])
+        run_release("fallo", "--new-suite", suite, code=1)
+        save("fallo", "REG-02", code=2)
+        self.assertEqual(sorted(path.name for path in lots.iterdir()), ["primera"])
+
+        with sqlite3.connect(self.db) as db:
+            db.execute("UPDATE registros SET estado = 'archivado' WHERE id = 'QA-2'")
+        output = run_release("segunda", "--new-suite", suite)
+        self.assertIn("2 de 2", (output / "reporte gerencial.html").read_text())
+        self.assertEqual(
+            json.loads((output / "resultado.json").read_text())["provenance"]["regressions"],
+            {"saved": ["REG-01"], "new": ["REG-02"]},
+        )
+        save("segunda", "REG-02")
+        self.assertEqual((lots / "primera/casos.json").read_bytes(), first)
+        replayed = run_release("tercera")
+        result = json.loads((replayed / "resultado.json").read_text())
+        self.assertEqual(
+            [(row["case"], row["status"]) for row in result["cases"]],
+            [("REG-01", "passed"), ("REG-02", "passed")],
+        )
+
     @unittest.skipUnless(
         os.environ.get("QA_V6_TEST_BROWSER"), "Integración Playwright opcional"
     )

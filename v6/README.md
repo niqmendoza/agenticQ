@@ -1,17 +1,20 @@
 # Agentic QC V6
 
-El analista usa el agente para descubrir casos y confirmar los resultados esperados con negocio. El catálogo aprobado se guarda con el producto. Cada release ejecuta ese catálogo con un comando y genera su propio dictamen y evidencia. El [prompt maestro](PROMPT-MAESTRO.md) cubre la ejecución de suites aprobadas, la exploración con documentación de la aplicación y la comparación con V5.
+El analista usa el agente para descubrir casos y confirmar los resultados esperados con negocio. Las pruebas aprobadas se versionan en el [repo compartido de regresiones](docs/REGRESIONES.md), con una carpeta por aplicación. Cada release ejecuta ese catálogo con un comando y genera su propio dictamen y evidencia. El [prompt maestro](PROMPT-MAESTRO.md) cubre la ejecución de suites aprobadas, la exploración con documentación de la aplicación y la comparación con V5.
 
 | Carpeta o archivo | Para qué sirve |
 | --- | --- |
 | [Prompt maestro](PROMPT-MAESTRO.md) y [guía de registros](REGISTROS.md) | Encargo para Copilot y formato de casos, intentos y hallazgos. |
 | [docs/](docs/) | [Propuesta para gerencia](docs/Propuesta-Agentic-QC-V6.html) y [análisis técnico de V5](docs/Analisis-V5-framework-QA.md) que fundamenta V6. |
 | [examples/](examples/) | Catálogos de demostración para el chatbot y la API de PappU. |
+| [regresiones/](docs/REGRESIONES.md) | Guía para traer, ejecutar y guardar las pruebas del repo de regresiones. |
 | [src/](src/), [tests/](tests/) y [templates/](templates/) | Implementación, pruebas automatizadas y plantillas de entrega. |
 | [evaluate-llm/](evaluate-llm/) | Comparación de modelos con revisión independiente. |
 | [azure-pipelines.yml](azure-pipelines.yml) | Plantilla de ejecución en CI y publicación de resultados. |
 
 El repositorio versiona el código, las guías y los ejemplos. Las sesiones, resultados del piloto, entornos virtuales y paquetes generados quedan en las carpetas locales que Git ignora.
+
+En el prompt maestro, completá **Alcance de prueba** con los cambios que querés validar para una release. Si lo dejás vacío o indicás «aplicación completa», el agente releva módulos y requisitos a partir del segundo cerebro, diseña las pruebas y prepara una primera suite de regresión reutilizable. El reporte compara el plan congelado con las ejecuciones observadas e identifica requisitos y casos pendientes.
 
 ## Instalar en el equipo del analista
 
@@ -20,12 +23,15 @@ Desde la carpeta `v6`, con Python 3.10 o posterior, creá un entorno e instalá 
 ```sh
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install ".[api]"
-python -m playwright install chromium
+python -m pip install -e ".[api]"
 qc --help
 ```
 
-Para PostgreSQL instalá también el extra `postgres`. Para pruebas exclusivamente de API alcanza con el extra `api`. La instalación de Chromium habilita las pruebas de pantalla. El CLI instalado guarda cada job en `.agentic-qc/` del directorio actual. `QC_WORKSPACE` elige otra raíz. Al invocar directamente `python src/qa.py`, la raíz predeterminada es la carpeta V6. Usá la misma raíz para operar sobre una corrida.
+Para PostgreSQL instalá también el extra `postgres`. El CLI instalado guarda cada job en `.agentic-qc/` del directorio actual. `QC_WORKSPACE` elige otra raíz. Al invocar directamente `python src/qa.py`, la raíz predeterminada es la carpeta V6. Usá la misma raíz para operar sobre una corrida.
+
+### Ver Playwright desde VS Code
+
+El prompt maestro usa la opción `--chrome-visible` del CLI para las pruebas de interfaz que Copilot ejecuta en la computadora del analista. La opción está disponible en `qc validate`, `qc run` y `qc init`. Playwright abre una ventana independiente del perfil habitual de Chrome y la cierra al terminar el caso. La evidencia identifica el canal y el modo de ventana. Con Chrome instalado alcanza con tener la biblioteca Python de Playwright en el entorno del CLI. Para perfiles de Chromium administrado, prepará ese navegador con `python -m playwright install chromium`. En CI se conserva el navegador indicado en el perfil, que usa el modo sin ventana por defecto.
 
 ## Probar el flujo completo en una computadora
 
@@ -38,29 +44,33 @@ python examples/chatbot/demo.py
 En una segunda terminal con el entorno activo:
 
 ```sh
-qc validate --suite examples/chatbot/suite.json
-qc run --suite examples/chatbot/suite.json --env local --build demo-sano --id sano
+qc validate --suite examples/chatbot/suite.json --chrome-visible
+qc run --suite examples/chatbot/suite.json --env local --build demo-sano --id sano --chrome-visible
 ```
 
 La suite comprueba que la persona vea el estado y la fuente en la pantalla, que el servicio devuelva el dato según el esquema OpenAPI y que responda adecuadamente para un trámite inexistente. Para probar la detección, cerrá el servidor de demo con Ctrl+C, reinicialo con `python examples/chatbot/demo.py --regression` y ejecutá la misma suite con `--build demo-con-falla --id con-falla`. El dato cambia a «cerrado», fallan la pantalla y el servicio y sigue aprobando la consulta del trámite inexistente.
 
-La entrega está en `.agentic-qc/resultados/<id>/` y su ZIP contiguo. `resultado.json` contiene el dictamen, casos, intentos y huellas. `junit.xml` sirve para CI. `reportes/<id>.html` y los Markdown describen lo observado. Un directorio por ID impide que un reintento pise la corrida anterior.
+La entrega está en `.agentic-qc/resultados/<id>/` y su ZIP contiguo. Tanto `qc run` como `qc publish --zip` incluyen `reporte gerencial.html` junto a los Markdown. El HTML resume el dictamen, el alcance, los resultados por caso e intento, los hallazgos y los pendientes. `resultado.json` contiene el dictamen, casos, intentos y huellas. `junit.xml` sirve para CI. Un directorio por ID impide que un reintento pise la corrida anterior.
 
 ## Probar tu chatbot y comparar la corrida V5
 
-1. **Para probar ya una aplicación propia**, abrí V6 en el agente, completá el [encargo](PROMPT-MAESTRO.md) con el endpoint real, entorno, build, fuentes y mecanismos de acceso. Si partís del ejemplo, copiá su catálogo al repo de tu aplicación. Sustituí sus reglas, actores, URL, controles, contrato y fixtures por los de tu producto. Los nombres de variables de entorno van en el perfil. Cada equipo mantiene su catálogo.
+1. **Para probar ya una aplicación propia**, abrí V6 en el agente, completá el [encargo](PROMPT-MAESTRO.md) con el endpoint real, entorno, build, fuentes y mecanismos de acceso. Si partís del ejemplo, copiá su catálogo a la carpeta `regresiones/` del repositorio que mantendrá las pruebas. Sustituí sus reglas, actores, URL, controles, contrato y fixtures por los de tu producto. Los nombres de variables de entorno van en el perfil.
 2. **Para repetir los casos exactos de V5**, esperá que termine esa corrida. Si conservás la carpeta privada de trabajo y su manifiesto declarativo, copialos al equipo de QC y promovelos con el comando siguiente. La promoción conserva los IDs, definiciones y fixtures del manifiesto y enumera lo que quede fuera. Revisá el perfil y los datos antes de versionarlos. Los casos manuales o ejecutados por una herramienta externa requieren su propia implementación o un intento externo documentado.
 3. **Validá y ejecutá** con el mismo build, datos y entorno. Para conservar el contrato de la prueba, resolvé las fuentes citadas contra el corpus. Si V5 usó un localizador descriptivo que no existe literalmente, fijá una sección o rango de líneas verificable y registrá ese cambio. Podés usar `--profile` y `--corpus` para archivos del entorno.
 4. **Compará las entregas.** El comparador admite el ZIP publicado de V5, la carpeta de notas y la carpeta de trabajo. El ZIP V5 permite recuperar veredictos por ID. Las definiciones ejecutables y las huellas comparables se obtienen con los eventos de la carpeta de trabajo.
 
 ```sh
-qc promote --from-run /ruta/v5/.trabajo/corrida --manifest /ruta/al/manifiesto.json --app mi-chatbot --out qa-chatbot
-qc validate --suite qa-chatbot/suite.json --corpus /ruta/al/segundo-cerebro
-qc run --suite qa-chatbot/suite.json --corpus /ruta/al/segundo-cerebro --env QA --build BUILD_REAL --id contraste-v6
+qc promote --from-run /ruta/v5/.trabajo/corrida --manifest /ruta/al/manifiesto.json --app mi-chatbot --out /ruta/repo-codigo/regresiones
+qc validate --suite /ruta/repo-codigo/regresiones/suite.json --corpus /ruta/al/segundo-cerebro
+qc run --suite /ruta/repo-codigo/regresiones/suite.json --corpus /ruta/al/segundo-cerebro --env QA --build BUILD_REAL --id contraste-v6
 qc compare --baseline /ruta/al/resultado-v5.zip --candidate .agentic-qc/resultados/contraste-v6.zip --out comparacion-v5-v6.md
 ```
 
 Los resultados se emparejan por ID y muestran primer y último estado e intentos. Cuando existen las huellas, el informe verifica si el diseño coincide. Los casos exclusivos, cambios de build y definiciones sin verificar aparecen por separado. Para comparar el esfuerzo de las personas, registrar el tiempo de preparación de ambas corridas desde el mismo punto de inicio.
+
+## Repetir pruebas del repositorio de regresiones
+
+El comando `qc run --app ID_APLICACION --regressions RUTA_REPO` selecciona las pruebas guardadas de la aplicación. Acepta `--new-suite` para correr también las pruebas nuevas en el mismo informe. Después de la revisión de QA, `qc promote --regressions RUTA_REPO` incorpora los casos nuevos aprobados al clon local. El analista hace commit y push para que el catálogo esté disponible para el equipo. [Guía del flujo](docs/REGRESIONES.md)
 
 ## Qué versiona cada aplicación
 
