@@ -885,6 +885,11 @@ def run_case(args):
             "evidence": evidence_path,
             "execution_method": method,
             "executor": "runner",
+            **(
+                {"browser_steps": metadata["browser_steps"]}
+                if "browser_steps" in metadata
+                else {}
+            ),
             **({"classification": blocked_class} if blocked_class else {}),
             "results": results,
             "started_at": started,

@@ -1,0 +1,7 @@
+{
+  "CONS-01": {
+    "estado": "documentada",
+    "detalle": "Para QA-17 la pantalla debe informar el estado en revisión y citar REG-17. Se admiten distintas redacciones.",
+    "fuentes": [{"path": "reglas.md", "start": 3, "end": 3, "locator": "REG-17"}]
+  }
+}

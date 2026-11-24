@@ -34,6 +34,11 @@ def main():
     x.add_argument("corpus")
     x = sub.add_parser("pack")
     x.add_argument("--queries-json", required=True)
+    x.add_argument(
+        "--matched-sections",
+        action="store_true",
+        help="Priorizar los rangos encontrados en cada documento",
+    )
     x.add_argument("--seeds", type=int, default=2)
     x.add_argument("--related", type=int, default=5)
     x.add_argument("--max-docs", type=int, default=20)
@@ -111,6 +116,7 @@ def main():
                     a.max_docs,
                     a.max_lines,
                     a.replay,
+                    matched_sections=a.matched_sections,
                 )
             elif a.cmd == "show":
                 if not 1 <= a.max_lines <= 500:

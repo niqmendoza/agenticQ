@@ -1,0 +1,13 @@
+{
+  "app": "chat-tramites",
+  "entorno": "demo-local",
+  "build": "demo-sano",
+  "recorridos": [
+    {
+      "id": "CONS-01",
+      "superficie": "frontend",
+      "objetivo": "Consultar un trámite y verificar el estado y la fuente en pantalla.",
+      "consulta": "trámite estado fuente REG-17"
+    }
+  ]
+}

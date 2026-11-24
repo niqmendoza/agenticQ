@@ -9,7 +9,9 @@ class BrowserDataUnavailable(Exception):
     pass
 
 
-def prepare_steps(case, profile, run, checks):
+def prepare_steps(case, profile, run, checks, *, environment=None):
+    if environment is None:
+        environment = os.environ
     actions = case.get("browser_steps")
     if not isinstance(actions, list) or not actions:
         raise ValueError(
@@ -46,7 +48,7 @@ def prepare_steps(case, profile, run, checks):
                 raise ValueError(
                     "value_env se usa para completar un campo desde una variable."
                 )
-            value = os.environ.get(variable)
+            value = environment.get(variable)
             if not value:
                 raise BrowserDataUnavailable(
                     f"Falta la variable para completar el paso {identifier}."

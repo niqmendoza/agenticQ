@@ -1,0 +1,5 @@
+**/logs/*
+!**/logs/.gitkeep
+**/salidas/
+**/__pycache__/
+/Agentic-QC-V8.zip

@@ -259,6 +259,7 @@ def packet(
     replay=False,
     queries=None,
     pending=None,
+    include_sections=True,
 ):
     out = {
         "version": VERSION,
@@ -285,7 +286,7 @@ def packet(
         end = min(req.get("end", len(lines)), len(lines))
         if start < 1 or end < start:
             continue
-        old = s["delivered"].get(path, {}).get("ranges", [])
+        old = merge(s["delivered"].get(path, {}).get("ranges", []) + new_lines[path])
         spans = [[start, end]] if replay else missing(start, end, old)
         out["seen_lines_skipped"] += end - start + 1 - sum(b - a + 1 for a, b in spans)
         if not spans:
@@ -294,12 +295,6 @@ def packet(
             pending.append({"path": path, "reason": "max-docs", "ranges": spans})
             continue
         key = sid(path)
-        headers = [
-            dict(r)
-            for r in c.execute(
-                "SELECT start,end,title FROM headers WHERE path=?", (path,)
-            )
-        ]
         meta = json.loads(doc["meta"])
         title = meta.get("title", Path(path).stem)
         info = {
@@ -307,8 +302,14 @@ def packet(
             "sha256": doc["sha"],
             "title": title,
             "total_lines": len(lines),
-            "sections": headers,
         }
+        if include_sections:
+            info["sections"] = [
+                dict(row)
+                for row in c.execute(
+                    "SELECT start,end,title FROM headers WHERE path=?", (path,)
+                )
+            ]
         added = []
         count = 0
         for a, b in spans:
@@ -400,6 +401,7 @@ def pack(
     max_docs=20,
     max_lines=120,
     replay=False,
+    matched_sections=False,
 ):
     ranked = []
     qinfo = []
@@ -414,11 +416,20 @@ def pack(
         for rank, h in enumerate(hits):
             scores[h["path"]] += 1 / (rank + 1)
     # Equidad entre preguntas: evita que una consulta extensa monopolice el paquete.
+    seen_ranges = set()
     for rank in range(seeds):
         for hits in ranked:
             if rank < len(hits):
-                path = hits[rank]["path"]
-                if path not in seen:
+                hit = hits[rank]
+                path = hit["path"]
+                span = (path, hit["start"], hit["end"])
+                if matched_sections and span not in seen_ranges:
+                    requests.append(
+                        {"path": path, "start": hit["start"], "end": hit["end"]}
+                    )
+                    seen_ranges.add(span)
+                    seen.add(path)
+                elif not matched_sections and path not in seen:
                     requests.append({"path": path})
                     seen.add(path)
     seeds_set = set(seen)
@@ -448,7 +459,17 @@ def pack(
         if p not in seen and p not in related_scores:
             pending.append({"path": p, "reason": "search-not-expanded"})
     return packet(
-        c, cfg, s, requests, budget, max_docs, max_lines, replay, qinfo, pending
+        c,
+        cfg,
+        s,
+        requests,
+        budget,
+        max_docs,
+        max_lines,
+        replay,
+        qinfo,
+        pending,
+        include_sections=not matched_sections,
     )
 
 

@@ -1,6 +1,6 @@
 # QA agentizada
 
-[Agentic QC V6 · instalación y piloto](v6/README.md) · [Propuesta ejecutiva](v6/docs/Propuesta-Agentic-QC-V6.html) · [Guía V5](v5/README.md)
+[QA V8 · análisis, casos y ejecución](v8/README.md) · [Agentic QC V6 · instalación y piloto](v6/README.md) · [Propuesta ejecutiva](v6/docs/Propuesta-Agentic-QC-V6.html) · [Guía V5](v5/README.md)
 
 Herramientas, documentación y evidencias del proyecto de QA agentizada. V6 incorpora catálogos reutilizables, regresión por release y comparación con las corridas de V5.
 
