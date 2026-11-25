@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$title · Comparación de modelos</title>
+<style>
+  :root { color-scheme: light; font: 16px/1.5 system-ui, sans-serif; color: #172632; background: #f5f7f9; }
+  body { margin: 0; }
+  main { max-width: 76rem; padding: 2.25rem 1.25rem 4rem; margin: 0 auto; }
+  h1, h2, h3 { line-height: 1.2; margin: 0 0 .8em; }
+  h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
+  p { margin: .4rem 0; }
+  article { background: #fff; border: 1px solid #d9e2e9; padding: clamp(1rem, 3vw, 1.65rem); margin-top: 1.25rem; border-radius: .65rem; }
+  .quality { display: grid; gap: 1.5rem; }
+  .chart { list-style: none; margin: 0; padding: 0; }
+  .chart li { display: grid; grid-template-columns: minmax(7rem, 1fr) minmax(5rem, 2fr) auto; gap: .65rem; align-items: center; margin: .55rem 0; }
+  .chart li > span:first-child { overflow-wrap: anywhere; }
+  .track, .bar { display: block; height: .65rem; border-radius: .3rem; }
+  .track { background: #e5eaef; }
+  .bar { background: #197168; }
+  strong, td { font-variant-numeric: tabular-nums; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { text-align: left; border-bottom: 1px solid #d9e2e9; padding: .6rem; vertical-align: top; }
+  thead { background: #eaf1f4; }
+  li { margin-block: .35rem; }
+  a { color: #095b7d; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p>Evaluación de modelos · QA V6</p>
+    <h1>$title</h1>
+    $overview
+  </header>
+  <article><h2>Estado de las corridas por modelo</h2>$outcomes</article>
+  <article><h2>Consumo total mediano</h2>$tokens</article>
+  <article><h2>Puntos de la rúbrica logrados por etapa</h2><div class="quality">$quality</div></article>
+  <article><h2>Detalle por modelo y etapa</h2>$metrics<ul>$notes</ul></article>
+  <article><h2>Corridas archivadas</h2>$runs</article>
+</main>
+</body>
+</html>

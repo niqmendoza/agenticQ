@@ -1,0 +1,5 @@
+{
+  "descripcion": {"type": "constant", "value": "Documento sintético para probar adjuntos"},
+  "codigo_documental": {"type": "uuid"},
+  "registro": {"type": "sequence", "prefix": "QA-FIXTURE-"}
+}

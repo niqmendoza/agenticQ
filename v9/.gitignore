@@ -1,0 +1,7 @@
+**/logs/*
+!**/logs/.gitkeep
+**/salidas/
+**/__pycache__/
+/Agentic-QC-V9.zip
+/credenciales.txt
+**/entradas/

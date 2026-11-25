@@ -1,0 +1,20 @@
+{
+  "id": "comparacion-qa-01",
+  "title": "Comparación de modelos en QA V9",
+  "version": "COMPLETAR_SHA_DEL_BUILD",
+  "environment": "COMPLETAR_IDENTIFICADOR_DEL_ENTORNO",
+  "setup": "COMPLETAR estado inicial, fixtures y semilla, cliente, permisos y presupuesto de ejecución que se mantienen entre corridas.",
+  "corpus_revision": "COMPLETAR_SHA256_DEL_INDICE_O_USAR_NULL",
+  "browser_flows": ["web_ui"],
+  "rubric": {
+    "analisis": [
+      {"id": "A1", "expected": "Identifica la regla del flujo prioritario con una cita localizable del segundo cerebro y explica su impacto."}
+    ],
+    "diseno": [
+      {"id": "D1", "expected": "Diseña un caso repetible para el flujo prioritario con precondición, criterio observable y el resultado esperado que indica la especificación."}
+    ],
+    "ejecucion": [
+      {"id": "E1", "expected": "Opera el flujo prioritario con Playwright y deja evidencia de la acción y su resultado observable."}
+    ]
+  }
+}

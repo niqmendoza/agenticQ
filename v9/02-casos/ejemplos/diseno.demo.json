@@ -1,0 +1,102 @@
+{
+  "area": "POC Testing",
+  "perfil": {
+    "base_url": "http://127.0.0.1:8766",
+    "http_operations": [
+      {
+        "method": "POST",
+        "path": "/consulta"
+      }
+    ],
+    "browser_paths": [
+      "/"
+    ],
+    "browser_controls": {
+      "tramite": "#tramite",
+      "enviar": "button",
+      "mensaje": "#respuesta",
+      "fuente": "#fuente"
+    },
+    "browser_channel": "chrome"
+  },
+  "casos": [
+    {
+      "kind": "case",
+      "id": "CHAT-UI",
+      "title": "El cliente ve el estado y la fuente",
+      "feature": "Consulta de trámites",
+      "requirement": "CONS-01",
+      "priority": "high",
+      "level": "web",
+      "scenario": "Usuario de QA en el chatbot de trámites",
+      "preconditions": [
+        "Catálogo de trámites sintéticos cargado."
+      ],
+      "steps": [
+        "Ingresar QA-17 y consultar.",
+        "Leer la respuesta y la referencia."
+      ],
+      "expected": "El estado y la fuente son visibles.",
+      "oracle_status": "documented",
+      "sources": [
+        {
+          "path": "reglas.md",
+          "start": 3,
+          "end": 3,
+          "locator": "REG-17"
+        }
+      ],
+      "criteria": [
+        {
+          "id": "mensaje",
+          "expected": "Menciona en revisión",
+          "check": {
+            "type": "control_contains",
+            "equals": "en revisión",
+            "control": "mensaje"
+          }
+        },
+        {
+          "id": "fuente",
+          "expected": "Fuente REG-17",
+          "check": {
+            "type": "control_text",
+            "equals": "REG-17",
+            "control": "fuente"
+          }
+        }
+      ],
+      "browser_path": "/",
+      "browser_flow": "web_ui",
+      "browser_steps": [
+        {
+          "id": "numero",
+          "type": "fill",
+          "control": "tramite",
+          "value": "QA-17"
+        },
+        {
+          "id": "consultar",
+          "type": "click",
+          "control": "enviar"
+        }
+      ],
+      "step_expected": [
+        "Se envía la consulta del trámite QA-17.",
+        "La pantalla muestra en revisión y cita REG-17."
+      ],
+      "azure": {
+        "test_case_type": "Positive",
+        "component_type": "Web",
+        "type": "Functional"
+      }
+    }
+  ],
+  "pasos": [
+    {
+      "case": "CHAT-UI",
+      "via": "playwright"
+    }
+  ],
+  "pendientes": {}
+}
