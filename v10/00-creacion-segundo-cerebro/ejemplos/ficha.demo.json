@@ -1,0 +1,15 @@
+{
+  "modulo": "api",
+  "hechos": [
+    {
+      "id": "consulta-estado",
+      "tipo": "regla",
+      "titulo": "Estado de un trámite conocido",
+      "afirmacion": "El trámite sintético QA-17 está en revisión y la respuesta cita REG-17.",
+      "evidencia": [
+        {"archivo": "api/tramites.py", "desde": 2, "hasta": 2, "localizador": "REG-17"}
+      ]
+    }
+  ],
+  "pendientes": []
+}

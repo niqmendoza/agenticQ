@@ -1,0 +1,19 @@
+{
+  "app": "Chat de trámites",
+  "entorno": "demo-local",
+  "build": "demo-sano",
+  "recorridos": [
+    {
+      "id": "CONS-01",
+      "superficie": "frontend",
+      "objetivo": "Consultar un trámite y verificar el estado y la fuente en pantalla.",
+      "consulta": "trámite estado fuente REG-17"
+    }
+  ],
+  "superficies": "frontend",
+  "modo_auth_esperado": "sin autenticación en el servicio de demostración",
+  "recorridos_priorizados": [
+    "CONS-01"
+  ],
+  "area_qa": "POC Testing"
+}

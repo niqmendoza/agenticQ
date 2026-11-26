@@ -1,0 +1,23 @@
+{
+  "reviewer": "Equipo de QA",
+  "checks": {
+    "A1": {
+      "met": true,
+      "reason": "La nota identifica la regla y explica por qué afecta al flujo prioritario.",
+      "evidence": ["analisis segundo cerebro.md"],
+      "cases": []
+    },
+    "D1": {
+      "met": true,
+      "reason": "El caso QA-01 tiene pasos repetibles y un esperado medible.",
+      "evidence": ["casos.md"],
+      "cases": ["QA-01"]
+    },
+    "E1": {
+      "met": false,
+      "reason": "El intento quedó bloqueado antes de observar el resultado.",
+      "evidence": ["ejecuciones.md"],
+      "cases": ["QA-01"]
+    }
+  }
+}

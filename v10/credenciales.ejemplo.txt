@@ -1,0 +1,8 @@
+# Variables de QA. Copiá este archivo como credenciales.txt en la VM.
+# Un par NOMBRE=valor por línea, sin export ni expansión de shell.
+# Podés cambiar o agregar los nombres que declare el perfil de la suite.
+COELSA_QA_EMAIL=
+COELSA_QA_PASSWORD=
+QA_API_TOKEN=
+QA_POSTGRES_DSN=
+RAGFLOW_API_KEY=
