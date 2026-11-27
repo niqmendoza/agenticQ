@@ -104,10 +104,11 @@ def otel_rows(rows):
                     attributes.get("gen_ai.usage.input_tokens"),
                     attributes.get("gen_ai.usage.output_tokens"),
                     attributes.get("gen_ai.response.model"),
+                    attributes.get("gen_ai.usage.cache_read.input_tokens"),
                 )
             )
 
-    for trace, span, session, start, end, inputs, outputs, model in spans:
+    for trace, span, session, start, end, inputs, outputs, model, cache_read in spans:
         assigned = roots.get(trace, set())
         if len(assigned) == 1:
             session = next(iter(assigned))
@@ -121,6 +122,7 @@ def otel_rows(rows):
             "input": inputs,
             "output": outputs,
             "model": model,
+            "cache_read": cache_read,
         }
 
 
@@ -129,11 +131,11 @@ def native_rows(rows):
         if text_field(row.get("scope")):
             yield {
                 key: row.get(key)
-                for key in ("scope", "id", "start", "end", "input", "output", "model")
+                for key in ("scope", "id", "start", "end", "input", "output", "model", "cache_read")
             }
 
 
-def select_usage(path, format_name, scope=None):
+def select_usage(path, format_name, scope=None, *, include_cache=False):
     if not path.is_file():
         raise TokensUnavailable("Falta el archivo de contadores nativos.")
     reader = otel_rows if format_name == "otel" else native_rows
@@ -174,6 +176,9 @@ def select_usage(path, format_name, scope=None):
             for value in (row["input"], row["output"])
         )
         call = (start, end, *counts, model_id(row["model"]))
+        if include_cache:
+            cached = row.get("cache_read")
+            call += (cached if type(cached) is int and cached >= 0 else None,)
         if identifier in calls and calls[identifier] != call:
             raise TokensUnavailable(
                 "La fuente tiene registros contradictorios para una misma llamada."

@@ -1,0 +1,45 @@
+[
+  {
+    "id": "consulta-tramite",
+    "conceptos": ["api/consulta-estado", "api/referencia-tramite"],
+    "revision": {"estado": "borrador"},
+    "escenarios": [
+      {
+        "id": "valido-registro",
+        "titulo": "Trámite conocido QA-17",
+        "tipo": "valido",
+        "prioridad": "alta",
+        "capa": "api",
+        "actor": "Persona que consulta",
+        "precondiciones": ["Registro de demostración disponible."],
+        "configuracion": ["Catálogo sintético."],
+        "datos_sinteticos": ["QA-17"],
+        "accion": "Consultar el identificador QA-17.",
+        "resultado": "HTTP 200 con estado en revisión y referencia REG-17.",
+        "evidencia": [
+          {"id": "contrato", "tipo": "contrato", "archivo": "api/contrato.md", "desde": 3, "hasta": 3, "localizador": "devuelve HTTP 200"}
+        ],
+        "prueba": {"estado": "candidato"},
+        "ejecucion": {"estado": "no-ejecutado"}
+      },
+      {
+        "id": "fallo-ausente",
+        "titulo": "Trámite desconocido",
+        "tipo": "fallo",
+        "prioridad": "alta",
+        "capa": "api",
+        "actor": "Persona que consulta",
+        "precondiciones": ["El identificador está ausente del catálogo."],
+        "configuracion": ["Catálogo sintético."],
+        "datos_sinteticos": ["QA-DESCONOCIDO"],
+        "accion": "Consultar el identificador ausente.",
+        "resultado": "HTTP 404 con error trámite ausente.",
+        "evidencia": [
+          {"id": "contrato", "tipo": "contrato", "archivo": "api/contrato.md", "desde": 4, "hasta": 4, "localizador": "devuelve HTTP 404"}
+        ],
+        "prueba": {"estado": "candidato"},
+        "ejecucion": {"estado": "no-ejecutado"}
+      }
+    ]
+  }
+]

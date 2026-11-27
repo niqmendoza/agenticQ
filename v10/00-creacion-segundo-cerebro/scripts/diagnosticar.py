@@ -74,6 +74,7 @@ def consumo_registrado(dirs):
         "estado": "sin_medicion" if not cortes else "parcial" if None in (inputs, outputs) else "medido",
         "tokens_entrada": inputs, "tokens_salida": outputs,
         "tokens_total": inputs + outputs if None not in (inputs, outputs) else None,
+        "tokens_cache_lectura": total_observado(cortes, "tokens_cache_lectura"),
         "llamadas_observadas": sum(corte["llamadas_unicas"] for corte in cortes),
         "conversaciones_medidas": len(cortes),
         "por_modelo": {
@@ -94,19 +95,21 @@ def navegacion(rows):
     casos_sin_resultados, filas_recortadas, contextos_sin_integridad = [], [], []
     caracteres = 0
     for key in sorted(navegadas):
-        path = ETAPA / "salidas" / key / "contexto.json"
-        receipt = leer(path.parent / "entrega.json")
-        expected = receipt.get("archivos", {}).get("contexto.json")
+        root = ETAPA / "salidas" / key
+        receipt = leer(root / "entrega.json")
+        archivos = receipt.get("archivos", {})
+        path = root / ("contexto-qc.json" if "contexto-qc.json" in archivos else "contexto.json")
+        expected = archivos.get(path.name)
         if path.is_symlink() or not path.is_file() or not expected or huella(path) != expected:
             contextos_sin_integridad.append(key)
             continue
         data = read_json(path)
         caracteres += len(path.read_text(encoding="utf-8"))
-        if data["modo"] == "buscar" and not data["entradas"]:
+        if data.get("modo") == "buscar" and not data["entradas"]:
             casos_sin_resultados.append(key)
-        if data["recortado"]:
+        if data.get("recortado") or data.get("evidencia_recortada"):
             filas_recortadas.append(key)
-        for entry in data["entradas"]:
+        for entry in data.get("entradas", data.get("evidencia", [])):
             if "texto" in entry:
                 fragmentos[(entry["archivo"], entry["desde"], entry["hasta"], entry["texto"])] += 1
     return {

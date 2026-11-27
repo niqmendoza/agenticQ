@@ -10,9 +10,15 @@ ETAPAS = {
     "00-creacion-segundo-cerebro": (
         "FORMATO.md",
         "MEDICION.md",
+        "V3-QC.md",
         "ejemplos/ficha.demo.json",
         "ejemplos/taxonomia.demo.json",
+        "ejemplos/perfil-qc.demo.json",
+        "ejemplos/fichas-qc.demo.json",
+        "ejemplos/consultas-qc.demo.json",
+        "ejemplos/consultas-qc.coelsa.json",
         "ejemplos/repositorio-demo/api/tramites.py",
+        "ejemplos/repositorio-demo/api/contrato.md",
     ),
     "01-analisis": (
         "ejemplos/encargo.demo.json",

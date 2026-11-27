@@ -1,0 +1,12 @@
+[
+  {"id": "estado", "consulta": "valido-registro qué estado retorna QA-17", "flujo": "consulta-tramite", "caso": "valido-registro"},
+  {"id": "fuente", "consulta": "valido-registro qué referencia REG-17 acompaña al estado", "flujo": "consulta-tramite", "caso": "valido-registro"},
+  {"id": "consulta-valida", "consulta": "valido-registro condición registro de demostración disponible", "flujo": "consulta-tramite", "caso": "valido-registro"},
+  {"id": "estado-200", "consulta": "valido-registro trámite conocido HTTP 200", "flujo": "consulta-tramite", "caso": "valido-registro"},
+  {"id": "consulta-actor", "consulta": "valido-registro persona que consulta identificador QA-17", "flujo": "consulta-tramite", "caso": "valido-registro"},
+  {"id": "codigo-ausente", "consulta": "fallo-ausente HTTP 404 para trámite desconocido", "flujo": "consulta-tramite", "caso": "fallo-ausente"},
+  {"id": "catalogo", "consulta": "fallo-ausente identificador QA-DESCONOCIDO fuera de catálogo", "flujo": "consulta-tramite", "caso": "fallo-ausente"},
+  {"id": "error", "consulta": "fallo-ausente cuál es el resultado observable trámite ausente", "flujo": "consulta-tramite", "caso": "fallo-ausente"},
+  {"id": "evidencia-404", "consulta": "fallo-ausente dónde se documenta respuesta 404", "flujo": "consulta-tramite", "caso": "fallo-ausente"},
+  {"id": "dato-negativo", "consulta": "fallo-ausente datos sintéticos para consultar trámite ausente", "flujo": "consulta-tramite", "caso": "fallo-ausente"}
+]

@@ -42,6 +42,8 @@ python3 v10/03-ejecuciones/scripts/qa.py tokens-check --run release-prueba --for
 
 El campo `model` es opcional en QA V10 y se exige para [comparar modelos](scripts/benchmark/README.md). Copiá el modelo devuelto para esa llamada. En OpenTelemetry se lee `gen_ai.response.model`.
 
+Si la fuente nativa informa tokens de entrada leídos de caché, incluí el campo opcional `cache_read`. En OpenTelemetry el importador de etapas lee `gen_ai.usage.cache_read.input_tokens`. El contador se reporta por separado y los valores faltantes quedan en `null`.
+
 ## Etapas y cierre
 
 Marcá los cambios de etapa con `tokens-stage`. Las etapas son `preparacion`, `analisis`, `diseno`, `ejecucion` y `cierre`. Una llamada que cruza un cambio de etapa aparece como mixta. El consumo de la aplicación se documenta por separado.

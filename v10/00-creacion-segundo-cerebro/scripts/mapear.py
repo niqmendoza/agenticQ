@@ -13,13 +13,15 @@ from higiene import sanear
 from soporte import principal, read_json, write_json
 
 from fichas import reusar
+from perfil_qc import contiene, validar_perfil
 from repositorio import SCHEMA, configurar, inventario, modulo, objetos, perfil_archivo, snapshot, texto_seguro
 
 
 def opciones(parser):
-    parser.add_argument("--repo", required=True, type=Path)
-    parser.add_argument("--app", required=True)
-    parser.add_argument("--rev", default="HEAD", help="Referencia Git local que se resuelve a un commit.")
+    parser.add_argument("--perfil", type=Path, help="Perfil de aplicación para una publicación V3.")
+    parser.add_argument("--repo", type=Path)
+    parser.add_argument("--app")
+    parser.add_argument("--rev", help="Referencia Git local. Por defecto HEAD.")
     parser.add_argument("--modulos", type=Path, help="JSON de prefijos y dependencias para un monorepo.")
     parser.add_argument("--anterior", type=Path, help="Entrega previa para identificar módulos que necesitan revisión.")
     parser.add_argument("--max-kib-archivo", type=int, default=512)
@@ -32,14 +34,25 @@ def digest(value):
 def operar(args, salida, logs, resumen):
     """Crear un índice local redactado, un inventario técnico y fichas iniciales."""
     resumen["operacion"] = "mapear"
-    app = args.app.strip()
+    perfil = None
+    if args.perfil:
+        if any((args.repo, args.app, args.rev, args.modulos)):
+            raise ValueError("Con --perfil configurá repositorio, aplicación, revisión y módulos en el perfil.")
+        raw_perfil = read_json(args.perfil)
+        perfil = validar_perfil(raw_perfil)
+        repo = args.perfil.resolve().parent / raw_perfil["repositorio"]
+        app, revision, raw_config = perfil["aplicacion"], perfil["revision"], perfil["modulos"]
+    else:
+        if not args.repo or not args.app:
+            raise ValueError("Indicá --perfil o bien --repo y --app.")
+        repo, app, revision = args.repo, args.app.strip(), args.rev or "HEAD"
+        raw_config = read_json(args.modulos) if args.modulos else {}
     if not app or len(app) > 160 or "\n" in app or sanear(app)[1]:
         raise ValueError("Indicá un nombre visible de aplicación válido, sin datos sensibles.")
     if not 1 <= args.max_kib_archivo <= 16384:
         raise ValueError("El tamaño máximo por archivo debe estar entre 1 y 16384 KiB.")
-    raw_config = read_json(args.modulos) if args.modulos else {}
     deps, prefix = configurar(raw_config)
-    commit, tree = snapshot(args.repo.resolve(), args.rev)
+    commit, tree = snapshot(repo.resolve(), revision)
     resumen["commit"] = commit
     files, omisiones, huellas = inventario(tree, args.max_kib_archivo * 1024)
     por_modulo = defaultdict(list)
@@ -47,7 +60,8 @@ def operar(args, salida, logs, resumen):
         por_modulo[modulo(path, prefix, deps)].append([path.as_posix(), mode, oid])
     modulos, caracteres, redacciones = {}, 0, 0
     index = salida / "indice.sqlite"
-    with closing(sqlite3.connect(index)) as db, db, objetos(args.repo.resolve()) as leer:
+    exclusiones = perfil["exclusiones"] if perfil else []
+    with closing(sqlite3.connect(index)) as db, db, objetos(repo.resolve()) as leer:
         db.execute("CREATE TABLE metadata (schema TEXT NOT NULL, commit_sha TEXT NOT NULL)")
         db.execute("INSERT INTO metadata VALUES (?,?)", (SCHEMA, commit))
         db.execute("""CREATE TABLE archivos (
@@ -57,6 +71,9 @@ def operar(args, salida, logs, resumen):
         db.execute("CREATE INDEX archivos_por_modulo ON archivos(modulo, ruta)")
         for path, oid, size in files:
             ruta = path.as_posix()
+            if any(contiene(ruta, excluido) for excluido in exclusiones):
+                omisiones["perfil_excluido"] += 1
+                continue
             if sanear(ruta)[1]:
                 omisiones["ruta_sensible"] += 1
                 continue
@@ -100,11 +117,12 @@ def operar(args, salida, logs, resumen):
         write_json(borradores / f"{key}.json", {"modulo": key, "hechos": [], "pendientes": []})
     mapa = {
         "schema": SCHEMA, "app": app, "commit": commit,
-        "configuracion": digest([raw_config, args.max_kib_archivo]),
+        "configuracion": digest([raw_config, args.max_kib_archivo, exclusiones]) if exclusiones else digest([raw_config, args.max_kib_archivo]),
         "huella_raiz": digest(por_modulo["raiz"]),
         "modulos": modulos, "omisiones": dict(sorted(omisiones.items())),
         "archivos_indexados": sum(data["archivos"] for data in modulos.values()),
         "caracteres_fuente": caracteres, "redacciones": redacciones,
+        **({"perfil_qc": perfil} if perfil else {}),
     }
     with closing(sqlite3.connect(index)) as db:
         db.row_factory = sqlite3.Row

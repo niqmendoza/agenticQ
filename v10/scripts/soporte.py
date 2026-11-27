@@ -185,7 +185,7 @@ def consumo(args, etapa):
     carpeta = etapa / "logs" / run_id(args.id)
     if not any(carpeta.glob("*/resumen.json")):
         raise ValueError("No existe una ejecución registrada con ese ID en esta etapa.")
-    scope, llamadas = select_usage(args.archivo, args.formato, args.scope)
+    scope, llamadas = select_usage(args.archivo, args.formato, args.scope, include_cache=True)
     valores = list(llamadas.values())
 
     def total(filas, indice):
@@ -205,6 +205,7 @@ def consumo(args, etapa):
         "llamadas_unicas": len(valores),
         "tokens_entrada": total(valores, 2),
         "tokens_salida": total(valores, 3),
+        "tokens_cache_lectura": total(valores, 5),
         "llamadas_sin_entrada": sum(v[2] is None for v in valores),
         "llamadas_sin_salida": sum(v[3] is None for v in valores),
         "inicio_llamadas": min(v[0] for v in valores).isoformat(),

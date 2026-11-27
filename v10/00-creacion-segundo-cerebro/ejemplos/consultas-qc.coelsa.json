@@ -1,0 +1,12 @@
+[
+  {"id":"jwt-sesion-valida","consulta":"Qué precondiciones y evidencia pide el caso válido de sesión JWT","flujo":"sesion-jwt","caso":"sesion-vigente","tema_base":true},
+  {"id":"jwt-expiracion","consulta":"Qué se observa cuando se vence una sesión JWT y cuál es el contrato aplicable","flujo":"sesion-jwt","caso":"sesion-vencida","tema_base":true},
+  {"id":"modelos-ui","consulta":"Cómo comprueba QC la publicación de modelos en UI y qué controles hay que observar","flujo":"publicacion-modelos","caso":"publicacion-ui"},
+  {"id":"modelos-api","consulta":"Qué resultado y fuente usa el caso de publicación de modelos por API","flujo":"publicacion-modelos","caso":"publicacion-api"},
+  {"id":"descarga-vigente","consulta":"Qué variante permite descargar con enlace firmado y qué evidencia respalda el resultado","flujo":"descarga-firmada","caso":"descarga-vigente","tema_base":true},
+  {"id":"descarga-expirada","consulta":"Cómo se comprueba una descarga firmada expirada y su limpieza","flujo":"descarga-firmada","caso":"descarga-expirada","tema_base":true},
+  {"id":"ragflow-activo","consulta":"Qué configuración, acción y fuente respaldan una recuperación con RAGFlow habilitado","flujo":"ragflow","caso":"recuperacion-habilitada","tema_base":true},
+  {"id":"ragflow-inactivo","consulta":"Cómo distingue QC la implementación de RAGFlow de una recuperación con el flag deshabilitado","flujo":"ragflow","caso":"recuperacion-deshabilitada","tema_base":true},
+  {"id":"chat-stream-sano","consulta":"Qué test comprueba un stream de chat sano y qué resultado observable tiene","flujo":"recuperacion-chat","caso":"stream-sano"},
+  {"id":"chat-stream-interrumpido","consulta":"Cómo se reproduce el stream interrumpido y qué aserción demuestra recuperación del chat","flujo":"recuperacion-chat","caso":"stream-interrumpido"}
+]

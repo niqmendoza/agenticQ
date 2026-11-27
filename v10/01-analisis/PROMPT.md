@@ -35,6 +35,8 @@ Agrupá consultas por objetivo. Conservá el índice si vas a consultar seccione
 
 Cuando tengas una entrega de la etapa 00, usá `--cerebro`. El script verifica el recibo, registra el commit y la versión OKF, y recupera extractos del bundle. Citá el concepto que contiene la afirmación y consultá sus `sources` y sus vínculos si hace falta confirmar una dependencia. Los índices ayudan a localizar conceptos. Los pendientes indican preguntas abiertas.
 
+Cuando el bundle incluya `inicio.md` y `qc/`, buscá primero la ficha QC del flujo elegido. Conservá su ID de escenario y el estado de revisión al registrar la regla. Podés obtener la ficha y sus rangos citados con `recuperar_qc.py` de la etapa 00 si tenés el mapa original. Confirmá el esperado contra esas fuentes y registrá las discrepancias de alcance o de configuración. [Recuperación selectiva V3](../00-creacion-segundo-cerebro/V3-QC.md#recuperar-y-diagnosticar)
+
 ```sh
 python v10/01-analisis/scripts/analizar.py procesar --id ID-contexto --encargo "ENCARGO_NORMALIZADO" --cerebro "ENTREGA_CEREBRO" --conservar-indice
 ```

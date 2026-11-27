@@ -1,0 +1,13 @@
+{
+  "aplicacion": "Aplicación de trámites",
+  "repositorio": "repositorio-demo",
+  "revision": "HEAD",
+  "flujos_criticos": [
+    {"id": "consulta-tramite", "titulo": "Consultar el estado de un trámite", "riesgo": "Mostrar un estado o una referencia incorrectos."}
+  ],
+  "fuentes": [
+    {"prefijo": "api", "tipo": "implementacion"},
+    {"prefijo": "api/contrato.md", "tipo": "contrato"}
+  ],
+  "presupuesto": {"navegacion_caracteres": 4500, "recuperacion_caracteres": 16000, "portada_tokens": 500}
+}

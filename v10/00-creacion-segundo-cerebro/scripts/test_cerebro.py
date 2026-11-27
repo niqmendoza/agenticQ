@@ -23,7 +23,7 @@ class CrearSegundoCerebro(unittest.TestCase):
         self.root = Path(temp.name)
         self.v10 = self.root / "v10"
         shutil.copytree(V10, self.v10, ignore=shutil.ignore_patterns(
-            "logs", "salidas", "credenciales.txt", "__pycache__", "*.zip",
+            ".git", "logs", "salidas", "credenciales.txt", "__pycache__", "*.zip",
         ))
         self.stage = self.v10 / "00-creacion-segundo-cerebro"
         self.repo = self.root / "app"
@@ -194,6 +194,7 @@ class CrearSegundoCerebro(unittest.TestCase):
                 "attributes": {
                     "gen_ai.operation.name": "chat", "gen_ai.conversation.id": "sesion-unica-sintetica",
                     "gen_ai.usage.input_tokens": tokens[0], "gen_ai.usage.output_tokens": tokens[1],
+                    "gen_ai.usage.cache_read.input_tokens": 40 + index,
                     "gen_ai.response.model": "modelo-sintetico",
                     "gen_ai.input.messages": "texto de telemetria que no debe ir al diagnostico",
                 },
@@ -212,6 +213,7 @@ class CrearSegundoCerebro(unittest.TestCase):
         raw = (result / "diagnostico.json").read_text()
         report = json.loads(raw)
         self.assertEqual(report["consumo"]["tokens_total"], 250)
+        self.assertEqual(report["consumo"]["tokens_cache_lectura"], 81)
         self.assertEqual(report["consumo"]["llamadas_observadas"], 2)
         self.assertEqual(report["consumo"]["conversaciones_medidas"], 1)
         self.assertEqual(report["consumo"]["por_modelo"]["modelo-sintetico"]["tokens_entrada"], 220)
@@ -313,3 +315,63 @@ class CrearSegundoCerebro(unittest.TestCase):
         self.assertEqual({x["causa"] for x in json.loads(logs.read_text())["incidencias"]},
                          {"pertenencia_incorrecta", "concepto_ausente_en_moc"})
         self.hacer("publicar", "borrador", "--mapa", self.stage / "salidas/mapa-invalido-tematico", code=2)
+
+    def test_v3_recupera_escenarios_y_bloquea_revision_con_fuente_modificada(self):
+        self.demo_en_git()
+        samples = self.stage / "ejemplos"
+        profile = samples / "perfil-qc.demo.json"
+        mapa = self.hacer("mapear", "mapa-qc", "--perfil", profile)
+        info = json.loads((mapa / "mapa.json").read_text())
+        raw = json.loads((samples / "fichas-qc.demo.json").read_text())
+        raw[0]["revision"] = {"estado": "listo-para-qc", "por": "QA sintético", "commit": info["commit"]}
+        fichas = self.root / "fichas-qc.json"
+        fichas.write_text(json.dumps(raw))
+        migracion = self.root / "migracion.json"
+        migracion.write_text(json.dumps([
+            {"nota": "vault anterior/Regla.md", "decision": "incorporada", "destino": "consulta-tramite/valido-registro",
+             "motivo": "El caso ahora cita el contrato del commit."}
+        ]))
+        args = ["--taxonomia", samples / "taxonomia.demo.json", "--revision", samples / "ficha.demo.json"]
+        incompleta = self.root / "qc-sin-fallo.json"
+        incompleta.write_text(json.dumps([{**raw[0], "escenarios": raw[0]["escenarios"][:1]}]))
+        self.hacer("publicar", "promocion-invalida", "--mapa", mapa, *args, "--fichas-qc", incompleta, code=2)
+        entrega = self.hacer("publicar", "v3", "--mapa", mapa, *args, "--fichas-qc", fichas, "--migracion", migracion)
+        replay = self.hacer("publicar", "v3-republicado", "--mapa", mapa, *args, "--anterior", entrega)
+        self.assertIn("qc/consulta-tramite.md", (entrega / "corpus/inicio.md").read_text())
+        self.assertEqual(json.loads((entrega / "migracion.json").read_text())[0]["decision"], "incorporada")
+        recuperado = self.hacer("recuperar_qc", "escenario-qc", "--cerebro", entrega, "--mapa", mapa,
+                               "--flujo", "consulta-tramite", "--caso", "fallo-ausente")
+        contexto = json.loads((recuperado / "contexto-qc.json").read_text())
+        self.assertEqual(contexto["ejecucion"], "no-ejecutado")
+        self.assertIn("HTTP 404", contexto["evidencia"][0]["texto"])
+        self.assertNotIn("## Caso valido-registro", contexto["ficha"]["texto"])
+        piloto = self.hacer("piloto_qc", "piloto-v3", "--cerebro", entrega, "--mapa", mapa,
+                           "--consultas", samples / "consultas-qc.demo.json", "--republicacion", replay, code=3)
+        informe = json.loads((piloto / "piloto-qc.json").read_text())
+        self.assertTrue(informe["controles"]["integridad"])
+        self.assertTrue(informe["controles"]["republicacion_identica"])
+        self.assertTrue(informe["controles"]["recuperacion"], informe["recuperacion"])
+        self.assertIsNone(informe["controles"]["corte_nativo"])
+        self.assertIsNone(informe["controles"]["utilidad_revisada"])
+
+        stage1 = self.v10 / "01-analisis"
+        encargo = json.loads((stage1 / "ejemplos/encargo.demo.json").read_text())
+        encargo["recorridos"][0]["consulta"] = "fallo-ausente HTTP 404 para trámite desconocido"
+        enc = self.root / "encargo.json"
+        enc.write_text(json.dumps(encargo))
+        self.cli(stage1 / "scripts/analizar.py", "procesar", "--id", "analisis-qc",
+                 "--cerebro", entrega, "--encargo", enc)
+        analisis = json.loads((stage1 / "salidas/analisis-qc/analisis.json").read_text())
+        self.assertIn("qc/consulta-tramite.md", {x["original"] for x in analisis["extractos"]})
+
+        repos = samples / "repositorio-demo"
+        with (repos / "api/contrato.md").open("a") as stream:
+            stream.write("\nSe actualizó el contrato.\n")
+        for cmd in (["add", "."], ["-c", "user.email=qa@example.test", "-c", "user.name=QA", "commit", "-qm", "cambio"]):
+            subprocess.run(["git", "-C", str(repos), *cmd], check=True, capture_output=True)
+        nuevo_mapa = self.hacer("mapear", "mapa-qc-cambio", "--perfil", profile, "--anterior", entrega)
+        nueva = self.hacer("publicar", "v3-bloqueado", "--mapa", nuevo_mapa, *args, "--anterior", entrega, code=3)
+        cambiada = json.loads((nueva / "fichas-qc.json").read_text())["consulta-tramite"]
+        self.assertEqual(cambiada["revision"]["estado"], "bloqueado")
+        self.assertTrue(cambiada["invalidaciones"])
+        self.assertFalse(cambiada["escenarios"][0]["evidencia"])

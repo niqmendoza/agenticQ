@@ -87,3 +87,5 @@ python v10/00-creacion-segundo-cerebro/scripts/exportar_vault.py --cerebro "ENTR
 ## Consumo
 
 El contexto se limita sobre el JSON completo. Una búsqueda puede reunir hasta diez consultas y alterna resultados entre ellas. Para el análisis de QA se usan los extractos del corpus, con el presupuesto de la etapa 01. `diagnosticar.py` evalúa el bundle con ese recuperador y reúne los tamaños de contexto, los resultados de las consultas y los cortes registrados de Copilot. Usa PyYAML, incluido en las dependencias de V10. Una comparación de tokens requiere cortes nativos de dos corridas sobre el mismo alcance, commit y modelo. [Medición y diagnóstico](MEDICION.md)
+
+Para una publicación V3, el perfil de aplicación y las fichas QC agregan `corpus/inicio.md` y `corpus/qc/`. [Formato de escenarios V3](V3-QC.md)

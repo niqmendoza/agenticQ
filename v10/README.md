@@ -48,6 +48,8 @@ python v10/01-analisis/scripts/analizar.py procesar --id analisis --encargo "ENC
 
 Para actualizar una entrega, agregá `--anterior` a `mapear.py` y `publicar.py`. El mapa identifica los módulos que necesitan revisión, y la publicación puede conservar fichas respaldadas por el mismo código. Para migrar una aplicación que ya tiene su segundo cerebro, podés seguir usando `analizar.py --corpus`. [Formato, configuración y métricas](00-creacion-segundo-cerebro/FORMATO.md)
 
+Para generar el segundo cerebro V3, pasá `mapear.py procesar --perfil PERFIL.json` y adjuntá `--fichas-qc FICHAS.json` al publicar. El perfil organiza los flujos críticos, separa la navegación de producto de los escenarios y permite evaluar la recuperación de ficha, caso y evidencia. [Flujo V3 y piloto](00-creacion-segundo-cerebro/V3-QC.md)
+
 Para una corrida de medición, activá la telemetría de Copilot antes de empezar. `publicar.py medir` importa el corte y `diagnosticar.py` reúne el consumo, la navegación del repositorio y la recuperación del bundle con el motor de la etapa 01. [Medición y diagnóstico de la etapa 00](00-creacion-segundo-cerebro/MEDICION.md)
 
 ## Probar análisis, casos y ejecución

@@ -23,7 +23,7 @@ def opciones(parser):
     mode.add_argument("--consulta", action="append", help="Búsqueda de términos. Se puede repetir.")
     mode.add_argument("--rango", nargs=3, metavar=("ARCHIVO", "DESDE", "HASTA"))
     parser.add_argument("--modulo")
-    parser.add_argument("--max-chars", type=int, default=7000)
+    parser.add_argument("--max-chars", type=int)
     parser.add_argument("--limite", type=int, default=12, help="Máximo de entradas publicadas.")
     parser.add_argument("--desplazamiento", type=int, default=0, help="Cantidad de filas a saltar en --resumen.")
 
@@ -105,54 +105,62 @@ def top_hits(db, queries, module, limit):
 def operar(args, salida, logs, resumen):
     """Emitir solo los fragmentos o rutas necesarios, con un límite sobre todo el JSON."""
     modo = "resumen" if args.resumen else "buscar" if args.consulta else "rango"
+    with abrir_indice(args.mapa) as (mapa, db):
+        return entregar(args, salida, resumen, modo, mapa, db)
+
+
+def entregar(args, salida, resumen, modo, mapa, db):
+    presupuesto = mapa.get("perfil_qc", {}).get("presupuesto", {}).get("navegacion_caracteres")
+    args.max_chars = args.max_chars if args.max_chars is not None else presupuesto or 7000
+    if presupuesto is not None and args.max_chars > presupuesto:
+        raise ValueError(f"El presupuesto del perfil permite hasta {presupuesto} caracteres.")
     resumen.update(operacion=modo, presupuesto_caracteres=args.max_chars)
     if not 800 <= args.max_chars <= 30000 or not 1 <= args.limite <= 50:
         raise ValueError("Indicá entre 800 y 30000 caracteres y entre 1 y 50 entradas.")
     if args.desplazamiento < 0 or args.desplazamiento and not args.resumen:
         raise ValueError("El desplazamiento se usa con --resumen y debe ser positivo o cero.")
-    with abrir_indice(args.mapa) as (mapa, db):
-        if args.modulo and args.modulo not in mapa["modulos"]:
-            raise ValueError("El módulo no existe en el mapa.")
-        resumen.update(commit=mapa["commit"], modulo=args.modulo)
-        contexto = {
-            "commit": mapa["commit"], "modo": modo, "modulo": args.modulo,
-            "presupuesto_caracteres": args.max_chars, "recortado": False, "entradas": [],
-        }
-        if args.resumen:
-            contexto["app"] = mapa["app"]
-            contexto["total_modulos"] = len(mapa["modulos"])
-            contexto["archivos_indexados"] = mapa["archivos_indexados"]
-            contexto["desplazamiento"] = args.desplazamiento
-            candidatos = islice(enumerar(mapa, db, args.modulo), args.desplazamiento, None)
-        elif args.consulta:
-            queries = list(dict.fromkeys(q.strip() for q in args.consulta))
-            if len(queries) > 10 or any(not q or len(q) > 180 or sanear(q)[1] for q in queries):
-                raise ValueError("Usá hasta diez consultas breves, sin valores sensibles.")
-            contexto["consultas"] = queries
-            resumen["consultas"] = len(queries)
-            candidatos = top_hits(db, queries, args.modulo, args.limite)
-        else:
-            path, a, b = args.rango
-            row = archivo(db, path)
-            a, b = int(a), int(b)
-            if not 1 <= a <= b <= row["lineas"] or b - a >= 80 or (args.modulo and row["modulo"] != args.modulo):
-                raise ValueError("El rango debe existir en el archivo, incluir hasta 80 líneas y pertenecer al módulo.")
-            candidatos = [{
-                "archivo": row["ruta"], "desde": a, "hasta": b,
-                "tipo": row["tipo"], "texto": "\n".join(row["texto"].split("\n")[a - 1:b]),
-            }]
+    if args.modulo and args.modulo not in mapa["modulos"]:
+        raise ValueError("El módulo no existe en el mapa.")
+    resumen.update(commit=mapa["commit"], modulo=args.modulo)
+    contexto = {
+        "commit": mapa["commit"], "modo": modo, "modulo": args.modulo,
+        "presupuesto_caracteres": args.max_chars, "recortado": False, "entradas": [],
+    }
+    if args.resumen:
+        contexto["app"] = mapa["app"]
+        contexto["total_modulos"] = len(mapa["modulos"])
+        contexto["archivos_indexados"] = mapa["archivos_indexados"]
+        contexto["desplazamiento"] = args.desplazamiento
+        candidatos = islice(enumerar(mapa, db, args.modulo), args.desplazamiento, None)
+    elif args.consulta:
+        queries = list(dict.fromkeys(q.strip() for q in args.consulta))
+        if len(queries) > 10 or any(not q or len(q) > 180 or sanear(q)[1] for q in queries):
+            raise ValueError("Usá hasta diez consultas breves, sin valores sensibles.")
+        contexto["consultas"] = queries
+        resumen["consultas"] = len(queries)
+        candidatos = top_hits(db, queries, args.modulo, args.limite)
+    else:
+        path, a, b = args.rango
+        row = archivo(db, path)
+        a, b = int(a), int(b)
+        if not 1 <= a <= b <= row["lineas"] or b - a >= 80 or (args.modulo and row["modulo"] != args.modulo):
+            raise ValueError("El rango debe existir en el archivo, incluir hasta 80 líneas y pertenecer al módulo.")
+        candidatos = [{
+            "archivo": row["ruta"], "desde": a, "hasta": b,
+            "tipo": row["tipo"], "texto": "\n".join(row["texto"].split("\n")[a - 1:b]),
+        }]
+    if tamano(contexto) > args.max_chars:
+        raise ValueError("El presupuesto no alcanza para los metadatos. Acotá las consultas.")
+    for candidato in candidatos:
+        if len(contexto["entradas"]) == args.limite:
+            contexto["recortado"] = True
+            break
+        contexto["entradas"].append(candidato)
         if tamano(contexto) > args.max_chars:
-            raise ValueError("El presupuesto no alcanza para los metadatos. Acotá las consultas.")
-        for candidato in candidatos:
-            if len(contexto["entradas"]) == args.limite:
-                contexto["recortado"] = True
-                break
-            contexto["entradas"].append(candidato)
-            if tamano(contexto) > args.max_chars:
-                contexto["entradas"].pop()
-                contexto["recortado"] = True
-                if args.rango:
-                    raise ValueError("El rango supera el presupuesto. Pedí menos líneas o ampliá el límite.")
+            contexto["entradas"].pop()
+            contexto["recortado"] = True
+            if args.rango:
+                raise ValueError("El rango supera el presupuesto. Pedí menos líneas o ampliá el límite.")
     write_json(salida / "contexto.json", contexto)
     fragmentos = [entry["texto"] for entry in contexto["entradas"] if "texto" in entry]
     resumen.update(

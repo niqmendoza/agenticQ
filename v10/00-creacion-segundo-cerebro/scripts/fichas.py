@@ -23,6 +23,23 @@ def texto(valor, maximo, field):
     return valor.strip()
 
 
+def comprobar_fuente(ref, db, cache):
+    path = ref.get("archivo")
+    if not isinstance(path, str):
+        raise ValueError("La cita necesita una ruta del índice.")
+    if path not in cache:
+        row = archivo(db, path)
+        cache[path] = (row["oid"], row["texto"].split("\n"))
+    oid, lines = cache[path]
+    a, b = ref.get("desde"), ref.get("hasta")
+    if type(a) is not int or type(b) is not int or not 1 <= a <= b <= len(lines) or b - a >= 40:
+        raise ValueError(f"Rango inválido en {path}. Usá hasta 40 líneas.")
+    locator = texto(ref.get("localizador"), 220, "localizador")
+    if "[REDACTADO]" in locator or locator.casefold() not in "\n".join(lines[a - 1:b]).casefold():
+        raise ValueError(f"El localizador literal no aparece en {path} L{a}-L{b}.")
+    return {"archivo": path, "desde": a, "hasta": b, "localizador": locator, "blob": oid}
+
+
 def validar(ficha, modulo, db, cache):
     if (
         not isinstance(ficha, dict) or ficha.get("modulo") != modulo
@@ -47,20 +64,10 @@ def validar(ficha, modulo, db, cache):
         for ref in refs:
             if not isinstance(ref, dict) or set(ref) - {"archivo", "desde", "hasta", "localizador", "blob"}:
                 raise ValueError(f"{modulo}/{key}: referencia mal formada.")
-            path = ref.get("archivo")
-            if not isinstance(path, str):
-                raise ValueError(f"{modulo}/{key}: la cita necesita una ruta del índice.")
-            if path not in cache:
-                row = archivo(db, path)
-                cache[path] = (row["oid"], row["texto"].split("\n"))
-            oid, lines = cache[path]
-            a, b = ref.get("desde"), ref.get("hasta")
-            if type(a) is not int or type(b) is not int or not 1 <= a <= b <= len(lines) or b - a >= 40:
-                raise ValueError(f"{modulo}/{key}: rango inválido en {path}. Usá hasta 40 líneas.")
-            locator = texto(ref.get("localizador"), 220, "localizador")
-            if "[REDACTADO]" in locator or locator.casefold() not in "\n".join(lines[a - 1:b]).casefold():
-                raise ValueError(f"{modulo}/{key}: el localizador literal no aparece en {path} L{a}-L{b}.")
-            cita = {"archivo": path, "desde": a, "hasta": b, "localizador": locator, "blob": oid}
+            try:
+                cita = comprobar_fuente(ref, db, cache)
+            except ValueError as error:
+                raise ValueError(f"{modulo}/{key}: {error}") from None
             if cita not in citas:
                 citas.append(cita)
         if "estado" in hecho and hecho["estado"] not in ESTADOS:
