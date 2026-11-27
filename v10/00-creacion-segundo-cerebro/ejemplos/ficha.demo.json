@@ -5,9 +5,29 @@
       "id": "consulta-estado",
       "tipo": "regla",
       "titulo": "Estado de un trámite conocido",
+      "descripcion": "Explica qué estado devuelve la consulta del trámite de demostración.",
+      "estado": "vigente",
       "afirmacion": "El trámite sintético QA-17 está en revisión y la respuesta cita REG-17.",
       "evidencia": [
         {"archivo": "api/tramites.py", "desde": 2, "hasta": 2, "localizador": "REG-17"}
+      ],
+      "relaciones": [
+        {
+          "tipo": "usa",
+          "destino": "api/referencia-tramite",
+          "motivo": "REG-17 es la referencia que acompaña al estado devuelto."
+        }
+      ]
+    },
+    {
+      "id": "referencia-tramite",
+      "tipo": "dato",
+      "titulo": "Referencia [REG-17] del trámite",
+      "descripcion": "Identifica la referencia que permite rastrear la respuesta de la consulta.",
+      "estado": "vigente",
+      "afirmacion": "La respuesta asocia la clave fuente con REG-17.",
+      "evidencia": [
+        {"archivo": "api/tramites.py", "desde": 2, "hasta": 2, "localizador": "\"fuente\": \"REG-17\""}
       ]
     }
   ],

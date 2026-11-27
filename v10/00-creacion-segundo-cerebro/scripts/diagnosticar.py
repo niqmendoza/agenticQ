@@ -150,6 +150,7 @@ def escribir_reporte(path, report):
         f"- Pendientes de documentación y relaciones · {report['pendientes']}",
         f"- Incidencias estructurales · {len(okf['incidencias'])}",
         f"- Conceptos sin ruta desde el índice · {len(okf['conceptos_sin_ruta_desde_indice'])}",
+        f"- Evaluación del grafo temático · {okf['grafo_tematico']['estado']}",
         f"- Grupos con afirmaciones repetidas · {len(okf['afirmaciones_repetidas'])}",
         f"- Tipo de prueba de recuperación · {lectura['origen_pruebas']}",
         f"- Recuperados en lote · {lectura['recuperadas_en_lote']} de {len(lectura['casos'])}",
@@ -158,6 +159,15 @@ def escribir_reporte(path, report):
         "El diagnóstico usa el recuperador de la etapa 01 con las consultas indicadas en el JSON adjunto.",
         "Las sondas por título comprueban acceso al contenido. Las consultas de QA miden recuperación frente a sus expectativas.",
     ]
+    grafo = okf["grafo_tematico"]
+    if "areas" in grafo:
+        lines += [
+            "", f"- Áreas y MOCs · {grafo['areas']} y {grafo['mocs']}",
+            f"- Conceptos con una entrada en el índice raíz · {grafo['indice_raiz_unico']}",
+            f"- Relaciones justificadas · {grafo['relaciones_justificadas']}",
+            f"- Relaciones entre áreas · {grafo['relaciones_entre_areas']}",
+            f"- Conceptos aislados · {len(grafo['conceptos_aislados'])}",
+        ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -175,7 +185,8 @@ def operar(args, salida, logs, resumen):
     resumen["commit"] = commit
     fichas = read_json(root / "fichas.json")
     spec = read_json(args.pruebas) if args.pruebas else None
-    structural, retrieval = evaluar_lectura(root / "corpus", fichas, spec, args.max_chars)
+    taxonomia = read_json(root / "taxonomia.json") if manifest.get("grafo", {}).get("organizacion") == "tematica" else None
+    structural, retrieval = evaluar_lectura(root / "corpus", fichas, spec, args.max_chars, taxonomia)
     rows, dirs, omitted = actividad(args, receipt["id"], commit)
     nav, usage = navegacion(rows), consumo_registrado(dirs)
     report = {
@@ -201,6 +212,7 @@ def operar(args, salida, logs, resumen):
     observado = (
         bool(retrieval["casos"]) and retrieval["recuperadas_en_lote"] == len(retrieval["casos"])
         and not structural["incidencias"] and not structural["conceptos_sin_ruta_desde_indice"]
+        and (taxonomia is None or not structural["enlaces_sin_resolver"])
     )
     return 0 if observado else 3
 

@@ -49,7 +49,7 @@ Para medir la recuperación de requisitos concretos, prepará un JSON con pregun
 ]
 ```
 
-Sin ese archivo, el diagnóstico usa hasta seis sondas por título de módulos distintos. Estas sondas comprueban acceso al contenido publicado. Las consultas de QA permiten medir respuestas frente a requisitos elegidos de antemano.
+Sin ese archivo, el diagnóstico usa hasta seis sondas por título en áreas temáticas distintas. Las entregas anteriores usan los módulos. Estas sondas comprueban acceso al contenido publicado. Las consultas de QA permiten medir recuperación frente a requisitos elegidos de antemano.
 
 El informe registra estructura OKF, rutas desde el índice, citas, cobertura por módulo, pendientes y recuperación con el motor de la etapa 01. Prueba cada consulta por separado y después junto con las demás bajo el mismo presupuesto. Eso permite ver si un concepto falta, si la búsqueda no lo trae o si se recupera individualmente y queda fuera del lote. El código de salida 3 indica un diagnóstico con hallazgos de estructura o recuperación. El estado del corte nativo queda registrado aparte.
 

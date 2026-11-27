@@ -11,6 +11,7 @@ ETAPAS = {
         "FORMATO.md",
         "MEDICION.md",
         "ejemplos/ficha.demo.json",
+        "ejemplos/taxonomia.demo.json",
         "ejemplos/repositorio-demo/api/tramites.py",
     ),
     "01-analisis": (

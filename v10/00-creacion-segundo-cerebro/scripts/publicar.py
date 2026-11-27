@@ -10,12 +10,16 @@ from fichas import reusar, validar
 from indice import abrir_indice
 from okf import VERSION_OKF, publicar_okf
 from repositorio import SCHEMA
+from tematico import planificar, publicar_tematico
 
 
 def opciones(parser):
     parser.add_argument("--mapa", required=True, type=Path)
     parser.add_argument("--revision", action="append", type=Path, default=[], help="Ficha revisada. Se puede repetir.")
     parser.add_argument("--anterior", type=Path, help="Entrega de un segundo cerebro previo de la misma aplicación.")
+    formato = parser.add_mutually_exclusive_group(required=True)
+    formato.add_argument("--taxonomia", type=Path, help="Plan de áreas de producto y mapas de contenido.")
+    formato.add_argument("--por-modulo", action="store_true", help="Reconstruir expresamente una entrega anterior.")
 
 
 def operar(args, salida, logs, resumen):
@@ -47,7 +51,25 @@ def operar(args, salida, logs, resumen):
                 }
                 estados[key] = "pendiente"
     corpus = salida / "corpus"
-    relaciones_pendientes = publicar_okf(corpus, mapa, fichas)
+    grafo = {"organizacion": "modulos"}
+    if args.taxonomia:
+        try:
+            taxonomia, rutas, notas, salientes, entrantes, errores = planificar(read_json(args.taxonomia), fichas)
+        except ValueError as error:
+            write_json(logs / "validacion-grafo.json", {"incidencias": [{"causa": "taxonomia_invalida"}]})
+            raise ValueError(f"Taxonomía inválida. {error}") from None
+        write_json(logs / "validacion-grafo.json", {"incidencias": errores, "conceptos": len(notas)})
+        if errores:
+            raise ValueError(f"El grafo tiene {len(errores)} incidencias. Revisá validacion-grafo.json.")
+        publicar_tematico(corpus, mapa, taxonomia, rutas, notas, salientes, entrantes)
+        write_json(salida / "taxonomia.json", taxonomia)
+        relaciones_pendientes = []
+        grafo = {
+            "organizacion": "tematica", "areas": len(taxonomia["areas"]), "mocs": len(taxonomia["mocs"]),
+            "relaciones_justificadas": sum(map(len, salientes.values())),
+        }
+    else:
+        relaciones_pendientes = publicar_okf(corpus, mapa, fichas)
     n_hechos = sum(len(ficha["hechos"]) for ficha in fichas.values())
     n_pendientes = sum(len(ficha["pendientes"]) for ficha in fichas.values()) + len(relaciones_pendientes)
     write_json(salida / "fichas.json", fichas)
@@ -64,10 +86,12 @@ def operar(args, salida, logs, resumen):
         },
         "hechos": n_hechos, "pendientes": n_pendientes, "archivos_indexados": mapa["archivos_indexados"],
         "omisiones": mapa["omisiones"], "relaciones_pendientes": relaciones_pendientes,
+        "grafo": grafo,
     })
     resumen.update(
         operacion="publicar", commit=mapa["commit"], hechos=n_hechos, pendientes=n_pendientes,
         okf_version=VERSION_OKF, relaciones_pendientes=len(relaciones_pendientes),
+        **grafo,
         modulos_reutilizados=sum(value == "reutilizado" for value in estados.values()),
         modulos_sin_revision=sum(value == "pendiente" for value in estados.values()),
         caracteres_fuente=mapa["caracteres_fuente"],

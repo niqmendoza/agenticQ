@@ -11,8 +11,9 @@ import yaml
 
 import brain
 from fichas import texto
-from okf import VERSION_OKF, ruta_concepto
+from okf import VERSION_OKF, linea_enlace, ruta_concepto, texto_seguro
 from repositorio import ID
+from tematico import linea_relacion, planificar, vinculo
 
 NOTAS = re.compile(r"\[\^([^\]\n]+)\](?!:)")
 DEFINICIONES = re.compile(r"^\[\^([^\]\n]+)\]:", re.MULTILINE)
@@ -32,8 +33,8 @@ def cabecera(content):
     return data, "\n".join(lines[end + 1:])
 
 
-def estructura(corpus, fichas):
-    hechos = {
+def estructura(corpus, fichas, rutas, taxonomia):
+    hechos = set(rutas.values()) if taxonomia else {
         ruta_concepto(key, hecho["id"])
         for key, ficha in fichas.items()
         for hecho in ficha["hechos"]
@@ -46,9 +47,14 @@ def estructura(corpus, fichas):
             )
     types, incidencias = Counter(), []
     chars = 0
-    roots = {"index.md", "aplicacion.md", "modulos/index.md"}
-    for key in fichas:
-        roots.update({f"modulos/{key}/index.md", f"modulos/{key}/modulo.md"})
+    roots = {"index.md", "aplicacion.md"}
+    if taxonomia:
+        roots.update(f"temas/{area['id']}/index.md" for area in taxonomia["areas"])
+        roots.update(f"mocs/{moc['id']}.md" for moc in taxonomia["mocs"])
+    else:
+        roots.add("modulos/index.md")
+        for key in fichas:
+            roots.update({f"modulos/{key}/index.md", f"modulos/{key}/modulo.md"})
     for path in sorted(roots | hechos):
         if not (corpus / path).is_file():
             incidencias.append({"archivo": path, "causa": "archivo_ausente"})
@@ -96,8 +102,15 @@ def estructura(corpus, fichas):
     }, docs
 
 
-def configurar_sondas(spec, fichas):
+def configurar_sondas(spec, fichas, plan=None):
     if spec is None:
+        if plan:
+            taxonomia, _, notas, *_ = plan
+            return "titulos_por_area", [
+                {"id": f"sonda-{number}", "consulta": notas[key]["titulo"], "concepto": key}
+                for number, area in enumerate(taxonomia["areas"][:6], 1)
+                if (key := next((item for item in area["conceptos"] if item in notas), None))
+            ]
         grupos = [(key, sorted(ficha["hechos"], key=lambda item: item["id"])) for key, ficha in sorted(fichas.items())]
         probes = []
         for key, hechos in grupos:
@@ -127,8 +140,9 @@ def configurar_sondas(spec, fichas):
     return "expectativas_de_qa", revisadas
 
 
-def evaluar_sonda(probe, paquete, docs):
-    path = ruta_concepto(*probe["concepto"].split("/"))
+def evaluar_sonda(probe, paquete, docs, rutas):
+    key = probe["concepto"]
+    path = rutas.get(key, ruta_concepto(*key.split("/")))
     extractos = [
         p for p in paquete["passages"] if paquete["sources"][p["source"]]["path"] == path
     ]
@@ -150,9 +164,58 @@ def evaluar_sonda(probe, paquete, docs):
     }
 
 
-def evaluar_lectura(corpus, fichas, spec, budget):
-    structural, docs = estructura(corpus, fichas)
-    origen, probes = configurar_sondas(spec, fichas)
+def auditar_temas(corpus, plan, docs, conteo_raiz, structure):
+    taxonomia, rutas, notas, salientes, entrantes, errores = plan
+
+    def comprobar_lineas(path, expected):
+        file = corpus / path
+        if not file.is_file():
+            return False
+        actual = set(file.read_text(encoding="utf-8").splitlines())
+        return all(line in actual for line in expected)
+
+    aislados = []
+    for key, path in rutas.items():
+        if conteo_raiz[path] != 1:
+            errores.append({"causa": "indice_raiz_incorrecto", "concepto": key, "apariciones": conteo_raiz[path]})
+        meta = docs.get(path, {})
+        if meta.get("description") != notas[key].get("descripcion") or meta.get("qa_estado") != notas[key].get("estado"):
+            errores.append({"causa": "metadatos_del_concepto_incorrectos", "concepto": key})
+        relaciones = [linea_relacion(e, rutas, notas, path) for e in salientes[key] if e["destino"] in rutas]
+        backlinks = [linea_relacion(e, rutas, notas, path, entrante=True) for e in entrantes[key] if e["origen"] in rutas]
+        if not (relaciones or backlinks) or not any(comprobar_lineas(path, [line]) for line in relaciones + backlinks):
+            aislados.append(key)
+        if not comprobar_lineas(path, relaciones + backlinks):
+            errores.append({"causa": "relacion_no_renderizada", "concepto": key})
+    for moc in taxonomia["mocs"]:
+        path = f"mocs/{moc['id']}.md"
+        expected = [
+            linea_enlace(notas[e["destino"]]["titulo"], vinculo(path, rutas[e["destino"]]), texto_seguro(e["motivo"]))
+            for e in moc["conceptos"] if e["destino"] in rutas
+        ]
+        if not comprobar_lineas(path, expected):
+            errores.append({"causa": "moc_incompleto", "moc": moc["id"]})
+    errores.extend({"causa": "concepto_aislado_en_bundle", "concepto": key} for key in aislados)
+    structure["incidencias"].extend(errores)
+    structure["grafo_tematico"] = {
+        "estado": "observado" if not errores else "con_incidencias",
+        "areas": len(taxonomia["areas"]), "mocs": len(taxonomia["mocs"]),
+        "indice_raiz_unico": sum(conteo_raiz[path] == 1 for path in rutas.values()),
+        "relaciones_justificadas": sum(map(len, salientes.values())),
+        "relaciones_entre_areas": sum(
+            rutas[key].split("/")[1] != rutas[e["destino"]].split("/")[1]
+            for key, edges in salientes.items() if key in rutas
+            for e in edges if e["destino"] in rutas
+        ),
+        "conceptos_aislados": aislados,
+    }
+
+
+def evaluar_lectura(corpus, fichas, spec, budget, taxonomia=None):
+    plan = planificar(taxonomia, fichas) if taxonomia is not None else None
+    rutas = plan[1] if plan else {}
+    structural, docs = estructura(corpus, fichas, rutas, taxonomia)
+    origen, probes = configurar_sondas(spec, fichas, plan)
     with TemporaryDirectory() as tmp:
         db = Path(tmp) / "indice.sqlite"
         tick = perf_counter()
@@ -172,6 +235,11 @@ def evaluar_lectura(corpus, fichas, spec, budget):
             structural["enlaces_resueltos"] = sum(map(len, edges.values()))
             structural["enlaces_sin_resolver"] = con.execute("SELECT count(*) FROM unresolved").fetchone()[0]
             structural["conceptos_sin_ruta_desde_indice"] = sorted(docs.keys() - seen)
+            if plan:
+                conteo_raiz = Counter(row[0] for row in con.execute("SELECT target FROM edges WHERE source='index.md'"))
+                auditar_temas(corpus, plan, docs, conteo_raiz, structural)
+            else:
+                structural["grafo_tematico"] = {"estado": "formato_por_modulos"}
 
             def recuperar(queries):
                 session = brain.session_load(None, cfg["revision"])
@@ -180,8 +248,8 @@ def evaluar_lectura(corpus, fichas, spec, budget):
             tick = perf_counter()
             batch = recuperar(list(dict.fromkeys(p["consulta"] for p in probes))) if probes else None
             casos = [
-                {**probe, "en_lote": evaluar_sonda(probe, batch, docs),
-                 "individual": evaluar_sonda(probe, recuperar([probe["consulta"]]), docs)}
+                {**probe, "en_lote": evaluar_sonda(probe, batch, docs, rutas),
+                 "individual": evaluar_sonda(probe, recuperar([probe["consulta"]]), docs, rutas)}
                 for probe in probes
             ]
     return structural, {

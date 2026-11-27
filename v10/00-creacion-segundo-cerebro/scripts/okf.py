@@ -19,8 +19,12 @@ def texto_seguro(value):
     return escape(value, quote=False).replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
 
 
+def etiqueta_enlace(value):
+    return escape(value, quote=False).replace("[", "&#91;").replace("]", "&#93;")
+
+
 def linea_enlace(titulo, destino, descripcion):
-    return f"* [{texto_seguro(titulo)}]({destino}) - {descripcion}"
+    return f"* [{etiqueta_enlace(titulo)}]({destino}) - {descripcion}"
 
 
 def escribir(path, lines, metadata=None, sources=()):
@@ -57,17 +61,21 @@ def fuente_okf(ref, commit):
     }
 
 
-def escribir_concepto(bundle, key, hecho, commit, conceptos):
+def cuerpo_atribuido(hecho, commit):
     por_id = {}
     for ref in hecho["evidencia"]:
         source = fuente_okf(ref, commit)
         por_id[source["id"]] = source
     sources = list(por_id.values())
     footnotes = " ".join(f"[^{source['id']}]" for source in sources)
-    body = [
+    return [
         f"{texto_seguro(hecho['afirmacion'])} {footnotes}", "",
         *(f"[^{source['id']}]: {texto_seguro(source['title'])}" for source in sources),
-    ]
+    ], sources
+
+
+def escribir_concepto(bundle, key, hecho, commit, conceptos):
+    body, sources = cuerpo_atribuido(hecho, commit)
     pendientes = []
     if relaciones := hecho.get("relaciones", []):
         body += ["", "## Relaciones", ""]
@@ -75,13 +83,14 @@ def escribir_concepto(bundle, key, hecho, commit, conceptos):
             destino, tipo = relacion["destino"], relacion["tipo"]
             if target := conceptos.get(destino):
                 path, title = target
-                body.append(f"* {tipo} [{texto_seguro(title)}](/{path})")
+                motivo = f" — {texto_seguro(relacion['motivo'])}" if "motivo" in relacion else ""
+                body.append(f"* {tipo} [{texto_seguro(title)}](/{path}){motivo}")
             else:
                 pendientes.append({"origen": f"{key}/{hecho['id']}", **relacion})
                 body.append(f"* Pendiente de vincular «{tipo}» a `{destino}`.")
     escribir(bundle / ruta_concepto(key, hecho["id"]), body, {
         "type": TIPOS_OKF[hecho["tipo"]], "title": hecho["titulo"],
-        "description": f"{TIPOS_OKF[hecho['tipo']]} de {key}.",
+        "description": hecho.get("descripcion", f"{TIPOS_OKF[hecho['tipo']]} de {key}."),
         "status": "draft", "tags": [key, hecho["tipo"]],
     }, sources)
     return pendientes

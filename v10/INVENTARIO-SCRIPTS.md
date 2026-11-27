@@ -8,7 +8,8 @@ V10 conserva los scripts y las herramientas avanzadas que quedaron agrupados en 
 |---|---|
 | [mapear.py](00-creacion-segundo-cerebro/scripts/mapear.py) | Inventaría el commit, crea el índice redactado y prepara borradores por módulo. |
 | [navegar.py](00-creacion-segundo-cerebro/scripts/navegar.py) | Devuelve mapas, búsquedas agrupadas y rangos con presupuesto sobre el JSON completo. |
-| [publicar.py](00-creacion-segundo-cerebro/scripts/publicar.py), [okf.py](00-creacion-segundo-cerebro/scripts/okf.py) | Validan citas, reutilizan fichas vigentes y escriben el bundle OKF 0.2. |
+| [publicar.py](00-creacion-segundo-cerebro/scripts/publicar.py), [tematico.py](00-creacion-segundo-cerebro/scripts/tematico.py), [okf.py](00-creacion-segundo-cerebro/scripts/okf.py) | Validan citas y relaciones, reutilizan fichas vigentes y escriben el grafo temático OKF 0.2. |
+| [exportar_vault.py](00-creacion-segundo-cerebro/scripts/exportar_vault.py) | Copia el corpus a una bóveda nueva y enlaza notas preexistentes cuando se indican. |
 | [diagnosticar.py](00-creacion-segundo-cerebro/scripts/diagnosticar.py), [evaluar_okf.py](00-creacion-segundo-cerebro/scripts/evaluar_okf.py) | Reúnen el consumo nativo y el contexto de la corrida, y verifican el bundle y su recuperación con el motor de 01. |
 | [repositorio.py](00-creacion-segundo-cerebro/scripts/repositorio.py), [indice.py](00-creacion-segundo-cerebro/scripts/indice.py), [fichas.py](00-creacion-segundo-cerebro/scripts/fichas.py) | Leen Git, consultan SQLite y verifican el formato y las huellas de las fichas. |
 | [test_cerebro.py](00-creacion-segundo-cerebro/scripts/test_cerebro.py) | Prueba el flujo sobre commits sintéticos, el presupuesto y el pase a 01. |

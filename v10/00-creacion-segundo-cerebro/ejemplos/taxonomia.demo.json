@@ -1,0 +1,27 @@
+{
+  "areas": [
+    {
+      "id": "consultas",
+      "titulo": "Consulta de trámites",
+      "descripcion": "Comportamiento observable al consultar el estado de un trámite.",
+      "conceptos": ["api/consulta-estado"]
+    },
+    {
+      "id": "trazabilidad",
+      "titulo": "Trazabilidad",
+      "descripcion": "Referencias que acompañan los datos devueltos al usuario.",
+      "conceptos": ["api/referencia-tramite"]
+    }
+  ],
+  "mocs": [
+    {
+      "id": "respuesta-tramites",
+      "titulo": "Cómo se construye una respuesta de trámite",
+      "descripcion": "Recorre la regla de consulta y la referencia usada para verificarla.",
+      "conceptos": [
+        {"destino": "api/consulta-estado", "motivo": "Establece el estado que el flujo entrega al usuario."},
+        {"destino": "api/referencia-tramite", "motivo": "Explica la fuente con la que se puede comprobar ese estado."}
+      ]
+    }
+  ]
+}

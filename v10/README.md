@@ -4,7 +4,7 @@ Cuatro etapas con entregas en disco. La etapa 00 publica un segundo cerebro OKF 
 
 | Etapa | Entrada | Entrega | Instrucciones |
 |---|---|---|---|
-| 00. Creación del segundo cerebro | Repositorio Git local, commit y agrupación opcional | Bundle OKF 0.2 con índices, conceptos tipados y referencias al código | [Prompt de creación](00-creacion-segundo-cerebro/PROMPT.md) |
+| 00. Creación del segundo cerebro | Repositorio Git local, commit y taxonomía de producto | Bundle OKF 0.2 con conceptos por temas, MOCs, relaciones justificadas y referencias al código | [Prompt de creación](00-creacion-segundo-cerebro/PROMPT.md) |
 | 01. Análisis | Encargo y entrega de 00 o un corpus existente | Reglas y dudas por recorrido, revisión del corpus y extractos con referencias originales | [Prompt de análisis](01-analisis/PROMPT.md) |
 | 02. Casos | Entrega de análisis, diseño de QA y documentación funcional opcional | CSV obligatorio, suite, perfil, pasos, criterios, datos, fuentes y pendientes | [Prompt de casos](02-casos/PROMPT.md) |
 | 03. Ejecuciones | Entrega de casos y acceso al entorno autorizado | Dictamen, preflight y, cuando se ejecuta la suite, resultados por intento, evidencia, HTML, JUnit y ZIP | [Prompt de ejecución](03-ejecuciones/PROMPT.md) |
@@ -42,7 +42,7 @@ El formato es `NOMBRE=valor` por línea. El valor es literal y las líneas que c
 ```sh
 python v10/00-creacion-segundo-cerebro/scripts/mapear.py procesar --id mapa --repo "REPO_LOCAL" --app "APLICACION" --rev HEAD
 python v10/00-creacion-segundo-cerebro/scripts/navegar.py procesar --id contexto-00 --mapa v10/00-creacion-segundo-cerebro/salidas/mapa --resumen
-python v10/00-creacion-segundo-cerebro/scripts/publicar.py procesar --id cerebro --mapa v10/00-creacion-segundo-cerebro/salidas/mapa --revision "FICHA.json"
+python v10/00-creacion-segundo-cerebro/scripts/publicar.py procesar --id cerebro --mapa v10/00-creacion-segundo-cerebro/salidas/mapa --taxonomia "TAXONOMIA.json" --revision "FICHA.json"
 python v10/01-analisis/scripts/analizar.py procesar --id analisis --encargo "ENCARGO.json" --cerebro v10/00-creacion-segundo-cerebro/salidas/cerebro
 ```
 

@@ -8,26 +8,31 @@ El bundle se publica en OKF 0.2, la versión del repositorio de Google Cloud Pla
 |---|---|---|
 | Mapa local | `mapa.json`, `indice.sqlite`, `borradores/` | Inventario del commit, búsquedas de código redactado y ficha inicial por módulo. |
 | Contexto de Copilot | `contexto.json` por consulta | Mapa paginado, resultados breves o rangos exactos; incluye el commit y el límite de caracteres. |
-| Bundle OKF | `corpus/index.md`, `corpus/aplicacion.md`, `corpus/modulos/` | Índices, conceptos tipados, fuentes y relaciones. |
-| Control de entrega | `manifiesto.json`, `fichas.json`, `entrega.json` | Cobertura por módulo, insumos para republicar y recibo de integridad. |
+| Bundle OKF | `corpus/index.md`, `corpus/aplicacion.md`, `corpus/temas/` y `corpus/mocs/` | Índices temáticos, conceptos tipados, mapas de contenido, fuentes y relaciones. |
+| Control de entrega | `manifiesto.json`, `fichas.json`, `taxonomia.json` y `entrega.json` | Cobertura, insumos para republicar y recibo de integridad. |
 
 ```text
 corpus/
 ├── index.md
 ├── aplicacion.md
-└── modulos/
-    ├── index.md
-    └── api/
-        ├── index.md
-        ├── modulo.md
-        └── concepto-consulta-estado.md
+├── temas/
+│   ├── consultas/
+│   │   ├── index.md
+│   │   └── concepto-consulta-estado.md
+│   └── trazabilidad/
+│       ├── index.md
+│       └── concepto-referencia-tramite.md
+└── mocs/
+    └── respuesta-tramites.md
 ```
 
 El índice raíz declara `okf_version: "0.2"`. Cada concepto de la aplicación registra citas en `sources` y las vincula con la afirmación mediante notas al pie. Las fuentes identifican el commit Git, el archivo y las líneas citadas. Los conceptos redactados a partir de fichas se publican con `status: draft` y con las referencias comprobadas estructuralmente. La clasificación de los conceptos, como `Regla funcional` o `Interfaz`, pertenece al dominio de QA. [Conceptos, fuentes y enlaces en OKF 0.2](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md#4-concept-documents)
 
 El inventario toma archivos rastreados de un commit Git local. Registra omisiones por formato, tamaño y otras causas. Excluye, entre otros, archivos de credenciales, dependencias o generados conocidos, binarios, enlaces y submódulos. El límite por archivo se ajusta con `--max-kib-archivo`. La redacción de patrones sensibles es heurística. El índice de código y los contextos de búsqueda quedan en el área de trabajo de la etapa 00. La etapa 01 indexa solo `corpus/` y conserva las rutas originales de los conceptos.
 
-## Ficha por módulo
+## Ficha técnica y taxonomía de producto
+
+Cada nota explica un concepto. El módulo de la ficha identifica el grupo técnico que mantiene sus fuentes. `taxonomia.json` define la navegación por áreas del producto y los MOCs. Dos conceptos del mismo módulo pueden pertenecer a áreas distintas. [Ejemplo de ficha](ejemplos/ficha.demo.json) · [Ejemplo de taxonomía](ejemplos/taxonomia.demo.json)
 
 ```json
 {
@@ -37,9 +42,14 @@ El inventario toma archivos rastreados de un commit Git local. Registra omisione
       "id": "consulta-estado",
       "tipo": "regla",
       "titulo": "Estado de un trámite conocido",
+      "descripcion": "Explica qué estado devuelve la consulta del trámite de demostración.",
+      "estado": "vigente",
       "afirmacion": "El trámite sintético QA-17 está en revisión y la respuesta cita REG-17.",
       "evidencia": [
         {"archivo": "api/tramites.py", "desde": 2, "hasta": 2, "localizador": "REG-17"}
+      ],
+      "relaciones": [
+        {"tipo": "usa", "destino": "api/referencia-tramite", "motivo": "La referencia acompaña al estado devuelto."}
       ]
     }
   ],
@@ -47,11 +57,11 @@ El inventario toma archivos rastreados de un commit Git local. Registra omisione
 }
 ```
 
-`tipo` admite `flujo`, `regla`, `interfaz`, `dato`, `prueba` y `operacion`. Usá IDs estables. Cada hecho admite hasta 600 caracteres y una a tres citas a rangos de hasta 40 líneas. El localizador es texto literal del rango redactado, sin distinción de mayúsculas. La validación comprueba que la referencia existe en el commit. La revisión de QA confirma que esa referencia respalda la afirmación.
+`tipo` admite `flujo`, `regla`, `interfaz`, `dato`, `prueba` y `operacion`. Usá IDs estables y únicos en cada área. `estado` admite `vigente`, `planificado`, `historico` y `por-confirmar`. El estado describe el conocimiento documentado. Cada hecho admite hasta 600 caracteres y una a tres citas a rangos de hasta 40 líneas. El localizador es texto literal del rango redactado, sin distinción de mayúsculas. La validación comprueba que la referencia existe en el commit. La revisión de QA confirma que la referencia respalda la afirmación y el estado.
 
-Cada hecho puede incluir `"relaciones": [{"tipo": "usa", "destino": "api/consulta-estado"}]`. Los tipos disponibles son `depende de`, `usa`, `valida`, `documenta` y `relacionado con`. La publicación traduce estos vínculos a enlaces al concepto destino. Si el concepto destino está pendiente, el vínculo queda en `relaciones_pendientes` del manifiesto. Las dependencias declaradas entre módulos también se publican como enlaces.
+Cada relación temática requiere `tipo`, `destino` y `motivo`. Elegí un verbo específico como `depende de`, `usa`, `limita`, `implementa`, `autoriza` o `valida`. Cada nota requiere una relación entrante o saliente y el publicador genera enlaces de regreso. Los MOCs enlazan al menos dos conceptos y explican el propósito de cada vínculo. El índice raíz lista cada concepto exactamente una vez, con la descripción de su ficha.
 
-El estado por módulo indica si la ficha se revisó, se reutilizó o quedó pendiente. El manifiesto registra las cantidades de hechos y pendientes. La publicación devuelve código 3 si hay pendientes o todavía falta publicar un hecho. La etapa 01 admite una entrega con cobertura parcial y al menos un hecho, y registra su procedencia y versión OKF.
+`publicar.py` requiere `--taxonomia RUTA` para este flujo. Si hay incumplimientos, `validacion-grafo.json` registra las incidencias y la publicación devuelve código 2. El código 3 conserva una entrega con pendientes de cobertura. `diagnosticar.py` vuelve a comprobar el índice raíz, la estructura de los MOCs, los enlaces y las notas aisladas antes de probar la recuperación. El modo explícito `--por-modulo` permite reconstruir entregas anteriores y el diagnóstico lo identifica por separado. La etapa 01 admite ambos formatos.
 
 ## Agrupación y actualización
 
@@ -65,6 +75,14 @@ Sin configuración se asigna un módulo por directorio de primer nivel y `raiz` 
 ```
 
 `mapear.py --anterior` marca fichas reutilizables. `publicar.py --anterior` las incorpora si coinciden la configuración, las huellas del módulo y la raíz, y los objetos citados. Un cambio en una dependencia declarada marca su módulo consumidor para revisión. En los repositorios con módulos compartidos, reflejá esas dependencias en la configuración o pasá una ficha nueva para los módulos afectados.
+
+## Bóveda de trabajo
+
+`exportar_vault.py` publica una copia Markdown del corpus en una carpeta nueva. Si se indican notas preexistentes, la copia incluye sus enlaces bajo «Notas preexistentes». La entrega con recibo se conserva como entrada para la etapa 01.
+
+```sh
+python v10/00-creacion-segundo-cerebro/scripts/exportar_vault.py --cerebro "ENTREGA_CEREBRO" --destino "segund_cerebro/coelsa-intelligent-brain" --referencia "Bóveda anterior" "RUTA_A_NOTA_DE_ENTRADA.md"
+```
 
 ## Consumo
 

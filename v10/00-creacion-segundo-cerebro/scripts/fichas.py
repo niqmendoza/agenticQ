@@ -6,7 +6,12 @@ from okf import TIPOS_OKF
 from repositorio import ID, SCHEMA
 from soporte import abrir, read_json
 
-RELACIONES = {"depende de", "usa", "valida", "documenta", "relacionado con"}
+RELACIONES = {
+    "depende de", "usa", "valida", "documenta", "relacionado con", "limita",
+    "controla", "implementa", "produce", "consume", "persiste en", "autoriza",
+    "configura", "observa",
+}
+ESTADOS = {"vigente", "planificado", "historico", "por-confirmar"}
 
 
 def texto(valor, maximo, field):
@@ -29,7 +34,7 @@ def validar(ficha, modulo, db, cache):
     hechos, vistos = [], set()
     for hecho in ficha["hechos"]:
         required = {"id", "tipo", "titulo", "afirmacion", "evidencia"}
-        if not isinstance(hecho, dict) or set(hecho) - {"relaciones"} != required:
+        if not isinstance(hecho, dict) or set(hecho) - {"relaciones", "descripcion", "estado"} != required:
             raise ValueError(f"{modulo}: cada hecho requiere id, tipo, título, afirmación y evidencia.")
         key = hecho["id"]
         if not isinstance(key, str) or not ID.fullmatch(key) or key in vistos or hecho["tipo"] not in TIPOS_OKF:
@@ -58,11 +63,15 @@ def validar(ficha, modulo, db, cache):
             cita = {"archivo": path, "desde": a, "hasta": b, "localizador": locator, "blob": oid}
             if cita not in citas:
                 citas.append(cita)
+        if "estado" in hecho and hecho["estado"] not in ESTADOS:
+            raise ValueError(f"{modulo}/{key}: estado de conocimiento inválido.")
         hechos.append({
             "id": key, "tipo": hecho["tipo"],
             "titulo": texto(hecho["titulo"], 100, "titulo"),
             "afirmacion": texto(hecho["afirmacion"], 600, "afirmacion"),
             "evidencia": citas,
+            **({"descripcion": texto(hecho["descripcion"], 220, "descripcion")} if "descripcion" in hecho else {}),
+            **({"estado": hecho["estado"]} if "estado" in hecho else {}),
             **({"relaciones": validar_relaciones(hecho["relaciones"], modulo, key)} if "relaciones" in hecho else {}),
         })
     pendientes = list(dict.fromkeys(texto(item, 300, "pendiente") for item in ficha["pendientes"]))
@@ -77,13 +86,15 @@ def validar_relaciones(relaciones, modulo, key):
     result = []
     for edge in relaciones:
         if (
-            not isinstance(edge, dict) or set(edge) != {"tipo", "destino"}
+            not isinstance(edge, dict) or set(edge) - {"motivo"} != {"tipo", "destino"}
             or edge["tipo"] not in RELACIONES or not isinstance(edge["destino"], str)
         ):
             raise ValueError(f"{modulo}/{key}: vínculo inválido.")
         target = edge["destino"].split("/")
         if len(target) != 2 or not all(ID.fullmatch(item) for item in target) or target == [modulo, key]:
             raise ValueError(f"{modulo}/{key}: el vínculo requiere otro concepto en formato modulo/id.")
+        if "motivo" in edge:
+            edge = {**edge, "motivo": texto(edge["motivo"], 220, "motivo de la relación")}
         if edge not in result:
             result.append(edge)
     return result

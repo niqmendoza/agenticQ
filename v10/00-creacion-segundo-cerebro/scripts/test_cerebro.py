@@ -1,5 +1,6 @@
 """Integración de la etapa 00 con commits locales y la entrega consumida por 01."""
 
+import hashlib
 import json
 import shutil
 import sqlite3
@@ -108,7 +109,7 @@ class CrearSegundoCerebro(unittest.TestCase):
             "El trámite QA-17 está en revisión y la respuesta cita REG-17.",
             relaciones=[{"tipo": "relacionado con", "destino": "web/hecho"}],
         )
-        brain = self.hacer("publicar", "cerebro", "--mapa", mapa, "--revision", with_cita, code=3)
+        brain = self.hacer("publicar", "cerebro", "--por-modulo", "--mapa", mapa, "--revision", with_cita, code=3)
         self.assertFalse((brain / "indice.sqlite").exists())
         bundle = brain / "corpus"
         self.assertEqual(yaml.safe_load((bundle / "index.md").read_text().split("---")[1]), {"okf_version": "0.2"})
@@ -155,14 +156,14 @@ class CrearSegundoCerebro(unittest.TestCase):
     def test_citas_e_incremental_revisan_dependientes(self):
         mapa = self.mapear("inicial")
         invalid = self.ficha("api", "api/tramites.py", 1, "REG-17", "Cita incorrecta")
-        self.hacer("publicar", "invalido", "--mapa", mapa, "--revision", invalid, code=2)
+        self.hacer("publicar", "invalido", "--por-modulo", "--mapa", mapa, "--revision", invalid, code=2)
         api = self.ficha("api", "api/tramites.py", 2, "QA-17", "El trámite QA-17 está en revisión.")
         web = self.ficha(
             "web", "web/pantalla.ts", 1, "Estado", "La pantalla muestra el estado.",
             relaciones=[{"tipo": "usa", "destino": "api/hecho"}],
         )
         reports = self.ficha("reportes", "reportes/exportar.go", 1, "CSV", "El módulo emite CSV.")
-        old = self.hacer("publicar", "anterior", "--mapa", mapa, "--revision", api, "--revision", web, "--revision", reports)
+        old = self.hacer("publicar", "anterior", "--por-modulo", "--mapa", mapa, "--revision", api, "--revision", web, "--revision", reports)
         self.assertIn("[Resultado esperado](/modulos/api/concepto-hecho.md)",
                       (old / "corpus/modulos/web/concepto-hecho.md").read_text())
         self.poner("api/tramites.py", "def consultar():\n    return 'QA-17 aprobado'\n")
@@ -171,7 +172,7 @@ class CrearSegundoCerebro(unittest.TestCase):
         modules = json.loads((nuevo / "mapa.json").read_text())["modulos"]
         self.assertEqual({key: value["revision"] for key, value in modules.items()},
                          {"api": "pendiente", "web": "pendiente", "reportes": "reutilizable"})
-        actual = self.hacer("publicar", "actual", "--mapa", nuevo, "--anterior", old, code=3)
+        actual = self.hacer("publicar", "actual", "--por-modulo", "--mapa", nuevo, "--anterior", old, code=3)
         manifest = json.loads((actual / "manifiesto.json").read_text())
         self.assertEqual(manifest["modulos"]["reportes"]["estado"], "reutilizado")
         self.assertEqual(manifest["hechos"], 1)
@@ -182,7 +183,7 @@ class CrearSegundoCerebro(unittest.TestCase):
             self.hacer("navegar", f"piloto-busqueda-{suffix}", "--mapa", mapa,
                        "--consulta", "QA-17 revisión", "--modulo", "api", "--max-chars", 900)
         api = self.ficha("api", "api/tramites.py", 2, "REG-17", "El trámite QA-17 está en revisión y cita REG-17.")
-        bundle = self.hacer("publicar", "piloto-publicar", "--mapa", mapa, "--revision", api, code=3)
+        bundle = self.hacer("publicar", "piloto-publicar", "--por-modulo", "--mapa", mapa, "--revision", api, code=3)
         meter = self.stage / "scripts/publicar.py"
         telemetry = self.root / "otel.jsonl"
         spans = []
@@ -220,7 +221,7 @@ class CrearSegundoCerebro(unittest.TestCase):
         self.assertEqual(report["recuperacion"]["casos"][0]["en_lote"]["estado"], "recuperado")
         self.assertNotIn("texto de telemetria", raw)
         self.assertNotIn("sesion-unica-sintetica", raw)
-        copia = self.hacer("publicar", "republicado", "--mapa", mapa, "--revision", api, code=3)
+        copia = self.hacer("publicar", "republicado", "--por-modulo", "--mapa", mapa, "--revision", api, code=3)
         revision = self.hacer("diagnosticar", "sin-medicion", "--cerebro", copia, "--pruebas", probes)
         sin_medicion = json.loads((revision / "diagnostico.json").read_text())
         self.assertEqual(sin_medicion["consumo"]["estado"], "sin_medicion")
@@ -232,3 +233,83 @@ class CrearSegundoCerebro(unittest.TestCase):
                              "--pruebas", probes, code=3)
         self.assertEqual(json.loads((ausente / "diagnostico.json").read_text())
                          ["recuperacion"]["casos"][0]["en_lote"]["estado"], "concepto_ausente")
+
+    def publicar_demo_tematico(self, nombre, *, codigo=0, cambiar_taxonomia=None):
+        mapa = self.hacer("mapear", f"mapa-{nombre}", "--repo", self.stage / "ejemplos/repositorio-demo",
+                          "--app", "Aplicación de trámites")
+        tax = self.stage / "ejemplos/taxonomia.demo.json"
+        if cambiar_taxonomia:
+            datos = json.loads(tax.read_text())
+            cambiar_taxonomia(datos)
+            tax = self.root / "taxonomia-editada.json"
+            tax.write_text(json.dumps(datos))
+        return self.hacer("publicar", nombre, "--mapa", mapa, "--taxonomia", tax,
+                           "--revision", self.stage / "ejemplos/ficha.demo.json", code=codigo)
+
+    def demo_en_git(self):
+        repo = self.stage / "ejemplos/repositorio-demo"
+        for command in (
+            ["init", "-q"], ["add", "."],
+            ["-c", "user.email=qa@example.test", "-c", "user.name=QA", "commit", "-qm", "demo"],
+        ):
+            subprocess.run(["git", "-C", str(repo), *command], check=True, capture_output=True)
+
+    def test_grafo_tematico_consumido_por_01_y_exportado_sin_tocar_notas(self):
+        self.demo_en_git()
+        entrega = self.publicar_demo_tematico("tematico")
+        corpus = entrega / "corpus"
+        hecho = "temas/consultas/concepto-consulta-estado.md"
+        relacion = "../trazabilidad/concepto-referencia-tramite.md"
+        self.assertIn(relacion, (corpus / hecho).read_text())
+        self.assertIn("REG-17 es la referencia", (corpus / hecho).read_text())
+        self.assertIn("Referenciado por", (corpus / "temas/trazabilidad/concepto-referencia-tramite.md").read_text())
+        self.assertEqual((corpus / "index.md").read_text().count(hecho), 1)
+        self.assertTrue((corpus / "mocs/respuesta-tramites.md").is_file())
+        salida = self.hacer("diagnosticar", "diagnostico-tematico", "--cerebro", entrega)
+        informe = json.loads((salida / "diagnostico.json").read_text())
+        grafo = informe["okf"]["grafo_tematico"]
+        self.assertEqual(grafo["indice_raiz_unico"], 2)
+        self.assertEqual(grafo["relaciones_justificadas"], 1)
+        self.assertEqual(grafo["relaciones_entre_areas"], 1)
+        self.assertEqual(grafo["conceptos_aislados"], [])
+        self.assertEqual(informe["recuperacion"]["recuperadas_en_lote"], 2)
+
+        stage1 = self.v10 / "01-analisis"
+        self.cli(stage1 / "scripts/analizar.py", "procesar", "--id", "analisis-tematico",
+                 "--cerebro", entrega, "--encargo", stage1 / "ejemplos/encargo.demo.json")
+        analisis = json.loads((stage1 / "salidas/analisis-tematico/analisis.json").read_text())
+        self.assertIn(hecho, {x["original"] for x in analisis["extractos"]})
+
+        nota = self.root / "vault anterior/Inicio.md"
+        nota.parent.mkdir()
+        nota.write_text("# Referencia anterior\n")
+        nueva = self.root / "vault nueva"
+        script = self.stage / "scripts/exportar_vault.py"
+        self.cli(script, "--cerebro", entrega, "--destino", nueva, "--referencia", "Guía anterior", nota)
+        self.cli(script, "--cerebro", entrega, "--destino", nueva, code=2)
+        self.assertEqual(nota.read_text(), "# Referencia anterior\n")
+        self.assertIn("../vault%20anterior/Inicio.md", (nueva / "index.md").read_text())
+        self.assertNotIn("Notas preexistentes", (corpus / "index.md").read_text())
+
+        ruta = corpus / "index.md"
+        original = ruta.read_text()
+        duplicado = next(line for line in original.splitlines() if f"({hecho})" in line)
+        ruta.write_text(original + "\n" + duplicado + "\n")
+        receipt = entrega / "entrega.json"
+        dato = json.loads(receipt.read_text())
+        dato["archivos"]["corpus/index.md"] = hashlib.sha256(ruta.read_bytes()).hexdigest()
+        receipt.write_text(json.dumps(dato))
+        alterado = self.hacer("diagnosticar", "diagnostico-duplicado", "--cerebro", entrega, code=3)
+        estado = json.loads((alterado / "diagnostico.json").read_text())
+        self.assertIn("indice_raiz_incorrecto", {x["causa"] for x in estado["okf"]["incidencias"]})
+
+    def test_rechaza_conceptos_sin_area_o_borradores_por_defecto(self):
+        self.demo_en_git()
+        def duplicar(datos):
+            datos["areas"][1]["conceptos"].append("api/consulta-estado")
+            datos["mocs"][0]["conceptos"][0]["destino"] = "api/ausente"
+        self.publicar_demo_tematico("invalido-tematico", codigo=2, cambiar_taxonomia=duplicar)
+        logs = next((self.stage / "logs/invalido-tematico").glob("*/validacion-grafo.json"))
+        self.assertEqual({x["causa"] for x in json.loads(logs.read_text())["incidencias"]},
+                         {"pertenencia_incorrecta", "concepto_ausente_en_moc"})
+        self.hacer("publicar", "borrador", "--mapa", self.stage / "salidas/mapa-invalido-tematico", code=2)
